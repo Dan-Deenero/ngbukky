@@ -1,0 +1,22 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ngbuka/src/config/locator/app_locator.dart';
+import 'package:ngbuka/src/config/themes/app_theme.dart';
+
+void main() {
+  setUplocator();
+  runApp(const Ngbuka());
+}
+
+class Ngbuka extends StatelessWidget {
+  static final _router = locator<GoRouter>();
+  const Ngbuka({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return FlutterSizer(builder: (context, orientation, screenType) {
+      return MaterialApp.router(
+          title: 'Ngbuka', theme: AppTheme.defaultTheme, routerConfig: _router);
+    });
+  }
+}
