@@ -11,11 +11,6 @@ List<OnboardingModel> onboarding = [
       description:
           "Gain access to a stream of user requests  leads from car owners in your areas",
       image: AppImages.secondMan),
-  OnboardingModel(
-      heading: "Effortless booking and communication ",
-      description:
-          "Enjoy a streamlined booking process and seamless communication with customers",
-      image: AppImages.thirdMan),
 ];
 
 class OnboardingModel {

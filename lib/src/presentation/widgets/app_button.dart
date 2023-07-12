@@ -8,18 +8,28 @@ import 'custom_text.dart';
 class AppButton extends StatelessWidget {
   final String buttonText;
   final VoidCallback? onTap;
-  const AppButton({super.key, required this.buttonText, this.onTap});
+  final bool hasIcon;
+  final bool isSmall;
+  final bool isOrange;
+  const AppButton({
+    super.key,
+    required this.buttonText,
+    this.onTap,
+    this.hasIcon = true,
+    this.isSmall = false,
+    this.isOrange = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-          width: double.infinity,
+          width: isSmall ? 225 : double.infinity,
           height: 7.h,
           decoration: BoxDecoration(
-              color: AppColors.primary,
-              borderRadius: BorderRadius.circular(10)),
+              color: isOrange ? AppColors.orange : AppColors.primary,
+              borderRadius: BorderRadius.circular(20)),
           child: Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -27,10 +37,12 @@ class AppButton extends StatelessWidget {
                 customText(
                     text: buttonText, textColor: AppColors.white, fontSize: 14),
                 widthSpace(2),
-                const Icon(
-                  Icons.arrow_forward,
-                  color: AppColors.white,
-                )
+                hasIcon
+                    ? const Icon(
+                        Icons.arrow_forward,
+                        color: AppColors.white,
+                      )
+                    : const SizedBox.shrink()
               ],
             ),
           )),

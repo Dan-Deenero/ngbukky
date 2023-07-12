@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ngbuka/src/config/keys/app_routes.dart';
+import 'package:ngbuka/src/config/locator/app_locator.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
 
 import 'app_spacer.dart';
@@ -17,16 +20,30 @@ Widget customHeading(String text) => Text(
 Widget customText(
         {required String text,
         required double fontSize,
-        required Color textColor}) =>
+        required Color textColor,
+        FontWeight? fontWeight,
+        TextAlign? textAlignment}) =>
     Text(text,
-        style:
-            TextStyle(fontFamily: '', color: textColor, fontSize: fontSize.dp));
+        textAlign: textAlignment ?? TextAlign.left,
+        style: TextStyle(
+            fontFamily: 'Fira',
+            color: textColor,
+            fontWeight: fontWeight ?? FontWeight.w500,
+            fontSize: fontSize.dp));
 
-Widget haveanaccount() => Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        bodyText("I already have an account,"),
-        widthSpace(1),
-        customText(text: "Log me in", fontSize: 15, textColor: AppColors.orange)
-      ],
-    );
+Widget haveanaccount() {
+  final router = locator<GoRouter>();
+
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      bodyText("I already have an account,"),
+      widthSpace(1),
+      GestureDetector(
+        onTap: () => router.push(AppRoutes.login),
+        child: customText(
+            text: "Log me in", fontSize: 15, textColor: AppColors.orange),
+      )
+    ],
+  );
+}

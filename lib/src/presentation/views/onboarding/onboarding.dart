@@ -2,6 +2,8 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/domain/data/onboarding_model.dart';
 import 'package:ngbuka/src/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/presentation/widgets/app_spacer.dart';
@@ -23,10 +25,15 @@ class OnboardingScreen extends HookWidget {
             return Stack(
               children: [
                 Container(
+                    padding: EdgeInsets.zero,
                     height: 70.h,
                     width: double.infinity,
-                    color: AppColors.lightBlue,
-                    child: Image.asset(onboarding[index].image)),
+                    child: Image.asset(
+                      onboarding[index].image,
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      fit: BoxFit.cover,
+                    )),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
@@ -57,7 +64,10 @@ class OnboardingScreen extends HookWidget {
                           heightSpace(1),
                           bodyText(onboarding[index].description),
                           heightSpace(5),
-                          const AppButton(buttonText: "Start connecting"),
+                          AppButton(
+                            buttonText: "Start connecting",
+                            onTap: () => context.push(AppRoutes.createAccount),
+                          ),
                           heightSpace(3),
                           haveanaccount()
                         ],
