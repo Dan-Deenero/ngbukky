@@ -9,9 +9,11 @@ class AppColors {
   static const Color white = Color(0xffFFFFFF);
   static const Color black = Color(0xff000000);
   static const Color lightBlue = Color(0xffAFB6FD);
+  static const Color veryLightOrange = Color(0xffFFF8EF);
   static const Color lightOrange = Color(0xffED6150);
   static const Color normalBlue = Color(0xff1A1A7A);
   static const Color textformGrey = Color(0xffdddce1);
+  static const Color containerOrange = Color(0xffFFEDED);
   static const borderGrey = Color(0xFFE2E8F0);
   static const backgroundGrey = Color(0xFFF1F5F9);
   static const checkBoxColor = Color(0xfffaa5f03);
@@ -22,12 +24,12 @@ class AppColors {
       borderSide: BorderSide(
         color: Colors.red,
       ),
-      borderRadius: BorderRadius.all(Radius.circular(5)));
+      borderRadius: BorderRadius.all(Radius.circular(20)));
   static OutlineInputBorder normalBorder = const OutlineInputBorder(
       borderSide: BorderSide(color: AppColors.textformGrey),
-      borderRadius: BorderRadius.all(Radius.circular(5)));
+      borderRadius: BorderRadius.all(Radius.circular(20)));
 
   static OutlineInputBorder emptyBorder = const OutlineInputBorder(
       borderSide: BorderSide(color: AppColors.textformGrey),
-      borderRadius: BorderRadius.all(Radius.circular(5)));
+      borderRadius: BorderRadius.all(Radius.circular(20)));
 }
