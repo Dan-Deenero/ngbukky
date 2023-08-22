@@ -87,7 +87,7 @@ class LoginView extends HookWidget {
                       ),
                     ),
                   ),
-                  Padding(
+                  Padding( 
                       padding: const EdgeInsets.only(right: 10),
                       child: GestureDetector(
                           onTap: () => context.push(AppRoutes.createAccount),

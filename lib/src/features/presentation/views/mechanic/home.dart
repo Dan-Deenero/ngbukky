@@ -262,8 +262,8 @@ class HomeView extends HookWidget {
               ),
               heightSpace(4),
               Container(
+                padding: EdgeInsets.all(5),
                 width: double.infinity,
-                height: 13.h,
                 decoration: BoxDecoration(
                   color: AppColors.white,
                   borderRadius: BorderRadius.circular(20),
@@ -302,10 +302,12 @@ class HomeView extends HookWidget {
                         Row(
                           children: [
                             SvgPicture.asset(AppImages.serviceIcon),
-                            customText(
-                                text: "AC Maintenance, Engine sitting",
-                                fontSize: 10,
-                                textColor: AppColors.black)
+                            Flexible(
+                              child: customText(
+                                  text: "AC Maintenance, Engine sitting",
+                                  fontSize: 10,
+                                  textColor: AppColors.black),
+                            )
                           ],
                         ),
                         heightSpace(.2),

@@ -78,7 +78,7 @@ Widget card(String title, String subtitle, String number, String color) =>
           customText(
               text: subtitle, fontSize: 12, textColor: AppColors.textColor)
         ]),
-      ),
+      ), 
     );
 
 class Bookings extends HookWidget {
@@ -118,6 +118,14 @@ class Bookings extends HookWidget {
         body: Column(
           children: [
             heightSpace(4),
+            Container(
+              height: 2.h,
+              decoration: const BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: AppColors.borderGrey),
+                )
+              ),
+            ),
             Container(
               height: 40,
               width: double.infinity,
