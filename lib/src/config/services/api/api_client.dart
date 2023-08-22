@@ -4,7 +4,9 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_keys.dart';
+import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/config/services/api/api_response.dart';
 import 'package:ngbuka/src/config/services/api/endpoints.dart';
 import 'package:ngbuka/src/config/services/storage_service.dart';
@@ -95,6 +97,12 @@ class ApiClient {
     final result = await _makeRequest(
       () async {
         final header = _defaultHeader;
+        log('this is the token$_token');
+        if (useToken) {
+          header.addAll(
+            {'Authorization': 'Bearer $_token'},
+          );
+        }
 
         final options = Options(headers: header);
         log('put request');
@@ -190,8 +198,8 @@ class ApiClient {
     } on DioError catch (e) {
       log(e.response.toString());
       log(e.response!.statusCode.toString());
-      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
-        // locator<GoRouter>().push(AppRoutes.login);
+      if (e.response?.statusCode == 401) {
+        locator<GoRouter>().push(AppRoutes.login);
         // router.push(AppRoutes.login);
       }
       log(e.toString());

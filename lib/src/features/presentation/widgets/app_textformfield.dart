@@ -15,6 +15,7 @@ class CustomTextFormField extends StatefulWidget {
   final bool hasMaxline;
   final String? Function(String?)? validator;
   final List<TextInputFormatter>? inputFormatters;
+  final VoidCallback? onTap;
   final String? error;
   final ValueChanged<String>? onChanged;
   final TextInputType keyboardType;
@@ -22,6 +23,7 @@ class CustomTextFormField extends StatefulWidget {
       {super.key,
       this.isAddress = false,
       this.label,
+      this.onTap,
       this.hasMaxline = false,
       this.inputFormatters,
       this.onChanged,
@@ -51,6 +53,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             textColor: AppColors.primary),
         heightSpace(1),
         TextFormField(
+          onTap: widget.onTap,
           maxLines: widget.hasMaxline ? 8 : 1,
           cursorColor: AppColors.primary,
           cursorWidth: 0.9,

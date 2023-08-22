@@ -5,10 +5,12 @@ import 'package:intl_phone_field/phone_number.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
 
 class CustomPhoneField extends StatelessWidget {
+  final TextEditingController? controller;
   final Function(PhoneNumber)? onChanged;
   final bool enabled;
   const CustomPhoneField({
     super.key,
+    this.controller,
     this.enabled = true,
     this.onChanged,
   });
@@ -16,6 +18,7 @@ class CustomPhoneField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IntlPhoneField(
+      controller: controller,
       cursorColor: AppColors.primary,
       cursorWidth: 0.9,
       disableLengthCheck: false,
