@@ -30,7 +30,7 @@ class _SplashscreenState extends State<Splashscreen> {
   checkForLogin() {
     final token = locator<LocalStorageService>().getDataFromDisk(AppKeys.token);
     if (token != null) {
-      context.push(AppRoutes.login);
+      context.push(AppRoutes.businessInfo);
       // context.push(AppRoutes.bottomNav);
       // selectAccountView();
       return;

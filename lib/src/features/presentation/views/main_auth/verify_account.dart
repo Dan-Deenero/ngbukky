@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -25,8 +27,10 @@ class VerifyAccount extends HookWidget {
     }
 
     void verifyOTP() async {
+      log(otpModel.otpType);
+      var body = {"email": otpModel.email, "otp": otp.text};
       if (otpModel.otpType == "createAccount") {
-        bool result = await _authRepo.verifyOTP(otp.text);
+        bool result = await _authRepo.verifyOTP(body);
         if (result) {
           if (context.mounted) {
             context.push(AppRoutes.setup);
@@ -34,8 +38,6 @@ class VerifyAccount extends HookWidget {
           }
         }
       }
-
-      var body = {"email": otpModel.email, "otp": otp.text};
 
       bool result = await _authRepo.verifyPasswordOTP(body);
       if (result) {

@@ -18,7 +18,7 @@ class PinView extends StatelessWidget {
       length: 6,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       onChanged: onChanged,
-      androidSmsAutofillMethod: AndroidSmsAutofillMethod.smsRetrieverApi,
+      androidSmsAutofillMethod: AndroidSmsAutofillMethod.smsUserConsentApi,
       enableIMEPersonalizedLearning: true,
       animationCurve: Curves.easeIn,
       animationDuration: const Duration(milliseconds: 100),

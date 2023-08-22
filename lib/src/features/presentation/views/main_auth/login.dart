@@ -45,7 +45,7 @@ class LoginView extends HookWidget {
       bool result = await _authRepo.loginEmail(data);
       if (result) {
         if (context.mounted) {
-          context.push(AppRoutes.bottomNav);
+          context.push(AppRoutes.setup);
         }
       }
     }

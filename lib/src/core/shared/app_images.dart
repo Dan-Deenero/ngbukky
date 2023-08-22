@@ -27,6 +27,7 @@ class AppImages {
   static const String time = "assets/images/svgs/time.svg";
   static const String carIcon = "assets/images/svgs/car.svg";
   static const String warning = "assets/images/svgs/warning.svg";
+  static const String info = "assets/images/svgs/info.svg";
   static const String file = "assets/images/svgs/file.svg";
   static const String phone = "assets/images/svgs/phone.svg";
   static const String contact = "assets/images/svgs/contact.svg";
@@ -36,4 +37,5 @@ class AppImages {
   static const String filter = "assets/images/svgs/filter.svg";
   static const String tick = "assets/images/svgs/tick.svg";
   static const String createAccount = "assets/images/svgs/create-account.svg";
+  static const String edit = "assets/images/svgs/edit.svg";
 }
