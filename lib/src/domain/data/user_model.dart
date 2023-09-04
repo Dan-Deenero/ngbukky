@@ -4,6 +4,7 @@ class UserModel {
   String? lastname;
   String? email;
   String? phoneNumber;
+  String? username;
   bool? isEmailVerified;
   String? verifiedEmailAt;
   String? profileImageUrl;
@@ -24,9 +25,9 @@ class UserModel {
   String? about;
   List<String>? languages;
   bool? isActive;
-  List<String>? services;
+  List<Services>? services;
   List<String>? otherServices;
-  List<String>? availability;
+  List<Availability>? availability;
 
   UserModel(
       {this.id,
@@ -34,6 +35,7 @@ class UserModel {
       this.lastname,
       this.email,
       this.phoneNumber,
+      this.username,
       this.isEmailVerified,
       this.verifiedEmailAt,
       this.profileImageUrl,
@@ -64,6 +66,7 @@ class UserModel {
     lastname = json['lastname'];
     email = json['email'];
     phoneNumber = json['phoneNumber'];
+    username = json['username'];
     isEmailVerified = json['isEmailVerified'];
     verifiedEmailAt = json['verifiedEmailAt'];
     profileImageUrl = json['profileImageUrl'];
@@ -82,30 +85,102 @@ class UserModel {
     deviceToken = json['deviceToken'];
     mechanicType = json['mechanicType'];
     about = json['about'];
-    if (json['languages'] != null) {
-      languages = <String>[];
-      json['languages'].forEach((v) {
-        languages!.add((v));
-      });
-    }
+    languages = json['languages'].cast<String>();
     isActive = json['isActive'];
     if (json['services'] != null) {
-      services = <String>[];
+      services = <Services>[];
       json['services'].forEach((v) {
-        services!.add((v));
+        services!.add(new Services.fromJson(v));
       });
     }
-    if (json['otherServices'] != null) {
-      otherServices = <String>[];
-      json['otherServices'].forEach((v) {
-        otherServices!.add((v));
-      });
-    }
+    otherServices = json['otherServices'].cast<String>();
     if (json['availability'] != null) {
-      availability = <String>[];
+      availability = <Availability>[];
       json['availability'].forEach((v) {
-        availability!.add((v));
+        availability!.add(new Availability.fromJson(v));
       });
     }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['firstname'] = this.firstname;
+    data['lastname'] = this.lastname;
+    data['email'] = this.email;
+    data['phoneNumber'] = this.phoneNumber;
+    data['username'] = this.username;
+    data['isEmailVerified'] = this.isEmailVerified;
+    data['verifiedEmailAt'] = this.verifiedEmailAt;
+    data['profileImageUrl'] = this.profileImageUrl;
+    data['role'] = this.role;
+    data['status'] = this.status;
+    data['ninImageUrl'] = this.ninImageUrl;
+    data['isServiceProvider'] = this.isServiceProvider;
+    data['businessName'] = this.businessName;
+    data['cacNumber'] = this.cacNumber;
+    data['address'] = this.address;
+    data['lga'] = this.lga;
+    data['city'] = this.city;
+    data['state'] = this.state;
+    data['longitude'] = this.longitude;
+    data['latitude'] = this.latitude;
+    data['deviceToken'] = this.deviceToken;
+    data['mechanicType'] = this.mechanicType;
+    data['about'] = this.about;
+    data['languages'] = this.languages;
+    data['isActive'] = this.isActive;
+    if (this.services != null) {
+      data['services'] = this.services!.map((v) => v.toJson()).toList();
+    }
+    data['otherServices'] = this.otherServices;
+    if (this.availability != null) {
+      data['availability'] = this.availability!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Services {
+  String? id;
+  String? name;
+
+  Services({this.id, this.name});
+
+  Services.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    return data;
+  }
+}
+
+class Availability {
+  String? id;
+  String? day;
+  String? from;
+  String? to;
+
+  Availability({this.id, this.day, this.from, this.to});
+
+  Availability.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    day = json['day'];
+    from = json['from'];
+    to = json['to'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['day'] = this.day;
+    data['from'] = this.from;
+    data['to'] = this.to;
+    return data;
   }
 }

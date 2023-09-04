@@ -20,6 +20,7 @@ class AppColors {
   static const checkBoxColor = Color(0xfffaa5f03);
   static const containerGrey = Color(0xFFE2E8F0);
   static const green = Color(0xff2BAF29);
+  static const lightgreen = Color(0xffECFFF1);
   static const textGrey = Color(0xFF64748B);
   static OutlineInputBorder errorBorder = const OutlineInputBorder(
       borderSide: BorderSide(

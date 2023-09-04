@@ -38,16 +38,16 @@ class CustomPhoneField extends StatelessWidget {
         floatingLabelBehavior: FloatingLabelBehavior.never,
         enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: AppColors.textformGrey),
-            borderRadius: BorderRadius.all(Radius.circular(5))),
+            borderRadius: BorderRadius.all(Radius.circular(20))),
         errorBorder: OutlineInputBorder(
             borderSide: BorderSide(color: AppColors.red),
-            borderRadius: BorderRadius.all(Radius.circular(5))),
+            borderRadius: BorderRadius.all(Radius.circular(20))),
         focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: AppColors.textformGrey),
-            borderRadius: BorderRadius.all(Radius.circular(5))),
+            borderRadius: BorderRadius.all(Radius.circular(20))),
         focusedErrorBorder: OutlineInputBorder(
             borderSide: BorderSide(color: AppColors.red),
-            borderRadius: BorderRadius.all(Radius.circular(5))),
+            borderRadius: BorderRadius.all(Radius.circular(20))),
         counter: SizedBox.shrink(),
         border: OutlineInputBorder(),
       ),

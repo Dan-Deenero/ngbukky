@@ -70,4 +70,4 @@ final stateWorkingHours = StateProvider<List<Map<String, dynamic>>>((ref) {
     {"isChecked": false, "from": "9", "to": "9", "day": "Sun"}
   ];
 });
-final workingHourController = TextEditingController();
+final    workingHourController = TextEditingController();

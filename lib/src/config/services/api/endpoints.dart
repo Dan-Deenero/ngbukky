@@ -11,4 +11,5 @@ class Endpoints {
   static const String getMechanicServices = 'services';
   static const String getLocation = 'location/sub-domains';
   static const String updateBusiness = 'mechanic/business-profile';
+  static const String getStatisticsInfo = 'mechanic/summary?type=quote-request';
 }

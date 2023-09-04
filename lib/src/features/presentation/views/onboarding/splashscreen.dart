@@ -35,7 +35,7 @@ class _SplashscreenState extends State<Splashscreen> {
       // selectAccountView();
       return;
     } else {
-      context.push(AppRoutes.login);
+      context.push(AppRoutes.bottomNav);
     }
   }
 
@@ -56,6 +56,6 @@ class _SplashscreenState extends State<Splashscreen> {
   void initState() {
     super.initState();
 
-    Timer(const Duration(seconds: 3), () => checkForOnBoarding());
+    Timer(const Duration(seconds: 3), () => context.push(AppRoutes.login));
   }
 }

@@ -9,6 +9,7 @@ import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/domain/data/user_model.dart';
 import 'package:ngbuka/src/domain/repository/auth_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
+import 'package:ngbuka/src/features/presentation/widgets/app_phone_field.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_textformfield.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
@@ -18,17 +19,18 @@ import 'package:ngbuka/src/utils/helpers/validators.dart';
 import '../../../../config/keys/app_routes.dart';
 import '../../../../core/shared/colors.dart';
 
-class PersonalInfoPage extends HookWidget {
+class PersonalInfoSettings extends HookWidget {
   static final AuthRepo _authRepo = AuthRepo();
   static final firstName = TextEditingController();
   static final lastName = TextEditingController();
+  static final email = TextEditingController();
   static final mechanicType = TextEditingController();
   static final phone = TextEditingController();
   static final description = TextEditingController();
   static final otherLanguages = TextEditingController();
   static List<String> languages = [];
   static final _formKey = GlobalKey<FormState>();
-  const PersonalInfoPage({super.key});
+  const PersonalInfoSettings({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +39,18 @@ class PersonalInfoPage extends HookWidget {
     final isValidated = useState<bool>(false);
     getUserProfile() {
       _authRepo.getMechanicProfile().then((value) {
+        String phoneStr = value.phoneNumber.toString();
+        String updatedStr = phoneStr.substring(3); 
+        // int updatedNumber = int.parse(updatedStr);
         isLoading.value = false;
         userModel.value = value;
         firstName.text = value.firstname!;
         lastName.text = value.lastname!;
+        languages = value.languages!;
+        mechanicType.text = value.mechanicType!;
+        description.text = value.about!;
+        phone.text = updatedStr;
+        email.text = value.email!;
       });
     }
 
@@ -62,7 +72,7 @@ class PersonalInfoPage extends HookWidget {
       bool result = await _authRepo.updateInfo(body);
       if (result) {
         if (context.mounted) {
-          context.push(AppRoutes.businessInfo);
+          context.push(AppRoutes.profileSettings);
         }
       }
     }
@@ -120,7 +130,7 @@ class PersonalInfoPage extends HookWidget {
                             heightSpace(1),
                             customText(
                                 text:
-                                    "Help us complete these info and get started",
+                                    "Edit your personal information",
                                 fontSize: 15,
                                 textColor: AppColors.white),
                           ]),
@@ -131,54 +141,20 @@ class PersonalInfoPage extends HookWidget {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(children: [
-                          heightSpace(2),
+                          heightSpace(4),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               customText(
-                                  text: "Personal information",
+                                  text: "Edit Personal Profile",
                                   fontSize: 18,
-                                  textColor: AppColors.primary),
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 10.w,
-                                    height: 10.h,
-                                    decoration: BoxDecoration(
-                                        border:
-                                            Border.all(color: AppColors.orange),
-                                        shape: BoxShape.circle,
-                                        color: AppColors.white),
-                                    child: Center(
-                                        child: customText(
-                                            text: "1",
-                                            fontSize: 15,
-                                            textColor: AppColors.black)),
-                                  ),
-                                  const SizedBox(
-                                      width: 30,
-                                      child: Divider(
-                                        height: 2,
-                                        color:
-                                            Color.fromARGB(255, 131, 130, 133),
-                                      )),
-                                  Container(
-                                    width: 10.w,
-                                    height: 10.h,
-                                    decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: AppColors.white),
-                                    child: Center(
-                                        child: customText(
-                                            text: "2",
-                                            fontSize: 15,
-                                            textColor: AppColors.textGrey)),
-                                  ),
-                                ],
-                              )
+                                  textColor: AppColors.primary,
+                                  fontWeight: FontWeight.w800
+                                ),
+                              
                             ],
                           ),
-                          heightSpace(2),
+                          heightSpace(3),
                           CustomTextFormField(
                             validator: stringValidation,
                             textEditingController: firstName,
@@ -205,29 +181,12 @@ class PersonalInfoPage extends HookWidget {
                             hintText: "Doe",
                           ),
                           heightSpace(2),
-                          // CustomTextFormField(
-                          //   textEditingController: email,
-                          //   prefixIcon: Padding(
-                          //     padding: const EdgeInsets.all(13.0),
-                          //     child: SvgPicture.asset(
-                          //       AppImages.emailIcon,
-                          //     ),
-                          //   ),
-                          //   label: "Personal email",
-                          //   hintText: "johndoe@gmail.com",
-                          // ),
+                          
 
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // customText(
-                              //     text: "Phone number",
-                              //     fontSize: 14,
-                              //     textColor: AppColors.primary),
-                              // heightSpace(2),
-                              // CustomPhoneField(
-                              //   controller: phone,
-                              // ),
+                              
                               heightSpace(2),
                               CustomTextFormField(
                                 textEditingController: mechanicType,
@@ -265,19 +224,7 @@ class PersonalInfoPage extends HookWidget {
                                 ],
                                 onChanged: onChanged,
                               ),
-                              heightSpace(2),
-
-                              CustomTextFormField(
-                                textEditingController: otherLanguages,
-                                prefixIcon: Padding(
-                                  padding: const EdgeInsets.all(13.0),
-                                  child: SvgPicture.asset(
-                                    AppImages.languageIcon,
-                                  ),
-                                ),
-                                label: "What other languages",
-                                hintText: "Separate with a comma",
-                              ),
+                              
                               heightSpace(2),
                               CustomTextFormField(
                                 validator: stringValidation,
@@ -286,55 +233,55 @@ class PersonalInfoPage extends HookWidget {
                                 textEditingController: description,
                               ),
                               heightSpace(3),
+
+                              AbsorbPointer(
+                                absorbing: true,
+                                child: Opacity(
+                                  opacity: 0.2,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      customText(
+                                          text: "Phone number",
+                                          fontSize: 14,
+                                          textColor: AppColors.primary),
+                                      heightSpace(1),
+                                      CustomPhoneField(
+                                        controller: phone,
+                                      ),
+                              
+                                      heightSpace(2),
+                              
+                                      CustomTextFormField(
+                                        textEditingController: email,
+                                        prefixIcon: Padding(
+                                          padding: const EdgeInsets.all(13.0),
+                                          child: SvgPicture.asset(
+                                            AppImages.emailIcon,
+                                          ),
+                                        ),
+                                        label: "Personal email",
+                                        hintText: "johndoe@gmail.com",
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+
+                              heightSpace(5),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   SizedBox(
-                                    width: MediaQuery.of(context).size.width * 0.6,
+                                    width: MediaQuery.of(context).size.width * 0.87,
                                     child: AppButton(
-                                      isActive: isValidated.value,
+                                      // isActive: isValidated.value,
                                       onTap: updateInfo,
                                       buttonText: "Save",
                                       isOrange: true,
                                       isSmall: true,
                                     ),
                                   ),
-                                  widthSpace(2),
-                                  Expanded(
-                                    child: Row(
-                                      children: [
-                                        customText(
-                                            text: "Next",
-                                            fontSize: 15,
-                                            textColor: AppColors.textGrey),
-                                        widthSpace(4),
-                                        GestureDetector(
-                                          onTap: () => context
-                                              .push(AppRoutes.businessInfo),
-                                          child: Container(
-                                            height: 13.h,
-                                            width: 13.w,
-                                            decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color: AppColors.textGrey),
-                                                color: AppColors.white
-                                                    .withOpacity(.5),
-                                                shape: BoxShape.circle),
-                                            child: const Padding(
-                                              padding:
-                                                  EdgeInsets.only(left: 7.0),
-                                              child: Center(
-                                                  child: Icon(
-                                                Icons.arrow_forward_ios,
-                                                color: AppColors.textGrey,
-                                              )),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                  
                                 ],
                               ),
                               heightSpace(2),

@@ -14,11 +14,11 @@ import 'package:ngbuka/src/features/presentation/widgets/app_textformfield.dart'
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 import 'package:ngbuka/src/utils/helpers/validators.dart';
 
-class LoginView extends HookWidget {
+class SpareLoginView extends HookWidget {
   static final email = TextEditingController();
   static final password = TextEditingController();
   static final AuthRepo _authRepo = AuthRepo();
-  const LoginView({super.key});
+  const SpareLoginView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,19 +44,11 @@ class LoginView extends HookWidget {
         "isEmailLogin": true
       };
       LoginModel result = await _authRepo.loginEmail(data);
-      if(context.mounted){
-        if (result.user?.mechanicType == null) {
-            context.push(AppRoutes.personalInfo);
-
-          // if (context.mounted) {
-          //   context.push(AppRoutes.bottomNav);
-          // }
-        }else if(result.user?.businessName == null){
-          context.push(AppRoutes.businessInfo);
-        }else{
-          context.push(AppRoutes.bottomNav);
+      if (result.user?.businessName == null) {
+        if (context.mounted) {
+          context.push(AppRoutes.spareSetup);
         }
-     }
+      }
     }
 
     return Scaffold(

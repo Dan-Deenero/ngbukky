@@ -4,24 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/booking.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/wallet.dart';
-import 'package:ngbuka/src/features/presentation/views/profile_settings/profile_page.dart';
+
 
 import '../../../../core/shared/app_images.dart';
-import 'home.dart';
-
-class BottomNavigationBarView extends HookWidget {
+class BottomNavBarView extends HookWidget {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  static final List<Widget> _widgetOptions = <Widget>[
-    HomeView(),
-    Bookings(),
-    Wallet(),
-    ProfileSettings(),
+  static const List<Widget> _widgetOptions = <Widget>[
+    Center(child: Text('Home'),),
+    Center(child: Text('Orders'),),
+    Center(child: Text('Inventory'),),
+    Center(child: Text('Wallet'),),
+    Center(child: Text('Profile'),)
   ];
-  const BottomNavigationBarView({super.key});
+  const BottomNavBarView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -55,18 +52,26 @@ class BottomNavigationBarView extends HookWidget {
                 : SvgPicture.asset(
                     AppImages.orders,
                   ),
-            label: 'Booking',
+            label: 'Orders',
           ),
           BottomNavigationBarItem(
               icon: selectedIndex.value == 2
                   ? SvgPicture.asset(
-                      AppImages.wallet,
+                      AppImages.orders,
                       color: AppColors.orange,
                     )
                   : SvgPicture.asset(
-                      AppImages.wallet,
+                      AppImages.orders,
                       color: AppColors.black,
                     ),
+              label: "Inventory"),
+          BottomNavigationBarItem(
+              icon: selectedIndex.value == 3
+                  ? SvgPicture.asset(
+                      AppImages.profile,
+                      color: AppColors.orange,
+                    )
+                  : SvgPicture.asset(AppImages.profile),
               label: "Wallet"),
           BottomNavigationBarItem(
               icon: selectedIndex.value == 3

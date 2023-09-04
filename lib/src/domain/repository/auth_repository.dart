@@ -6,6 +6,7 @@ import 'package:ngbuka/src/config/locator/app_locator.dart';
 import 'package:ngbuka/src/config/services/api/api_client.dart';
 import 'package:ngbuka/src/config/services/api/endpoints.dart';
 import 'package:ngbuka/src/config/services/storage_service.dart';
+import 'package:ngbuka/src/domain/data/login_model.dart';
 import 'package:ngbuka/src/domain/data/user_model.dart';
 
 class AuthRepo {
@@ -36,14 +37,24 @@ class AuthRepo {
     return UserModel();
   }
 
-  Future<bool> loginEmail(Map<String, dynamic> body) async {
-    final response = await ApiClient.post(Endpoints.login, body: body);
+  Future<UserModel> UpdateMechanicProfile() async {
+    final response =
+        await ApiClient.get(Endpoints.getProfileMechanic, useToken: true);
+    if (response.status == 200) {
+      return UserModel.fromJson(response.entity);
+    }
+    return UserModel();
+  }
+
+  Future<LoginModel> loginEmail(Map<String, dynamic> body) async {
+    final response =
+        await ApiClient.post(Endpoints.login, body: body, useToken: false);
     if (response.status == 200) {
       locator<LocalStorageService>()
           .saveDataToDisk(AppKeys.token, json.encode(response.entity["token"]));
-      return true;
+      return LoginModel.fromJson(response.entity);
     }
-    return false;
+    return LoginModel();
   }
 
   Future<bool> register(Map<String, String> body) async {

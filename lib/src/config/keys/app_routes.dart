@@ -10,7 +10,11 @@ class AppRoutes {
   static const String newPassword = '/new-password';
   static const String setup = '/setup';
   static const String personalInfo = '/personal-info';
+  static const String contactPage = '/contact-page';
+  static const String personalInfoSettings = '/personal-info-settings';
+  static const String profileSettings = '/profileSettings';
   static const String businessInfo = '/business-info';
+  static const String businessInfoSettings = '/business-info-settings';
   static const String bottomNav = '/bottom-nav';
   static const String businessLocation = '/business-location';
   static const String inspectionBooking = '/inspection-booking';
@@ -25,4 +29,13 @@ class AppRoutes {
   static const String walletHistory = '/wallet-history';
   static const String historyDetail = '/history-detail';
   static const String selectAccount = '/select-account';
+  static const String boarding1 = '/boarding1';
+  static const String boarding2 = '/boarding2';
+  static const String spareLogin = '/spare-login';
+  static const String spareSetup = '/spare-setup';
+  static const String spareBottomNav = '/spare-bottomnav';
+  static const String sparePersonalInfo = '/spare-personalinfo';
+  static const String spareStoreInfo = '/spare-storeinfo';
+  static const String spareBusinessInfo = '/spare-businessinfo';
+
 }

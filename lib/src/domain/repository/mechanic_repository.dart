@@ -2,6 +2,7 @@ import 'package:ngbuka/src/config/services/api/api_client.dart';
 import 'package:ngbuka/src/config/services/api/endpoints.dart';
 import 'package:ngbuka/src/domain/data/city_lga.dart';
 import 'package:ngbuka/src/domain/data/services_model.dart';
+import 'package:ngbuka/src/domain/data/statistics_model.dart';
 
 class MechanicRepo {
   Future<MechanicServicesModel> getMechanicProfile() async {
@@ -29,4 +30,14 @@ class MechanicRepo {
     }
     return false;
   }
+
+  Future<StatisticsModel> getStatisticsInfo() async {
+    final response =
+        await ApiClient.get(Endpoints.getStatisticsInfo, useToken: true);
+    if (response.status == 200) {
+      return StatisticsModel.fromJson(response.entity);
+    }
+    return StatisticsModel();
+  }
+
 }

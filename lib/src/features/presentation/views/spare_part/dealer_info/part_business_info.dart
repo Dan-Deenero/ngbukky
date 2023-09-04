@@ -1,76 +1,31 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
+import 'package:ngbuka/src/core/shared/colors.dart';
 import 'package:ngbuka/src/domain/data/user_model.dart';
-import 'package:ngbuka/src/domain/repository/auth_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
+import 'package:ngbuka/src/features/presentation/widgets/app_phone_field.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_textformfield.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 import 'package:ngbuka/src/features/presentation/widgets/dropdown_search.dart';
 import 'package:ngbuka/src/utils/helpers/validators.dart';
 
-import '../../../../config/keys/app_routes.dart';
-import '../../../../core/shared/colors.dart';
-
-class PersonalInfoPage extends HookWidget {
-  static final AuthRepo _authRepo = AuthRepo();
-  static final firstName = TextEditingController();
-  static final lastName = TextEditingController();
-  static final mechanicType = TextEditingController();
-  static final phone = TextEditingController();
-  static final description = TextEditingController();
-  static final otherLanguages = TextEditingController();
-  static List<String> languages = [];
+class SpareBusinessInfo extends HookWidget {
   static final _formKey = GlobalKey<FormState>();
-  const PersonalInfoPage({super.key});
+
+  const SpareBusinessInfo({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = useState<bool>(true);
+    final isLoading = useState<bool>(false);
     final userModel = useState<UserModel?>(null);
     final isValidated = useState<bool>(false);
-    getUserProfile() {
-      _authRepo.getMechanicProfile().then((value) {
-        isLoading.value = false;
-        userModel.value = value;
-        firstName.text = value.firstname!;
-        lastName.text = value.lastname!;
-      });
-    }
 
-    onChanged(List<String>? list) {
-      languages = list!;
-      log(languages.toString());
-    }
-
-    List<String> otherLang = otherLanguages.text.split(',');
-
-    updateInfo() async {
-      var body = {
-        "firstname": firstName.text,
-        "lastname": lastName.text,
-        "mechanicType": mechanicType.text,
-        "about": description.text,
-        "languages": languages + otherLang,
-      };
-      bool result = await _authRepo.updateInfo(body);
-      if (result) {
-        if (context.mounted) {
-          context.push(AppRoutes.businessInfo);
-        }
-      }
-    }
-
-    useEffect(() {
-      getUserProfile();
-      return null;
-    }, []);
     return Scaffold(
       backgroundColor: AppColors.scaffoldColor,
       body: isLoading.value
@@ -136,41 +91,64 @@ class PersonalInfoPage extends HookWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               customText(
-                                  text: "Personal information",
+                                  text: "Business information",
                                   fontSize: 18,
                                   textColor: AppColors.primary),
                               Row(
                                 children: [
                                   Container(
-                                    width: 10.w,
-                                    height: 10.h,
+                                    width: 7.w,
+                                    height: 7.h,
                                     decoration: BoxDecoration(
                                         border:
-                                            Border.all(color: AppColors.orange),
+                                            Border.all(color: AppColors.green),
                                         shape: BoxShape.circle,
-                                        color: AppColors.white),
+                                        color: AppColors.lightgreen),
                                     child: Center(
                                         child: customText(
                                             text: "1",
                                             fontSize: 15,
-                                            textColor: AppColors.black)),
+                                            textColor: AppColors.green)),
                                   ),
                                   const SizedBox(
-                                      width: 30,
+                                      width: 20,
                                       child: Divider(
                                         height: 2,
                                         color:
                                             Color.fromARGB(255, 131, 130, 133),
                                       )),
                                   Container(
-                                    width: 10.w,
-                                    height: 10.h,
-                                    decoration: const BoxDecoration(
+                                    width: 7.w,
+                                    height: 7.h,
+                                    decoration: BoxDecoration(
+                                        border:
+                                            Border.all(color: AppColors.green),
+                                        shape: BoxShape.circle,
+                                        color: AppColors.lightgreen),
+                                    child: Center(
+                                        child: customText(
+                                            text: "2",
+                                            fontSize: 15,
+                                            textColor: AppColors.green)),
+                                  ),
+                                  const SizedBox(
+                                      width: 20,
+                                      child: Divider(
+                                        height: 2,
+                                        color:
+                                            Color.fromARGB(255, 131, 130, 133),
+                                      )),
+                                  Container(
+                                    width: 7.w,
+                                    height: 7.h,
+                                    decoration: BoxDecoration(
+                                      border:
+                                            Border.all(color: AppColors.orange),
                                         shape: BoxShape.circle,
                                         color: AppColors.white),
                                     child: Center(
                                         child: customText(
-                                            text: "2",
+                                            text: "3",
                                             fontSize: 15,
                                             textColor: AppColors.textGrey)),
                                   ),
@@ -181,7 +159,7 @@ class PersonalInfoPage extends HookWidget {
                           heightSpace(2),
                           CustomTextFormField(
                             validator: stringValidation,
-                            textEditingController: firstName,
+                            // textEditingController: firstName,
                             prefixIcon: Padding(
                               padding: const EdgeInsets.all(13.0),
                               child: SvgPicture.asset(
@@ -194,7 +172,7 @@ class PersonalInfoPage extends HookWidget {
                           heightSpace(2),
                           CustomTextFormField(
                             validator: stringValidation,
-                            textEditingController: lastName,
+                            // textEditingController: lastName,
                             prefixIcon: Padding(
                               padding: const EdgeInsets.all(13.0),
                               child: SvgPicture.asset(
@@ -230,7 +208,7 @@ class PersonalInfoPage extends HookWidget {
                               // ),
                               heightSpace(2),
                               CustomTextFormField(
-                                textEditingController: mechanicType,
+                                // textEditingController: mechanicType,
                                 validator: stringValidation,
                                 prefixIcon: Padding(
                                   padding: const EdgeInsets.all(13.0),
@@ -263,12 +241,12 @@ class PersonalInfoPage extends HookWidget {
                                   'Yoruba',
                                   'Pidgin',
                                 ],
-                                onChanged: onChanged,
+                                // onChanged: onChanged,
                               ),
                               heightSpace(2),
 
                               CustomTextFormField(
-                                textEditingController: otherLanguages,
+                                // textEditingController: otherLanguages,
                                 prefixIcon: Padding(
                                   padding: const EdgeInsets.all(13.0),
                                   child: SvgPicture.asset(
@@ -283,7 +261,7 @@ class PersonalInfoPage extends HookWidget {
                                 validator: stringValidation,
                                 label: "Tell us little about yourself",
                                 hasMaxline: true,
-                                textEditingController: description,
+                                // textEditingController: description,
                               ),
                               heightSpace(3),
                               Row(
@@ -294,7 +272,7 @@ class PersonalInfoPage extends HookWidget {
                                     width: MediaQuery.of(context).size.width * 0.6,
                                     child: AppButton(
                                       isActive: isValidated.value,
-                                      onTap: updateInfo,
+                                      // onTap: updateInfo,
                                       buttonText: "Save",
                                       isOrange: true,
                                       isSmall: true,

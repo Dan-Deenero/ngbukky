@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ngbuka/src/config/keys/app_routes.dart';
+import 'package:ngbuka/src/config/router/app_router.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
@@ -11,45 +14,88 @@ Widget card(
   String title,
   String subtitle,
   String image,
-) =>
-    Container(
-      padding: const EdgeInsets.only(top: 10),
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      width: double.infinity,
-      height: 8.h,
-      decoration: BoxDecoration(boxShadow: const [
-        BoxShadow(
-          color: Color.fromARGB(255, 223, 222, 222),
-          blurRadius: 1,
-          offset: Offset(1, 1), // Shadow position
-        ),
-      ], borderRadius: BorderRadius.circular(20), color: AppColors.white),
-      child: ListTile(
-        leading: SvgPicture.asset(
-          image,
-          width: 25,
-          height: 25,
-        ),
-        trailing: const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Icon(
-            Icons.arrow_forward_ios,
-            size: 20,
+  String route,
+  BuildContext context
+) =>  GestureDetector(
+  onTap: () {
+    context.push(route);
+  },
+  child:   Container(
+  
+          padding: const EdgeInsets.symmetric(vertical: 10),
+  
+          margin: const EdgeInsets.symmetric(vertical: 10),
+  
+          width: double.infinity,
+  
+          height: 10.h,
+  
+          decoration: BoxDecoration(boxShadow: const [
+  
+            BoxShadow(
+  
+              color: Color.fromARGB(255, 223, 222, 222),
+  
+              blurRadius: 1,
+  
+              offset: Offset(1, 1), // Shadow position
+  
+            ),
+  
+          ], borderRadius: BorderRadius.circular(20), color: AppColors.white),
+  
+          child: ListTile(
+  
+            leading: SvgPicture.asset(
+  
+              image,
+  
+              width: 25,
+  
+              height: 25,
+  
+            ),
+  
+            trailing: const Padding(
+  
+              padding: EdgeInsets.all(8.0),
+  
+              child: Icon(
+  
+                Icons.arrow_forward_ios,
+  
+                size: 20,
+  
+              ),
+  
+            ),
+  
+            title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+  
+              Flexible(
+  
+                child: customText(
+  
+                    text: title,
+  
+                    fontSize: 15,
+  
+                    textColor: AppColors.black,
+  
+                    fontWeight: FontWeight.bold),
+  
+              ),
+  
+              customText(
+  
+                  text: subtitle, fontSize: 12, textColor: AppColors.textColor)
+  
+            ]),
+  
           ),
+  
         ),
-        title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Flexible(
-            child: customText(
-                text: title,
-                fontSize: 15,
-                textColor: AppColors.black,
-                fontWeight: FontWeight.bold),
-          ),
-          customText(
-              text: subtitle, fontSize: 12, textColor: AppColors.textColor)
-        ]),
-      ),
-    );
+);
 
 class ProfileSettings extends StatelessWidget {
   const ProfileSettings({super.key});
@@ -110,13 +156,13 @@ class ProfileSettings extends StatelessWidget {
               ),
               heightSpace(5),
               card("Personal profile", "Edit your personal information",
-                  AppImages.nameIcon),
+                    AppImages.nameIcon, AppRoutes.personalInfoSettings, context),
               card("Business profile", "Edit your business information",
-                  AppImages.box),
+                  AppImages.box, AppRoutes.businessInfoSettings, context),
               card("Contact Ngbuka", "Edit your business information",
-                  AppImages.box),
+                  AppImages.box, AppRoutes.contactPage, context),
               card("Wallet", "Edit your business information",
-                  AppImages.contact),
+                  AppImages.contact, AppRoutes.bottomNav, context),
             ]),
           ),
         )

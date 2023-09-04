@@ -10,6 +10,7 @@ class AppImages {
   static const String thirdMan = "assets/images/pngs/third_man.png";
   static const String car = "assets/images/pngs/car-header.png";
   static const String tools = "assets/images/pngs/tools.png";
+  static const String setools = "assets/images/pngs/setTools.png";
   static const String logoBlue = "assets/images/pngs/logo-blue.png";
   static const String notification = "assets/images/svgs/notification.svg";
   static const String homeBackground = "assets/images/pngs/home-background.png";
@@ -38,4 +39,6 @@ class AppImages {
   static const String tick = "assets/images/svgs/tick.svg";
   static const String createAccount = "assets/images/svgs/create-account.svg";
   static const String edit = "assets/images/svgs/edit.svg";
+  static const String googleText = "assets/images/svgs/google_text.svg";
+  static const String googleLocs = "assets/images/svgs/google-locs.svg";
 }

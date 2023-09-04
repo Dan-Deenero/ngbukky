@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
@@ -78,15 +79,47 @@ Widget card(String title, String subtitle, String number, String color) =>
           customText(
               text: subtitle, fontSize: 12, textColor: AppColors.textColor)
         ]),
-      ), 
+      ),
     );
 
 class Bookings extends HookWidget {
-  const Bookings({super.key});
+  static final MechanicRepo _mechanicRepo = MechanicRepo();
+  
+
+  Bookings({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final pending = useState<int?>(0);
+    final declined = useState<int?>(0);
+    final completed = useState<int?>(0);
+    final accepted = useState<int?>(0);
+    final rejected = useState<int?>(0);
+    final bargaining = useState<int?>(0);
+    final approved = useState<int?>(0);
+    final disapproved = useState<int?>(0);
+    final awaitingPayment = useState<int?>(0);
+
+    getBookingsInfo() {
+      _mechanicRepo.getStatisticsInfo().then((value) {
+        pending.value = value.pENDING;
+        declined.value = value.dECLINED;
+        completed.value = value.cOMPLETED;
+        accepted.value = value.aCCEPTED;
+        rejected.value = value.rEJECTED;
+        bargaining.value = value.bARGAINING;
+        approved.value = value.aPPROVED;
+        disapproved.value = value.dISAPPROVED;
+        awaitingPayment.value = value.aWAITINGPAYMENT;
+      });
+    }
+
+
     final tabIndex = useState<int>(0);
+    useEffect(() {
+      getBookingsInfo();
+      return null;
+    }, []);
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -121,10 +154,9 @@ class Bookings extends HookWidget {
             Container(
               height: 2.h,
               decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: AppColors.borderGrey),
-                )
-              ),
+                  border: Border(
+                top: BorderSide(color: AppColors.borderGrey),
+              )),
             ),
             Container(
               height: 40,
@@ -168,8 +200,21 @@ class Bookings extends HookWidget {
                 ],
               ),
             ),
-            const Expanded(
-              child: TabBarView(children: [InspectionBookings(), Quotes()]),
+            Expanded(
+              child: TabBarView(children: [
+                InspectionBookings(
+                  pending: pending.value,
+                  declined: declined.value,
+                  completed: completed.value,
+                  accepted: accepted.value,
+                  rejected: rejected.value,
+                  bargaining: bargaining.value,
+                  approved: approved.value,
+                  disapproved: disapproved.value,
+                  awaitingPayment: awaitingPayment.value,
+                ),
+                Quotes()
+              ]),
             )
           ],
         ),
@@ -179,7 +224,27 @@ class Bookings extends HookWidget {
 }
 
 class InspectionBookings extends StatelessWidget {
-  const InspectionBookings({super.key});
+  final int? pending;
+  final int? declined;
+  final int? completed;
+  final int? accepted;
+  final int? rejected;
+  final int? bargaining;
+  final int? approved;
+  final int? disapproved;
+  final int? awaitingPayment;
+
+  const InspectionBookings(
+      {super.key,
+      this.pending,
+      this.declined,
+      this.completed,
+      this.accepted,
+      this.rejected,
+      this.bargaining,
+      this.approved,
+      this.disapproved,
+      this.awaitingPayment});
 
   @override
   Widget build(BuildContext context) {
@@ -205,7 +270,7 @@ class InspectionBookings extends StatelessWidget {
                           fontSize: 12,
                           textColor: AppColors.textGrey),
                       customText(
-                          text: "0",
+                          text: "$approved",
                           fontSize: 25,
                           textColor: AppColors.black,
                           fontWeight: FontWeight.bold),
@@ -236,7 +301,7 @@ class InspectionBookings extends StatelessWidget {
                           fontSize: 12,
                           textColor: AppColors.textGrey),
                       customText(
-                          text: "0",
+                          text: "$disapproved",
                           fontSize: 25,
                           textColor: AppColors.black,
                           fontWeight: FontWeight.bold),
@@ -259,38 +324,38 @@ class InspectionBookings extends StatelessWidget {
             heightSpace(2),
             GestureDetector(
               onTap: () => context.push(AppRoutes.bookingAlert),
-              child: card("New booking alerts", "New inspection bookings", "0",
+              child: card("New booking alerts", "New inspection bookings", "$pending",
                   "orange"),
             ),
             heightSpace(2),
             GestureDetector(
               onTap: () => context.push(AppRoutes.acceptedBooking),
               child: card("Accepted booking",
-                  "You have accepted these inspection bookings", "1", "orange"),
+                  "You have accepted these inspection bookings", "$accepted", "orange"),
             ),
             heightSpace(2),
             card("Pending client approval",
-                "You have accepted these inspection bookings", "1", "orange"),
+                "You have accepted these inspection bookings", "$bargaining", "orange"),
             heightSpace(2),
             GestureDetector(
               onTap: () => context.push(AppRoutes.paymentRequest),
               child: card("Payment request",
-                  "You have accepted these inspection bookings", "1", "grey"),
+                  "You have accepted these inspection bookings", "$awaitingPayment", "grey"),
             ),
             heightSpace(2),
             GestureDetector(
               onTap: () => context.push(AppRoutes.completedBooking),
               child: card("Completed",
-                  "You have accepted these inspection bookings", "30", "green"),
+                  "You have accepted these inspection bookings", "$completed", "green"),
             ),
             heightSpace(2),
             GestureDetector(
               onTap: () => context.push(AppRoutes.paymentDeclined),
               child: card("Payment declined",
-                  "You have accepted these inspection bookings", "2", "red"),
+                  "You have accepted these inspection bookings", "$declined", "red"),
             ),
             heightSpace(2),
-            card("Rejected", "You have accepted these inspection bookings", "4",
+            card("Rejected", "You have accepted these inspection bookings", "$rejected",
                 "red"),
           ],
         ),

@@ -6,15 +6,42 @@ import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
 class HomeView extends HookWidget {
+  static final MechanicRepo _mechanicRepo = MechanicRepo();
+
   const HomeView({super.key});
+
+  
 
   @override
   Widget build(BuildContext context) {
+
+    final pending = useState<int?>(0);
+    final declined = useState<int?>(0);
+    final completed = useState<int?>(0);
+
+
+    getStatisticsInfo(){
+      _mechanicRepo.getStatisticsInfo().then((value){
+        pending.value = value.pENDING;
+        declined.value = value.dECLINED;
+        completed.value = value.cOMPLETED;
+      } );
+    } 
+
+
+
+
     final tabIndex = useState<int>(0);
+
+    useEffect(() {
+      getStatisticsInfo();
+      return null;
+    }, []);
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -68,7 +95,7 @@ class HomeView extends HookWidget {
                           textColor: AppColors.black),
                       heightSpace(2),
                       customText(
-                          text: "4", fontSize: 24, textColor: AppColors.black),
+                          text: "${pending.value}", fontSize: 24, textColor: AppColors.black),
                       heightSpace(2),
                       customText(
                           text: "Inspection and quote",
@@ -92,7 +119,7 @@ class HomeView extends HookWidget {
                               textColor: AppColors.black),
                           heightSpace(1),
                           customText(
-                              text: "10",
+                              text: "${completed.value}",
                               fontSize: 20,
                               textColor: AppColors.black),
                           heightSpace(1),
@@ -125,7 +152,7 @@ class HomeView extends HookWidget {
                               textColor: AppColors.black),
                           heightSpace(1),
                           customText(
-                              text: "10",
+                              text: "${declined.value}",
                               fontSize: 20,
                               textColor: AppColors.red),
                           heightSpace(1),

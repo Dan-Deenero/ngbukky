@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/domain/data/otp_model.dart';
 import 'package:ngbuka/src/features/presentation/views/business_info/business_info.dart';
+import 'package:ngbuka/src/features/presentation/views/business_info/business_info_settings.dart';
 import 'package:ngbuka/src/features/presentation/views/business_info/business_location.dart';
 import 'package:ngbuka/src/features/presentation/views/main_auth/create_account.dart';
 import 'package:ngbuka/src/features/presentation/views/main_auth/forgot_pass_phone.dart';
@@ -24,9 +25,19 @@ import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/wallet_hi
 import 'package:ngbuka/src/features/presentation/views/notifications/notification.dart';
 import 'package:ngbuka/src/features/presentation/views/onboarding/account_selection.dart';
 import 'package:ngbuka/src/features/presentation/views/onboarding/onboarding.dart';
+import 'package:ngbuka/src/features/presentation/views/onboarding/onboarding2.dart';
 import 'package:ngbuka/src/features/presentation/views/onboarding/splashscreen.dart';
 import 'package:ngbuka/src/features/presentation/views/personal_info/enterprise.dart';
+import 'package:ngbuka/src/features/presentation/views/personal_info/personal_info.dart';
 import 'package:ngbuka/src/features/presentation/views/personal_info/setup.dart';
+import 'package:ngbuka/src/features/presentation/views/profile_settings/contact_page.dart';
+import 'package:ngbuka/src/features/presentation/views/profile_settings/profile_page.dart';
+import 'package:ngbuka/src/features/presentation/views/spare_part/auth/spare_login.dart';
+import 'package:ngbuka/src/features/presentation/views/spare_part/dealer_info/part_business_info.dart';
+import 'package:ngbuka/src/features/presentation/views/spare_part/dealer_info/spare_personal_info.dart';
+import 'package:ngbuka/src/features/presentation/views/spare_part/dealer_info/spear_part_setup.dart';
+import 'package:ngbuka/src/features/presentation/views/spare_part/dealer_info/store_info.dart';
+import 'package:ngbuka/src/features/presentation/views/spare_part/spare_bottom_nav.dart';
 
 GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
@@ -75,9 +86,25 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
           name: AppRoutes.personalInfo,
           builder: (_, state) => const PersonalInfoPage()),
       GoRoute(
+          path: AppRoutes.profileSettings,
+          name: AppRoutes.profileSettings,
+          builder: (_, state) => const ProfileSettings()),
+      GoRoute(
+          path: AppRoutes.personalInfoSettings,
+          name: AppRoutes.personalInfoSettings,
+          builder: (_, state) => const PersonalInfoSettings()),
+      GoRoute(
           path: AppRoutes.businessInfo,
           name: AppRoutes.businessInfo,
           builder: (_, state) => const BusinessInfoPage()),
+      GoRoute(
+          path: AppRoutes.businessInfoSettings,
+          name: AppRoutes.businessInfoSettings,
+          builder: (_, state) => const BusinessInfoSettings()),
+      GoRoute(
+          path: AppRoutes.contactPage,
+          name: AppRoutes.contactPage,
+          builder: (_, state) => const ContactPage()),
       GoRoute(
           path: AppRoutes.bottomNav,
           name: AppRoutes.bottomNav,
@@ -134,4 +161,36 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
           path: AppRoutes.selectAccount,
           name: AppRoutes.selectAccount,
           builder: (_, state) => const SelectAccount()),
+      GoRoute(
+          path: AppRoutes.boarding1,
+          name: AppRoutes.boarding1,
+          builder: (_, state) => const Boarding1()),
+      GoRoute(
+          path: AppRoutes.boarding2,
+          name: AppRoutes.boarding2,
+          builder: (_, state) => const Boarding2()),
+      GoRoute(
+          path: AppRoutes.spareLogin,
+          name: AppRoutes.spareLogin,
+          builder: (_, state) => const SpareLoginView()),
+      GoRoute(
+          path: AppRoutes.spareBottomNav,
+          name: AppRoutes.spareBottomNav,
+          builder: (_, state) => const BottomNavBarView()),
+      GoRoute(
+          path: AppRoutes.spareSetup,
+          name: AppRoutes.spareSetup,
+          builder: (_, state) => const SpearSetupPage()),
+      GoRoute(
+          path: AppRoutes.spareStoreInfo,
+          name: AppRoutes.spareStoreInfo,
+          builder: (_, state) => const SpareStoreInfo()),
+      GoRoute(
+          path: AppRoutes.sparePersonalInfo,
+          name: AppRoutes.sparePersonalInfo,
+          builder: (_, state) => const SparePersonalInfo()),
+      GoRoute(
+          path: AppRoutes.spareBusinessInfo,
+          name: AppRoutes.spareBusinessInfo,
+          builder: (_, state) => const SpareBusinessInfo()),
     ]);
