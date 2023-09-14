@@ -9,12 +9,16 @@ class AppDropdown extends StatefulWidget {
   final String? Function(String?)? validator;
   final String label;
   final Widget? prefixIcon;
+  final String? value;
+  final bool isValue;
   const AppDropdown(
       {super.key,
       this.validator,
       this.prefixIcon,
       required this.dropdownList,
       required this.label,
+      this.value,
+      required this.isValue,
       this.onChange});
 
   @override
@@ -30,11 +34,11 @@ class _AppDropdownState extends State<AppDropdown> {
       children: [
         customText(
             text: widget.label, fontSize: 14, textColor: AppColors.textColor),
-        heightSpace(2),
+        heightSpace(1),
         SizedBox(
           height: 75,
           child: DropdownButtonFormField(
-              value: widget.dropdownList?.first,
+              value: widget.isValue ? widget.value : widget.dropdownList!.first,
               validator: widget.validator,
               decoration: InputDecoration(
                   prefixIcon: widget.prefixIcon,

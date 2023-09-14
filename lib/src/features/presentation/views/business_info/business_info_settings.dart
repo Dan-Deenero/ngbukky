@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import 'package:ngbuka/src/domain/data/city_lga.dart';
 import 'package:ngbuka/src/domain/data/services_model.dart';
 import 'package:ngbuka/src/domain/data/user_model.dart';
 import 'package:ngbuka/src/domain/repository/auth_repository.dart';
+import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_dropdown.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -41,24 +43,27 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
   List<String> carsList = [];
 
   getBusinessProfile() {
-      _authRepo.getMechanicProfile().then((value) {
-        businessName.text = value.businessName!;
-        cac.text = value.cacNumber!;
-        address.text = value.address!;
-        // carsList= value.!;
-        // serviceList = value.services!;
-        // newItems = value.about!;
-      });
-    }
+    _authRepo.getMechanicProfile().then((value) {
+      String availabilityString = jsonEncode(value.availability!);
+      List<Services> services = value.services!;
+      businessName.text = value.businessName!;
+      cac.text = value.cacNumber!;
+      address.text = value.address!;
+      cityController.text = value.city!;
+      lgaController.text = value.lga!;
+      stateController.text = value.state!;
 
+      // carsList= value.!;
+      // selectedServiceList = services.cast<String>();
+      // workingHourController.text = availabilityString;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final loading = ref.watch(isLoading);
     // final userModel = useState<UserModel?>(null);
     final workingHour = ref.watch(stateWorkingHours);
-
-    
 
     workingHours() {
       saveData() {
@@ -353,6 +358,8 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                 textColor: AppColors.textColor),
                             heightSpace(1),
                             AppDropdown(
+                              isValue: true,
+                              value: stateController.text,
                               validator: (val) {
                                 if (val == "select") {
                                   return "Select a state";
@@ -376,12 +383,28 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                             Column(
                               children: [
                                 AppDropdown(
+                                    isValue: true,
+                                    value: cityController.text,
+                                    validator: (val) {
+                                      if (val == "select") {
+                                        return "Select a state";
+                                      }
+                                      return null;
+                                    },
                                     dropdownList: cityState,
                                     label: "City",
                                     onChange: (val) =>
                                         cityController.text = val.toString()),
                                 heightSpace(1),
                                 AppDropdown(
+                                    isValue: true,
+                                    value: lgaController.text,
+                                    validator: (val) {
+                                      if (val == "select") {
+                                        return "Select a state";
+                                      }
+                                      return null;
+                                    },
                                     dropdownList: lgaState,
                                     label: "LGA",
                                     onChange: (val) =>
@@ -418,7 +441,6 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
       );
     }
 
-    
     return Scaffold(
       backgroundColor: AppColors.scaffoldColor,
       body: loading
@@ -472,46 +494,18 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Column(children: [
-                        heightSpace(2),
+                        heightSpace(4),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             customText(
                                 text: "Business information",
+                                fontWeight: FontWeight.w700,
                                 fontSize: 18,
                                 textColor: AppColors.primary),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 10.w,
-                                  height: 10.h,
-                                  decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: AppColors.white),
-                                  child: Center(
-                                      child: customText(
-                                          text: "1",
-                                          fontSize: 15,
-                                          textColor: AppColors.black)),
-                                ),
-                                widthSpace(8),
-                                Container(
-                                  width: 10.w,
-                                  height: 10.h,
-                                  decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: AppColors.white),
-                                  child: Center(
-                                      child: customText(
-                                          text: "2",
-                                          fontSize: 15,
-                                          textColor: AppColors.textGrey)),
-                                ),
-                              ],
-                            )
                           ],
                         ),
-                        heightSpace(2),
+                        heightSpace(4),
                         CustomTextFormField(
                           textEditingController: businessName,
                           label: "Business name",
@@ -548,27 +542,37 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                           label: "Location of your business",
                           hintText: "Enter location",
                         ),
-                        // heightSpace(2),
-                        // CustomTextFormField(
-                        //     label: "Business email (optional)",
-                        //     hintText: "johndoe@gmail.com",
-                        //     prefixIcon: Padding(
-                        //       padding: const EdgeInsets.all(13.0),
-                        //       child: SvgPicture.asset(
-                        //         AppImages.emailIcon,
-                        //       ),
-                        //     )),
                         heightSpace(2),
+
+                        Padding(
+                          padding: const EdgeInsets.only(),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              GestureDetector(
+                                onTap: () {},
+                                child: Row(
+                                  children: [
+                                    customText(
+                                      text: 'Use my present location',
+                                      fontSize: 14,
+                                      textColor: AppColors.orange,
+                                      textAlignment: TextAlign.right,
+                                    ),
+                                    widthSpace(2  ),
+                                    SvgPicture.asset(AppImages.googleText),
+                                    widthSpace(1),
+                                    SvgPicture.asset(AppImages.googleLocs),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        heightSpace(3),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // customText(
-                            //     text: "Business phone no (optional)",
-                            //     fontSize: 14,
-                            //     textColor: AppColors.primary),
-                            // heightSpace(2),
-                            // const CustomPhoneField(),
-                            // heightSpace(2),
                             customText(
                                 text: "What cars are you familiar with?",
                                 fontSize: 14,
@@ -584,28 +588,21 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                               ),
                               selectedItems: const [
                                 'None',
-                                'Air conditioning',
-                                'Battery Engineering',
-                                'Customer Service',
-                                'Detail orientation',
-                                'Diesel Equipment',
-                                'Electrical repair',
-                                'Electrical wiring',
-                                'Others'
+                                'Toyota',
+                                'Honda',
+                                'Ford',
+                                'BMW',
+                                'Audi',
+                                'Lexus',
+                                'Nissan',
+                                'Mercedes-Benz',
+                                'Volkswagen',
+                                'Tesla',
+                                'Chevrolet'
+                                    'Others'
                               ],
                               // onChanged: onChanged,
                             ),
-                            heightSpace(2),
-                            CustomTextFormField(
-                                textEditingController: carsFamiliar,
-                                label: "Other cars",
-                                hintText: "Separate with a comma",
-                                prefixIcon: Padding(
-                                  padding: const EdgeInsets.all(13.0),
-                                  child: SvgPicture.asset(
-                                    AppImages.carIcon,
-                                  ),
-                                )),
                             heightSpace(2),
                             customText(
                                 text: "List of Services",
@@ -613,6 +610,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                 textColor: AppColors.black),
                             heightSpace(1),
                             AppDropdDownSearch(
+                              listOfSelectedItems: selectedServiceList,
                               onChanged: (val) {
                                 selectedServiceList = val!;
                                 log(val.toString());
@@ -628,21 +626,11 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                               selectedItems: serviceList,
                               // onChanged: onChanged,
                             ),
-                            heightSpace(2),
-                            CustomTextFormField(
-                                textEditingController: serviceController,
-                                label: "Other servces",
-                                hintText: "separate with a comma",
-                                prefixIcon: Padding(
-                                  padding: const EdgeInsets.all(13.0),
-                                  child: SvgPicture.asset(
-                                    AppImages.serviceIcon,
-                                  ),
-                                )),
                             heightSpace(4),
                             customText(
                                 text: "Availabiity",
-                                fontSize: 14,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
                                 textColor: AppColors.black),
                             heightSpace(2),
                             CustomTextFormField(
@@ -660,34 +648,6 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                             heightSpace(3),
                             Row(
                               children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      height: 13.h,
-                                      width: 13.w,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: AppColors.textGrey),
-                                          color:
-                                              AppColors.white.withOpacity(.5),
-                                          shape: BoxShape.circle),
-                                      child: const Padding(
-                                        padding: EdgeInsets.only(left: 7.0),
-                                        child: Center(
-                                            child: Icon(
-                                          Icons.arrow_back_ios,
-                                          color: AppColors.textGrey,
-                                        )),
-                                      ),
-                                    ),
-                                    widthSpace(4),
-                                    customText(
-                                        text: "Go back",
-                                        fontSize: 15,
-                                        textColor: AppColors.textGrey),
-                                    widthSpace(4),
-                                  ],
-                                ),
                                 Expanded(
                                   child: AppButton(
                                     onTap: updateBusinessProfile,

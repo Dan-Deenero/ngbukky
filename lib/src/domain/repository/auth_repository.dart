@@ -37,7 +37,7 @@ class AuthRepo {
     return UserModel();
   }
 
-  Future<UserModel> UpdateMechanicProfile() async {
+  Future<UserModel> updateMechanicProfile() async {
     final response =
         await ApiClient.get(Endpoints.getProfileMechanic, useToken: true);
     if (response.status == 200) {
@@ -95,6 +95,15 @@ class AuthRepo {
     return false;
   }
 
+  Future<bool> signOut() async {
+    final response =
+        await ApiClient.patch(Endpoints.logout, body: null, useToken: true);
+    if (response.status == 200) {
+      return true;
+    }
+    return false;
+  }
+
   Future<bool> verifyPasswordOTP(Map<String, String> body) async {
     final response = await ApiClient.post(Endpoints.resetOTPVerify,
         body: body, useToken: true);
@@ -106,4 +115,5 @@ class AuthRepo {
     }
     return false;
   }
+
 }

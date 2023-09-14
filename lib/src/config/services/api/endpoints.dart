@@ -2,6 +2,7 @@ class Endpoints {
   static const String baseURL = "http://23.234.211.147/api/v1/";
   static const String register = "auth/register";
   static const String login = "auth/login";
+  static const String logout = "auth/logout";
   static const String verifyOTP = "auth/verify";
   static const String resetPassword = "auth/reset-password";
   static const String resetOTPVerify = "auth/reset-password/verify";
@@ -12,4 +13,6 @@ class Endpoints {
   static const String getLocation = 'location/sub-domains';
   static const String updateBusiness = 'mechanic/business-profile';
   static const String getStatisticsInfo = 'mechanic/summary?type=quote-request';
+  static const String getAllBooking = 'mechanic/bookings';
+  // static const String getOneBooking = 'mechanic/bookings/id';
 }

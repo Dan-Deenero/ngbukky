@@ -18,13 +18,13 @@ class LoginView extends HookWidget {
   static final email = TextEditingController();
   static final password = TextEditingController();
   static final AuthRepo _authRepo = AuthRepo();
+  static final formKey = GlobalKey<FormState>();
   const LoginView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final isChecked = useState<bool>(false);
+    final isChecked = useState<bool>(true);
     final isActive = useState<bool>(false);
-    final formKey = GlobalKey<FormState>();
     Color getColor(Set<MaterialState> states) {
       const Set<MaterialState> interactiveStates = <MaterialState>{
         MaterialState.pressed,
@@ -45,16 +45,14 @@ class LoginView extends HookWidget {
       };
       LoginModel result = await _authRepo.loginEmail(data);
       if(context.mounted){
-        if (result.user?.mechanicType == null) {
-            context.push(AppRoutes.personalInfo);
-
-          // if (context.mounted) {
-          //   context.push(AppRoutes.bottomNav);
-          // }
-        }else if(result.user?.businessName == null){
-          context.push(AppRoutes.businessInfo);
-        }else{
-          context.push(AppRoutes.bottomNav);
+        if(result.user != null){
+          if (result.user?.mechanicType == null) {
+              context.go(AppRoutes.personalInfo);
+          }else if(result.user?.businessName == null){
+            context.go(AppRoutes.businessInfo);
+          }else{
+            context.go(AppRoutes.bottomNav);
+          }
         }
      }
     }
@@ -99,7 +97,7 @@ class LoginView extends HookWidget {
                   Padding( 
                       padding: const EdgeInsets.only(right: 10),
                       child: GestureDetector(
-                          onTap: () => context.push(AppRoutes.boarding1),
+                          onTap: () => context.push(AppRoutes.createAccount),
                           child: SvgPicture.asset(AppImages.createAccount)))
                 ],
               ),
@@ -111,6 +109,7 @@ class LoginView extends HookWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Form(
           key: formKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: () {
             isActive.value = formKey.currentState!.validate();
           },

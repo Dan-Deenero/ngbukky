@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
+import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/data/otp_model.dart';
 import 'package:ngbuka/src/features/presentation/views/business_info/business_info.dart';
 import 'package:ngbuka/src/features/presentation/views/business_info/business_info_settings.dart';
@@ -20,6 +21,7 @@ import 'package:ngbuka/src/features/presentation/views/mechanic/payment_declined
 import 'package:ngbuka/src/features/presentation/views/mechanic/payment_request.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/quote_request.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/send_quote.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/view_accepted_booking.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/history_detail.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/wallet_history.dart';
 import 'package:ngbuka/src/features/presentation/views/notifications/notification.dart';
@@ -30,6 +32,7 @@ import 'package:ngbuka/src/features/presentation/views/onboarding/splashscreen.d
 import 'package:ngbuka/src/features/presentation/views/personal_info/enterprise.dart';
 import 'package:ngbuka/src/features/presentation/views/personal_info/personal_info.dart';
 import 'package:ngbuka/src/features/presentation/views/personal_info/setup.dart';
+import 'package:ngbuka/src/features/presentation/views/profile_settings/add_wallet_page.dart';
 import 'package:ngbuka/src/features/presentation/views/profile_settings/contact_page.dart';
 import 'package:ngbuka/src/features/presentation/views/profile_settings/profile_page.dart';
 import 'package:ngbuka/src/features/presentation/views/spare_part/auth/spare_login.dart';
@@ -116,7 +119,11 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
           path: AppRoutes.inspectionBooking,
           name: AppRoutes.inspectionBooking,
-          builder: (_, state) => const InspectionBooking()),
+          builder: (_, state) => InspectionBooking(id: state.extra as String,)),
+      GoRoute(
+          path: AppRoutes.viewAcceptedBooking,
+          name: AppRoutes.viewAcceptedBooking,
+          builder: (_, state) => ViewAcceptedBooking(id: state.extra as String,)),
       GoRoute(
           path: AppRoutes.sendQuotes,
           name: AppRoutes.sendQuotes,
@@ -193,4 +200,8 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
           path: AppRoutes.spareBusinessInfo,
           name: AppRoutes.spareBusinessInfo,
           builder: (_, state) => const SpareBusinessInfo()),
+      GoRoute(
+          path: AppRoutes.addWallet,
+          name: AppRoutes.addWallet,
+          builder: (_, state) =>  AddWalletPage()),
     ]);

@@ -12,7 +12,7 @@ void main() {
     const ProviderScope(child: Ngbuka())
   );
 }
-
+  
 class  Ngbuka extends StatelessWidget{
   static final _router = locator<GoRouter>();
   const Ngbuka({super.key});

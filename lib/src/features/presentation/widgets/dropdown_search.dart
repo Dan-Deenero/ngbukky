@@ -7,11 +7,13 @@ class AppDropdDownSearch extends StatelessWidget {
   final Widget? prefixIcon;
   final String? hintText;
   final List<String> selectedItems;
+  final List<String>? listOfSelectedItems;
   const AppDropdDownSearch(
       {super.key,
       this.hintText,
       this.onChanged,
       required this.selectedItems,
+      this.listOfSelectedItems,
       this.prefixIcon});
 
   @override
@@ -36,7 +38,7 @@ class AppDropdDownSearch extends StatelessWidget {
         popupProps: const PopupPropsMultiSelection.menu(
           showSelectedItems: true,
         ),
-        selectedItems: const [],
+        selectedItems: listOfSelectedItems ?? [],
         validator: (value) => (value!.isEmpty) ? 'Required' : null,
         onChanged: onChanged);
   }

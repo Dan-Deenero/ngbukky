@@ -15,6 +15,7 @@ class AppRoutes {
   static const String profileSettings = '/profileSettings';
   static const String businessInfo = '/business-info';
   static const String businessInfoSettings = '/business-info-settings';
+  static const String addWallet = '/add-wallet';
   static const String bottomNav = '/bottom-nav';
   static const String businessLocation = '/business-location';
   static const String inspectionBooking = '/inspection-booking';
@@ -24,6 +25,7 @@ class AppRoutes {
   static const String paymentRequest = '/payment-request';
   static const String completedBooking = '/completed-booking';
   static const String acceptedBooking = '/accepted-book';
+  static const String viewAcceptedBooking = '/view-accepted-book';
   static const String paymentDeclined = '/payment-declined';
   static const String notification = '/notification';
   static const String walletHistory = '/wallet-history';

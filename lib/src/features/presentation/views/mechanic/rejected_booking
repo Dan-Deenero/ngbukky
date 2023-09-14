@@ -11,14 +11,14 @@ import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
-class AcceptedBooking extends StatefulWidget {
-  const AcceptedBooking({super.key});
+class RejectedBooking extends StatefulWidget {
+  const RejectedBooking({super.key});
 
   @override
-  State<AcceptedBooking> createState() => _AcceptedBookingState();
+  State<RejectedBooking> createState() => _RejectedBookingState();
 }
 
-class _AcceptedBookingState extends State<AcceptedBooking> {
+class _RejectedBookingState extends State<RejectedBooking> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
   List<BookingModel> _bookingHistory = [];
   bool isLoading = true;

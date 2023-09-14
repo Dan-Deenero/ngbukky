@@ -1,3 +1,5 @@
+
+
 String? dropdownValidation(String? string) =>
     string == "Select" ? "Select an item" : null;
 
@@ -20,7 +22,7 @@ String? emailValidation(String? email) {
 //   }
 
 String? passwordValidation(String? string) =>
-    string!.length < 6 ? 'Atleast 6 characters is expected' : null;
+    string!.length < 6 ? 'At least 6 characters is expected' : null;
 
 String? stringValidation(String? string) =>
     string!.length < 2 ? 'Atleast 2 characters is expected' : null;

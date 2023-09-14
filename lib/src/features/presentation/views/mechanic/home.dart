@@ -6,40 +6,55 @@ import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/repository/auth_repository.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
 class HomeView extends HookWidget {
   static final MechanicRepo _mechanicRepo = MechanicRepo();
+  static final AuthRepo _authRepo = AuthRepo();
 
   const HomeView({super.key});
 
-  
-
   @override
   Widget build(BuildContext context) {
-
     final pending = useState<int?>(0);
     final declined = useState<int?>(0);
     final completed = useState<int?>(0);
 
+    final name = useState<String?>('Damini');
 
-    getStatisticsInfo(){
-      _mechanicRepo.getStatisticsInfo().then((value){
+    var hour = DateTime.now().hour;
+    String greetings = 'good morning';
+
+    if (hour < 12) {
+      greetings = 'Good Morning';
+    } else if (hour < 17) {
+      greetings = 'Good Afternoon';
+    } else {
+      greetings = 'Good Evening';
+    }
+
+    getUserProfile() {
+      _authRepo.getMechanicProfile().then((value) {
+        name.value = value.lastname!;
+      });
+    }
+
+    getStatisticsInfo() {
+      _mechanicRepo.getStatisticsInfo().then((value) {
         pending.value = value.pENDING;
         declined.value = value.dECLINED;
         completed.value = value.cOMPLETED;
-      } );
-    } 
-
-
-
+      });
+    }
 
     final tabIndex = useState<int>(0);
 
     useEffect(() {
       getStatisticsInfo();
+      getUserProfile();
       return null;
     }, []);
     return DefaultTabController(
@@ -56,17 +71,22 @@ class HomeView extends HookWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  customText(
-                      text: "Good moring, Damini",
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      textColor: AppColors.black),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      customText(
+                          text: "$greetings, ${name.value}",
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          textColor: AppColors.black),
+                      bodyText("Great way to start your day "),
+                    ],
+                  ),
                   GestureDetector(
                       onTap: () => context.push(AppRoutes.notification),
                       child: SvgPicture.asset(AppImages.notification))
                 ],
               ),
-              bodyText("Great way to start your day "),
               heightSpace(2)
             ]),
           ),
@@ -78,13 +98,13 @@ class HomeView extends HookWidget {
             horizontal: 20,
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.fromLTRB(20, 50, 20, 40),
-                    height: 200,
+                    height: 208,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: AppColors.veryLightOrange),
@@ -95,7 +115,9 @@ class HomeView extends HookWidget {
                           textColor: AppColors.black),
                       heightSpace(2),
                       customText(
-                          text: "${pending.value}", fontSize: 24, textColor: AppColors.black),
+                          text: "${pending.value}",
+                          fontSize: 24,
+                          textColor: AppColors.black),
                       heightSpace(2),
                       customText(
                           text: "Inspection and quote",
@@ -106,71 +128,11 @@ class HomeView extends HookWidget {
                   widthSpace(3),
                   Column(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
-                        height: 100,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: AppColors.white),
-                        child: Column(children: [
-                          customText(
-                              text: "Completed Bookings",
-                              fontSize: 12,
-                              textColor: AppColors.black),
-                          heightSpace(1),
-                          customText(
-                              text: "${completed.value}",
-                              fontSize: 20,
-                              textColor: AppColors.black),
-                          heightSpace(1),
-                          Container(
-                            width: 90,
-                            height: 15,
-                            decoration: BoxDecoration(
-                                color: AppColors.green.withOpacity(.2),
-                                borderRadius: BorderRadius.circular(5)),
-                            child: Center(
-                              child: customText(
-                                  text: "This month",
-                                  fontSize: 10,
-                                  textColor: AppColors.black),
-                            ),
-                          )
-                        ]),
-                      ),
+                      BookingStatusDiv(completed, AppColors.black,
+                          AppColors.green, AppColors.white),
                       heightSpace(1),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
-                        height: 100,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: AppColors.containerOrange),
-                        child: Column(children: [
-                          customText(
-                              text: "Declined Bookings",
-                              fontSize: 12,
-                              textColor: AppColors.black),
-                          heightSpace(1),
-                          customText(
-                              text: "${declined.value}",
-                              fontSize: 20,
-                              textColor: AppColors.red),
-                          heightSpace(1),
-                          Container(
-                            width: 90,
-                            height: 15,
-                            decoration: BoxDecoration(
-                                color: AppColors.lightOrange.withOpacity(.2),
-                                borderRadius: BorderRadius.circular(5)),
-                            child: Center(
-                              child: customText(
-                                  text: "This month",
-                                  fontSize: 10,
-                                  textColor: AppColors.lightOrange),
-                            ),
-                          )
-                        ]),
-                      )
+                      BookingStatusDiv(declined, AppColors.red,
+                          AppColors.lightOrange, AppColors.containerOrange),
                     ],
                   )
                 ],
@@ -261,7 +223,7 @@ class HomeView extends HookWidget {
                     title: Padding(
                       padding: const EdgeInsets.only(top: 9),
                       child: customText(
-                          text: "Kelechi Amadi",
+                          text: "Toyota",
                           fontSize: 14,
                           textColor: AppColors.black,
                           fontWeight: FontWeight.bold),
@@ -366,7 +328,7 @@ class HomeView extends HookWidget {
                     title: Padding(
                       padding: const EdgeInsets.only(top: 9),
                       child: customText(
-                          text: "Kelechi Amadi",
+                          text: "Toyota",
                           fontSize: 14,
                           textColor: AppColors.black,
                           fontWeight: FontWeight.bold),
@@ -374,10 +336,24 @@ class HomeView extends HookWidget {
                     leading: SvgPicture.asset(AppImages.carIcon)),
               ),
               heightSpace(4),
-              customText(
-                  text: "Recent activities",
-                  fontSize: 15,
-                  textColor: AppColors.primary),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  customText(
+                      text: "Recent activities",
+                      fontSize: 15,
+                      textColor: AppColors.primary),
+                  Row(
+                    children: [
+                      customText(
+                          text: "See all",
+                          fontSize: 15,
+                          textColor: AppColors.primary),
+                      const Icon(Icons.arrow_forward)
+                    ],
+                  )
+                ],
+              ),
               heightSpace(2),
               Container(
                 height: 40,
@@ -480,7 +456,7 @@ class HomeView extends HookWidget {
                               ],
                             ),
                             title: customText(
-                                text: "Kelechi Amadi",
+                                text: "Kels2323",
                                 fontSize: 16,
                                 textColor: AppColors.black,
                                 fontWeight: FontWeight.bold),
@@ -501,6 +477,37 @@ class HomeView extends HookWidget {
           ),
         )),
       ),
+    );
+  }
+
+  Container BookingStatusDiv(
+      ValueNotifier<int?> completed, Color txtColor, monthColor, bgColor) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+      height: 100,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10), color: bgColor),
+      child: Column(children: [
+        customText(
+            text: "Completed Bookings",
+            fontSize: 12,
+            textColor: AppColors.black),
+        heightSpace(1),
+        customText(
+            text: "${completed.value}", fontSize: 20, textColor: txtColor),
+        heightSpace(1),
+        Container(
+          width: 90,
+          height: 15,
+          decoration: BoxDecoration(
+              color: monthColor.withOpacity(.2),
+              borderRadius: BorderRadius.circular(5)),
+          child: Center(
+            child: customText(
+                text: "This month", fontSize: 10, textColor: txtColor),
+          ),
+        )
+      ]),
     );
   }
 

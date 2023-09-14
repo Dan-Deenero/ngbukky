@@ -41,4 +41,8 @@ class AppImages {
   static const String edit = "assets/images/svgs/edit.svg";
   static const String googleText = "assets/images/svgs/google_text.svg";
   static const String googleLocs = "assets/images/svgs/google-locs.svg";
+  static const String logoutIcon = "assets/images/svgs/logout_icon.svg";
+  static const String accountDet = "assets/images/svgs/account_det.svg";
+  static const String bookingWarning = "assets/images/svgs/booking_warning.svg";
+  static const String cancelModal = "assets/images/svgs/cancel_modal.svg";
 }

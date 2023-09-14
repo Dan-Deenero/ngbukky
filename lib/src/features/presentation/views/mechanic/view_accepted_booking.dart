@@ -15,18 +15,18 @@ import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
 import '../../../../core/shared/colors.dart';
 
-class InspectionBooking extends StatefulWidget {
+class ViewAcceptedBooking extends StatefulWidget {
   final String id;
-  InspectionBooking({
+  ViewAcceptedBooking({
     super.key,
     required this.id,
   });
 
   @override
-  State<InspectionBooking> createState() => _InspectionBookingState();
+  State<ViewAcceptedBooking> createState() => _ViewAcceptedBookingState();
 }
 
-class _InspectionBookingState extends State<InspectionBooking> {
+class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
 
   bool isLoading = true;
@@ -254,12 +254,12 @@ class _InspectionBookingState extends State<InspectionBooking> {
               ),
             ),
             customText(
-                text: "View inspection booking",
+                text: "Accepted bookings",
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 textColor: AppColors.black),
             heightSpace(1),
-            bodyText("Accept or reject booking")
+            bodyText("Send quote or reject booking")
           ]),
         ),
       ),
@@ -395,7 +395,7 @@ class _InspectionBookingState extends State<InspectionBooking> {
                               borderRadius: BorderRadius.circular(25)),
                           child: Center(
                               child: customText(
-                                  text: "Reject",
+                                  text: "Complete",
                                   fontSize: 15,
                                   textColor: AppColors.black)),
                         ),
@@ -405,7 +405,7 @@ class _InspectionBookingState extends State<InspectionBooking> {
                         child: AppButton(
                           onTap: accept,
                           hasIcon: false,
-                          buttonText: "Accept",
+                          buttonText: "Send Quote",
                           isOrange: true,
                         ),
                       )

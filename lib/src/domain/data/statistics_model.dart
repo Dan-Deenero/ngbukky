@@ -34,15 +34,15 @@ class StatisticsModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['PENDING'] = this.pENDING;
-    data['ACCEPTED'] = this.aCCEPTED;
-    data['REJECTED'] = this.rEJECTED;
-    data['BARGAINING'] = this.bARGAINING;
-    data['APPROVED'] = this.aPPROVED;
-    data['DISAPPROVED'] = this.dISAPPROVED;
-    data['AWAITING_PAYMENT'] = this.aWAITINGPAYMENT;
-    data['DECLINED'] = this.dECLINED;
-    data['COMPLETED'] = this.cOMPLETED;
+    data['PENDING'] = pENDING;
+    data['ACCEPTED'] = aCCEPTED;
+    data['REJECTED'] = rEJECTED;
+    data['BARGAINING'] = bARGAINING;
+    data['APPROVED'] = aPPROVED;
+    data['DISAPPROVED'] = dISAPPROVED;
+    data['AWAITING_PAYMENT'] = aWAITINGPAYMENT;
+    data['DECLINED'] = dECLINED;
+    data['COMPLETED'] = cOMPLETED;
     return data;
   }
 }

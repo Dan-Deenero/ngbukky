@@ -84,7 +84,6 @@ Widget card(String title, String subtitle, String number, String color) =>
 
 class Bookings extends HookWidget {
   static final MechanicRepo _mechanicRepo = MechanicRepo();
-  
 
   Bookings({super.key});
 
@@ -100,7 +99,7 @@ class Bookings extends HookWidget {
     final disapproved = useState<int?>(0);
     final awaitingPayment = useState<int?>(0);
 
-    getBookingsInfo() {
+    getStatisticsInfo() {
       _mechanicRepo.getStatisticsInfo().then((value) {
         pending.value = value.pENDING;
         declined.value = value.dECLINED;
@@ -114,10 +113,9 @@ class Bookings extends HookWidget {
       });
     }
 
-
     final tabIndex = useState<int>(0);
     useEffect(() {
-      getBookingsInfo();
+      getStatisticsInfo();
       return null;
     }, []);
     return DefaultTabController(
@@ -126,31 +124,35 @@ class Bookings extends HookWidget {
         backgroundColor: AppColors.backgroundGrey,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(
-            10.h,
+            13.h,
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30),
+            padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 60),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  customText(
-                      text: "Bookings",
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      textColor: AppColors.black),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      customText(
+                          text: "Bookings",
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          textColor: AppColors.black),
+                      bodyText("View your bookings and Quotes "),
+                    ],
+                  ),
                   SvgPicture.asset(AppImages.notification)
                 ],
               ),
-              bodyText("View your bookings and Quotes "),
-              heightSpace(2)
             ]),
           ),
         ),
         body: Column(
           children: [
-            heightSpace(4),
+            heightSpace(1),
             Container(
               height: 2.h,
               decoration: const BoxDecoration(
@@ -159,6 +161,7 @@ class Bookings extends HookWidget {
               )),
             ),
             Container(
+              margin: EdgeInsets.symmetric(horizontal: 20),
               height: 40,
               width: double.infinity,
               decoration: BoxDecoration(
@@ -323,40 +326,64 @@ class InspectionBookings extends StatelessWidget {
             ),
             heightSpace(2),
             GestureDetector(
-              onTap: () => context.push(AppRoutes.bookingAlert),
-              child: card("New booking alerts", "New inspection bookings", "$pending",
-                  "orange"),
+              onTap: ()  => context.push(AppRoutes.bookingAlert),
+              child: card("New booking alerts", "New inspection bookings",
+                  "$pending", "orange"),
             ),
             heightSpace(2),
             GestureDetector(
               onTap: () => context.push(AppRoutes.acceptedBooking),
-              child: card("Accepted booking",
-                  "You have accepted these inspection bookings", "$accepted", "orange"),
+              child: card(
+                  "Accepted booking",
+                  "You have accepted these inspection bookings",
+                  "$accepted",
+                  "orange"),
             ),
             heightSpace(2),
-            card("Pending client approval",
-                "You have accepted these inspection bookings", "$bargaining", "orange"),
+            card(
+                "Pending client approval",
+                "Done with requirements, awaiting client approval",
+                "$bargaining",
+                "orange"),
             heightSpace(2),
             GestureDetector(
               onTap: () => context.push(AppRoutes.paymentRequest),
-              child: card("Payment request",
-                  "You have accepted these inspection bookings", "$awaitingPayment", "grey"),
+              child: card(
+                  "Payment request",
+                  "Done with requirements, awaiting client approval",
+                  "$awaitingPayment",
+                  "grey"),
             ),
             heightSpace(2),
             GestureDetector(
               onTap: () => context.push(AppRoutes.completedBooking),
-              child: card("Completed",
-                  "You have accepted these inspection bookings", "$completed", "green"),
+              child: card(
+                  "Completed",
+                  "Payment made and deal closed",
+                  "$completed",
+                  "green"),
+            ),
+            heightSpace(2),
+            GestureDetector(
+              onTap: () => context.push(AppRoutes.completedBooking),
+              child: card(
+                  "Booking rejected",
+                  "The client rejected your booking quote",
+                  "$completed",
+                  "green"),
             ),
             heightSpace(2),
             GestureDetector(
               onTap: () => context.push(AppRoutes.paymentDeclined),
-              child: card("Payment declined",
-                  "You have accepted these inspection bookings", "$declined", "red"),
+              child: card(
+                  "Payment declined",
+                  "The client declined these payment",
+                  "$declined",
+                  "red"),
             ),
             heightSpace(2),
-            card("Rejected", "You have accepted these inspection bookings", "$rejected",
-                "red"),
+            card("Rejected", "You rejected these booking quote",
+                "$rejected", "red"),
           ],
         ),
       ),

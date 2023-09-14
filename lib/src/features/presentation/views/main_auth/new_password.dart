@@ -29,7 +29,7 @@ class NewPassword extends HookWidget {
       bool result = await _authRepo.createNewPassword(data);
       if (result) {
         if (context.mounted) {
-          context.push(AppRoutes.newPassword);
+          context.push(AppRoutes.login);
         }
       }
     }

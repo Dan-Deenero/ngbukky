@@ -9,6 +9,7 @@ import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/domain/data/city_lga.dart';
 import 'package:ngbuka/src/domain/data/services_model.dart';
+import 'package:ngbuka/src/domain/repository/auth_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_dropdown.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -31,6 +32,8 @@ class BusinessInfoPage extends ConsumerStatefulWidget {
 class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
   List<String> serviceList = [];
   List<String> selectedServiceList = [];
+  static final AuthRepo _authRepo = AuthRepo();
+
   final formKey = GlobalKey<FormState>();
 
   List<String> carsList = [];
@@ -333,6 +336,8 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                                 textColor: AppColors.textColor),
                             heightSpace(1),
                             AppDropdown(
+                              isValue: false,
+                                value: stateController.text,
                               validator: (val) {
                                 if (val == "select") {
                                   return "Select a state";
@@ -356,12 +361,16 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                             Column(
                               children: [
                                 AppDropdown(
+                                  isValue: false,
+                                    value: cityController.text,
                                     dropdownList: cityState,
                                     label: "City",
                                     onChange: (val) =>
                                         cityController.text = val.toString()),
                                 heightSpace(1),
                                 AppDropdown(
+                                  isValue: false,
+                                  value: lgaController.text,
                                     dropdownList: lgaState,
                                     label: "LGA",
                                     onChange: (val) =>
@@ -563,13 +572,17 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                               ),
                               selectedItems: const [
                                 'None',
-                                'Air conditioning',
-                                'Battery Engineering',
-                                'Customer Service',
-                                'Detail orientation',
-                                'Diesel Equipment',
-                                'Electrical repair',
-                                'Electrical wiring',
+                                'Toyota',
+                                'Honda',
+                                'Ford',
+                                'BMW',
+                                'Audi',
+                                'Lexus',
+                                'Nissan',
+                                'Mercedes-Benz',
+                                'Volkswagen',
+                                'Tesla',
+                                'Chevrolet'
                                 'Others'
                               ],
                               // onChanged: onChanged,
@@ -670,6 +683,8 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                                 Expanded(
                                   child: AppButton(
                                     onTap: updateBusinessProfile,
+                                    // updateInfo();
+
                                     buttonText: "Save",
                                     isOrange: true,
                                     isSmall: true,
@@ -710,6 +725,18 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
   initState() {
     super.initState();
     getMechanicServices();
+  }
+
+  updateInfo() async {
+    var body = {
+      "cars": carsList + carsFamiliar.text.split(","),
+    };
+    bool result = await _authRepo.updateInfo(body);
+    if (result) {
+      if (context.mounted) {
+        context.push(AppRoutes.businessInfo);
+      }
+    }
   }
 
   updateBusinessProfile() async {

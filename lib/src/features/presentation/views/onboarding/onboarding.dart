@@ -72,7 +72,7 @@ class OnboardingScreen extends HookWidget {
                               onTap: () {
                                 locator<LocalStorageService>().saveDataToDisk(
                                     AppKeys.firstInstall, false);
-                                context.push(AppRoutes.createAccount);
+                                context.push(AppRoutes.boarding1);
                               }),
                           heightSpace(3),
                           haveanaccount()

@@ -208,6 +208,7 @@ class PersonalInfoSettings extends HookWidget {
                                   textColor: AppColors.primary),
                               heightSpace(1),
                               AppDropdDownSearch(
+                                listOfSelectedItems: languages,
                                 hintText: "What languages do you speak?",
                                 prefixIcon: Padding(
                                   padding: const EdgeInsets.all(13.0),

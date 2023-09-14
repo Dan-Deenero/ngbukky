@@ -56,6 +56,6 @@ class _SplashscreenState extends State<Splashscreen> {
   void initState() {
     super.initState();
 
-    Timer(const Duration(seconds: 3), () => context.push(AppRoutes.login));
+    Timer(const Duration(seconds: 3), () => context.go(AppRoutes.onboarding));
   }
 }
