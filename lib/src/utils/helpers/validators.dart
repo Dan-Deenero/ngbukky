@@ -26,3 +26,11 @@ String? passwordValidation(String? string) =>
 
 String? stringValidation(String? string) =>
     string!.length < 2 ? 'Atleast 2 characters is expected' : null;
+
+String? numericValidation(String? value) {
+  if (!RegExp(r"^[0-9]+$").hasMatch(value!)) {
+    return "Please enter a valid number"; 
+  }
+  
+  return null;
+}

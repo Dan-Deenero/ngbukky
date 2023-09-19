@@ -10,7 +10,6 @@ class AppDropdown extends StatefulWidget {
   final String label;
   final Widget? prefixIcon;
   final String? value;
-  final bool isValue;
   const AppDropdown(
       {super.key,
       this.validator,
@@ -18,7 +17,6 @@ class AppDropdown extends StatefulWidget {
       required this.dropdownList,
       required this.label,
       this.value,
-      required this.isValue,
       this.onChange});
 
   @override
@@ -38,7 +36,7 @@ class _AppDropdownState extends State<AppDropdown> {
         SizedBox(
           height: 75,
           child: DropdownButtonFormField(
-              value: widget.isValue ? widget.value : widget.dropdownList!.first,
+              value:  widget.dropdownList!.first,
               validator: widget.validator,
               decoration: InputDecoration(
                   prefixIcon: widget.prefixIcon,

@@ -26,7 +26,8 @@ class UserModel {
   List<String>? languages;
   bool? isActive;
   List<Services>? services;
-  List<String>? otherServices;
+  List<Services>? otherServices;
+  List<String>? cars;
   List<Availability>? availability;
 
   UserModel(
@@ -58,6 +59,7 @@ class UserModel {
       this.isActive,
       this.services,
       this.otherServices,
+      this.cars,
       this.availability});
 
   UserModel.fromJson(Map<String, dynamic> json) {
@@ -90,10 +92,16 @@ class UserModel {
     if (json['services'] != null) {
       services = <Services>[];
       json['services'].forEach((v) {
-        services!.add(new Services.fromJson(v));
+        services!.add(Services.fromJson(v));
       });
     }
-    otherServices = json['otherServices'].cast<String>();
+    if (json['otherServices'] != null) {
+      otherServices = <Services>[];
+      json['otherServices'].forEach((v) {
+        otherServices!.add(Services.fromJson(v));
+      });
+    }
+    cars = json['cars'].cast<String>();
     if (json['availability'] != null) {
       availability = <Availability>[];
       json['availability'].forEach((v) {
@@ -133,7 +141,11 @@ class UserModel {
     if (this.services != null) {
       data['services'] = this.services!.map((v) => v.toJson()).toList();
     }
-    data['otherServices'] = this.otherServices;
+    if (this.otherServices != null) {
+      data['otherServices'] =
+          this.otherServices!.map((v) => v.toJson()).toList();
+    }
+    // data['cars'] = this.cars;
     if (this.availability != null) {
       data['availability'] = this.availability!.map((v) => v.toJson()).toList();
     }

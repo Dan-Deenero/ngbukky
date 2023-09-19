@@ -336,7 +336,7 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                                 textColor: AppColors.textColor),
                             heightSpace(1),
                             AppDropdown(
-                              isValue: false,
+                              // isValue: false,
                                 value: stateController.text,
                               validator: (val) {
                                 if (val == "select") {
@@ -361,7 +361,7 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                             Column(
                               children: [
                                 AppDropdown(
-                                  isValue: false,
+                                  // isValue: false,
                                     value: cityController.text,
                                     dropdownList: cityState,
                                     label: "City",
@@ -369,7 +369,7 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                                         cityController.text = val.toString()),
                                 heightSpace(1),
                                 AppDropdown(
-                                  isValue: false,
+                                  // isValue: false,
                                   value: lgaController.text,
                                     dropdownList: lgaState,
                                     label: "LGA",

@@ -56,7 +56,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           onTap: widget.onTap,
           maxLines: widget.hasMaxline ? 8 : 1,
           cursorColor: AppColors.primary,
-          cursorWidth: 0.9,
+          cursorWidth: 0.2,
           onChanged: widget.onChanged,
           keyboardType: widget.keyboardType,
           controller: widget.textEditingController,

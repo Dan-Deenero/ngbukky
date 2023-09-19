@@ -26,7 +26,7 @@ class _RejectedBookingState extends State<RejectedBooking> {
   @override
   void initState() {
     super.initState();
-    _mechanicRepo.getAllBooking('accepted').then((value) => setState(() {
+    _mechanicRepo.getAllBooking('rejected').then((value) => setState(() {
           _bookingHistory = value;
           isLoading = false;
           print(_bookingHistory);
@@ -64,12 +64,12 @@ class _RejectedBookingState extends State<RejectedBooking> {
               ),
             ),
             customText(
-                text: "Accepted bookings",
+                text: "Rejected bookings",
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 textColor: AppColors.black),
             heightSpace(1),
-            bodyText("Send quote or reject booking")
+            bodyText("View all the bookings you rejected")
           ]),
         ),
       ),
@@ -82,6 +82,20 @@ class _RejectedBookingState extends State<RejectedBooking> {
                   padding: const EdgeInsets.all(10),
                   child: Wrap(
                     children: [
+                      if (_bookingHistory.isEmpty)
+                            Center(
+                              heightFactor: 3.5,
+                                child: Column(
+                              children: [
+                                SvgPicture.asset(AppImages.bookingWarning),
+                                customText(
+                                    text:
+                                        'You have not rejected any booking',
+                                    fontSize: 15,
+                                    textColor: AppColors.black)
+                              ],
+                            ))
+                      else
                       ..._bookingHistory.map((e) {
                         var dateString = e.date;
                         var dateTime = DateTime.parse(dateString!);
@@ -92,10 +106,11 @@ class _RejectedBookingState extends State<RejectedBooking> {
                             DateFormat('hh:mm a').format(dateTime);
                         return GestureDetector(
                           onTap: () {
-                            context.push(AppRoutes.viewAcceptedBooking,
+                            context.push(AppRoutes.viewRejectedBooking,
                                 extra: e.id);
                           },
                           child: Container(
+                            margin: const EdgeInsets.only(bottom: 10),
                             width: double.infinity,
                             height: 10.h,
                             decoration: BoxDecoration(
@@ -115,13 +130,13 @@ class _RejectedBookingState extends State<RejectedBooking> {
                                     height: 3.h,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
-                                        color: AppColors.backgroundGrey
-                                            .withOpacity(.3)),
+                                        color: AppColors.red
+                                            .withOpacity(.1)),
                                     child: Center(
                                       child: customText(
                                           text: "Accepted booking",
                                           fontSize: 10,
-                                          textColor: AppColors.green),
+                                          textColor: AppColors.red),
                                     ),
                                   )
                                 ]),

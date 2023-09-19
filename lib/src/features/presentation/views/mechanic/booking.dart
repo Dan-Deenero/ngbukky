@@ -85,7 +85,7 @@ Widget card(String title, String subtitle, String number, String color) =>
 class Bookings extends HookWidget {
   static final MechanicRepo _mechanicRepo = MechanicRepo();
 
-  Bookings({super.key});
+  const Bookings({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -340,17 +340,20 @@ class InspectionBookings extends StatelessWidget {
                   "orange"),
             ),
             heightSpace(2),
-            card(
-                "Pending client approval",
-                "Done with requirements, awaiting client approval",
-                "$bargaining",
-                "orange"),
+            GestureDetector(
+              onTap: () => context.push(AppRoutes.pendingQuoteApproval),
+              child: card(
+                  "Pending client approval",
+                  "Quote sent and awaiting client approval",
+                  "$bargaining",
+                  "orange"),
+            ),
             heightSpace(2),
             GestureDetector(
               onTap: () => context.push(AppRoutes.paymentRequest),
               child: card(
                   "Payment request",
-                  "Done with requirements, awaiting client approval",
+                  "I have requested for payment for this service",
                   "$awaitingPayment",
                   "grey"),
             ),
@@ -365,12 +368,12 @@ class InspectionBookings extends StatelessWidget {
             ),
             heightSpace(2),
             GestureDetector(
-              onTap: () => context.push(AppRoutes.completedBooking),
+              onTap: () => context.push(AppRoutes.bookingRejected),
               child: card(
                   "Booking rejected",
                   "The client rejected your booking quote",
-                  "$completed",
-                  "green"),
+                  "$disapproved",
+                  "red"),
             ),
             heightSpace(2),
             GestureDetector(
@@ -382,8 +385,11 @@ class InspectionBookings extends StatelessWidget {
                   "red"),
             ),
             heightSpace(2),
-            card("Rejected", "You rejected these booking quote",
-                "$rejected", "red"),
+            GestureDetector(
+              onTap: () => context.push(AppRoutes.rejectedBooking),
+              child: card("Rejected", "You rejected these booking quote",
+                  "$rejected", "red"),
+            ),
           ],
         ),
       ),

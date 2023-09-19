@@ -32,6 +32,7 @@ class AuthRepo {
     final response =
         await ApiClient.get(Endpoints.getProfileMechanic, useToken: true);
     if (response.status == 200) {
+      // log(response.entity);
       return UserModel.fromJson(response.entity);
     }
     return UserModel();

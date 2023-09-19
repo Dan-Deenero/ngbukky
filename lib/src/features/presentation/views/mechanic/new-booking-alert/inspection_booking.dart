@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
+import 'package:ngbuka/src/core/shared/colors.dart';
 import 'package:ngbuka/src/domain/data/acceptOrRejectBookingModel.dart';
 import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
@@ -13,7 +14,6 @@ import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
-import '../../../../core/shared/colors.dart';
 
 class InspectionBooking extends StatefulWidget {
   final String id;
@@ -33,6 +33,11 @@ class _InspectionBookingState extends State<InspectionBooking> {
 
   BookingModel? bookingModel;
 
+  var dateString;
+  var dateTime;
+  var formattedTime;
+  var formattedDate;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -41,27 +46,29 @@ class _InspectionBookingState extends State<InspectionBooking> {
           () {
             bookingModel = value;
             isLoading = false;
-          },
+            dateString = bookingModel!.date;
+            dateTime = DateTime.parse(dateString!);
+            formattedDate = DateFormat('E, d MMM y').format(dateTime);
+
+            formattedTime = DateFormat('hh:mm a').format(dateTime);
+                  },
         ));
   }
 
   // void resendOTP() async {
   @override
   Widget build(BuildContext context) {
-    var dateString = bookingModel!.date;
-    var dateTime = DateTime.parse(dateString!);
-    var formattedDate = DateFormat('E, d MMM y').format(dateTime);
-
-    var formattedTime = DateFormat('hh:mm a').format(dateTime);
+    
 
 
     acceptBooking() async {
       var body = {
         "action": "accepted",
       };
-      bool result = await _mechanicRepo.acceptOrReject(body, widget.id);
+      bool result = await _mechanicRepo.acceptOrRejectBooking(body, widget.id);
       if (result) {
         if (context.mounted) {
+          context.pop();
           context.push(AppRoutes.acceptedBooking);
           return;
         }
@@ -72,7 +79,7 @@ class _InspectionBookingState extends State<InspectionBooking> {
       var body = {
         "action": "rejected",
       };
-      bool result = await _mechanicRepo.acceptOrReject(body, widget.id);
+      bool result = await _mechanicRepo.acceptOrRejectBooking(body, widget.id);
       if (result) {
         if (context.mounted) {
           context.go(AppRoutes.bookingAlert);

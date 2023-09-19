@@ -4,6 +4,7 @@ import 'package:ngbuka/src/core/shared/colors.dart';
 
 class AppDropdDownSearch extends StatelessWidget {
   final String? Function(List<String>?)? onChanged;
+  final Widget? suffixIcon;
   final Widget? prefixIcon;
   final String? hintText;
   final List<String> selectedItems;
@@ -14,7 +15,8 @@ class AppDropdDownSearch extends StatelessWidget {
       this.onChanged,
       required this.selectedItems,
       this.listOfSelectedItems,
-      this.prefixIcon});
+      this.prefixIcon,
+      this.suffixIcon});
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +27,7 @@ class AppDropdDownSearch extends StatelessWidget {
             fillColor: AppColors.white,
             filled: true,
             prefixIcon: prefixIcon,
+            suffixIcon: suffixIcon,
             disabledBorder: const OutlineInputBorder(
                 borderSide: BorderSide(color: AppColors.textformGrey),
                 borderRadius: BorderRadius.all(Radius.circular(20))),

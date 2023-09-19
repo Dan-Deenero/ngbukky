@@ -12,16 +12,26 @@ import 'package:ngbuka/src/features/presentation/views/main_auth/login.dart';
 import 'package:ngbuka/src/features/presentation/views/main_auth/new_password.dart';
 import 'package:ngbuka/src/features/presentation/views/main_auth/select_account_type.dart';
 import 'package:ngbuka/src/features/presentation/views/main_auth/verify_account.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/accepted_booking.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/accepted-bookings/accepted_booking.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/accepted-bookings/view_accepted_booking.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/booking-rejected/booking_rejected.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/booking-rejected/inspection_details_br.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/booking.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/bottom_nav.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/completed_booking.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/inspection_booking.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/new_booking_alerts.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/payment_declined.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/payment_request.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/completed_booking/completed_booking.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/completed_booking/inspection_details.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/new-booking-alert/inspection_booking.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/new-booking-alert/new_booking_alerts.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/payment_declined/inspection_details_pd.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/payment_declined/payment_declined.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/payment_request/inspection_details_pr.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/payment_request/payment_request.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/pending_quote_approval/Inspection_details_pqa.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/pending_quote_approval/pending_quote_aproval.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/quote_request.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/send_quote.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/view_accepted_booking.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/rejected-bookings/rejected_booking.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/rejected-bookings/view_rejected_booking.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/send-quotes/send_quote.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/history_detail.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/wallet_history.dart';
 import 'package:ngbuka/src/features/presentation/views/notifications/notification.dart';
@@ -113,6 +123,10 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
           name: AppRoutes.bottomNav,
           builder: (_, state) => const BottomNavigationBarView()),
       GoRoute(
+          path: AppRoutes.bookings,
+          name: AppRoutes.bookings,
+          builder: (_, state) => Bookings()),
+      GoRoute(
           path: AppRoutes.businessLocation,
           name: AppRoutes.businessLocation,
           builder: (_, state) => const BusinessLocation()),
@@ -125,9 +139,33 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
           name: AppRoutes.viewAcceptedBooking,
           builder: (_, state) => ViewAcceptedBooking(id: state.extra as String,)),
       GoRoute(
+          path: AppRoutes.viewRejectedBooking,
+          name: AppRoutes.viewRejectedBooking,
+          builder: (_, state) => ViewRejectedBooking(id: state.extra as String,)),
+      GoRoute(
+          path: AppRoutes.bookingRejectedDetails,
+          name: AppRoutes.bookingRejectedDetails,
+          builder: (_, state) => BRInspectionDetails(id: state.extra as String,)),
+      GoRoute(
+          path: AppRoutes.paymentRequestDetails,
+          name: AppRoutes.paymentRequestDetails,
+          builder: (_, state) => PRInspectionDetails(id: state.extra as String,)),
+      GoRoute(
+          path: AppRoutes.paymentDeclinedDetails,
+          name: AppRoutes.paymentDeclinedDetails,
+          builder: (_, state) => PDInspectionDetails(id: state.extra as String,)),
+      GoRoute(
+          path: AppRoutes.completedBookingDetails,
+          name: AppRoutes.completedBookingDetails,
+          builder: (_, state) => CompletedInspectionDetails(id: state.extra as String,)),
+      GoRoute(
+          path: AppRoutes.pendingQuoteApprovalDetails,
+          name: AppRoutes.pendingQuoteApprovalDetails,
+          builder: (_, state) => PQAInspectionDetails(id: state.extra as String,)),
+      GoRoute(
           path: AppRoutes.sendQuotes,
           name: AppRoutes.sendQuotes,
-          builder: (_, state) => const SendQuote()),
+          builder: (_, state) =>  SendQuote(id: state.extra as String,)),
       GoRoute(
           path: AppRoutes.quotesRequest,
           name: AppRoutes.quotesRequest,
@@ -149,9 +187,21 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
           name: AppRoutes.acceptedBooking,
           builder: (_, state) => const AcceptedBooking()),
       GoRoute(
+          path: AppRoutes.rejectedBooking,
+          name: AppRoutes.rejectedBooking,
+          builder: (_, state) => const RejectedBooking()),
+      GoRoute(
+          path: AppRoutes.bookingRejected,
+          name: AppRoutes.bookingRejected,
+          builder: (_, state) => const BookingRejected()),
+      GoRoute(
           path: AppRoutes.paymentDeclined,
           name: AppRoutes.paymentDeclined,
           builder: (_, state) => const PaymentDeclined()),
+      GoRoute(
+          path: AppRoutes.pendingQuoteApproval,
+          name: AppRoutes.pendingQuoteApproval,
+          builder: (_, state) => const PendingQuoteApproval()),
       GoRoute(
           path: AppRoutes.notification,
           name: AppRoutes.notification,

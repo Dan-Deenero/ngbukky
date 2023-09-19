@@ -82,6 +82,20 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                   padding: const EdgeInsets.all(10),
                   child: Wrap(
                     children: [
+                      if (_bookingHistory.isEmpty)
+                            Center(
+                              heightFactor: 3.5,
+                                child: Column(
+                              children: [
+                                SvgPicture.asset(AppImages.bookingWarning),
+                                customText(
+                                    text:
+                                        'You have not accepted any booking yet',
+                                    fontSize: 15,
+                                    textColor: AppColors.black)
+                              ],
+                            ))
+                      else
                       ..._bookingHistory.map((e) {
                         var dateString = e.date;
                         var dateTime = DateTime.parse(dateString!);
@@ -96,6 +110,7 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                                 extra: e.id);
                           },
                           child: Container(
+                            margin: const EdgeInsets.only(bottom: 10),
                             width: double.infinity,
                             height: 10.h,
                             decoration: BoxDecoration(
@@ -115,8 +130,7 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                                     height: 3.h,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
-                                        color: AppColors.backgroundGrey
-                                            .withOpacity(.3)),
+                                        color: AppColors.green.withOpacity(.1)),
                                     child: Center(
                                       child: customText(
                                           text: "Accepted booking",

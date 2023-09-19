@@ -1,12 +1,18 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 
+import 'package:ngbuka/src/config/locator/app_locator.dart';
 import 'package:ngbuka/src/config/services/api/api_client.dart';
 import 'package:ngbuka/src/config/services/api/endpoints.dart';
+import 'package:ngbuka/src/config/services/storage_service.dart';
 import 'package:ngbuka/src/domain/data/city_lga.dart';
 import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
+import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/data/services_model.dart';
 import 'package:ngbuka/src/domain/data/statistics_model.dart';
+
+import '../../config/keys/app_keys.dart';
 
 class MechanicRepo {
   Future<MechanicServicesModel> getMechanicProfile() async {
@@ -35,6 +41,14 @@ class MechanicRepo {
     return false;
   }
 
+  Future<bool> saveProfileImage(Map<String, dynamic> data) async {
+    final response = await ApiClient.put(Endpoints.userProfileImage, body: data);
+    if (response.status == 200) {
+      return true;
+    }
+    return false;
+  }
+
   Future<StatisticsModel> getStatisticsInfo() async {
     final response =
         await ApiClient.get(Endpoints.getStatisticsInfo, useToken: true);
@@ -44,30 +58,6 @@ class MechanicRepo {
     return StatisticsModel();
   }
 
-  // Future<List<BookingModel>> getAllBooking() async {
-  //   final response =
-  //       await ApiClient.get(Endpoints.getAllBooking, useToken: true);
-  //   if (response.status == 200) {
-  //     var jsonResponse = jsonDecode(response.entity);
-  //     List<BookingModel> bookings = [];
-  //     for (var b in jsonResponse){
-  //       BookingModel books = BookingModel(
-  //         id: b['id'],
-  //         status: b['status'],
-  //         date: b['date'],
-  //         brand: b['brand'],
-  //         model: b['model'],
-  //         year: b['year'],
-  //         user: b['user']
-  //       );
-
-  //       bookings.add(books);
-  //     }
-  //     return bookings;
-  //   }else{
-  //     throw Exception('Failed to load Post');
-  //   }
-  // }
 
   Future<List<BookingModel>> getAllBooking(String status) async {
     final response =
@@ -85,6 +75,7 @@ class MechanicRepo {
     return booking;
   }
 
+
   Future<BookingModel> getoneBooking(id) async {
     final response =
         await ApiClient.get('${Endpoints.getAllBooking}/$id', useToken: true);
@@ -95,8 +86,44 @@ class MechanicRepo {
     return BookingModel();
   }
 
-  Future<bool> acceptOrReject(Map<String, String> body, id) async {
+  Future<List<QuotesModel>> getAllQuotes() async {
+    final response =
+        await ApiClient.get(Endpoints.getAllQuotes, useToken: true);
+    List<QuotesModel> quote = [];
+    if (response.status == 200) {
+      for (var quoteModel in response.entity['rows']) {
+        quote.add(QuotesModel.fromJson(quoteModel));
+      }
+      return quote;
+    } else if (response.status == 404) {
+      
+      return [];
+    }
+    return quote;
+  }
+
+  Future<QuotesModel> getoneQuote(id) async {
+    final response =
+        await ApiClient.get('${Endpoints.getAllQuotes}/$id', useToken: true);
+    if (response.status == 200) {
+      log(response.entity.toString());
+      return QuotesModel.fromJson(response.entity);
+    }
+    return QuotesModel();
+  }
+
+
+  Future<bool> acceptOrRejectBooking(Map<String, String> body, id) async {
     final response = await ApiClient.patch('${Endpoints.getAllBooking}/$id',
+        body: body, useToken: true);
+    if (response.status == 200) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> acceptOrRejectQuote(Map<String, String> body, id) async {
+    final response = await ApiClient.patch('${Endpoints.getAllQuotes}/$id',
         body: body, useToken: true);
     if (response.status == 200) {
       return true;
@@ -110,6 +137,61 @@ class MechanicRepo {
         body: body,
         useToken: true);
     if (response.status == 200) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> sendQuoteForBooking(Map<dynamic, dynamic> body, id) async {
+    final response =
+        await ApiClient.post('${Endpoints.getAllBooking}/$id/quote', body: body, useToken: false);
+    if (response.status == 200) {
+      locator<LocalStorageService>()
+          .saveDataToDisk(AppKeys.token, json.encode(response.entity["token"]));
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> sendQuoteForQuotes(Map<String, String> body, id) async {
+    final response =
+        await ApiClient.post('${Endpoints.getAllQuotes}/$id/quote', body: body, useToken: false);
+    if (response.status == 200) {
+      locator<LocalStorageService>()
+          .saveDataToDisk(AppKeys.token, json.encode(response.entity["token"]));
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> markInspectionAsCompleted(Map<String, String> body, id) async {
+    final response = await ApiClient.patch(
+        '${Endpoints.getAllBooking}/$id/complete',
+        body: body,
+        useToken: true);
+    if (response.status == 200) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> markQuoteAsCompleted(Map<String, String> body, id) async {
+    final response = await ApiClient.patch(
+        '${Endpoints.getAllQuotes}/$id/complete',
+        body: body,
+        useToken: true);
+    if (response.status == 200) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> addPersonalizedService(Map<dynamic, dynamic> body) async {
+    final response =
+        await ApiClient.post(Endpoints.addPersonalizedService, body: body, useToken: false);
+    if (response.status == 200) {
+      locator<LocalStorageService>()
+          .saveDataToDisk(AppKeys.token, json.encode(response.entity["token"]));
       return true;
     }
     return false;

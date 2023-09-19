@@ -118,7 +118,7 @@ class AddWalletPage extends HookWidget {
                           width: 1,
                         ),
                       ),
-                        isValue: false,
+                        // isValue: false,
                         value: bankController.text,
                         validator: (val) {
                           if (val == "select") {

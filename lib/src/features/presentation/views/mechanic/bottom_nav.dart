@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/accepted_booking.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/booking.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/new_booking_alerts.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/wallet.dart';
 import 'package:ngbuka/src/features/presentation/views/profile_settings/profile_page.dart';
 

@@ -6,14 +6,13 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
+import 'package:ngbuka/src/core/shared/colors.dart';
 import 'package:ngbuka/src/domain/data/acceptOrRejectBookingModel.dart';
 import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
-
-import '../../../../core/shared/colors.dart';
 
 class ViewAcceptedBooking extends StatefulWidget {
   final String id;
@@ -30,6 +29,10 @@ class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
 
   bool isLoading = true;
+  var dateString;
+  var dateTime;
+  var formattedDate;
+  var formattedTime;
 
   BookingModel? bookingModel;
 
@@ -41,191 +44,99 @@ class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
           () {
             bookingModel = value;
             isLoading = false;
+            dateString = bookingModel!.date!;
+            dateTime = DateTime.parse(dateString);
+            formattedDate = DateFormat('E, d MMM y').format(dateTime);
+
+            formattedTime = DateFormat('hh:mm a').format(dateTime);
           },
         ));
+  }
+
+  finishBooking() async {
+    var body = {
+      "action": "accepted",
+    };
+    bool result = await _mechanicRepo.markInspection(body, widget.id);
+    if (result) {
+      if (context.mounted) {
+        context.push(AppRoutes.acceptedBooking);
+        return;
+      }
+    }
+  }
+
+  finish() {
+    showDialog(
+        context: context,
+        builder: (context) => Center(
+              child: Container(
+                // padding: EdgeInsets.all(10.0),
+                width: 700, // Set the desired width
+                height: 200,
+                child: Dialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        16.0), // Adjust the radius as needed
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          customText(
+                              text: 'Confirm acceptance',
+                              fontSize: 20,
+                              textColor: AppColors.black,
+                              fontWeight: FontWeight.w500),
+                          InkWell(
+                              onTap: () => context.pop(),
+                              child: SvgPicture.asset(AppImages.cancelModal))
+                        ],
+                      ),
+                      heightSpace(1),
+                      customText(
+                          text: 'Confirm that you want to accept this booking',
+                          fontSize: 12,
+                          textColor: AppColors.black),
+                      heightSpace(3),
+                      Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextButton(
+                                onPressed: () => context.pop(),
+                                child: customText(
+                                    text: 'No',
+                                    fontSize: 16,
+                                    textColor: AppColors.textGrey)),
+                            widthSpace(3),
+                            Container(
+                              width: 1,
+                              height: 40,
+                              color: AppColors.containerGrey,
+                            ),
+                            widthSpace(3),
+                            TextButton(
+                                onPressed: finishBooking,
+                                child: customText(
+                                    text: 'Yes',
+                                    fontSize: 16,
+                                    textColor: AppColors.darkOrange))
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ));
   }
 
   // void resendOTP() async {
   @override
   Widget build(BuildContext context) {
-    var dateString = bookingModel!.date;
-    var dateTime = DateTime.parse(dateString!);
-    var formattedDate = DateFormat('E, d MMM y').format(dateTime);
-
-    var formattedTime = DateFormat('hh:mm a').format(dateTime);
-
-
-    acceptBooking() async {
-      var body = {
-        "action": "accepted",
-      };
-      bool result = await _mechanicRepo.acceptOrReject(body, widget.id);
-      if (result) {
-        if (context.mounted) {
-          context.push(AppRoutes.acceptedBooking);
-          return;
-        }
-      }
-    }
-
-    rejectBooking() async {
-      var body = {
-        "action": "rejected",
-      };
-      bool result = await _mechanicRepo.acceptOrReject(body, widget.id);
-      if (result) {
-        if (context.mounted) {
-          context.go(AppRoutes.bookingAlert);
-          return;
-        }
-      }
-    }
-
-    accept() {
-      showDialog(
-          context: context,
-          builder: (context) => Center(
-                child: Container( 
-                  // padding: EdgeInsets.all(10.0),
-                  width: 700, // Set the desired width
-                  height: 200,
-                  child: Dialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                          16.0), // Adjust the radius as needed
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                          
-                            customText(
-                                text: 'Confirm acceptance',
-                                fontSize:20,
-                                textColor: AppColors.black,
-                                fontWeight: FontWeight.w500),
-                            InkWell(
-                              onTap: () => context.pop(),
-                              child: SvgPicture.asset(AppImages.cancelModal)
-                            )
-                          ],
-                        ),
-                        heightSpace(1),
-                        customText(
-                            text:
-                                'Confirm that you want to accept this booking',
-                            fontSize: 12,
-                            textColor: AppColors.black),
-                        heightSpace(3),
-                        
-                        Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              TextButton(
-                                  onPressed: () => context.pop(),
-                                  child: customText(
-                                      text: 'No',
-                                      fontSize: 16,
-                                      textColor: AppColors.textGrey)),
-                              widthSpace(3),
-                              Container(
-                                width: 1,
-                                height: 40,
-                                color: AppColors.containerGrey,
-                              ),
-                              widthSpace(3),
-                              TextButton(
-                                  onPressed: acceptBooking,
-                                  child: customText(
-                                      text: 'Yes',
-                                      fontSize: 16,
-                                      textColor: AppColors.darkOrange))
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ));
-    }
-
-    reject() {
-      showDialog(
-          context: context,
-          builder: (context) => Center(
-                child: Container( 
-                  // padding: EdgeInsets.all(10.0),
-                  width: 700, // Set the desired width
-                  height: 200,
-                  child: Dialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                          16.0), // Adjust the radius as needed
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                          
-                            customText(
-                                text: 'Confirm rejection',
-                                fontSize:20,
-                                textColor: AppColors.black,
-                                fontWeight: FontWeight.w500),
-                            InkWell(
-                              onTap: () => context.pop(),
-                              child: SvgPicture.asset(AppImages.cancelModal)
-                            )
-                          ],
-                        ),
-                        heightSpace(1),
-                        customText(
-                            text:
-                                'Confirm that you want to reject this booking',
-                            fontSize: 12,
-                            textColor: AppColors.black),
-                        heightSpace(3),
-                        
-                        Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              TextButton(
-                                  onPressed: () => context.pop(),
-                                  child: customText(
-                                      text: 'No',
-                                      fontSize: 16,
-                                      textColor: AppColors.textGrey)),
-                              widthSpace(3),
-                              Container(
-                                width: 1,
-                                height: 40,
-                                color: AppColors.containerGrey,
-                              ),
-                              widthSpace(3),
-                              TextButton(
-                                  onPressed: rejectBooking,
-                                  child: customText(
-                                      text: 'Yes',
-                                      fontSize: 16,
-                                      textColor: AppColors.darkOrange))
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ));
-    }
-
-    
 
     return Scaffold(
       appBar: PreferredSize(
@@ -245,12 +156,12 @@ class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
                 padding: const EdgeInsets.only(left: 7.0),
                 child: Center(
                     child: GestureDetector(
-                      onTap: () => context.pop(),
-                      child: const Icon(
-                                      Icons.arrow_back_ios,
-                                      color: AppColors.black,
-                                    ),
-                    )),
+                  onTap: () => context.pop(),
+                  child: const Icon(
+                    Icons.arrow_back_ios,
+                    color: AppColors.black,
+                  ),
+                )),
               ),
             ),
             customText(
@@ -386,7 +297,7 @@ class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
                   Row(
                     children: [
                       GestureDetector(
-                        onTap: reject,
+                        onTap: finish,
                         child: Container(
                           width: 30.w,
                           height: 7.h,
@@ -403,7 +314,7 @@ class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
                       widthSpace(2),
                       Expanded(
                         child: AppButton(
-                          onTap: accept,
+                          onTap: () => context.push(AppRoutes.sendQuotes, extra: bookingModel!.id),
                           hasIcon: false,
                           buttonText: "Send Quote",
                           isOrange: true,

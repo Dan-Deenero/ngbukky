@@ -18,7 +18,7 @@ class  Ngbuka extends StatelessWidget{
   const Ngbuka({super.key});
   @override
   Widget build(BuildContext context) {
-    return OverlaySupport.global(
+    return OverlaySupport.global( 
       child: FlutterSizer(builder: (context, orientation, screenType) {
         return MaterialApp.router(
             debugShowCheckedModeBanner: false,

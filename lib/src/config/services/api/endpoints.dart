@@ -8,11 +8,13 @@ class Endpoints {
   static const String resetOTPVerify = "auth/reset-password/verify";
   static const String resendOTP = "/auth/resend";
   static const String newPasword = "auth/password/reset";
+  static const String userProfileImage = "/user/profile/image";
   static const String getProfileMechanic = 'mechanic/profile';
   static const String getMechanicServices = 'services';
   static const String getLocation = 'location/sub-domains';
   static const String updateBusiness = 'mechanic/business-profile';
   static const String getStatisticsInfo = 'mechanic/summary?type=quote-request';
   static const String getAllBooking = 'mechanic/bookings';
-  // static const String getOneBooking = 'mechanic/bookings/id';
+  static const String getAllQuotes = 'mechanic/quote-requests';
+  static const String addPersonalizedService = '/mechanic/services/personal';
 }

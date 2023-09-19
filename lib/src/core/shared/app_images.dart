@@ -45,4 +45,7 @@ class AppImages {
   static const String accountDet = "assets/images/svgs/account_det.svg";
   static const String bookingWarning = "assets/images/svgs/booking_warning.svg";
   static const String cancelModal = "assets/images/svgs/cancel_modal.svg";
+  static const String hourGlass = "assets/images/svgs/hour_glass.svg";
+  static const String successModal = "assets/images/svgs/success-modal.svg";
+  static const String editIcon = "assets/images/svgs/edit_icon.svg";
 }

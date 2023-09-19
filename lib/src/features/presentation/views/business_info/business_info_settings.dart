@@ -1,8 +1,6 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,7 +11,6 @@ import 'package:ngbuka/src/domain/data/city_lga.dart';
 import 'package:ngbuka/src/domain/data/services_model.dart';
 import 'package:ngbuka/src/domain/data/user_model.dart';
 import 'package:ngbuka/src/domain/repository/auth_repository.dart';
-import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_dropdown.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -38,22 +35,30 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
   static final AuthRepo _authRepo = AuthRepo();
   List<String> serviceList = [];
   List<String> selectedServiceList = [];
+  List<String> serveList = [];
+  List<String> otherList = [];
+  List<Services> otherServiceList = [];
+  List<String> selectServiceList = [];
+  List<Services> service = [];
   final formKey = GlobalKey<FormState>();
 
   List<String> carsList = [];
 
   getBusinessProfile() {
     _authRepo.getMechanicProfile().then((value) {
-      String availabilityString = jsonEncode(value.availability!);
-      List<Services> services = value.services!;
+      // String availabilityString = jsonEncode(value.availability!);
+      service = value.services!;
+      otherServiceList = value.otherServices!;
+      serveList = service.map((service) => service.name!).toList();
+      otherList = otherServiceList.map((service) => service.name!).toList();
+      serveList = serveList + otherList;
       businessName.text = value.businessName!;
       cac.text = value.cacNumber!;
       address.text = value.address!;
       cityController.text = value.city!;
-      lgaController.text = value.lga!;
-      stateController.text = value.state!;
-
-      // carsList= value.!;
+      // lgaController.text = value.lga!;
+      // stateController.text = value.state!;
+      carsList = value.cars!;
       // selectedServiceList = services.cast<String>();
       // workingHourController.text = availabilityString;
     });
@@ -73,7 +78,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
           if (item["isChecked"]) {
             if (item["isChecked"]) {
               var itemString =
-                  "From: ${item["from"]}, To: ${item["to"]}, Day: ${item["day"]}";
+                  "from: ${item["from"]}, to: ${item["to"]}, Day: ${item["day"]}";
               trueItemsString.add(itemString);
             }
           }
@@ -244,13 +249,22 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                     final TimeOfDay? result =
                                         await showTimePicker(
                                             context: context,
-                                            initialTime: TimeOfDay.now());
+                                            initialTime: TimeOfDay.now(),                                            
+                                            initialEntryMode:
+                                                TimePickerEntryMode.input);
 
                                     if (result != null) {
                                       if (context.mounted) {
                                         setState(() {
+                                          String res;
+                                          if (result.minute < 10) {
+                                            res =
+                                                '0${result.minute.toString()}';
+                                          } else {
+                                            res = result.minute.toString();
+                                          }
                                           workingHour[index]["from"] =
-                                              result.format(context);
+                                              '${result.hour.toString()}:$res';
                                         });
                                       }
                                     }
@@ -276,14 +290,22 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                   onTap: () async {
                                     final TimeOfDay? result =
                                         await showTimePicker(
-                                            context: context,
-                                            initialTime: TimeOfDay.now());
+                                      context: context,
+                                      initialTime: TimeOfDay.now(),
+                                      initialEntryMode: TimePickerEntryMode.input
+                                    );
 
                                     if (result != null) {
                                       if (context.mounted) {
                                         setState(() {
+                                          String ses;
+                                          if(result.minute < 10){
+                                            ses = '0${result.minute.toString()}';
+                                          }else{
+                                            ses = result.minute.toString();
+                                          }
                                           workingHour[index]["to"] =
-                                              result.format(context);
+                                              '${result.hour.toString()}:$ses';
                                         });
                                       }
                                     }
@@ -358,7 +380,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                 textColor: AppColors.textColor),
                             heightSpace(1),
                             AppDropdown(
-                              isValue: true,
+                              // isValue: true,
                               value: stateController.text,
                               validator: (val) {
                                 if (val == "select") {
@@ -383,11 +405,11 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                             Column(
                               children: [
                                 AppDropdown(
-                                    isValue: true,
+                                    // isValue: false,
                                     value: cityController.text,
                                     validator: (val) {
                                       if (val == "select") {
-                                        return "Select a state";
+                                        return "Select a city";
                                       }
                                       return null;
                                     },
@@ -397,11 +419,11 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                         cityController.text = val.toString()),
                                 heightSpace(1),
                                 AppDropdown(
-                                    isValue: true,
+                                    // isValue: false,
                                     value: lgaController.text,
                                     validator: (val) {
                                       if (val == "select") {
-                                        return "Select a state";
+                                        return "Select a lga";
                                       }
                                       return null;
                                     },
@@ -543,7 +565,6 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                           hintText: "Enter location",
                         ),
                         heightSpace(2),
-
                         Padding(
                           padding: const EdgeInsets.only(),
                           child: Row(
@@ -559,7 +580,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                       textColor: AppColors.orange,
                                       textAlignment: TextAlign.right,
                                     ),
-                                    widthSpace(2  ),
+                                    widthSpace(2),
                                     SvgPicture.asset(AppImages.googleText),
                                     widthSpace(1),
                                     SvgPicture.asset(AppImages.googleLocs),
@@ -579,6 +600,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                 textColor: AppColors.black),
                             heightSpace(1),
                             AppDropdDownSearch(
+                              listOfSelectedItems: carsList,
                               hintText: "Select cars",
                               prefixIcon: Padding(
                                 padding: const EdgeInsets.all(13.0),
@@ -610,7 +632,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                 textColor: AppColors.black),
                             heightSpace(1),
                             AppDropdDownSearch(
-                              listOfSelectedItems: selectedServiceList,
+                              listOfSelectedItems: serveList,
                               onChanged: (val) {
                                 selectedServiceList = val!;
                                 log(val.toString());
@@ -696,6 +718,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
 
   updateBusinessProfile() async {
     List<String> id = [];
+    List<String> name = [];
     List<Map<String, dynamic>> newItems = [];
     final servicesState = ref.watch(services);
     final workingHour = ref.watch(stateWorkingHours);
@@ -705,6 +728,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
         if (service.name == serviceName) {
           log(service.name.toString());
           id.add(service.id!);
+          name.add(service.name!);
         }
       }
     }
@@ -724,7 +748,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
       "address": address.text,
       "longitude": "-122.33221",
       "latitude": "789.9987",
-      "services": id,
+      "services": selectedServiceList,
       "otherServices": serviceController.text.split(","),
       "cars": carsList + carsFamiliar.text.split(","),
       "availability": newItems
