@@ -7,15 +7,16 @@ import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
 class AlertDialogue extends StatelessWidget {
-  String title;
-  String subtitle;
-  TextEditingController service;
-  TextEditingController cost;
-  String content;
-  String action;
-  VoidCallback fction;
+  final String title;
+  final String subtitle;
+  final TextEditingController service;
+  final TextEditingController cost;
+  final String content;
+  final String action;
+  final VoidCallback fction;
+  final VoidCallback? cancel;
 
-  AlertDialogue(
+  const AlertDialogue(
       {super.key,
       required this.title,
       required this.subtitle,
@@ -23,7 +24,8 @@ class AlertDialogue extends StatelessWidget {
       required this.cost,
       required this.content,
       required this.action,
-      required this.fction});
+      required this.fction,
+      this.cancel});
   // static final service = TextEditingController();
   // static final cost = TextEditingController();
 
@@ -45,7 +47,7 @@ class AlertDialogue extends StatelessWidget {
                 textColor: AppColors.black,
                 fontWeight: FontWeight.w700),
             InkWell(
-                onTap: () => context.pop(),
+                onTap: cancel,
                 child: SvgPicture.asset(AppImages.cancelModal))
           ],
         ),

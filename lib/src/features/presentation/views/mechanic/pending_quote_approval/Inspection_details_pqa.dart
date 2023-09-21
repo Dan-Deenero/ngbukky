@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -26,7 +28,22 @@ class _PQAInspectionDetailsState extends State<PQAInspectionDetails> {
 
   bool isLoading = true;
 
+  List<String> serviceList = [];
+  List<String> otherList = [];
+  // List<Services> otherServiceList = [];
+  List<String> selectedServiceList = [];
+  List<Quotes>? quotes = [];
+
   BookingModel? bookingModel;
+
+  int? totalPrice;
+
+  int price = 0;
+  double serviceFee = 0;
+  RequestedSystemService? requestedSystemService;
+  RequestedPersonalisedService? requestedPersonalisedService;
+
+
   var dateString;
   var formattedDate;
   var formattedTime;
@@ -45,9 +62,18 @@ class _PQAInspectionDetailsState extends State<PQAInspectionDetails> {
 
             formattedTime = DateFormat('hh:mm a').format(dateTime);
             isLoading = false;
+            quotes = bookingModel!.quotes;
+            for(Quotes quote in quotes!){
+              if(quote.price != null){
+                price += quote.price!;
+              }
+            }
+            serviceFee = price * 0.01;
+            
           },
         ));
   }
+  
 
   // void resendOTP() async {
   @override
@@ -104,6 +130,7 @@ class _PQAInspectionDetailsState extends State<PQAInspectionDetails> {
                   heightSpace(2),
                   Row(
                     children: [
+
                       widthSpace(5.5),
                       SvgPicture.asset(AppImages.hourGlass),
                       widthSpace(10),
@@ -200,52 +227,41 @@ class _PQAInspectionDetailsState extends State<PQAInspectionDetails> {
                       textColor: AppColors.orange,
                       fontWeight: FontWeight.bold),
                   heightSpace(3),
-                  Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              SvgPicture.asset(AppImages.serviceIcon),
-                              widthSpace(2),
-                              customText(
-                                  text: 'AC Maintenance',
-                                  fontSize: 13,
-                                  textColor: AppColors.black,
-                                  fontWeight: FontWeight.w600),
-                            ],
-                          ),
-                          customText(
-                              text: '₦ 2,000.00',
-                              fontSize: 13,
-                              textColor: AppColors.black)
-                        ],
-                      ),
-                      heightSpace(4),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              SvgPicture.asset(AppImages.serviceIcon),
-                              widthSpace(2),
-                              customText(
-                                  text: 'Electrical Repair',
-                                  fontSize: 13,
-                                  textColor: AppColors.black,
-                                  fontWeight: FontWeight.w600),
-                            ],
-                          ),
-                          customText(
-                              text: '₦ 3,000.00',
-                              fontSize: 13,
-                              textColor: AppColors.black)
-                        ],
-                      ),
-                      heightSpace(2),
-                    ],
-                  ),
+                  ...quotes!.map((quote){
+                    String serviceName = '';
+                    if(quote.requestedPersonalisedService != null){
+                      serviceName = quote.requestedPersonalisedService!.name!;
+                    }
+                    else if(quote.requestedSystemService != null){
+                      serviceName = quote.requestedSystemService!.name!;
+                    }
+                    return Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                SvgPicture.asset(AppImages.serviceIcon),
+                                widthSpace(2),
+                                customText(
+                                    text: serviceName,
+                                    fontSize: 13,
+                                    textColor: AppColors.black,
+                                    fontWeight: FontWeight.w600),
+                              ],
+                            ),
+                            customText(
+                                text: '${quote.price!}',
+                                fontSize: 13,
+                                textColor: AppColors.black)
+                          ],
+                        ),
+                        heightSpace(4),
+                      ],
+                    );
+                  }),
+                  
                   heightSpace(1),
                   const Divider(),
                   customText(
@@ -291,7 +307,7 @@ class _PQAInspectionDetailsState extends State<PQAInspectionDetails> {
                               fontSize: 13,
                               textColor: AppColors.black),
                           customText(
-                              text: '5000.00',
+                              text: '$price',
                               fontSize: 13,
                               textColor: AppColors.black)
                         ],
@@ -305,7 +321,7 @@ class _PQAInspectionDetailsState extends State<PQAInspectionDetails> {
                               fontSize: 13,
                               textColor: AppColors.black),
                           customText(
-                              text: '50.00',
+                              text: '$serviceFee',
                               fontSize: 13,
                               textColor: AppColors.black)
                         ],
@@ -320,7 +336,7 @@ class _PQAInspectionDetailsState extends State<PQAInspectionDetails> {
                               textColor: AppColors.black,
                               fontWeight: FontWeight.w600),
                           customText(
-                              text: '5,050.00',
+                              text: '${price + serviceFee}',
                               fontSize: 13,
                               textColor: AppColors.black,
                               fontWeight: FontWeight.w600)

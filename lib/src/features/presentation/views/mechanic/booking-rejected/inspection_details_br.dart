@@ -36,6 +36,11 @@ class _BRInspectionDetailsState extends State<BRInspectionDetails> {
   var formattedTime;
   var dateTime;
 
+  int price = 0;
+  double serviceFee = 0;
+  List<Quotes>? quotes = [];
+
+
   @override
   void initState() {
     // TODO: implement initState
@@ -49,6 +54,13 @@ class _BRInspectionDetailsState extends State<BRInspectionDetails> {
 
             formattedTime = DateFormat('hh:mm a').format(dateTime);
             isLoading = false;
+            quotes = bookingModel!.quotes;
+            for(Quotes quote in quotes!){
+              if(quote.price != null){
+                price += quote.price!;
+              }
+            }
+            serviceFee = price * 0.01;
           },
         ));
   }
@@ -204,52 +216,40 @@ class _BRInspectionDetailsState extends State<BRInspectionDetails> {
                       textColor: AppColors.orange,
                       fontWeight: FontWeight.bold),
                   heightSpace(3),
-                  Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              SvgPicture.asset(AppImages.serviceIcon),
-                              widthSpace(2),
-                              customText(
-                                  text: 'AC Maintenance',
-                                  fontSize: 13,
-                                  textColor: AppColors.black,
-                                  fontWeight: FontWeight.w600),
-                            ],
-                          ),
-                          customText(
-                              text: '₦ 2,000.00',
-                              fontSize: 13,
-                              textColor: AppColors.black)
-                        ],
-                      ),
-                      heightSpace(4),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              SvgPicture.asset(AppImages.serviceIcon),
-                              widthSpace(2),
-                              customText(
-                                  text: 'Electrical Repair',
-                                  fontSize: 13,
-                                  textColor: AppColors.black,
-                                  fontWeight: FontWeight.w600),
-                            ],
-                          ),
-                          customText(
-                              text: '₦ 3,000.00',
-                              fontSize: 13,
-                              textColor: AppColors.black)
-                        ],
-                      ),
-                      heightSpace(2),
-                    ],
-                  ),
+                  ...quotes!.map((quote){
+                    String serviceName = '';
+                    if(quote.requestedPersonalisedService != null){
+                      serviceName = quote.requestedPersonalisedService!.name!;
+                    }
+                    else if(quote.requestedSystemService != null){
+                      serviceName = quote.requestedSystemService!.name!;
+                    }
+                    return Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                SvgPicture.asset(AppImages.serviceIcon),
+                                widthSpace(2),
+                                customText(
+                                    text: serviceName,
+                                    fontSize: 13,
+                                    textColor: AppColors.black,
+                                    fontWeight: FontWeight.w600),
+                              ],
+                            ),
+                            customText(
+                                text: '${quote.price!}',
+                                fontSize: 13,
+                                textColor: AppColors.black)
+                          ],
+                        ),
+                        heightSpace(4),
+                      ],
+                    );
+                  }),
                   heightSpace(1),
                   const Divider(),
                   customText(
@@ -295,7 +295,7 @@ class _BRInspectionDetailsState extends State<BRInspectionDetails> {
                               fontSize: 13,
                               textColor: AppColors.black),
                           customText(
-                              text: '5000.00',
+                              text: '$price',
                               fontSize: 13,
                               textColor: AppColors.black)
                         ],
@@ -309,7 +309,7 @@ class _BRInspectionDetailsState extends State<BRInspectionDetails> {
                               fontSize: 13,
                               textColor: AppColors.black),
                           customText(
-                              text: '50.00',
+                              text: '$serviceFee',
                               fontSize: 13,
                               textColor: AppColors.black)
                         ],
@@ -324,7 +324,7 @@ class _BRInspectionDetailsState extends State<BRInspectionDetails> {
                               textColor: AppColors.black,
                               fontWeight: FontWeight.w600),
                           customText(
-                              text: '5,050.00',
+                              text: '${price + serviceFee}',
                               fontSize: 13,
                               textColor: AppColors.black,
                               fontWeight: FontWeight.w600)

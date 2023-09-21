@@ -29,6 +29,7 @@ import 'package:ngbuka/src/features/presentation/views/mechanic/payment_request/
 import 'package:ngbuka/src/features/presentation/views/mechanic/pending_quote_approval/Inspection_details_pqa.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/pending_quote_approval/pending_quote_aproval.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/quote_request.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/quote_send.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/rejected-bookings/rejected_booking.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/rejected-bookings/view_rejected_booking.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/send-quotes/send_quote.dart';
@@ -166,6 +167,10 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
           path: AppRoutes.sendQuotes,
           name: AppRoutes.sendQuotes,
           builder: (_, state) =>  SendQuote(id: state.extra as String,)),
+      GoRoute(
+          path: AppRoutes.quotesSend,
+          name: AppRoutes.quotesSend,
+          builder: (_, state) =>  QuoteSend(id: state.extra as String,)),
       GoRoute(
           path: AppRoutes.quotesRequest,
           name: AppRoutes.quotesRequest,

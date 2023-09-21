@@ -32,6 +32,15 @@ class _CompletedInspectionDetailsState extends State<CompletedInspectionDetails>
   bool isLoading = true;
 
   BookingModel? bookingModel;
+  var dateString;
+  var formattedDate;
+  var formattedTime;
+  var dateTime;
+
+  int price = 0;
+  double serviceFee = 0;
+  List<Quotes>? quotes = [];
+
 
   @override
   void initState() {
@@ -40,7 +49,19 @@ class _CompletedInspectionDetailsState extends State<CompletedInspectionDetails>
     _mechanicRepo.getoneBooking(widget.id).then((value) => setState(
           () {
             bookingModel = value;
+            dateString = bookingModel!.date;
+            dateTime = DateTime.parse(dateString!);
+            formattedDate = DateFormat('E, d MMM y').format(dateTime);
+
+            formattedTime = DateFormat('hh:mm a').format(dateTime);
             isLoading = false;
+            quotes = bookingModel!.quotes;
+            for(Quotes quote in quotes!){
+              if(quote.price != null){
+                price += quote.price!;
+              }
+            }
+            serviceFee = price * 0.01;
           },
         ));
   }
@@ -48,13 +69,7 @@ class _CompletedInspectionDetailsState extends State<CompletedInspectionDetails>
   // void resendOTP() async {
   @override
   Widget build(BuildContext context) {
-    var dateString = bookingModel!.date;
-    var dateTime = DateTime.parse(dateString!);
-    var formattedDate = DateFormat('E, d MMM y').format(dateTime);
-
-    var formattedTime = DateFormat('hh:mm a').format(dateTime);
-
-
+    
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(24.h),
@@ -199,6 +214,48 @@ class _CompletedInspectionDetailsState extends State<CompletedInspectionDetails>
                         fontSize: 12,
                         textColor: AppColors.textGrey),
                   ),
+                  const Divider(),
+                  customText(
+                      text: "Service rendered",
+                      fontSize: 14,
+                      textColor: AppColors.orange,
+                      fontWeight: FontWeight.bold),
+                  heightSpace(3),
+                  ...quotes!.map((quote){
+                    String serviceName = '';
+                    if(quote.requestedPersonalisedService != null){
+                      serviceName = quote.requestedPersonalisedService!.name!;
+                    }
+                    else if(quote.requestedSystemService != null){
+                      serviceName = quote.requestedSystemService!.name!;
+                    }
+                    return Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                SvgPicture.asset(AppImages.serviceIcon),
+                                widthSpace(2),
+                                customText(
+                                    text: serviceName,
+                                    fontSize: 13,
+                                    textColor: AppColors.black,
+                                    fontWeight: FontWeight.w600),
+                              ],
+                            ),
+                            customText(
+                                text: '${quote.price!}',
+                                fontSize: 13,
+                                textColor: AppColors.black)
+                          ],
+                        ),
+                        heightSpace(4),
+                      ],
+                    );
+                  }),
+                  heightSpace(1),
                   const Divider(),
                   customText(
                       text: "Schedule",

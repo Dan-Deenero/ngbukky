@@ -69,7 +69,7 @@ class _InspectionBookingState extends State<InspectionBooking> {
       if (result) {
         if (context.mounted) {
           context.pop();
-          context.push(AppRoutes.acceptedBooking);
+          context.go(AppRoutes.acceptedBooking);
           return;
         }
       }
@@ -82,7 +82,7 @@ class _InspectionBookingState extends State<InspectionBooking> {
       bool result = await _mechanicRepo.acceptOrRejectBooking(body, widget.id);
       if (result) {
         if (context.mounted) {
-          context.go(AppRoutes.bookingAlert);
+          context.go(AppRoutes.rejectedBooking);
           return;
         }
       }

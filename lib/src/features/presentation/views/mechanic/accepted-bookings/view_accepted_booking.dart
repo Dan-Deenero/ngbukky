@@ -314,7 +314,7 @@ class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
                       widthSpace(2),
                       Expanded(
                         child: AppButton(
-                          onTap: () => context.push(AppRoutes.sendQuotes, extra: bookingModel!.id),
+                          onTap: () => context.push(AppRoutes.quotesSend, extra: bookingModel!.id),
                           hasIcon: false,
                           buttonText: "Send Quote",
                           isOrange: true,

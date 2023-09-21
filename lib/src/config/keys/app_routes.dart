@@ -20,6 +20,7 @@ class AppRoutes {
   static const String businessLocation = '/business-location';
   static const String inspectionBooking = '/inspection-booking';
   static const String sendQuotes = '/send-quotes';
+  static const String quotesSend = '/quotes-send';
   static const String quotesRequest = '/quotes-request';
   static const String bookingAlert = '/booking-alert';
   static const String bookings = '/bookings';

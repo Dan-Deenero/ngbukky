@@ -27,13 +27,17 @@ class PRInspectionDetails extends StatefulWidget {
 class _PRInspectionDetailsState extends State<PRInspectionDetails> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
 
+  List<Quotes>? quotes = [];
+  
   bool isLoading = true;
-
   BookingModel? bookingModel;
   var dateString;
   var formattedDate;
   var formattedTime;
   var dateTime;
+
+  int price = 0;
+  double serviceFee = 0;
 
   @override
   void initState() {
@@ -47,38 +51,46 @@ class _PRInspectionDetailsState extends State<PRInspectionDetails> {
             formattedDate = DateFormat('E, d MMM y').format(dateTime);
             formattedTime = DateFormat('hh:mm a').format(dateTime);
             isLoading = false;
+            quotes = bookingModel!.quotes;
+            for(Quotes quote in quotes!){
+              if(quote.price != null){
+                price += quote.price!;
+              }
+            }
+            serviceFee = price * 0.01;
           },
         ));
   }
 
 
-  // completeBooking() async {
-  //     var body = {
-  //       "": "",
-  //     };
-  //     bool result = await _mechanicRepo.markInspectionAsCompleted(body, widget.id);
-  //     if (result) {
-  //       if (context.mounted) {
-  //         context.push(AppRoutes.acceptedBooking);
-  //         return;
-  //       }
-  //     }
-  // }
+  completeBooking() async {
+      var body = {
+        "": "",
+      };
+      bool result = await _mechanicRepo.markInspectionAsCompleted(body, widget.id);
+      if (result) {
+        if (context.mounted) {
+          context.push(AppRoutes.acceptedBooking);
+          return;
+        }
+      }
+  }
 
-  // completedBooking() {
-  //   completeBooking();
-  //   showDialog(
-  //       context: context,
-  //       builder: (context) => SuccessDialogue(
-  //             title: 'Complete booking',
-  //             subtitle:
-  //                 'Your have completed your booking and requested for payment from Kels2323',
-  //             action: () => context.go(AppRoutes.paymentRequest)
-  //           ));
-  //   Future.delayed(const Duration(seconds: 1), () {
-  //     context.push(AppRoutes.paymentRequest);
-  //   });
-  // }
+  showCompletedModal(){
+    showDialog(
+        context: context,
+        builder: (context) => SuccessDialogue(
+              title: 'Complete booking',
+              subtitle:
+                  'Your have completed your booking and requested for payment from Kels2323',
+              action: () => context.go(AppRoutes.paymentRequest)
+            ));
+  }
+
+  completedBooking() {
+    completeBooking();
+    showCompletedModal();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -231,52 +243,40 @@ class _PRInspectionDetailsState extends State<PRInspectionDetails> {
                       textColor: AppColors.orange,
                       fontWeight: FontWeight.bold),
                   heightSpace(3),
-                  Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              SvgPicture.asset(AppImages.serviceIcon),
-                              widthSpace(2),
-                              customText(
-                                  text: 'AC Maintenance',
-                                  fontSize: 13,
-                                  textColor: AppColors.black,
-                                  fontWeight: FontWeight.w600),
-                            ],
-                          ),
-                          customText(
-                              text: '₦ 2,000.00',
-                              fontSize: 13,
-                              textColor: AppColors.black)
-                        ],
-                      ),
-                      heightSpace(4),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              SvgPicture.asset(AppImages.serviceIcon),
-                              widthSpace(2),
-                              customText(
-                                  text: 'Electrical Repair',
-                                  fontSize: 13,
-                                  textColor: AppColors.black,
-                                  fontWeight: FontWeight.w600),
-                            ],
-                          ),
-                          customText(
-                              text: '₦ 3,000.00',
-                              fontSize: 13,
-                              textColor: AppColors.black)
-                        ],
-                      ),
-                      heightSpace(2),
-                    ],
-                  ),
+                  ...quotes!.map((quote){
+                    String serviceName = '';
+                    if(quote.requestedPersonalisedService != null){
+                      serviceName = quote.requestedPersonalisedService!.name!;
+                    }
+                    else if(quote.requestedSystemService != null){
+                      serviceName = quote.requestedSystemService!.name!;
+                    }
+                    return Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                SvgPicture.asset(AppImages.serviceIcon),
+                                widthSpace(2),
+                                customText(
+                                    text: serviceName,
+                                    fontSize: 13,
+                                    textColor: AppColors.black,
+                                    fontWeight: FontWeight.w600),
+                              ],
+                            ),
+                            customText(
+                                text: '${quote.price!}',
+                                fontSize: 13,
+                                textColor: AppColors.black)
+                          ],
+                        ),
+                        heightSpace(4),
+                      ],
+                    );
+                  }),
                   heightSpace(1),
                   const Divider(),
                   customText(
@@ -322,7 +322,7 @@ class _PRInspectionDetailsState extends State<PRInspectionDetails> {
                               fontSize: 13,
                               textColor: AppColors.black),
                           customText(
-                              text: '5000.00',
+                              text: '$price',
                               fontSize: 13,
                               textColor: AppColors.black)
                         ],
@@ -336,7 +336,7 @@ class _PRInspectionDetailsState extends State<PRInspectionDetails> {
                               fontSize: 13,
                               textColor: AppColors.black),
                           customText(
-                              text: '50.00',
+                              text: '$serviceFee',
                               fontSize: 13,
                               textColor: AppColors.black)
                         ],
@@ -351,7 +351,7 @@ class _PRInspectionDetailsState extends State<PRInspectionDetails> {
                               textColor: AppColors.black,
                               fontWeight: FontWeight.w600),
                           customText(
-                              text: '5,050.00',
+                              text: '${price + serviceFee}',
                               fontSize: 13,
                               textColor: AppColors.black,
                               fontWeight: FontWeight.w600)
@@ -393,7 +393,7 @@ class _PRInspectionDetailsState extends State<PRInspectionDetails> {
                 widthSpace(2),
                 Expanded(
                   child: AppButton(
-                    onTap: () {},
+                    onTap: completedBooking,
                     hasIcon: false,
                     buttonText: "Complete Booking",
                     isOrange: true,

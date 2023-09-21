@@ -14,10 +14,7 @@ import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
 class PDInspectionDetails extends StatefulWidget {
   final String id;
-  const PDInspectionDetails({
-    super.key,
-    required this.id
-  });
+  const PDInspectionDetails({super.key, required this.id});
 
   @override
   State<PDInspectionDetails> createState() => _PDInspectionDetailsState();
@@ -35,6 +32,11 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
   var formattedTime;
   var dateTime;
 
+  int price = 0;
+  double serviceFee = 0;
+  List<Quotes>? quotes = [];
+
+
   @override
   void initState() {
     // TODO: implement initState
@@ -48,6 +50,14 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
 
             formattedTime = DateFormat('hh:mm a').format(dateTime);
             isLoading = false;
+
+            quotes = bookingModel!.quotes;
+            for(Quotes quote in quotes!){
+              if(quote.price != null){
+                price += quote.price!;
+              }
+            }
+            serviceFee = price * 0.01;
           },
         ));
   }
@@ -56,75 +66,75 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
 
   reportClient() {
     showDialog(
-      context: context, 
-      builder: (context) => SimpleDialog(
-      shape: RoundedRectangleBorder(
-        borderRadius:
-            BorderRadius.circular(20.0), // Adjust the radius as needed
-      ),
-      contentPadding: const EdgeInsets.all(20.0),
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            customText(
-                text: 'Report client?',
-                fontSize: 24,
-                textColor: AppColors.black,
-                fontWeight: FontWeight.w700),
-            InkWell(
-                onTap: () => context.pop(),
-                child: SvgPicture.asset(AppImages.cancelModal))
-          ],
-        ),
-        heightSpace(1),
-        customText(
-            text: 'Do you want to report this client? ',
-            fontSize: 12,
-            textColor: AppColors.black),
-        heightSpace(2),
-        modalForm('Air conditioning', service, 8),
-        heightSpace(1),
-        Row(
-          children: [
-            SvgPicture.asset(AppImages.warning),
-            widthSpace(2),
-            Flexible(
-              child: customText(
-                  text:
-                      'Ensure this action is totally needed, or settle your differences with the client.',
-                  fontSize: 11,
-                  textColor: AppColors.textGrey),
-            )
-          ],
-        ),
-        heightSpace(2),
-        Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              TextButton(
-                  onPressed: () => context.pop(),
-                  child: customText(
-                      text: 'cancel',
-                      fontSize: 16,
-                      textColor: AppColors.textGrey)),
-              Container(
-                width: 1,
-                height: 40,
-                color: AppColors.containerGrey,
+        context: context,
+        builder: (context) => SimpleDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(20.0), // Adjust the radius as needed
               ),
-              TextButton(
-                  onPressed: () {},
-                  child: customText(
-                      text: 'Send report',
-                      fontSize: 16,
-                      textColor: AppColors.darkOrange))
-            ],
-          ),
-        )
-      ],
-    ));
+              contentPadding: const EdgeInsets.all(20.0),
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    customText(
+                        text: 'Report client?',
+                        fontSize: 24,
+                        textColor: AppColors.black,
+                        fontWeight: FontWeight.w700),
+                    InkWell(
+                        onTap: () => context.pop(),
+                        child: SvgPicture.asset(AppImages.cancelModal))
+                  ],
+                ),
+                heightSpace(1),
+                customText(
+                    text: 'Do you want to report this client? ',
+                    fontSize: 12,
+                    textColor: AppColors.black),
+                heightSpace(2),
+                modalForm('Air conditioning', service, 8),
+                heightSpace(1),
+                Row(
+                  children: [
+                    SvgPicture.asset(AppImages.warning),
+                    widthSpace(2),
+                    Flexible(
+                      child: customText(
+                          text:
+                              'Ensure this action is totally needed, or settle your differences with the client.',
+                          fontSize: 11,
+                          textColor: AppColors.textGrey),
+                    )
+                  ],
+                ),
+                heightSpace(2),
+                Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton(
+                          onPressed: () => context.pop(),
+                          child: customText(
+                              text: 'cancel',
+                              fontSize: 16,
+                              textColor: AppColors.textGrey)),
+                      Container(
+                        width: 1,
+                        height: 40,
+                        color: AppColors.containerGrey,
+                      ),
+                      TextButton(
+                          onPressed: () {},
+                          child: customText(
+                              text: 'Send report',
+                              fontSize: 16,
+                              textColor: AppColors.darkOrange))
+                    ],
+                  ),
+                )
+              ],
+            ));
   }
 
   @override
@@ -275,52 +285,39 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
                 textColor: AppColors.orange,
                 fontWeight: FontWeight.bold),
             heightSpace(2),
-            Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        SvgPicture.asset(AppImages.serviceIcon),
-                        widthSpace(2),
-                        customText(
-                            text: 'AC Maintenance',
-                            fontSize: 13,
-                            textColor: AppColors.black,
-                            fontWeight: FontWeight.w600),
-                      ],
-                    ),
-                    customText(
-                        text: '₦ 2,000.00',
-                        fontSize: 13,
-                        textColor: AppColors.black)
-                  ],
-                ),
-                heightSpace(3),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        SvgPicture.asset(AppImages.serviceIcon),
-                        widthSpace(2),
-                        customText(
-                            text: 'Electrical Repair',
-                            fontSize: 13,
-                            textColor: AppColors.black,
-                            fontWeight: FontWeight.w600),
-                      ],
-                    ),
-                    customText(
-                        text: '₦ 3,000.00',
-                        fontSize: 13,
-                        textColor: AppColors.black)
-                  ],
-                ),
-                heightSpace(2),
-              ],
-            ),
+            ...quotes!.map((quote) {
+              String serviceName = '';
+              if (quote.requestedPersonalisedService != null) {
+                serviceName = quote.requestedPersonalisedService!.name!;
+              } else if (quote.requestedSystemService != null) {
+                serviceName = quote.requestedSystemService!.name!;
+              }
+              return Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          SvgPicture.asset(AppImages.serviceIcon),
+                          widthSpace(2),
+                          customText(
+                              text: serviceName,
+                              fontSize: 13,
+                              textColor: AppColors.black,
+                              fontWeight: FontWeight.w600),
+                        ],
+                      ),
+                      customText(
+                          text: '${quote.price!}',
+                          fontSize: 13,
+                          textColor: AppColors.black)
+                    ],
+                  ),
+                  heightSpace(4),
+                ],
+              );
+            }),
             heightSpace(1),
             const Divider(),
             customText(
@@ -367,7 +364,7 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
                         fontSize: 13,
                         textColor: AppColors.black),
                     customText(
-                        text: '5,000.00',
+                        text: '$price',
                         fontSize: 13,
                         textColor: AppColors.black)
                   ],
@@ -381,7 +378,9 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
                         fontSize: 13,
                         textColor: AppColors.black),
                     customText(
-                        text: '50.00', fontSize: 13, textColor: AppColors.black)
+                        text: '$serviceFee',
+                        fontSize: 13, 
+                        textColor: AppColors.black)
                   ],
                 ),
                 heightSpace(2),
@@ -394,7 +393,7 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
                         textColor: AppColors.black,
                         fontWeight: FontWeight.w600),
                     customText(
-                        text: '5,050.00',
+                        text: '${price + serviceFee}',
                         fontSize: 13,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.w600)
@@ -453,8 +452,8 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
     );
   }
 
-
-  TextFormField modalForm(String hint, TextEditingController control, int line) {
+  TextFormField modalForm(
+      String hint, TextEditingController control, int line) {
     return TextFormField(
       controller: control,
       maxLines: line,
@@ -469,7 +468,6 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
             borderRadius: BorderRadius.all(Radius.circular(20))),
         contentPadding: const EdgeInsets.only(left: 10, top: 10),
         errorStyle: const TextStyle(fontSize: 14),
-        
       ),
     );
   }
