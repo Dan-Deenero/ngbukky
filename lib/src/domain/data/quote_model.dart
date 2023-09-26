@@ -111,7 +111,7 @@ class Mechanic {
 
 class User {
   String? id;
-  Null? username;
+  String? username;
 
   User({this.id, this.username});
 

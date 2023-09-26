@@ -87,9 +87,7 @@ class _SendQuoteState extends ConsumerState<SendQuote> {
               if (parts.length == 2) {
                 String serviceId = parts[0];
                 String serviceName = parts[1];
-                if (serviceId != null) {
-                  serviceNameToId[serviceName] = serviceId;
-                }
+                serviceNameToId[serviceName] = serviceId;
               }
             });
           },
@@ -138,10 +136,8 @@ class _SendQuoteState extends ConsumerState<SendQuote> {
         });
 
     if (results != null) {
-      results.forEach((serviceName, cost) {
-        if (serviceName.isNotEmpty && cost != null) {
-          selectedServices[serviceName] = cost;
-        } // Add the entry to the new Map
+      results.forEach((serviceName, cost) {    
+        selectedServices[serviceName] = cost;
       });
     } else {
       log(results.toString());

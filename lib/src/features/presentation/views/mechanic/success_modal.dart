@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
-import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
@@ -9,11 +7,11 @@ import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
 class SuccessDialogue extends StatelessWidget {
-  String title;
-  String subtitle;
-  VoidCallback action;
+  final String title;
+  final String subtitle;
+  final VoidCallback action;
 
-  SuccessDialogue(
+  const SuccessDialogue(
       {super.key,
       required this.title,
       required this.subtitle,

@@ -2,12 +2,15 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/controller/fetch_full_profile.dart';
 import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/data/user_model.dart';
 import 'package:ngbuka/src/domain/repository/auth_repository.dart';
@@ -19,7 +22,7 @@ import 'package:ngbuka/src/features/presentation/widgets/app_textformfield.dart'
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 import 'package:ngbuka/src/utils/helpers/validators.dart';
 
-import 'success_modal.dart';
+import '../success_modal.dart';
 
 class QuoteSend extends StatefulWidget {
   final String id;
@@ -53,10 +56,7 @@ class _QuoteSendState extends State<QuoteSend> {
 
   BookingModel? bookingModel;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
+  getUpdatedProfile() {
     _authRepo.getMechanicProfile().then((value) => setState(
           () {
             service = value.services!;
@@ -88,6 +88,13 @@ class _QuoteSendState extends State<QuoteSend> {
             });
           },
         ));
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUpdatedProfile();
     mechanicRepo.getoneBooking(widget.id).then((value) => setState(
           () {
             bookingModel = value;
@@ -121,6 +128,30 @@ class _QuoteSendState extends State<QuoteSend> {
     });
   }
 
+  addPersonalService(String serv) async {
+    log(serv);
+    var data = {
+      "name": serv,
+      "imageUrl": "some url",
+      "description": "the description"
+    };
+
+    bool result = await mechanicRepo.addPersonalizedService(data);
+    if (result) {
+      if (context.mounted) {
+        context.pop();
+      }
+    }
+  }
+
+  addServiceToSelectedServices(String serviceName, int serviceCost) {
+    setState(() {
+      selectedServices2[serviceName] = serviceCost;
+
+      subtotal += serviceCost;
+    });
+  }
+
   addService() {
     showDialog(
         context: context,
@@ -132,40 +163,17 @@ class _QuoteSendState extends State<QuoteSend> {
               content:
                   'This service is added to your already existing list of services',
               action: 'Add service',
-              fction: () {
+              fction: () async {
+                addPersonalService(serv.text);
                 setState(() {
                   addServiceToSelectedServices(
                       serv.text, int.parse(price.text));
-                  addPersonalService();
+                  // getUpdatedProfile();
+                  
+                  // context.pop();
                 });
-                // updateBusinessProfile();
               },
             ));
-  }
-
-  addPersonalService() async {
-    var data = {
-      "name": '${serv.text}',
-      "imageUrl": "some url",
-      "description": "the description"
-    };
-
-    bool result = await mechanicRepo.addPersonalizedService(data);
-    if (result) {
-      if (context.mounted) {
-        context.pop();
-      }
-    }
-
-    log(data.toString());
-  }
-
-  addServiceToSelectedServices(String serviceName, int serviceCost) {
-    setState(() {
-      selectedServices2[serviceName] = serviceCost;
-
-      subtotal += serviceCost;
-    });
   }
 
   void submit() {
@@ -317,34 +325,36 @@ class _QuoteSendState extends State<QuoteSend> {
             ));
   }
 
-  showSuccesModal(){
+  showSuccesModal() {
     showDialog(
-            context: context,
-            builder: (context) => SuccessDialogue(
-                  title: 'Quote sent',
-                  subtitle:
-                      'Your quote has been sent successfully to ${bookingModel!.user!.username!}',
-                  action: () {
-                    context.go(AppRoutes.pendingQuoteApproval);
-                  },
-                ));
+        context: context,
+        builder: (context) => SuccessDialogue(
+              title: 'Quote sent',
+              subtitle:
+                  'Your quote has been sent successfully to ${bookingModel!.user!.username!}',
+              action: () {
+                context.go(AppRoutes.pendingQuoteApproval);
+              },
+            ));
   }
 
   sendQuote() async {
     selectedServices2.forEach((serviceName, cost) {
       final serviceId = serviceNameToId[serviceName];
-        servicesItems.add({
-          "serviceId": serviceId, // Convert the ID to string
-          "cost": cost,
-        });
-      
+      servicesItems.add({
+        "serviceId": serviceId, // Convert the ID to string
+        "cost": cost,
+      });
     });
-        // log(servicesItems.toString());
-        // print(servicesItems.toString());
+    // log(servicesItems.toString());
+    // print(servicesItems.toString());
 
     var data = {};
     if (selectedServices2.isNotEmpty) {
-      data = {"isOnlyAmount": 'false', "services": [...servicesItems]};
+      data = {
+        "isOnlyAmount": 'false',
+        "services": [...servicesItems]
+      };
     } else {
       data = {"isOnlyAmount": 'true', "amount": subtotal};
     }
@@ -473,7 +483,7 @@ class _QuoteSendState extends State<QuoteSend> {
               padding: const EdgeInsets.only(),
               child: Center(
                   child: GestureDetector(
-                onTap: () => context.pop(),
+                onTap: () => context.push(AppRoutes.bottomNav),
                 child: const Icon(
                   Icons.close,
                   color: AppColors.black,
@@ -738,8 +748,6 @@ class _MultiSelectState extends State<MultiSelect> {
   var serviced = TextEditingController();
   var serves = TextEditingController();
   var prices = TextEditingController();
-
-  String serviceName = "";
   int serviceCost = 0;
 
   void _itemChange(String itemValue, bool isSelected) {

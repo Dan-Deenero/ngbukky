@@ -211,7 +211,7 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                                             widthSpace(2),
                                             customText(
                                                 text: e["day"],
-                                                fontSize: 15,
+                                                fontSize: 12,
                                                 textColor: AppColors.black)
                                           ]),
                                         ),
@@ -222,13 +222,23 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                                     final TimeOfDay? result =
                                         await showTimePicker(
                                             context: context,
-                                            initialTime: TimeOfDay.now());
+                                            initialTime: TimeOfDay.now(),
+                                            initialEntryMode:
+                                                TimePickerEntryMode.input
+                                            );
 
                                     if (result != null) {
                                       if (context.mounted) {
                                         setState(() {
+                                          String res;
+                                          if (result.minute < 10) {
+                                            res =
+                                                '0${result.minute.toString()}';
+                                          } else {
+                                            res = result.minute.toString();
+                                          }
                                           workingHour[index]["from"] =
-                                              result.format(context);
+                                              '${result.hour.toString()}:$res';
                                         });
                                       }
                                     }
@@ -255,13 +265,22 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                                     final TimeOfDay? result =
                                         await showTimePicker(
                                             context: context,
-                                            initialTime: TimeOfDay.now());
+                                            initialTime: TimeOfDay.now(),
+                                            initialEntryMode:
+                                                TimePickerEntryMode.input
+                                            );
 
                                     if (result != null) {
                                       if (context.mounted) {
                                         setState(() {
+                                          String ses;
+                                          if(result.minute < 10){
+                                            ses = '0${result.minute.toString()}';
+                                          }else{
+                                            ses = result.minute.toString();
+                                          }
                                           workingHour[index]["to"] =
-                                              result.format(context);
+                                              '${result.hour.toString()}:$ses';
                                         });
                                       }
                                     }
@@ -623,7 +642,7 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                             heightSpace(2),
                             CustomTextFormField(
                                 textEditingController: serviceController,
-                                label: "Other servces",
+                                label: "Other Services",
                                 hintText: "separate with a comma",
                                 prefixIcon: Padding(
                                   padding: const EdgeInsets.all(13.0),

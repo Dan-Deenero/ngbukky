@@ -47,7 +47,7 @@ class AlertDialogue extends StatelessWidget {
                 textColor: AppColors.black,
                 fontWeight: FontWeight.w700),
             InkWell(
-                onTap: cancel,
+                onTap: () => context.pop(),
                 child: SvgPicture.asset(AppImages.cancelModal))
           ],
         ),

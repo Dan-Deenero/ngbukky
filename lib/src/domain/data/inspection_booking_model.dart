@@ -139,7 +139,7 @@ class Responses {
 class Quotes {
 	String? id;
 	int? price;
-	Null? message;
+	String? message;
 	RequestedSystemService? requestedSystemService;
 	RequestedPersonalisedService? requestedPersonalisedService;
 

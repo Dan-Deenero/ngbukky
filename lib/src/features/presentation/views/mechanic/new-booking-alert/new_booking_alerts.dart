@@ -1,5 +1,3 @@
-import 'dart:developer';
-// import 'dart:js_interop';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';

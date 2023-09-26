@@ -56,18 +56,16 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
       cac.text = value.cacNumber!;
       address.text = value.address!;
       cityController.text = value.city!;
-      // lgaController.text = value.lga!;
-      // stateController.text = value.state!;
+      lgaController.text = value.lga!;
+      stateController.text = value.state!;
       carsList = value.cars!;
       // selectedServiceList = services.cast<String>();
-      // workingHourController.text = availabilityString;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final loading = ref.watch(isLoading);
-    // final userModel = useState<UserModel?>(null);
     final workingHour = ref.watch(stateWorkingHours);
 
     workingHours() {

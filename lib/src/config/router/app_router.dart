@@ -1,6 +1,5 @@
 import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
-import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/data/otp_model.dart';
 import 'package:ngbuka/src/features/presentation/views/business_info/business_info.dart';
 import 'package:ngbuka/src/features/presentation/views/business_info/business_info_settings.dart';
@@ -29,7 +28,7 @@ import 'package:ngbuka/src/features/presentation/views/mechanic/payment_request/
 import 'package:ngbuka/src/features/presentation/views/mechanic/pending_quote_approval/Inspection_details_pqa.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/pending_quote_approval/pending_quote_aproval.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/quote_request.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/quote_send.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/send-quotes/quote_send.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/rejected-bookings/rejected_booking.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/rejected-bookings/view_rejected_booking.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/send-quotes/send_quote.dart';
