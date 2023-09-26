@@ -50,5 +50,7 @@ class AppRoutes {
   static const String sparePersonalInfo = '/spare-personalinfo';
   static const String spareStoreInfo = '/spare-storeinfo';
   static const String spareBusinessInfo = '/spare-businessinfo';
+  static const String newQuoteAlert = '/new-quote-Alert';
+  static const String quoteRequest = '/quote-request';
 
 }

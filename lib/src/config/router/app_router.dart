@@ -11,6 +11,7 @@ import 'package:ngbuka/src/features/presentation/views/main_auth/login.dart';
 import 'package:ngbuka/src/features/presentation/views/main_auth/new_password.dart';
 import 'package:ngbuka/src/features/presentation/views/main_auth/select_account_type.dart';
 import 'package:ngbuka/src/features/presentation/views/main_auth/verify_account.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/new_quote_alert.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/accepted-bookings/accepted_booking.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/accepted-bookings/view_accepted_booking.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/booking-rejected/booking_rejected.dart';
@@ -258,4 +259,12 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
           path: AppRoutes.addWallet,
           name: AppRoutes.addWallet,
           builder: (_, state) =>  AddWalletPage()),
+      GoRoute(
+          path: AppRoutes.newQuoteAlert,
+          name: AppRoutes.newQuoteAlert,
+          builder: (_, state) => const NewQuoteAlert()),
+      GoRoute(
+          path: AppRoutes.quoteRequest,
+          name: AppRoutes.quoteRequest,
+          builder: (_, state) => const QuoteRequest()),
     ]);

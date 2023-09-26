@@ -477,7 +477,7 @@ class Quotes extends StatelessWidget {
             ),
             heightSpace(2),
             GestureDetector(
-              onTap: () => context.push(AppRoutes.bookingAlert),
+              onTap: () => context.push(AppRoutes.newQuoteAlert),
               child: card(
                   "New quote request", "View new quote request", "0", "orange"),
             ),
