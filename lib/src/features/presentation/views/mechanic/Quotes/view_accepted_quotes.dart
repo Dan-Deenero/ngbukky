@@ -2,209 +2,140 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/data/quote_model.dart';
+import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
-class QuoteRequests extends StatefulWidget {
+class ViewAcceptedQuote extends StatefulWidget {
   final String id;
-  const QuoteRequests({super.key, required this.id});
+  ViewAcceptedQuote({
+    super.key,
+    required this.id
+  });
 
   @override
-  State<QuoteRequests> createState() => _QuoteRequestsState();
+  State<ViewAcceptedQuote> createState() => _ViewAcceptedQuoteState();
 }
 
-class _QuoteRequestsState extends State<QuoteRequests> {
+class _ViewAcceptedQuoteState extends State<ViewAcceptedQuote> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
-  bool isLoading = true;
-  QuotesModel? quoteModel;
 
-  List<Services>? quote = [];
+  bool isLoading = false;
+  var dateString;
+  var dateTime;
+  var formattedDate;
+  var formattedTime;
 
+  BookingModel? bookingModel;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _mechanicRepo.getoneQuote(widget.id).then((value) => setState(
-          () {
-            quoteModel = value;
-            isLoading = false;
-            quote = quoteModel!.services!;
-          },
-        ));
-  }
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   _mechanicRepo.getoneBooking(widget.id).then((value) => setState(
+  //         () {
+  //           bookingModel = value;
+  //           isLoading = false;
+  //           dateString = bookingModel!.date!;
+  //           dateTime = DateTime.parse(dateString);
+  //           formattedDate = DateFormat('E, d MMM y').format(dateTime);
 
-  // acceptBooking() async {
-  //     var body = {
-  //       "action": "accepted",
-  //     };
-  //     bool result = await _mechanicRepo.acceptOrRejectBooking(body, widget.id);
-  //     if (result) {
-  //       if (context.mounted) {
-  //         context.pop();
-  //         context.go(AppRoutes.acceptedBooking);
-  //         return;
-  //       }
+  //           formattedTime = DateFormat('hh:mm a').format(dateTime);
+  //         },
+  //       ));
+  // }
+
+  // finishBooking() async {
+  //   var body = {
+  //     "action": "accepted",
+  //   };
+  //   bool result = await _mechanicRepo.markInspection(body, widget.id);
+  //   if (result) {
+  //     if (context.mounted) {
+  //       context.push(AppRoutes.acceptedBooking);
+  //       return;
   //     }
   //   }
+  // }
 
-  //   rejectBooking() async {
-  //     var body = {
-  //       "action": "rejected",
-  //     };
-  //     bool result = await _mechanicRepo.acceptOrRejectBooking(body, widget.id);
-  //     if (result) {
-  //       if (context.mounted) {
-  //         context.go(AppRoutes.rejectedBooking);
-  //         return;
-  //       }
-  //     }
-  //   }
+  // finish() {
+  //   showDialog(
+  //       context: context,
+  //       builder: (context) => Center(
+  //             child: Container(
+  //               // padding: EdgeInsets.all(10.0),
+  //               width: 700, // Set the desired width
+  //               height: 200,
+  //               child: Dialog(
+  //                 shape: RoundedRectangleBorder(
+  //                   borderRadius: BorderRadius.circular(
+  //                       16.0), // Adjust the radius as needed
+  //                 ),
+  //                 child: Column(
+  //                   mainAxisAlignment: MainAxisAlignment.center,
+  //                   children: [
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //                       children: [
+  //                         customText(
+  //                             text: 'Confirm acceptance',
+  //                             fontSize: 20,
+  //                             textColor: AppColors.black,
+  //                             fontWeight: FontWeight.w500),
+  //                         InkWell(
+  //                             onTap: () => context.pop(),
+  //                             child: SvgPicture.asset(AppImages.cancelModal))
+  //                       ],
+  //                     ),
+  //                     heightSpace(1),
+  //                     customText(
+  //                         text: 'Confirm that you want to accept this booking',
+  //                         fontSize: 12,
+  //                         textColor: AppColors.black),
+  //                     heightSpace(3),
+  //                     Center(
+  //                       child: Row(
+  //                         mainAxisAlignment: MainAxisAlignment.center,
+  //                         children: [
+  //                           TextButton(
+  //                               onPressed: () => context.pop(),
+  //                               child: customText(
+  //                                   text: 'No',
+  //                                   fontSize: 16,
+  //                                   textColor: AppColors.textGrey)),
+  //                           widthSpace(3),
+  //                           Container(
+  //                             width: 1,
+  //                             height: 40,
+  //                             color: AppColors.containerGrey,
+  //                           ),
+  //                           widthSpace(3),
+  //                           TextButton(
+  //                               onPressed: finishBooking,
+  //                               child: customText(
+  //                                   text: 'Yes',
+  //                                   fontSize: 16,
+  //                                   textColor: AppColors.darkOrange))
+  //                         ],
+  //                       ),
+  //                     )
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //           ));
+  // }
 
-  accept() {
-    showDialog(
-        context: context,
-        builder: (context) => Center(
-              child: Container(
-                // padding: EdgeInsets.all(10.0),
-                width: 700, // Set the desired width
-                height: 200,
-                child: Dialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                        16.0), // Adjust the radius as needed
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          customText(
-                              text: 'Confirm acceptance',
-                              fontSize: 20,
-                              textColor: AppColors.black,
-                              fontWeight: FontWeight.w500),
-                          InkWell(
-                              onTap: () => context.pop(),
-                              child: SvgPicture.asset(AppImages.cancelModal))
-                        ],
-                      ),
-                      heightSpace(1),
-                      customText(
-                          text: 'Confirm that you want to accept this booking',
-                          fontSize: 12,
-                          textColor: AppColors.black),
-                      heightSpace(3),
-                      Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            TextButton(
-                                onPressed: () => context.pop(),
-                                child: customText(
-                                    text: 'No',
-                                    fontSize: 16,
-                                    textColor: AppColors.textGrey)),
-                            widthSpace(3),
-                            Container(
-                              width: 1,
-                              height: 40,
-                              color: AppColors.containerGrey,
-                            ),
-                            widthSpace(3),
-                            TextButton(
-                                onPressed: () {},
-                                child: customText(
-                                    text: 'Yes',
-                                    fontSize: 16,
-                                    textColor: AppColors.darkOrange))
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ));
-  }
-
-  reject() {
-    showDialog(
-        context: context,
-        builder: (context) => Center(
-              child: Container(
-                // padding: EdgeInsets.all(10.0),
-                width: 700, // Set the desired width
-                height: 200,
-                child: Dialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                        16.0), // Adjust the radius as needed
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          customText(
-                              text: 'Confirm rejection',
-                              fontSize: 20,
-                              textColor: AppColors.black,
-                              fontWeight: FontWeight.w500),
-                          InkWell(
-                              onTap: () => context.pop(),
-                              child: SvgPicture.asset(AppImages.cancelModal))
-                        ],
-                      ),
-                      heightSpace(1),
-                      customText(
-                          text: 'Confirm that you want to reject this booking',
-                          fontSize: 12,
-                          textColor: AppColors.black),
-                      heightSpace(3),
-                      Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            TextButton(
-                                onPressed: () {},
-                                child: customText(
-                                    text: 'Yes',
-                                    fontSize: 16,
-                                    textColor: AppColors.darkOrange)),
-                            widthSpace(3),
-                            Container(
-                              width: 1,
-                              height: 40,
-                              color: AppColors.containerGrey,
-                            ),
-                            widthSpace(3),
-                            TextButton(
-                                onPressed: () => context.pop(),
-                                child: customText(
-                                    text: 'No',
-                                    fontSize: 16,
-                                    textColor: AppColors.textGrey))
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ));
-  }
-
+  // void resendOTP() async {
   @override
   Widget build(BuildContext context) {
-    // double width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(20.h),
@@ -232,7 +163,7 @@ class _QuoteRequestsState extends State<QuoteRequests> {
               ),
             ),
             customText(
-                text: "Quote Request",
+                text: "Accepted Quotes",
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 textColor: AppColors.black),
@@ -256,12 +187,12 @@ class _QuoteRequestsState extends State<QuoteRequests> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.profile),
                     title: customText(
-                        text: quoteModel!.user!.username!,
+                        text: 'Kels2323',
                         fontSize: 14,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
                     subtitle: customText(
-                        text: "Username",
+                        text: "Kels2323",
                         fontSize: 12,
                         textColor: AppColors.textGrey),
                   ),
@@ -297,7 +228,7 @@ class _QuoteRequestsState extends State<QuoteRequests> {
             ListTile(
               leading: SvgPicture.asset(AppImages.carIcon),
               title: customText(
-                  text: quoteModel!.brand!,
+                  text: 'Toyota',
                   fontSize: 14,
                   textColor: AppColors.black,
                   fontWeight: FontWeight.bold),
@@ -309,7 +240,7 @@ class _QuoteRequestsState extends State<QuoteRequests> {
             ListTile(
               leading: SvgPicture.asset(AppImages.carIcon),
               title: customText(
-                  text: '${quoteModel!.model}, ${quoteModel!.year}',
+                  text: "Camry Hybrid 2022",
                   fontSize: 14,
                   textColor: AppColors.black,
                   fontWeight: FontWeight.bold),
@@ -322,7 +253,7 @@ class _QuoteRequestsState extends State<QuoteRequests> {
             ListTile(
               leading: SvgPicture.asset(AppImages.calendarIcon),
               title: customText(
-                  text: '${quoteModel!.year!}',
+                  text: '2022',
                   fontSize: 14,
                   textColor: AppColors.black,
                   fontWeight: FontWeight.bold),
@@ -340,21 +271,29 @@ class _QuoteRequestsState extends State<QuoteRequests> {
             heightSpace(3),
             Column(
               children: [
-                ...quote!.map((qte) {
-                  return Row(
-                    children: [
-                      SvgPicture.asset(AppImages.serviceIcon),
-                      widthSpace(2),
-                      customText(
-                          text: qte.name!,
-                          fontSize: 13,
-                          textColor: AppColors.black,
-                          fontWeight: FontWeight.w600),
-                      heightSpace(4),
-                    ],
-                  );
-                }),
+                Row(
+                  children: [
+                    SvgPicture.asset(AppImages.serviceIcon),
+                    widthSpace(2),
+                    customText(
+                        text: 'AC Maintenance',
+                        fontSize: 13,
+                        textColor: AppColors.black,
+                        fontWeight: FontWeight.w600),
+                  ],
+                ),
                 heightSpace(4),
+                Row(
+                  children: [
+                    SvgPicture.asset(AppImages.serviceIcon),
+                    widthSpace(2),
+                    customText(
+                        text: 'Electrical Repair',
+                        fontSize: 13,
+                        textColor: AppColors.black,
+                        fontWeight: FontWeight.w600),
+                  ],
+                ),
               ],
             ),
             heightSpace(2),
@@ -405,7 +344,7 @@ class _QuoteRequestsState extends State<QuoteRequests> {
             Row(
               children: [
                 GestureDetector(
-                  onTap: reject,
+                  onTap: (){},
                   child: Container(
                     width: 30.w,
                     height: 7.h,
@@ -414,7 +353,7 @@ class _QuoteRequestsState extends State<QuoteRequests> {
                         borderRadius: BorderRadius.circular(25)),
                     child: Center(
                         child: customText(
-                            text: "Reject",
+                            text: "",
                             fontSize: 15,
                             textColor: AppColors.black)),
                   ),
@@ -422,10 +361,10 @@ class _QuoteRequestsState extends State<QuoteRequests> {
                 widthSpace(2),
                 Expanded(
                   child: InkWell(
-                    onTap: accept,
+                    onTap: (){},
                     child: const AppButton(
                       hasIcon: false,
-                      buttonText: "Accept request",
+                      buttonText: "Send Quote",
                       isOrange: true,
                     ),
                   ),

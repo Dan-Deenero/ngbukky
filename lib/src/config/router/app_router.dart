@@ -11,7 +11,12 @@ import 'package:ngbuka/src/features/presentation/views/main_auth/login.dart';
 import 'package:ngbuka/src/features/presentation/views/main_auth/new_password.dart';
 import 'package:ngbuka/src/features/presentation/views/main_auth/select_account_type.dart';
 import 'package:ngbuka/src/features/presentation/views/main_auth/verify_account.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/accepted_quotes.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/inspection_detalis_rq.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/new_quote_alert.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/quote_request.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/rejected_quote.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/view_accepted_quotes.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/accepted-bookings/accepted_booking.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/accepted-bookings/view_accepted_booking.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/booking-rejected/booking_rejected.dart';
@@ -172,10 +177,6 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
           name: AppRoutes.quotesSend,
           builder: (_, state) =>  QuoteSend(id: state.extra as String,)),
       GoRoute(
-          path: AppRoutes.quotesRequest,
-          name: AppRoutes.quotesRequest,
-          builder: (_, state) => const QuoteRequest()),
-      GoRoute(
           path: AppRoutes.bookingAlert,
           name: AppRoutes.bookingAlert,
           builder: (_, state) => const BookingAlert()),
@@ -266,5 +267,21 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
           path: AppRoutes.quoteRequest,
           name: AppRoutes.quoteRequest,
-          builder: (_, state) => const QuoteRequest()),
+          builder: (_, state) =>  QuoteRequests(id: state.extra as String,)),
+      GoRoute(
+          path: AppRoutes.acceptedQuotes,
+          name: AppRoutes.acceptedQuotes,
+          builder: (_, state) => const  AcceptedQuotes()),
+      GoRoute(
+          path: AppRoutes.viewAcceptedQuote,
+          name: AppRoutes.viewAcceptedQuote,
+          builder: (_, state) =>  ViewAcceptedQuote(id: state.extra as String,)),
+      GoRoute(
+          path: AppRoutes.rejectedQuote,
+          name: AppRoutes.rejectedQuote,
+          builder: (_, state) => const RejectedQuote()),
+      GoRoute(
+          path: AppRoutes.rejectedQuoteDetails,
+          name: AppRoutes.rejectedQuoteDetails,
+          builder: (_, state) =>  RQInspectionDetails(id: state.extra as String,)),
     ]);

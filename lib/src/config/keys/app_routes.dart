@@ -52,5 +52,9 @@ class AppRoutes {
   static const String spareBusinessInfo = '/spare-businessinfo';
   static const String newQuoteAlert = '/new-quote-Alert';
   static const String quoteRequest = '/quote-request';
+  static const String acceptedQuotes = '/accepted-quotes';
+  static const String viewAcceptedQuote = '/view-accepted-quote';
+  static const String rejectedQuote = '/rejected-quote';
+  static const String rejectedQuoteDetails = '/rejected-quote-details';
 
 }

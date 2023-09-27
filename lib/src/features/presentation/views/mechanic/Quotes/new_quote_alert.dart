@@ -1,12 +1,12 @@
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
+import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
@@ -20,16 +20,16 @@ class NewQuoteAlert extends StatefulWidget {
 
 class _NewQuoteAlertState extends State<NewQuoteAlert> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
-  List<BookingModel> _bookingHistory = [];
+  List<QuotesModel> _quoteHistory = [];
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _mechanicRepo.getAllBooking('pending').then((value) => setState(() {
-          _bookingHistory = value;
+    _mechanicRepo.getAllQuotes().then((value) => setState(() {
+          _quoteHistory = value;
           isLoading = false;
-          print(_bookingHistory);
+          print(_quoteHistory);
         }));
     // log(_bookingHistory.toString());
   }
@@ -89,49 +89,161 @@ class _NewQuoteAlertState extends State<NewQuoteAlert> {
                       padding: const EdgeInsets.all(14.0),
                       child: Wrap(
                         children: [
-                          // if (_bookingHistory.isEmpty)
-                          //   Center(
-                          //       heightFactor: 3.5,
-                          //       child: Column(
-                          //         children: [
-                          //           SvgPicture.asset(AppImages.bookingWarning),
-                          //           customText(
-                          //               text:
-                          //                   'There are no new inspection booking requests',
-                          //               fontSize: 15,
-                          //               textColor: AppColors.black)
-                          //         ],
-                          //       ))
-
-                          GestureDetector(
-                            onTap: () => context.push(AppRoutes.quoteRequest),
-                            child: Container(
-                              margin: const EdgeInsets.only(bottom: 10),
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.all(1),
-                              width: double.infinity,
-                              height: 12.h,
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                          if (_quoteHistory.isEmpty)
+                            Center(
+                                heightFactor: 3.5,
+                                child: Column(
                                   children: [
-                                    Container(
-                                        alignment: Alignment.center,
-                                        width: double.infinity,
-                                        height: 10.h,
-                                        decoration: BoxDecoration(
-                                          color: AppColors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        child: Column())
-                                  ]),
-                            ),
-                          ),
+                                    SvgPicture.asset(AppImages.bookingWarning),
+                                    customText(
+                                        text:
+                                            'There are no new Quote booking requests',
+                                        fontSize: 15,
+                                        textColor: AppColors.black,
+                                        textAlignment: TextAlign.center)
+                                  ],
+                                ))
+                          else
+                            ..._quoteHistory.map((e) {
+                              var dateString = e.createdAt;
+                              var dateTime = DateTime.parse(dateString!);
+                              var formattedDate =
+                                  DateFormat('dd MMM yyyy').format(dateTime);
 
+                              var formattedTime =
+                                  DateFormat('hh:mm a').format(dateTime);
+                              
+                              var names = e.services!.map((service){
+                                return "${service.name}";
+                              }).toList();
+                              String serviceNames = names.join(', ');
+
+                              return GestureDetector(
+                                onTap: () =>
+                                    context.push(AppRoutes.quoteRequest, extra: e.id),
+                                child: Container(
+                                  margin: const EdgeInsets.only(bottom: 10),
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.all(10),
+                                  width: double.infinity,
+                                  // height: 12.h,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            SvgPicture.asset(
+                                              AppImages.carIcon,
+                                              width: 30,
+                                            ),
+                                            widthSpace(2),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                customText(
+                                                    text: e.brand!,
+                                                    fontSize: 15,
+                                                    textColor: AppColors.black,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                                heightSpace(.5),
+                                                customText(
+                                                    text: '${e.model}, ${e.year}',
+                                                    fontSize: 13,
+                                                    textColor: AppColors.black,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                                heightSpace(1),
+                                                Row(
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                        AppImages.serviceIcon),
+                                                    widthSpace(1),
+                                                    SizedBox(
+                                                      width: 150,
+                                                      child: customText(
+                                                          text:
+                                                              serviceNames,
+                                                          fontSize: 10,
+                                                          textColor:
+                                                              AppColors.black),
+                                                    )
+                                                  ],
+                                                ),
+                                                heightSpace(1),
+                                                Row(
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                            AppImages.time),
+                                                        customText(
+                                                            text: formattedTime,
+                                                            fontSize: 10,
+                                                            textColor: AppColors
+                                                                .textGrey)
+                                                      ],
+                                                    ),
+                                                    widthSpace(2),
+                                                    Row(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                            AppImages
+                                                                .calendarIcon),
+                                                        customText(
+                                                            text: formattedDate,
+                                                            fontSize: 10,
+                                                            textColor: AppColors
+                                                                .textGrey)
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Container(
+                                                width: 60,
+                                                height: 20,
+                                                decoration: BoxDecoration(
+                                                    color: AppColors.green,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5)),
+                                                child: Center(
+                                                  child: customText(
+                                                    text: "New",
+                                                    fontSize: 10,
+                                                    textColor: AppColors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                              heightSpace(7),
+                                              customText(
+                                                  text: "Quote Request",
+                                                  fontSize: 12,
+                                                  textColor: AppColors.orange,
+                                                  fontWeight: FontWeight.w600),
+                                            ]),
+                                      ]),
+                                ),
+                              );
+                            }),
                           heightSpace(3)
                         ],
                       ),
@@ -141,32 +253,3 @@ class _NewQuoteAlertState extends State<NewQuoteAlert> {
               ));
   }
 }
-
-
-// Column(
-//                                                 crossAxisAlignment:
-//                                                     CrossAxisAlignment.end,
-//                                                 children: [
-//                                                   Container(
-//                                                     width: 60,
-//                                                     height: 20,
-//                                                     decoration: BoxDecoration(
-//                                                         color: AppColors.green,
-//                                                         borderRadius:
-//                                                             BorderRadius
-//                                                                 .circular(5)),
-//                                                     child: Center(
-//                                                       child: customText(
-//                                                         text: "New",
-//                                                         fontSize: 10,
-//                                                         textColor:
-//                                                             AppColors.white,
-//                                                       ),
-//                                                     ),
-//                                                   ),
-//                                                   heightSpace(2.2),
-//                                                   customText(
-//                                                       text: "Car Insepection",
-//                                                       fontSize: 12,
-//                                                       textColor: AppColors.red),
-//                                                 ]),

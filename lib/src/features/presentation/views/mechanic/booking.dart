@@ -483,7 +483,7 @@ class Quotes extends StatelessWidget {
             ),
             heightSpace(2),
             GestureDetector(
-              onTap: () => context.push(AppRoutes.acceptedBooking),
+              onTap: () => context.push(AppRoutes.acceptedQuotes),
               child: card("Accepted quotes",
                   "All you accepted bookings are here", "1", "orange"),
             ),

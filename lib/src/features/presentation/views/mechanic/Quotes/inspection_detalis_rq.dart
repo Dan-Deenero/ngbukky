@@ -10,18 +10,18 @@ import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
-class BRInspectionDetails extends StatefulWidget {
+class RQInspectionDetails extends StatefulWidget {
   final String id;
-  const BRInspectionDetails({
+  const RQInspectionDetails({
     super.key,
     required this.id,
   });
 
   @override
-  State<BRInspectionDetails> createState() => _BRInspectionDetailsState();
+  State<RQInspectionDetails> createState() => _RQInspectionDetailsState();
 }
 
-class _BRInspectionDetailsState extends State<BRInspectionDetails> {
+class _RQInspectionDetailsState extends State<RQInspectionDetails> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
 
   bool isLoading = true;
@@ -79,7 +79,7 @@ class _BRInspectionDetailsState extends State<BRInspectionDetails> {
                 fontWeight: FontWeight.bold,
                 textColor: AppColors.black),
             // heightSpace(1),
-            bodyText("View all necessary information \nabout this booking ")
+            Flexible(child: bodyText("View all necessary information about this booking "))
           ],
         ),
         actions: [
@@ -278,55 +278,6 @@ class _BRInspectionDetailsState extends State<BRInspectionDetails> {
                         text: "Scheduled time",
                         fontSize: 12,
                         textColor: AppColors.textGrey),
-                  ),
-                  heightSpace(2),
-                  const Divider(),
-                  Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          customText(
-                              text: 'Sub-total (₦)',
-                              fontSize: 13,
-                              textColor: AppColors.black),
-                          customText(
-                              text: '$price',
-                              fontSize: 13,
-                              textColor: AppColors.black)
-                        ],
-                      ),
-                      heightSpace(2),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          customText(
-                              text: 'Ngbuka Charge (1%)',
-                              fontSize: 13,
-                              textColor: AppColors.black),
-                          customText(
-                              text: '$serviceFee',
-                              fontSize: 13,
-                              textColor: AppColors.black)
-                        ],
-                      ),
-                      heightSpace(2),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          customText(
-                              text: 'Total',
-                              fontSize: 13,
-                              textColor: AppColors.black,
-                              fontWeight: FontWeight.w600),
-                          customText(
-                              text: '${price + serviceFee}',
-                              fontSize: 13,
-                              textColor: AppColors.black,
-                              fontWeight: FontWeight.w600)
-                        ],
-                      )
-                    ],
                   ),
                   heightSpace(2),
                 ],

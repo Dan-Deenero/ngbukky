@@ -91,7 +91,7 @@ class _BookingAlertState extends State<BookingAlert> {
                         children: [
                           if (_bookingHistory.isEmpty)
                             Center(
-                              heightFactor: 3.5,
+                              heightFactor: 3.0,
                                 child: Column(
                               children: [
                                 SvgPicture.asset(AppImages.bookingWarning),
@@ -99,7 +99,9 @@ class _BookingAlertState extends State<BookingAlert> {
                                     text:
                                         'There are no new inspection booking requests',
                                     fontSize: 15,
-                                    textColor: AppColors.black)
+                                    textColor: AppColors.black,
+                                    textAlignment: TextAlign.center
+                                )
                               ],
                             ))
                           else
