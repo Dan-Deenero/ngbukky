@@ -72,6 +72,7 @@ class ApiClient {
       () async {
         final header = _defaultHeader;
         log('this is the token$_token');
+
         if (useToken) {
           header.addAll(
             {'Authorization': 'Bearer $_token'},

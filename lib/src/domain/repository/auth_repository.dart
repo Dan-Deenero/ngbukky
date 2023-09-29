@@ -38,15 +38,6 @@ class AuthRepo {
     return UserModel();
   }
 
-  Future<UserModel> updateMechanicProfile() async {
-    final response =
-        await ApiClient.get(Endpoints.getProfileMechanic, useToken: true);
-    if (response.status == 200) {
-      return UserModel.fromJson(response.entity);
-    }
-    return UserModel();
-  }
-
   Future<LoginModel> loginEmail(Map<String, dynamic> body) async {
     final response =
         await ApiClient.post(Endpoints.login, body: body, useToken: false);
@@ -78,6 +69,15 @@ class AuthRepo {
     return false;
   }
 
+  Future<bool> signOut() async {
+    final response =
+        await ApiClient.patch(Endpoints.logout, body: null, useToken: true);
+    if (response.status == 200) {
+      return true;
+    }
+    return false;
+  }
+
   Future<bool> updateInfo(Map<String, dynamic> body) async {
     final response = await ApiClient.put(Endpoints.getProfileMechanic,
         body: body, useToken: false);
@@ -87,18 +87,18 @@ class AuthRepo {
     return false;
   }
 
+  Future<UserModel> updateMechanicProfile() async {
+    final response =
+        await ApiClient.get(Endpoints.getProfileMechanic, useToken: true);
+    if (response.status == 200) {
+      return UserModel.fromJson(response.entity);
+    }
+    return UserModel();
+  }
+
   Future<bool> verifyOTP(Map<String, String> body) async {
     final response =
         await ApiClient.patch(Endpoints.verifyOTP, body: body, useToken: true);
-    if (response.status == 200) {
-      return true;
-    }
-    return false;
-  }
-
-  Future<bool> signOut() async {
-    final response =
-        await ApiClient.patch(Endpoints.logout, body: null, useToken: true);
     if (response.status == 200) {
       return true;
     }
@@ -116,5 +116,4 @@ class AuthRepo {
     }
     return false;
   }
-
 }

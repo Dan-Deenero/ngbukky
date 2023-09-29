@@ -2,15 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/controller/fetch_full_profile.dart';
 import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/data/user_model.dart';
 import 'package:ngbuka/src/domain/repository/auth_repository.dart';
@@ -24,6 +21,20 @@ import 'package:ngbuka/src/utils/helpers/validators.dart';
 
 import '../success_modal.dart';
 
+class MultiSelect extends StatefulWidget {
+  final List<String> items;
+  final VoidCallback func;
+  final VoidCallback func2;
+  const MultiSelect(
+      {super.key,
+      required this.items,
+      required this.func,
+      required this.func2});
+
+  @override
+  State<MultiSelect> createState() => _MultiSelectState();
+}
+
 class QuoteSend extends StatefulWidget {
   final String id;
   const QuoteSend({super.key, required this.id});
@@ -32,14 +43,138 @@ class QuoteSend extends StatefulWidget {
   State<QuoteSend> createState() => _QuoteSendState();
 }
 
+class _MultiSelectState extends State<MultiSelect> {
+  final List<String> _selectedServices = [];
+  // Map<String, int> selectedServices2 = {};
+  var serviced = TextEditingController();
+  var serves = TextEditingController();
+  var prices = TextEditingController();
+  int serviceCost = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.circular(20.0), // Adjust the radius as needed
+      ),
+      backgroundColor: const Color.fromARGB(255, 244, 244, 245),
+      content: SizedBox(
+        width: 300, // Set the width to an appropriate value
+        height: 500,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  InkWell(
+                      onTap: () => context.pop(),
+                      child: SvgPicture.asset(AppImages.cancelModal))
+                ],
+              ),
+              customText(
+                  text: 'Select services and cost',
+                  fontSize: 18,
+                  textColor: AppColors.black,
+                  fontWeight: FontWeight.w700),
+              heightSpace(1),
+              customText(
+                  text: 'What will you be doing?',
+                  fontSize: 12,
+                  textColor: AppColors.black),
+              heightSpace(2),
+              ListBody(
+                  children: widget.items
+                      .map((item) => Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: CheckboxListTile(
+                              value: _selectedServices.contains(item),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    20.0), // Adjust the radius as needed
+                              ),
+                              tileColor: AppColors.white,
+                              title: Text(item),
+                              controlAffinity: ListTileControlAffinity.leading,
+                              // subtitle: const Text(
+                              //   "₦ 300",
+                              //   style: TextStyle(color: AppColors.orange),
+                              // ),
+                              onChanged: (isChecked) =>
+                                  _itemChange(item, isChecked!),
+                            ),
+                          ))
+                      .toList()),
+              heightSpace(3),
+              Row(
+                children: [
+                  Expanded(
+                    child: AppButton(
+                      onTap: () {
+                        _submit();
+                      },
+                      hasIcon: false,
+                      buttonText: "Done",
+                      isOrange: true,
+                    ),
+                  ),
+                  widthSpace(2),
+                  GestureDetector(
+                    onTap: () {
+                      context.pop();
+                      widget.func();
+                    },
+                    child: Container(
+                      width: 30.w,
+                      height: 7.h,
+                      decoration: BoxDecoration(
+                          color: AppColors.containerGrey,
+                          borderRadius: BorderRadius.circular(25)),
+                      child: const Center(
+                        child: Icon(Icons.add),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _itemChange(String itemValue, bool isSelected) {
+    setState(() {
+      if (isSelected) {
+        _selectedServices.add(itemValue);
+      } else {
+        _selectedServices.remove(itemValue);
+      }
+    });
+  }
+
+  void _submit() {
+    Navigator.pop(context, _selectedServices);
+    widget.func2();
+  }
+}
+
 class _QuoteSendState extends State<QuoteSend> {
   static final AuthRepo _authRepo = AuthRepo();
   static final MechanicRepo mechanicRepo = MechanicRepo();
+  static final costOnly = TextEditingController();
+  static var serv = TextEditingController();
+  static var price = TextEditingController();
+  static var serves = TextEditingController();
+
+  static var prices = TextEditingController();
   Map<String, int> selectedServices = {};
   Map<String, int> selectedServices2 = {};
   bool isLoading = true;
-  static final costOnly = TextEditingController();
-
   List<String> serviceNames = [];
   List<String> _serviceItems = [];
   Map<String, String> serviceNameToId = {};
@@ -47,253 +182,14 @@ class _QuoteSendState extends State<QuoteSend> {
   List<String> otherList = [];
   List<Services> otherServiceList = [];
   List<Services> service = [];
-  static var serv = TextEditingController();
-  static var price = TextEditingController();
-  static var serves = TextEditingController();
-  static var prices = TextEditingController();
 
   List<Map<String, dynamic>> servicesItems = [];
 
   BookingModel? bookingModel;
 
-  getUpdatedProfile() {
-    _authRepo.getMechanicProfile().then((value) => setState(
-          () {
-            service = value.services!;
-            otherServiceList = value.otherServices!;
-            // serviceList = service.map((service,) => service.id!).toList();
-            // otherList =
-            //     otherServiceList.map((service) => service.id!).toList();
-            serviceList = service.map((service) {
-              return "${service.id}: ${service.name}";
-            }).toList();
+  int subtotal = 0;
 
-            otherList = otherServiceList.map((service) {
-              return "${service.id}: ${service.name}";
-            }).toList();
-            serviceList = serviceList + otherList;
-
-            serviceNames = serviceList.map((item) {
-              return item.split(': ')[1];
-            }).toList();
-            log(serviceNames.toString());
-
-            serviceList.forEach((serviceString) {
-              List<String> parts = serviceString.split(': ');
-              if (parts.length == 2) {
-                String serviceId = parts[0];
-                String serviceName = parts[1];
-                serviceNameToId[serviceName] = serviceId;
-              }
-            });
-          },
-        ));
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getUpdatedProfile();
-    mechanicRepo.getoneBooking(widget.id).then((value) => setState(
-          () {
-            bookingModel = value;
-            log(bookingModel!.user!.id!);
-            isLoading = false;
-          },
-        ));
-  }
-
-  void _showMultiSelect() async {
-    final List<String>? results = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return MultiSelect(
-            items: serviceNames,
-            func: addService,
-            func2: submit,
-          );
-        });
-
-    if (results != null) {
-      setState(() {
-        _serviceItems = results;
-      });
-    }
-
-    _serviceItems.forEach((service) {
-      setState(() {
-        selectedServices[service] = 0;
-      });
-    });
-  }
-
-  addPersonalService(String serv) async {
-    log(serv);
-    var data = {
-      "name": serv,
-      "imageUrl": "some url",
-      "description": "the description"
-    };
-
-    bool result = await mechanicRepo.addPersonalizedService(data);
-    if (result) {
-      if (context.mounted) {
-        context.pop();
-      }
-    }
-  }
-
-  addServiceToSelectedServices(String serviceName, int serviceCost) {
-    setState(() {
-      selectedServices2[serviceName] = serviceCost;
-
-      subtotal += serviceCost;
-    });
-  }
-
-  addService() {
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialogue(
-              title: 'Add new service',
-              subtitle: 'Add a new service and its cost to your service list',
-              service: serv,
-              cost: price,
-              content:
-                  'This service is added to your already existing list of services',
-              action: 'Add service',
-              fction: () async {
-                addPersonalService(serv.text);
-                setState(() {
-                  addServiceToSelectedServices(
-                      serv.text, int.parse(price.text));
-                  // getUpdatedProfile();
-                  
-                  // context.pop();
-                });
-              },
-            ));
-  }
-
-  void submit() {
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(20.0), // Adjust the radius as needed
-              ),
-              backgroundColor: const Color.fromARGB(255, 244, 244, 245),
-              content: Container(
-                width: 300, // Set the width to an appropriate value
-                height: 400,
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          InkWell(
-                              onTap: () {
-                                context.pop();
-                                selectedServices.clear();
-                              },
-                              child: SvgPicture.asset(AppImages.cancelModal))
-                        ],
-                      ),
-                      customText(
-                          text: 'Select services and cost',
-                          fontSize: 18,
-                          textColor: AppColors.black,
-                          fontWeight: FontWeight.w700),
-                      heightSpace(1),
-                      customText(
-                          text: 'What will you be doing?',
-                          fontSize: 12,
-                          textColor: AppColors.black),
-                      heightSpace(2),
-                      ListBody(
-                          children: selectedServices.keys.map((item) {
-                        final dynamic costValue = selectedServices[item];
-                        log(costValue.toString());
-                        final int cost = costValue is int ? costValue : 0;
-
-                        return Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
-                            child: ListTile(
-                              tileColor: AppColors.white,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                              title: Text(item),
-                              subtitle: customText(
-                                  text: '$cost',
-                                  fontSize: 14,
-                                  textColor: AppColors.orange),
-                              trailing: GestureDetector(
-                                  onTap: () {
-                                    context.pop();
-                                    addCost(context, item);
-                                  },
-                                  child: SvgPicture.asset(
-                                    AppImages.editIcon,
-                                    width: 20,
-                                  )),
-                            ));
-                      }).toList()),
-                      heightSpace(3),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: AppButton(
-                              onTap: () {
-                                Navigator.pop(context, selectedServices2);
-                                setState(() {
-                                  selectedServices2.addAll(selectedServices);
-                                  selectedServices2.forEach((service, cost) {
-                                    subtotal += cost;
-                                  });
-                                  serviceFee = subtotal * 0.01;
-                                });
-                                // log(selectedServices2.toString());
-                              },
-                              hasIcon: false,
-                              buttonText: "Done",
-                              isOrange: true,
-                            ),
-                          ),
-                          widthSpace(2),
-                          GestureDetector(
-                            onTap: () {
-                              context.pop();
-                            },
-                            child: Container(
-                              width: 30.w,
-                              height: 7.h,
-                              decoration: BoxDecoration(
-                                  color: AppColors.containerGrey,
-                                  borderRadius: BorderRadius.circular(25)),
-                              child: const Center(
-                                child: Icon(Icons.add),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ));
-  }
-
-  void updateCostValue(String serviceName, int newCost) {
-    setState(() {
-      selectedServices[serviceName] = newCost;
-    });
-  }
+  double serviceFee = 0;
 
   addCost(BuildContext context, String ed) {
     int costs = selectedServices[ed] ?? 0;
@@ -325,130 +221,54 @@ class _QuoteSendState extends State<QuoteSend> {
             ));
   }
 
-  showSuccesModal() {
+  addPersonalService(String serv) async {
+    log(serv);
+    var data = {
+      "name": serv,
+      "imageUrl": "some url",
+      "description": "the description"
+    };
+
+    bool result = await mechanicRepo.addPersonalizedService(data);
+
+    if (result) {
+      getUpdatedProfile();
+      if (context.mounted) {
+        context.pop();
+      }
+    }
+  }
+
+  addService() {
     showDialog(
         context: context,
-        builder: (context) => SuccessDialogue(
-              title: 'Quote sent',
-              subtitle:
-                  'Your quote has been sent successfully to ${bookingModel!.user!.username!}',
-              action: () {
-                context.go(AppRoutes.pendingQuoteApproval);
+        builder: (context) => AlertDialogue(
+              title: 'Add new service',
+              subtitle: 'Add a new service and its cost to your service list',
+              service: serv,
+              cost: price,
+              content:
+                  'This service is added to your already existing list of services',
+              action: 'Add service',
+              fction: () async {
+                addPersonalService(serv.text);
+                setState(() {
+                  addServiceToSelectedServices(
+                      serv.text, int.parse(price.text));
+
+                  // context.pop();
+                });
               },
             ));
   }
 
-  sendQuote() async {
-    selectedServices2.forEach((serviceName, cost) {
-      final serviceId = serviceNameToId[serviceName];
-      servicesItems.add({
-        "serviceId": serviceId, // Convert the ID to string
-        "cost": cost,
-      });
+  addServiceToSelectedServices(String serviceName, int serviceCost) {
+    setState(() {
+      selectedServices2[serviceName] = serviceCost;
+
+      subtotal += serviceCost;
     });
-    // log(servicesItems.toString());
-    // print(servicesItems.toString());
-
-    var data = {};
-    if (selectedServices2.isNotEmpty) {
-      data = {
-        "isOnlyAmount": 'false',
-        "services": [...servicesItems]
-      };
-    } else {
-      data = {"isOnlyAmount": 'true', "amount": subtotal};
-    }
-    bool result = await mechanicRepo.sendQuoteForBooking(data, widget.id);
-    if (result) {
-      if (context.mounted) {
-        showSuccesModal();
-      }
-    }
   }
-
-  rejectBooking() async {
-    var body = {
-      "action": "rejected",
-    };
-    bool result = await mechanicRepo.acceptOrRejectBooking(body, widget.id);
-    if (result) {
-      if (context.mounted) {
-        context.go(AppRoutes.bookingAlert);
-        return;
-      }
-    }
-  }
-
-  reject() {
-    showDialog(
-        context: context,
-        builder: (context) => Center(
-              child: Container(
-                // padding: EdgeInsets.all(10.0),
-                width: 700, // Set the desired width
-                height: 200,
-                child: Dialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                        16.0), // Adjust the radius as needed
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          customText(
-                              text: 'Confirm rejection',
-                              fontSize: 20,
-                              textColor: AppColors.black,
-                              fontWeight: FontWeight.w500),
-                          InkWell(
-                              onTap: () => context.pop(),
-                              child: SvgPicture.asset(AppImages.cancelModal))
-                        ],
-                      ),
-                      heightSpace(1),
-                      customText(
-                          text: 'Confirm that you want to reject this booking',
-                          fontSize: 12,
-                          textColor: AppColors.black),
-                      heightSpace(3),
-                      Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            TextButton(
-                                onPressed: () => context.pop(),
-                                child: customText(
-                                    text: 'No',
-                                    fontSize: 16,
-                                    textColor: AppColors.textGrey)),
-                            widthSpace(3),
-                            Container(
-                              width: 1,
-                              height: 40,
-                              color: AppColors.containerGrey,
-                            ),
-                            widthSpace(3),
-                            TextButton(
-                                onPressed: rejectBooking,
-                                child: customText(
-                                    text: 'Yes',
-                                    fontSize: 16,
-                                    textColor: AppColors.darkOrange))
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ));
-  }
-
-  int subtotal = 0;
-  double serviceFee = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -726,138 +546,322 @@ class _QuoteSendState extends State<QuoteSend> {
             )),
     );
   }
-}
 
-class MultiSelect extends StatefulWidget {
-  final List<String> items;
-  final VoidCallback func;
-  final VoidCallback func2;
-  const MultiSelect(
-      {super.key,
-      required this.items,
-      required this.func,
-      required this.func2});
-
-  @override
-  State<MultiSelect> createState() => _MultiSelectState();
-}
-
-class _MultiSelectState extends State<MultiSelect> {
-  final List<String> _selectedServices = [];
-  // Map<String, int> selectedServices2 = {};
-  var serviced = TextEditingController();
-  var serves = TextEditingController();
-  var prices = TextEditingController();
-  int serviceCost = 0;
-
-  void _itemChange(String itemValue, bool isSelected) {
-    setState(() {
-      if (isSelected) {
-        _selectedServices.add(itemValue);
-      } else {
-        _selectedServices.remove(itemValue);
-      }
+  getOneBooking() {
+    mechanicRepo.getoneBooking(widget.id).then((value) {
+      bookingModel = value;
+      log(bookingModel!.user!.id!);
+      setState(() {
+        isLoading = false;
+      });
     });
   }
 
-  void _submit() {
-    Navigator.pop(context, _selectedServices);
-    widget.func2();
+  getUpdatedProfile() {
+    _authRepo.getMechanicProfile().then(
+      (value) {
+        service = value.services!;
+        otherServiceList = value.otherServices!;
+        // serviceList = service.map((service,) => service.id!).toList();
+        // otherList =
+        //     otherServiceList.map((service) => service.id!).toList();
+        serviceList = service.map((service) {
+          return "${service.id}: ${service.name}";
+        }).toList();
+
+        otherList = otherServiceList.map((service) {
+          return "${service.id}: ${service.name}";
+        }).toList();
+        serviceList = serviceList + otherList;
+
+        serviceNames = serviceList.map((item) {
+          return item.split(': ')[1];
+        }).toList();
+        log(serviceNames.toString());
+
+        for (var serviceString in serviceList) {
+          List<String> parts = serviceString.split(': ');
+          if (parts.length == 2) {
+            String serviceId = parts[0];
+            String serviceName = parts[1];
+            serviceNameToId[serviceName] = serviceId;
+          }
+        }
+      },
+    );
+    setState(() {});
   }
 
   @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      shape: RoundedRectangleBorder(
-        borderRadius:
-            BorderRadius.circular(20.0), // Adjust the radius as needed
-      ),
-      backgroundColor: const Color.fromARGB(255, 244, 244, 245),
-      content: Container(
-        width: 300, // Set the width to an appropriate value
-        height: 500,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  InkWell(
-                      onTap: () => context.pop(),
-                      child: SvgPicture.asset(AppImages.cancelModal))
-                ],
-              ),
-              customText(
-                  text: 'Select services and cost',
-                  fontSize: 18,
-                  textColor: AppColors.black,
-                  fontWeight: FontWeight.w700),
-              heightSpace(1),
-              customText(
-                  text: 'What will you be doing?',
-                  fontSize: 12,
-                  textColor: AppColors.black),
-              heightSpace(2),
-              ListBody(
-                  children: widget.items
-                      .map((item) => Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
-                            child: CheckboxListTile(
-                              value: _selectedServices.contains(item),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    20.0), // Adjust the radius as needed
-                              ),
-                              tileColor: AppColors.white,
-                              title: Text(item),
-                              controlAffinity: ListTileControlAffinity.leading,
-                              // subtitle: const Text(
-                              //   "₦ 300",
-                              //   style: TextStyle(color: AppColors.orange),
-                              // ),
-                              onChanged: (isChecked) =>
-                                  _itemChange(item, isChecked!),
-                            ),
-                          ))
-                      .toList()),
-              heightSpace(3),
-              Row(
-                children: [
-                  Expanded(
-                    child: AppButton(
-                      onTap: () {
-                        _submit();
-                      },
-                      hasIcon: false,
-                      buttonText: "Done",
-                      isOrange: true,
-                    ),
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUpdatedProfile();
+    getOneBooking();
+  }
+
+  reject() {
+    showDialog(
+        context: context,
+        builder: (context) => Center(
+              child: SizedBox(
+                // padding: EdgeInsets.all(10.0),
+                width: 700, // Set the desired width
+                height: 200,
+                child: Dialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        16.0), // Adjust the radius as needed
                   ),
-                  widthSpace(2),
-                  GestureDetector(
-                    onTap: () {
-                      context.pop();
-                      widget.func();
-                    },
-                    child: Container(
-                      width: 30.w,
-                      height: 7.h,
-                      decoration: BoxDecoration(
-                          color: AppColors.containerGrey,
-                          borderRadius: BorderRadius.circular(25)),
-                      child: const Center(
-                        child: Icon(Icons.add),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          customText(
+                              text: 'Confirm rejection',
+                              fontSize: 20,
+                              textColor: AppColors.black,
+                              fontWeight: FontWeight.w500),
+                          InkWell(
+                              onTap: () => context.pop(),
+                              child: SvgPicture.asset(AppImages.cancelModal))
+                        ],
                       ),
-                    ),
+                      heightSpace(1),
+                      customText(
+                          text: 'Confirm that you want to reject this booking',
+                          fontSize: 12,
+                          textColor: AppColors.black),
+                      heightSpace(3),
+                      Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextButton(
+                                onPressed: () => context.pop(),
+                                child: customText(
+                                    text: 'No',
+                                    fontSize: 16,
+                                    textColor: AppColors.textGrey)),
+                            widthSpace(3),
+                            Container(
+                              width: 1,
+                              height: 40,
+                              color: AppColors.containerGrey,
+                            ),
+                            widthSpace(3),
+                            TextButton(
+                                onPressed: rejectBooking,
+                                child: customText(
+                                    text: 'Yes',
+                                    fontSize: 16,
+                                    textColor: AppColors.darkOrange))
+                          ],
+                        ),
+                      )
+                    ],
                   ),
-                ],
+                ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ));
+  }
+
+  rejectBooking() async {
+    var body = {
+      "action": "rejected",
+    };
+    bool result = await mechanicRepo.acceptOrRejectBooking(body, widget.id);
+    if (result) {
+      if (context.mounted) {
+        context.go(AppRoutes.bookingAlert);
+        return;
+      }
+    }
+  }
+
+  sendQuote() async {
+    selectedServices2.forEach((serviceName, cost) {
+      final serviceId = serviceNameToId[serviceName];
+      servicesItems.add({
+        "serviceId": serviceId, // Convert the ID to string
+        "cost": cost,
+      });
+    });
+    // log(servicesItems.toString());
+    // print(servicesItems.toString());
+
+    var data = {};
+    if (selectedServices2.isNotEmpty) {
+      data = {
+        "isOnlyAmount": 'false',
+        "services": [...servicesItems]
+      };
+    } else {
+      data = {"isOnlyAmount": 'true', "amount": subtotal};
+    }
+    bool result = await mechanicRepo.sendQuoteForBooking(data, widget.id);
+    if (result) {
+      if (context.mounted) {
+        showSuccesModal();
+      }
+    }
+  }
+
+  showSuccesModal() {
+    showDialog(
+        context: context,
+        builder: (context) => SuccessDialogue(
+              title: 'Quote sent',
+              subtitle:
+                  'Your quote has been sent successfully to ${bookingModel!.user!.username!}',
+              action: () {
+                context.go(AppRoutes.pendingQuoteApproval);
+              },
+            ));
+  }
+
+  void submit() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(20.0), // Adjust the radius as needed
+              ),
+              backgroundColor: const Color.fromARGB(255, 244, 244, 245),
+              content: SizedBox(
+                width: 300, // Set the width to an appropriate value
+                height: 400,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          InkWell(
+                              onTap: () {
+                                context.pop();
+                                selectedServices.clear();
+                              },
+                              child: SvgPicture.asset(AppImages.cancelModal))
+                        ],
+                      ),
+                      customText(
+                          text: 'Select services and cost',
+                          fontSize: 18,
+                          textColor: AppColors.black,
+                          fontWeight: FontWeight.w700),
+                      heightSpace(1),
+                      customText(
+                          text: 'What will you be doing?',
+                          fontSize: 12,
+                          textColor: AppColors.black),
+                      heightSpace(2),
+                      ListBody(
+                          children: selectedServices.keys.map((item) {
+                        final dynamic costValue = selectedServices[item];
+                        log(costValue.toString());
+                        final int cost = costValue is int ? costValue : 0;
+
+                        return Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: ListTile(
+                              tileColor: AppColors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20)),
+                              title: Text(item),
+                              subtitle: customText(
+                                  text: '$cost',
+                                  fontSize: 14,
+                                  textColor: AppColors.orange),
+                              trailing: GestureDetector(
+                                  onTap: () {
+                                    context.pop();
+                                    addCost(context, item);
+                                  },
+                                  child: SvgPicture.asset(
+                                    AppImages.editIcon,
+                                    width: 20,
+                                  )),
+                            ));
+                      }).toList()),
+                      heightSpace(3),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: AppButton(
+                              onTap: () {
+                                Navigator.pop(context, selectedServices2);
+                                setState(() {
+                                  selectedServices2.addAll(selectedServices);
+                                  selectedServices2.forEach((service, cost) {
+                                    subtotal += cost;
+                                  });
+                                  serviceFee = subtotal * 0.01;
+                                });
+                                // log(selectedServices2.toString());
+                              },
+                              hasIcon: false,
+                              buttonText: "Done",
+                              isOrange: true,
+                            ),
+                          ),
+                          widthSpace(2),
+                          GestureDetector(
+                            onTap: () {
+                              context.pop();
+                            },
+                            child: Container(
+                              width: 30.w,
+                              height: 7.h,
+                              decoration: BoxDecoration(
+                                  color: AppColors.containerGrey,
+                                  borderRadius: BorderRadius.circular(25)),
+                              child: const Center(
+                                child: Icon(Icons.add),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ));
+  }
+
+  void updateCostValue(String serviceName, int newCost) {
+    setState(() {
+      selectedServices[serviceName] = newCost;
+    });
+  }
+
+  void _showMultiSelect() async {
+    final List<String>? results = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return MultiSelect(
+            items: serviceNames,
+            func: addService,
+            func2: submit,
+          );
+        });
+
+    if (results != null) {
+      setState(() {
+        _serviceItems = results;
+      });
+    }
+
+    for (var service in _serviceItems) {
+      setState(() {
+        selectedServices[service] = 0;
+      });
+    }
   }
 }
