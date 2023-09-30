@@ -168,8 +168,6 @@ class MechanicRepo {
         body: body,
         useToken: false);
     if (response.status == 200) {
-      locator<LocalStorageService>()
-          .saveDataToDisk(AppKeys.token, json.encode(response.entity["token"]));
       return true;
     }
     return false;

@@ -45,7 +45,7 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             GestureDetector(
-              onTap: () => context.push(AppRoutes.bookings),
+              onTap: () => context.pop(),
               child: Container(
                 height: 10.h,
                 width: 10.w,
@@ -150,7 +150,7 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                                             textColor: AppColors.textGrey)
                                       ],
                                     ),
-                                    widthSpace(1),
+                                    widthSpace(.5),
                                     Row(
                                       children: [
                                         SvgPicture.asset(

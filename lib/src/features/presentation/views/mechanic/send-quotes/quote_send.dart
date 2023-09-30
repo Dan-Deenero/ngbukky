@@ -673,6 +673,7 @@ class _QuoteSendState extends State<QuoteSend> {
       "action": "rejected",
     };
     bool result = await mechanicRepo.acceptOrRejectBooking(body, widget.id);
+    log(result.toString());
     if (result) {
       if (context.mounted) {
         context.go(AppRoutes.bookingAlert);
@@ -702,15 +703,15 @@ class _QuoteSendState extends State<QuoteSend> {
       data = {"isOnlyAmount": 'true', "amount": subtotal};
     }
     bool result = await mechanicRepo.sendQuoteForBooking(data, widget.id);
+    log(result.toString());
+
     if (result) {
-      if (context.mounted) {
         showSuccesModal();
-      }
     }
   }
 
-  showSuccesModal() {
-    showDialog(
+  showSuccesModal() async{
+     await showDialog(
         context: context,
         builder: (context) => SuccessDialogue(
               title: 'Quote sent',
