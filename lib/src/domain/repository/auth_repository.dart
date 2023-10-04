@@ -38,16 +38,28 @@ class AuthRepo {
     return UserModel();
   }
 
+
   Future<LoginModel> loginEmail(Map<String, dynamic> body) async {
-    final response =
-        await ApiClient.post(Endpoints.login, body: body, useToken: false);
-    if (response.status == 200) {
-      locator<LocalStorageService>()
-          .saveDataToDisk(AppKeys.token, json.encode(response.entity["token"]));
-      return LoginModel.fromJson(response.entity);
+    try {
+      final response = await ApiClient.post(Endpoints.login, body: body, useToken: false);
+
+      // Check if the response status is 200 (OK)
+      if (response.status == 200) {
+        locator<LocalStorageService>()
+            .saveDataToDisk(AppKeys.token, json.encode(response.entity["token"]));
+        return LoginModel.fromJson(response.entity);
+      } else {
+        throw Exception('Login failed: ${response.status} - ${response.entity["message"]}');
+      }
+    } catch (error) {
+      
+      // print('Error during login: $error');
+      throw error; 
+      
     }
-    return LoginModel();
+    
   }
+
 
   Future<bool> register(Map<String, String> body) async {
     final response =

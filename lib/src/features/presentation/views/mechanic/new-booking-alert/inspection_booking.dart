@@ -36,6 +36,8 @@ class _InspectionBookingState extends State<InspectionBooking> {
   var formattedTime;
   var formattedDate;
 
+  String username ='';
+
   @override
   void initState() {
     // TODO: implement initState
@@ -49,6 +51,7 @@ class _InspectionBookingState extends State<InspectionBooking> {
             formattedDate = DateFormat('E, d MMM y').format(dateTime);
 
             formattedTime = DateFormat('hh:mm a').format(dateTime);
+
                   },
         ));
   }
@@ -279,7 +282,7 @@ class _InspectionBookingState extends State<InspectionBooking> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.profile),
                     title: customText(
-                        text: bookingModel!.user!.username!,
+                        text: 'kels232',
                         fontSize: 15,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),

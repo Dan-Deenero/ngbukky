@@ -236,12 +236,12 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                             widthSpace(2),
                                             customText(
                                                 text: e["day"],
-                                                fontSize: 15,
+                                                fontSize: 12,
                                                 textColor: AppColors.black)
                                           ]),
                                         ),
                                       ),
-                                SvgPicture.asset(AppImages.edit),
+                                SvgPicture.asset(AppImages.edit, width: 70,),
                                 GestureDetector(
                                   onTap: () async {
                                     final TimeOfDay? result =
@@ -283,7 +283,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                             textColor: AppColors.black),
                                       )),
                                 ),
-                                widthSpace(4),
+                                widthSpace(2),
                                 GestureDetector(
                                   onTap: () async {
                                     final TimeOfDay? result =
@@ -752,12 +752,14 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
       "availability": newItems
     };
 
-    bool result = await mechanicRepo.updateBusinessInfo(data);
-    if (result) {
-      if (context.mounted) {
-        context.push(AppRoutes.profileSettings);
-      }
-    }
+    // bool result = await mechanicRepo.updateBusinessInfo(data);
+    // if (result) {
+    //   l
+    //   if (context.mounted) {
+        
+    //     context.push(AppRoutes.profileSettings);
+    //   }
+    // }
 
     log(data.toString());
   }

@@ -43,24 +43,31 @@ class MechanicRepo {
   }
 
   Future<List<BookingModel>> getAllBooking(String status) async {
-    final response = await ApiClient.get(
-        '${Endpoints.getAllBooking}?status=$status',
-        useToken: true);
-    List<BookingModel> booking = [];
-    if (response.status == 200) {
-      for (var bookingModel in response.entity['rows']) {
-        booking.add(BookingModel.fromJson(bookingModel));
+    try{
+      final response = await ApiClient.get(
+          '${Endpoints.getAllBooking}?status=$status',
+          useToken: true);
+      List<BookingModel> booking = [];
+      if (response.status == 200) {
+        for (var bookingModel in response.entity['rows']) {
+          booking.add(BookingModel.fromJson(bookingModel));
+        }
+        return booking;
+      } else if (response.status == 404) {
+        return [];
+      } else {
+        throw Exception('Login failed: ${response.status} - ${response.entity["message"]}');
       }
-      return booking;
-    } else if (response.status == 404) {
-      return [];
+    } catch (error) {
+      // print('Error during login: $error');
+      throw error; 
+      
     }
-    return booking;
   }
 
-  Future<List<QuotesModel>> getAllQuotes() async {
+  Future<List<QuotesModel>> getAllQuotes(String status) async {
     final response =
-        await ApiClient.get(Endpoints.getAllQuotes, useToken: true);
+        await ApiClient.get('${Endpoints.getAllQuotes}?status=$status', useToken: true);
     List<QuotesModel> quote = [];
     if (response.status == 200) {
       for (var quoteModel in response.entity['rows']) {

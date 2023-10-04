@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
 import 'package:ngbuka/src/domain/data/quote_model.dart';
@@ -22,6 +25,7 @@ class _QuoteRequestsState extends State<QuoteRequests> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
   bool isLoading = true;
   QuotesModel? quoteModel;
+  String uName = '';
 
   List<Services>? quote = [];
 
@@ -35,36 +39,38 @@ class _QuoteRequestsState extends State<QuoteRequests> {
             quoteModel = value;
             isLoading = false;
             quote = quoteModel!.services!;
+            log(quote.toString());
+            uName = quoteModel!.user!.username!;
           },
         ));
   }
 
-  // acceptBooking() async {
-  //     var body = {
-  //       "action": "accepted",
-  //     };
-  //     bool result = await _mechanicRepo.acceptOrRejectBooking(body, widget.id);
-  //     if (result) {
-  //       if (context.mounted) {
-  //         context.pop();
-  //         context.go(AppRoutes.acceptedBooking);
-  //         return;
-  //       }
-  //     }
-  //   }
+  acceptQuoteRequest() async {
+      var body = {
+        "action": "accepted",
+      };
+      bool result = await _mechanicRepo.acceptOrRejectQuote(body, widget.id);
+      if (result) {
+        if (context.mounted) {
+          context.pop();
+          context.go(AppRoutes.acceptedQuotes);
+          return;
+        }
+      }
+    }
 
-  //   rejectBooking() async {
-  //     var body = {
-  //       "action": "rejected",
-  //     };
-  //     bool result = await _mechanicRepo.acceptOrRejectBooking(body, widget.id);
-  //     if (result) {
-  //       if (context.mounted) {
-  //         context.go(AppRoutes.rejectedBooking);
-  //         return;
-  //       }
-  //     }
-  //   }
+    rejectQuoteRequest() async {
+      var body = {
+        "action": "rejected",
+      };
+      bool result = await _mechanicRepo.acceptOrRejectQuote(body, widget.id);
+      if (result) {
+        if (context.mounted) {
+          context.go(AppRoutes.bottomNav);
+          return;
+        }
+      }
+    }
 
   accept() {
     showDialog(
@@ -119,7 +125,7 @@ class _QuoteRequestsState extends State<QuoteRequests> {
                             ),
                             widthSpace(3),
                             TextButton(
-                                onPressed: () {},
+                                onPressed: acceptQuoteRequest,
                                 child: customText(
                                     text: 'Yes',
                                     fontSize: 16,
@@ -174,7 +180,7 @@ class _QuoteRequestsState extends State<QuoteRequests> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             TextButton(
-                                onPressed: () {},
+                                onPressed: rejectQuoteRequest,
                                 child: customText(
                                     text: 'Yes',
                                     fontSize: 16,
@@ -241,7 +247,8 @@ class _QuoteRequestsState extends State<QuoteRequests> {
           ]),
         ),
       ),
-      body: SingleChildScrollView(
+      body: isLoading ? Center(child: CircularProgressIndicator())
+      : SingleChildScrollView(
           child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
@@ -256,7 +263,7 @@ class _QuoteRequestsState extends State<QuoteRequests> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.profile),
                     title: customText(
-                        text: quoteModel!.user!.username!,
+                        text: uName,
                         fontSize: 14,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),

@@ -7,7 +7,7 @@ class QuotesModel {
   int? year;
   String? createdAt;
   List<Services>? services;
-  List<String>? otherServices;
+  List<Services>? otherServices;
   Mechanic? mechanic;
   User? user;
 
@@ -38,7 +38,12 @@ class QuotesModel {
         services!.add(Services.fromJson(v));
       });
     }
-    otherServices = json['otherServices'].cast<String>();
+    if (json['Services'] != null) {
+      otherServices = <Services>[];
+      json['Services'].forEach((v) {
+        otherServices!.add(Services.fromJson(v));
+      });
+    }
     mechanic = json['mechanic'] != null
         ? Mechanic.fromJson(json['mechanic'])
         : null;
