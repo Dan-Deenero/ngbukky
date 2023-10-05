@@ -295,7 +295,7 @@ class _InspectionBookingState extends State<InspectionBooking> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.locationIcon),
                     title: customText(
-                        text: "Elijiji rd, close 20, Woji, Port Harcourt",
+                        text: bookingModel!.user!.address!,
                         fontSize: 15,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),

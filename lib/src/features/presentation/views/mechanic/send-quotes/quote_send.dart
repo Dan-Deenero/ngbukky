@@ -362,50 +362,56 @@ class _QuoteSendState extends State<QuoteSend> {
                               ],
                             ),
                           )
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Wrap(
-                                spacing: 2,
-                                direction: Axis.vertical,
-                                children: selectedServices2.keys
-                                    .map((e) => Chip(
-                                          backgroundColor:
-                                              AppColors.orange.withOpacity(0.1),
-                                          shape: RoundedRectangleBorder(
-                                              side: const BorderSide(
-                                                  width: 0.5,
-                                                  color: AppColors.orange),
-                                              borderRadius:
-                                                  BorderRadius.circular(20)),
-                                          label: customText(
-                                              text:
-                                                  '$e - ₦${selectedServices2[e]}',
-                                              fontSize: 13,
-                                              textColor: AppColors.orange),
-                                          deleteIcon: const Icon(
-                                            Icons.close,
-                                            color: AppColors.red,
-                                          ),
-                                          onDeleted: () {
-                                            selectedServices.remove(e);
-                                            selectedServices2.remove(e);
-                                            setState(() {
-                                              int newSubtotal = 0;
-                                              selectedServices2
-                                                  .forEach((service, cost) {
-                                                newSubtotal += cost;
-                                                log(selectedServices
-                                                    .toString());
-                                              });
-                                              subtotal = newSubtotal;
-                                              serviceFee = subtotal * 0.01;
-                                            });
-                                          },
-                                        ))
-                                    .toList(),
+                        : InkWell(
+                            onTap: _showMultiSelect,
+                            child: SizedBox(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Wrap(
+                                    spacing: 2,
+                                    direction: Axis.vertical,
+                                    children: selectedServices2.keys
+                                        .map((e) => Chip(
+                                              backgroundColor: AppColors.orange
+                                                  .withOpacity(0.1),
+                                              shape: RoundedRectangleBorder(
+                                                  side: const BorderSide(
+                                                      width: 0.5,
+                                                      color: AppColors.orange),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20)),
+                                              label: customText(
+                                                  text:
+                                                      '$e - ₦${selectedServices2[e]}',
+                                                  fontSize: 13,
+                                                  textColor: AppColors.orange),
+                                              deleteIcon: const Icon(
+                                                Icons.close,
+                                                color: AppColors.red,
+                                              ),
+                                              onDeleted: () {
+                                                selectedServices.remove(e);
+                                                selectedServices2.remove(e);
+                                                setState(() {
+                                                  int newSubtotal = 0;
+                                                  selectedServices2
+                                                      .forEach((service, cost) {
+                                                    newSubtotal += cost;
+                                                    log(selectedServices
+                                                        .toString());
+                                                  });
+                                                  subtotal = newSubtotal;
+                                                  serviceFee = subtotal * 0.01;
+                                                });
+                                              },
+                                            ))
+                                        .toList(),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
                   ),
                   heightSpace(2),
@@ -706,12 +712,12 @@ class _QuoteSendState extends State<QuoteSend> {
     log(result.toString());
 
     if (result) {
-        showSuccesModal();
+      showSuccesModal();
     }
   }
 
-  showSuccesModal() async{
-     await showDialog(
+  showSuccesModal() async {
+    await showDialog(
         context: context,
         builder: (context) => SuccessDialogue(
               title: 'Quote sent',
@@ -866,3 +872,6 @@ class _QuoteSendState extends State<QuoteSend> {
     }
   }
 }
+
+
+// 25c996d9-fe96-45be-91e3-1d65e3782fa2

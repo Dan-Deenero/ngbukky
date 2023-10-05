@@ -229,7 +229,7 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
             ListTile(
               leading: SvgPicture.asset(AppImages.locationIcon),
               title: customText(
-                  text: "Elijiji rd, close 20, Woji, Port Harcourt",
+                  text: bookingModel!.user!.address!,
                   fontSize: 14,
                   textColor: AppColors.black,
                   fontWeight: FontWeight.bold),
