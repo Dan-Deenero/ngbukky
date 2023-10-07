@@ -38,23 +38,24 @@ class LoginView extends HookWidget {
     }
 
     void login() async {
-      var data = {
-        "email": email.text,
-        "password": password.text,
-        "isEmailLogin": true
-      };
-      LoginModel result = await _authRepo.loginEmail(data);
-      if(context.mounted){
-        if(result.user != null){
-          if (result.user?.mechanicType == null) {
-              context.go(AppRoutes.personalInfo);
-          }else if(result.user?.businessName == null){
-            context.go(AppRoutes.businessInfo);
-          }else{
-            context.go(AppRoutes.bottomNav);
-          }
-        }
-     }
+      context.push(AppRoutes.businessInfoSettings);
+      //   var data = {
+      //     "email": email.text,
+      //     "password": password.text,
+      //     "isEmailLogin": true
+      //   };
+      //   LoginModel result = await _authRepo.loginEmail(data);
+      //   if(context.mounted){
+      //     if(result.user != null){
+      //       if (result.user?.mechanicType == null) {
+      //           context.go(AppRoutes.personalInfo);
+      //       }else if(result.user?.businessName == null){
+      //         context.go(AppRoutes.businessInfo);
+      //       }else{
+      //         context.go(AppRoutes.bottomNav);
+      //       }
+      //     }
+      //  }
     }
 
     return Scaffold(
@@ -94,7 +95,7 @@ class LoginView extends HookWidget {
                       ),
                     ),
                   ),
-                  Padding( 
+                  Padding(
                       padding: const EdgeInsets.only(right: 10),
                       child: GestureDetector(
                           onTap: () => context.push(AppRoutes.createAccount),
