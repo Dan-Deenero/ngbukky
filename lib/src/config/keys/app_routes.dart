@@ -57,5 +57,20 @@ class AppRoutes {
   static const String viewAcceptedQuote = '/view-accepted-quote';
   static const String rejectedQuote = '/rejected-quote';
   static const String rejectedQuoteDetails = '/rejected-quote-details';
+  static const String pendingClientApproval = '/pending-client-approval';
+  static const String pendingClientApprovalDetails = '/pending-client-approval-details';
+  static const String quotePaymentRequest= '/quote-payment-request';
+  static const String quotePaymentRequestDetails= '/quote-payment-request-details';
+  static const String pendingQuotePaymentRequestDetails = '/pending-quote-payment-request-details';
+  static const String quotePaymentDecline = '/quote-dayment-decline';
+  static const String quotePaymentDeclineDetails = '/quote-dayment-decline-details';
+  static const String completedQuoteRequest = '/completed-quote-request';
+  static const String completedQuoteRequestDetails = '/completed-quote-request-details';
+  static const String quoteRejected = '/quote-rejected';
+  static const String quoteRejectedDetails = '/quote-rejected-details';
+
+
+
+
 
 }

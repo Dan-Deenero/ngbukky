@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
+import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
@@ -19,20 +19,31 @@ class QPaymentRequest extends StatefulWidget {
 
 class _QPaymentRequestState extends State<QPaymentRequest> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
-  List<BookingModel> _bookingHistory = [];
+  List<QuotesModel> _quoteHistory = [];
+  List<QuotesModel> _quoteHistory2 = [];
+
   bool isLoading = true;
+  List<Quotes>? quotes = [];
+
+  QuotesModel? quoteModel;
+  int price = 0;
+  double serviceFee = 0;
 
   @override
   void initState() {
     super.initState();
-    _mechanicRepo
-        .getAllBooking('awaiting payment')
-        .then((value) => setState(() {
-              _bookingHistory = value;
-              isLoading = false;
-              print(_bookingHistory);
-            }));
-    // log(_bookingHistory.toString());
+    _mechanicRepo.getAllQuotes('bargaining').then(
+          (value) => setState(() {
+            _quoteHistory = value;
+            isLoading = false;
+          }),
+        );
+    _mechanicRepo.getAllQuotes('awaiting payment').then(
+          (value) => setState(() {
+            _quoteHistory2 = value;
+            isLoading = false;
+          }),
+        );
   }
 
   @override
@@ -69,7 +80,7 @@ class _QPaymentRequestState extends State<QPaymentRequest> {
                 fontWeight: FontWeight.bold,
                 textColor: AppColors.black),
             heightSpace(1),
-            bodyText("Completed bookings awaiting payment")
+            bodyText("View all quotes awaiting payment request")
           ]),
         ),
       ),
@@ -79,7 +90,7 @@ class _QPaymentRequestState extends State<QPaymentRequest> {
           : SingleChildScrollView(
               child: Column(
               children: [
-                if (_bookingHistory.isEmpty)
+                if (_quoteHistory.isEmpty && _quoteHistory2.isEmpty)
                   Center(
                       heightFactor: 3.5,
                       child: Column(
@@ -90,14 +101,95 @@ class _QPaymentRequestState extends State<QPaymentRequest> {
                                   'You do not have any booking awaiting client approval',
                               fontSize: 15,
                               textColor: AppColors.black,
-                              textAlignment: TextAlign.center
-                          )
+                              textAlignment: TextAlign.center)
                         ],
                       ))
                 else
-                  ..._bookingHistory.map((e) {
-                    return GestureDetector(
-                    onTap: () => context.push(AppRoutes.paymentRequestDetails,
+                  ..._quoteHistory.map(
+                    (e) {
+                      _mechanicRepo.getoneQuote(e.id).then(
+                            (value) => setState(
+                              () {
+                                quoteModel = value;
+                                for (Quotes quote in quotes!) {
+                                  if (quote.price != null) {
+                                    price += quote.price!;
+                                  }
+                                }
+                                serviceFee = price * 0.01;
+                              },
+                            ),
+                          );
+                      return GestureDetector(
+                        onTap: () => context
+                            .push(AppRoutes.pendingQuotePaymentRequestDetails, extra: e.id),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Container(
+                            width: double.infinity,
+                            height: 10.h,
+                            decoration: BoxDecoration(
+                              color: AppColors.white,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: ListTile(
+                                subtitle: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    customText(
+                                        text: "Due: N5,050",
+                                        fontSize: 15,
+                                        textColor: AppColors.orange),
+                                    Container(
+                                      width: 37.w,
+                                      height: 3.h,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: AppColors.containerGrey),
+                                      child: Center(
+                                        child: customText(
+                                            text: "Pending payment request",
+                                            fontSize: 10,
+                                            textColor: AppColors.black),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                title: customText(
+                                    text: e.user!.username!,
+                                    fontSize: 16,
+                                    textColor: AppColors.black,
+                                    fontWeight: FontWeight.bold),
+                                leading: Container(
+                                  width: 10.w,
+                                  height: 10.h,
+                                  decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: AppColors.containerGrey),
+                                )),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ..._quoteHistory2.map((e) {
+                  _mechanicRepo.getoneQuote(e.id).then(
+                        (value) => setState(
+                          () {
+                            quoteModel = value;
+                            for (Quotes quote in quotes!) {
+                              if (quote.price != null) {
+                                price += quote.price!;
+                              }
+                            }
+                            serviceFee = price * 0.01;
+                          },
+                        ),
+                      );
+                  return GestureDetector(
+                    onTap: () => context.push(AppRoutes.quotePaymentRequestDetails,
                         extra: e.id),
                     child: Padding(
                       padding: const EdgeInsets.all(10),
@@ -146,7 +238,7 @@ class _QPaymentRequestState extends State<QPaymentRequest> {
                       ),
                     ),
                   );
-                  })
+                })
               ],
             )),
     );

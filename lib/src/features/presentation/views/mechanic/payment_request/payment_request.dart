@@ -22,7 +22,7 @@ class _PaymentRequestState extends State<PaymentRequest> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
   List<BookingModel> _bookingHistory = [];
   List<BookingModel> _bookingHistory2 = [];
-  List<BookingModel> _bookingHistory3 = [];
+  
   bool isLoading = true;
 
   @override
@@ -40,10 +40,6 @@ class _PaymentRequestState extends State<PaymentRequest> {
               _bookingHistory2 = value;
               isLoading = false;
             }));
-    _mechanicRepo.getAllBooking('declined').then((value) => setState(() {
-          _bookingHistory3 = value;
-          isLoading = false;
-        }));
     // log(_bookingHistory.toString());
   }
 
@@ -211,84 +207,6 @@ class _PaymentRequestState extends State<PaymentRequest> {
                     ),
                   );
                   }),
-                  ..._bookingHistory3.map((e) {
-                      var dateString = e.date;
-                      var dateTime = DateTime.parse(dateString!);
-                      var formattedDate =
-                          DateFormat('dd MMM yyyy').format(dateTime);
-
-                      var formattedTime =
-                          DateFormat('hh:mm a').format(dateTime);
-                      return GestureDetector(
-                        onTap: () =>
-                            context.push(AppRoutes.paymentDeclinedDetails),
-                        child: Container(
-                          width: double.infinity,
-                          height: 10.h,
-                          decoration: BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: ListTile(
-                              trailing: Column(children: [
-                                customText(
-                                    text: "N 5,050",
-                                    fontSize: 14,
-                                    textColor: AppColors.textGrey,
-                                    fontWeight: FontWeight.bold),
-                                heightSpace(1),
-                                Container(
-                                  width: 28.w,
-                                  height: 3.h,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: AppColors.red.withOpacity(.3)),
-                                  child: Center(
-                                    child: customText(
-                                        text: "Payment declined",
-                                        fontSize: 10,
-                                        textColor: AppColors.red),
-                                  ),
-                                )
-                              ]),
-                              subtitle: Row(
-                                children: [
-                                  Row(
-                                    children: [
-                                      SvgPicture.asset(AppImages.time),
-                                      customText(
-                                          text: formattedTime,
-                                          fontSize: 10,
-                                          textColor: AppColors.textGrey)
-                                    ],
-                                  ),
-                                  widthSpace(2),
-                                  Row(
-                                    children: [
-                                      SvgPicture.asset(AppImages.calendarIcon),
-                                      customText(
-                                          text: formattedDate,
-                                          fontSize: 10,
-                                          textColor: AppColors.textGrey)
-                                    ],
-                                  )
-                                ],
-                              ),
-                              title: customText(
-                                  text: e.user!.username!,
-                                  fontSize: 16,
-                                  textColor: AppColors.black,
-                                  fontWeight: FontWeight.bold),
-                              leading: Container(
-                                width: 10.w,
-                                height: 10.h,
-                                decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: AppColors.containerGrey),
-                              )),
-                        ),
-                      );
-                    })
               ],
             )),
     );

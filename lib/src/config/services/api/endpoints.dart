@@ -13,7 +13,8 @@ class Endpoints {
   static const String getMechanicServices = 'services';
   static const String getLocation = 'location/sub-domains';
   static const String updateBusiness = 'mechanic/business-profile';
-  static const String getStatisticsInfo = 'mechanic/summary?type=quote-request';
+  static const String getQuoteStatisticsInfo = 'mechanic/summary?type=quote-request';
+  static const String getBookingStatisticsInfo = 'mechanic/booking-summary';
   static const String getAllBooking = 'mechanic/bookings';
   static const String getAllQuotes = 'mechanic/quote-requests';
   static const String addPersonalizedService = '/mechanic/services/personal';

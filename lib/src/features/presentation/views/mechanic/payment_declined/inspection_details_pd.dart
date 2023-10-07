@@ -34,7 +34,6 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
   double serviceFee = 0;
   List<Quotes>? quotes = [];
 
-
   @override
   void initState() {
     // TODO: implement initState
@@ -50,8 +49,8 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
             isLoading = false;
 
             quotes = bookingModel!.quotes;
-            for(Quotes quote in quotes!){
-              if(quote.price != null){
+            for (Quotes quote in quotes!) {
+              if (quote.price != null) {
                 price += quote.price!;
               }
             }
@@ -64,75 +63,76 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
 
   reportClient() {
     showDialog(
-        context: context,
-        builder: (context) => SimpleDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(20.0), // Adjust the radius as needed
-              ),
-              contentPadding: const EdgeInsets.all(20.0),
+      context: context,
+      builder: (context) => SimpleDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius:
+              BorderRadius.circular(20.0), // Adjust the radius as needed
+        ),
+        contentPadding: const EdgeInsets.all(20.0),
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              customText(
+                  text: 'Report client?',
+                  fontSize: 24,
+                  textColor: AppColors.black,
+                  fontWeight: FontWeight.w700),
+              InkWell(
+                  onTap: () => context.pop(),
+                  child: SvgPicture.asset(AppImages.cancelModal))
+            ],
+          ),
+          heightSpace(1),
+          customText(
+              text: 'Do you want to report this client? ',
+              fontSize: 12,
+              textColor: AppColors.black),
+          heightSpace(2),
+          modalForm('Air conditioning', service, 8),
+          heightSpace(1),
+          Row(
+            children: [
+              SvgPicture.asset(AppImages.warning),
+              widthSpace(2),
+              Flexible(
+                child: customText(
+                    text:
+                        'Ensure this action is totally needed, or settle your differences with the client.',
+                    fontSize: 11,
+                    textColor: AppColors.textGrey),
+              )
+            ],
+          ),
+          heightSpace(2),
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    customText(
-                        text: 'Report client?',
-                        fontSize: 24,
-                        textColor: AppColors.black,
-                        fontWeight: FontWeight.w700),
-                    InkWell(
-                        onTap: () => context.pop(),
-                        child: SvgPicture.asset(AppImages.cancelModal))
-                  ],
+                TextButton(
+                    onPressed: () => context.pop(),
+                    child: customText(
+                        text: 'cancel',
+                        fontSize: 16,
+                        textColor: AppColors.textGrey)),
+                Container(
+                  width: 1,
+                  height: 40,
+                  color: AppColors.containerGrey,
                 ),
-                heightSpace(1),
-                customText(
-                    text: 'Do you want to report this client? ',
-                    fontSize: 12,
-                    textColor: AppColors.black),
-                heightSpace(2),
-                modalForm('Air conditioning', service, 8),
-                heightSpace(1),
-                Row(
-                  children: [
-                    SvgPicture.asset(AppImages.warning),
-                    widthSpace(2),
-                    Flexible(
-                      child: customText(
-                          text:
-                              'Ensure this action is totally needed, or settle your differences with the client.',
-                          fontSize: 11,
-                          textColor: AppColors.textGrey),
-                    )
-                  ],
-                ),
-                heightSpace(2),
-                Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      TextButton(
-                          onPressed: () => context.pop(),
-                          child: customText(
-                              text: 'cancel',
-                              fontSize: 16,
-                              textColor: AppColors.textGrey)),
-                      Container(
-                        width: 1,
-                        height: 40,
-                        color: AppColors.containerGrey,
-                      ),
-                      TextButton(
-                          onPressed: () {},
-                          child: customText(
-                              text: 'Send report',
-                              fontSize: 16,
-                              textColor: AppColors.darkOrange))
-                    ],
-                  ),
-                )
+                TextButton(
+                    onPressed: () {},
+                    child: customText(
+                        text: 'Send report',
+                        fontSize: 16,
+                        textColor: AppColors.darkOrange))
               ],
-            ));
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   @override
@@ -377,7 +377,7 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
                         textColor: AppColors.black),
                     customText(
                         text: '$serviceFee',
-                        fontSize: 13, 
+                        fontSize: 13,
                         textColor: AppColors.black)
                   ],
                 ),

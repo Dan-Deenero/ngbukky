@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
@@ -15,7 +13,7 @@ import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
 class ViewAcceptedQuote extends StatefulWidget {
   final String id;
-  ViewAcceptedQuote({super.key, required this.id});
+  const ViewAcceptedQuote({super.key, required this.id});
 
   @override
   State<ViewAcceptedQuote> createState() => _ViewAcceptedQuoteState();
@@ -25,10 +23,6 @@ class _ViewAcceptedQuoteState extends State<ViewAcceptedQuote> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
 
   bool isLoading = true;
-  var dateString;
-  var dateTime;
-  var formattedDate;
-  var formattedTime;
 
   QuotesModel? quoteModel;
   List<Services>? quote = [];
@@ -46,86 +40,7 @@ class _ViewAcceptedQuoteState extends State<ViewAcceptedQuote> {
         ));
   }
 
-  // finishBooking() async {
-  //   var body = {
-  //     "action": "accepted",
-  //   };
-  //   bool result = await _mechanicRepo.markInspection(body, widget.id);
-  //   if (result) {
-  //     if (context.mounted) {
-  //       context.push(AppRoutes.acceptedBooking);
-  //       return;
-  //     }
-  //   }
-  // }
 
-  // finish() {
-  //   showDialog(
-  //       context: context,
-  //       builder: (context) => Center(
-  //             child: Container(
-  //               // padding: EdgeInsets.all(10.0),
-  //               width: 700, // Set the desired width
-  //               height: 200,
-  //               child: Dialog(
-  //                 shape: RoundedRectangleBorder(
-  //                   borderRadius: BorderRadius.circular(
-  //                       16.0), // Adjust the radius as needed
-  //                 ),
-  //                 child: Column(
-  //                   mainAxisAlignment: MainAxisAlignment.center,
-  //                   children: [
-  //                     Row(
-  //                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //                       children: [
-  //                         customText(
-  //                             text: 'Confirm acceptance',
-  //                             fontSize: 20,
-  //                             textColor: AppColors.black,
-  //                             fontWeight: FontWeight.w500),
-  //                         InkWell(
-  //                             onTap: () => context.pop(),
-  //                             child: SvgPicture.asset(AppImages.cancelModal))
-  //                       ],
-  //                     ),
-  //                     heightSpace(1),
-  //                     customText(
-  //                         text: 'Confirm that you want to accept this booking',
-  //                         fontSize: 12,
-  //                         textColor: AppColors.black),
-  //                     heightSpace(3),
-  //                     Center(
-  //                       child: Row(
-  //                         mainAxisAlignment: MainAxisAlignment.center,
-  //                         children: [
-  //                           TextButton(
-  //                               onPressed: () => context.pop(),
-  //                               child: customText(
-  //                                   text: 'No',
-  //                                   fontSize: 16,
-  //                                   textColor: AppColors.textGrey)),
-  //                           widthSpace(3),
-  //                           Container(
-  //                             width: 1,
-  //                             height: 40,
-  //                             color: AppColors.containerGrey,
-  //                           ),
-  //                           widthSpace(3),
-  //                           TextButton(
-  //                               onPressed: finishBooking,
-  //                               child: customText(
-  //                                   text: 'Yes',
-  //                                   fontSize: 16,
-  //                                   textColor: AppColors.darkOrange))
-  //                         ],
-  //                       ),
-  //                     )
-  //                   ],
-  //                 ),
-  //               ),
-  //             ),
-  //           ));
-  // }
 
   // void resendOTP() async {
   @override
@@ -167,7 +82,7 @@ class _ViewAcceptedQuoteState extends State<ViewAcceptedQuote> {
         ),
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -268,20 +183,22 @@ class _ViewAcceptedQuoteState extends State<ViewAcceptedQuote> {
                   heightSpace(3),
                   Column(
                     children: [
-                      ...quote!.map((qte) {
-                        return Row(
-                          children: [
-                            SvgPicture.asset(AppImages.serviceIcon),
-                            widthSpace(2),
-                            customText(
-                                text: qte.name!,
-                                fontSize: 13,
-                                textColor: AppColors.black,
-                                fontWeight: FontWeight.w600),
-                            heightSpace(4),
-                          ],
-                        );
-                      }),
+                      ...quote!.map(
+                        (qte) {
+                          return Row(
+                            children: [
+                              SvgPicture.asset(AppImages.serviceIcon),
+                              widthSpace(2),
+                              customText(
+                                  text: qte.name!,
+                                  fontSize: 13,
+                                  textColor: AppColors.black,
+                                  fontWeight: FontWeight.w600),
+                              heightSpace(4),
+                            ],
+                          );
+                        },
+                      ),
                       heightSpace(4),
                     ],
                   ),
@@ -350,7 +267,7 @@ class _ViewAcceptedQuoteState extends State<ViewAcceptedQuote> {
                       widthSpace(2),
                       Expanded(
                         child: InkWell(
-                          onTap: () {},
+                          onTap: () => context.push(AppRoutes.sendQuotes),
                           child: const AppButton(
                             hasIcon: false,
                             buttonText: "Send Quote",

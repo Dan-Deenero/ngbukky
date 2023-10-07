@@ -118,9 +118,18 @@ class MechanicRepo {
     return CityLGA();
   }
 
-  Future<StatisticsModel> getStatisticsInfo() async {
+  Future<StatisticsModel> getQuoteStatisticsInfo() async {
     final response =
-        await ApiClient.get(Endpoints.getStatisticsInfo, useToken: true);
+        await ApiClient.get(Endpoints.getQuoteStatisticsInfo, useToken: true);
+    if (response.status == 200) {
+      return StatisticsModel.fromJson(response.entity);
+    }
+    return StatisticsModel();
+  }
+
+  Future<StatisticsModel> getBookingStatisticsInfo() async {
+    final response =
+        await ApiClient.get(Endpoints.getQuoteStatisticsInfo, useToken: true);
     if (response.status == 200) {
       return StatisticsModel.fromJson(response.entity);
     }
@@ -180,12 +189,10 @@ class MechanicRepo {
     return false;
   }
 
-  Future<bool> sendQuoteForQuotes(Map<String, String> body, id) async {
+  Future<bool> sendQuoteForQuotes(Map<dynamic, dynamic> body, id) async {
     final response = await ApiClient.post('${Endpoints.getAllQuotes}/$id/quote',
         body: body, useToken: false);
     if (response.status == 200) {
-      locator<LocalStorageService>()
-          .saveDataToDisk(AppKeys.token, json.encode(response.entity["token"]));
       return true;
     }
     return false;

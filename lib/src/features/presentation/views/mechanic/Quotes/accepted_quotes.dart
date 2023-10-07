@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -21,9 +20,14 @@ class AcceptedQuotes extends StatefulWidget {
 
 class _AcceptedQuotesState extends State<AcceptedQuotes> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
-    List<QuotesModel> _quoteHistory = [];
+  List<QuotesModel> _quoteHistory = [];
 
   bool isLoading = true;
+  List<Quotes>? quotes = [];
+
+  QuotesModel? quoteModel;
+  int price = 0;
+  double serviceFee = 0;
 
   @override
   void initState() {
@@ -84,9 +88,9 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
                   child: Wrap(
                     children: [
                       if (_quoteHistory.isEmpty)
-                            Center(
-                              heightFactor: 3.5,
-                                child: Column(
+                        Center(
+                            heightFactor: 3.5,
+                            child: Column(
                               children: [
                                 SvgPicture.asset(AppImages.bookingWarning),
                                 customText(
@@ -97,88 +101,103 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
                               ],
                             ))
                       else
-                      ..._quoteHistory.map((e) {
-                        var dateString = e.createdAt;
-                        var dateTime = DateTime.parse(dateString!);
-                        var formattedDate =
-                            DateFormat('dd MMM yyyy').format(dateTime);
+                        ..._quoteHistory.map((e) {
+                          _mechanicRepo.getoneQuote(e.id).then(
+                                (value) => setState(
+                                  () {
+                                    quoteModel = value;
+                                    for (Quotes quote in quotes!) {
+                                      if (quote.price != null) {
+                                        price += quote.price!;
+                                      }
+                                    }
+                                    serviceFee = price * 0.01;
+                                  },
+                                ),
+                              );
+                          var dateString = e.createdAt;
+                          var dateTime = DateTime.parse(dateString!);
+                          var formattedDate =
+                              DateFormat('dd MMM yyyy').format(dateTime);
 
-                        var formattedTime =
-                            DateFormat('hh:mm a').format(dateTime);
-                        return GestureDetector(
-                          onTap: () {
-                            context.push(AppRoutes.viewAcceptedQuote,
-                                extra: e.id);
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.only(bottom: 10),
-                            width: double.infinity,
-                            height: 10.h,
-                            decoration: BoxDecoration(
-                              color: AppColors.white,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: ListTile(
-                                trailing: Column(children: [
-                                  customText(
-                                      text: "₦ 5,050",
+                          var formattedTime =
+                              DateFormat('hh:mm a').format(dateTime);
+                          return GestureDetector(
+                            onTap: () {
+                              context.push(AppRoutes.viewAcceptedQuote,
+                                  extra: e.id);
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(bottom: 10),
+                              width: double.infinity,
+                              height: 10.h,
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: ListTile(
+                                  trailing: Column(children: [
+                                    customText(
+                                      text: '$price',
                                       fontSize: 14,
                                       textColor: AppColors.textGrey,
-                                  ),
-                                  heightSpace(1),
-                                  Container(
-                                    width: 28.w,
-                                    height: 3.h,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: AppColors.green.withOpacity(.1)),
-                                    child: Center(
-                                      child: customText(
-                                          text: "Accepted booking",
-                                          fontSize: 10,
-                                          textColor: AppColors.green),
                                     ),
-                                  )
-                                ]),
-                                subtitle: Row(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        SvgPicture.asset(AppImages.time),
-                                        customText(
-                                            text: formattedTime,
+                                    heightSpace(1),
+                                    Container(
+                                      width: 28.w,
+                                      height: 3.h,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color:
+                                              AppColors.green.withOpacity(.1)),
+                                      child: Center(
+                                        child: customText(
+                                            text: "Accepted booking",
                                             fontSize: 10,
-                                            textColor: AppColors.textGrey)
-                                      ],
-                                    ),
-                                    widthSpace(1),
-                                    Row(
-                                      children: [
-                                        SvgPicture.asset(
-                                            AppImages.calendarIcon),
-                                        customText(
-                                            text: formattedDate,
-                                            fontSize: 10,
-                                            textColor: AppColors.textGrey)
-                                      ],
+                                            textColor: AppColors.green),
+                                      ),
                                     )
-                                  ],
-                                ),
-                                title: customText(
-                                    text: e.user!.username!,
-                                    fontSize: 16,
-                                    textColor: AppColors.black,
-                                    fontWeight: FontWeight.bold),
-                                leading: Container(
-                                  width: 8.w,
-                                  height: 8.h,
-                                  decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: AppColors.containerGrey),
-                                )),
-                          ),
-                        );
-                      })
+                                  ]),
+                                  subtitle: Row(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          SvgPicture.asset(AppImages.time),
+                                          customText(
+                                              text: formattedTime,
+                                              fontSize: 10,
+                                              textColor: AppColors.textGrey)
+                                        ],
+                                      ),
+                                      widthSpace(1),
+                                      Row(
+                                        children: [
+                                          SvgPicture.asset(
+                                              AppImages.calendarIcon),
+                                          customText(
+                                              text: formattedDate,
+                                              fontSize: 10,
+                                              textColor: AppColors.textGrey)
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  title: customText(
+                                      text: e.user!.username!,
+                                      fontSize: 16,
+                                      textColor: AppColors.black,
+                                      fontWeight: FontWeight.bold),
+                                  leading: Container(
+                                    width: 8.w,
+                                    height: 8.h,
+                                    decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: AppColors.containerGrey),
+                                  )),
+                            ),
+                          );
+                        })
                     ],
                   ),
                 ),
