@@ -7,6 +7,7 @@ import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
 import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
+import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
@@ -20,16 +21,16 @@ class AcceptedQuotes extends StatefulWidget {
 
 class _AcceptedQuotesState extends State<AcceptedQuotes> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
-  List<BookingModel> _bookingHistory = [];
+    List<QuotesModel> _quoteHistory = [];
+
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _mechanicRepo.getAllBooking('accepted').then((value) => setState(() {
-          _bookingHistory = value;
+    _mechanicRepo.getAllQuotes('accepted').then((value) => setState(() {
+          _quoteHistory = value;
           isLoading = false;
-          print(_bookingHistory);
         }));
     // log(_bookingHistory.toString());
   }
@@ -82,7 +83,7 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
                   padding: const EdgeInsets.all(10),
                   child: Wrap(
                     children: [
-                      if (_bookingHistory.isEmpty)
+                      if (_quoteHistory.isEmpty)
                             Center(
                               heightFactor: 3.5,
                                 child: Column(
@@ -96,8 +97,8 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
                               ],
                             ))
                       else
-                      ..._bookingHistory.map((e) {
-                        var dateString = e.date;
+                      ..._quoteHistory.map((e) {
+                        var dateString = e.createdAt;
                         var dateTime = DateTime.parse(dateString!);
                         var formattedDate =
                             DateFormat('dd MMM yyyy').format(dateTime);

@@ -26,7 +26,7 @@ class _NewQuoteAlertState extends State<NewQuoteAlert> {
   @override
   void initState() {
     super.initState();
-    _mechanicRepo.getAllQuotes().then((value) => setState(() {
+    _mechanicRepo.getAllQuotes('pending').then((value) => setState(() {
           _quoteHistory = value;
           isLoading = false;
           print(_quoteHistory);

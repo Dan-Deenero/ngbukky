@@ -154,9 +154,9 @@ class _PRInspectionDetailsState extends State<PRInspectionDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           customText(
-                              text: 'Pending payment request',
+                              text: 'Pending request',
                               fontSize: 14,
-                              textColor: AppColors.green,
+                              textColor: AppColors.orange,
                               fontWeight: FontWeight.w600),
                           customText(
                               text: 'Booking status',
@@ -189,7 +189,7 @@ class _PRInspectionDetailsState extends State<PRInspectionDetails> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.locationIcon),
                     title: customText(
-                        text: "Elijiji rd, close 20, Woji, Port Harcourt",
+                        text: bookingModel!.user!.address!,
                         fontSize: 14,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -360,47 +360,7 @@ class _PRInspectionDetailsState extends State<PRInspectionDetails> {
                     ],
                   ),
                   heightSpace(2),
-                  heightSpace(3),
-            Row(
-              children: [
-                SvgPicture.asset(AppImages.warning),
-                widthSpace(2),
-                Flexible(
-                  child: customText(
-                      text:
-                          "For your own safety, all transactions should be done in the Ngbuka application.",
-                      fontSize: 12,
-                      textColor: AppColors.orange),
-                )
-              ],
-            ),
-            heightSpace(3),
-            Row(
-              children: [
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    width: 30.w,
-                    height: 7.h,
-                    decoration: BoxDecoration(
-                        color: AppColors.containerGrey,
-                        borderRadius: BorderRadius.circular(25)),
-                    child: Center(
-                      child: SvgPicture.asset(AppImages.warning),
-                    ),
-                  ),
-                ),
-                widthSpace(2),
-                Expanded(
-                  child: AppButton(
-                    onTap: completedBooking,
-                    hasIcon: false,
-                    buttonText: "Complete Booking",
-                    isOrange: true,
-                  ),
-                ),
-              ],
-            ),
+           
                 ],
               ),
             )),

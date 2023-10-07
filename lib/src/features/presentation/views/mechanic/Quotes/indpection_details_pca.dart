@@ -10,32 +10,41 @@ import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
-class BRInspectionDetails extends StatefulWidget {
+class PCAInspectionDetails extends StatefulWidget {
   final String id;
-  const BRInspectionDetails({
+  PCAInspectionDetails({
     super.key,
     required this.id,
   });
 
   @override
-  State<BRInspectionDetails> createState() => _BRInspectionDetailsState();
+  State<PCAInspectionDetails> createState() => _PCAInspectionDetailsState();
 }
 
-class _BRInspectionDetailsState extends State<BRInspectionDetails> {
+class _PCAInspectionDetailsState extends State<PCAInspectionDetails> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
 
   bool isLoading = true;
 
+  List<String> serviceList = [];
+  List<String> otherList = [];
+  // List<Services> otherServiceList = [];
+  List<String> selectedServiceList = [];
+  List<Quotes>? quotes = [];
+
   BookingModel? bookingModel;
+
+  int? totalPrice;
+
+  int price = 0;
+  double serviceFee = 0;
+  RequestedSystemService? requestedSystemService;
+  RequestedPersonalisedService? requestedPersonalisedService;
+
   var dateString;
   var formattedDate;
   var formattedTime;
   var dateTime;
-
-  int price = 0;
-  double serviceFee = 0;
-  List<Quotes>? quotes = [];
-
 
   @override
   void initState() {
@@ -51,8 +60,8 @@ class _BRInspectionDetailsState extends State<BRInspectionDetails> {
             formattedTime = DateFormat('hh:mm a').format(dateTime);
             isLoading = false;
             quotes = bookingModel!.quotes;
-            for(Quotes quote in quotes!){
-              if(quote.price != null){
+            for (Quotes quote in quotes!) {
+              if (quote.price != null) {
                 price += quote.price!;
               }
             }
@@ -123,9 +132,9 @@ class _BRInspectionDetailsState extends State<BRInspectionDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           customText(
-                              text: 'Booking rejected',
+                              text: 'Quote not approved by client',
                               fontSize: 14,
-                              textColor: AppColors.red,
+                              textColor: AppColors.green,
                               fontWeight: FontWeight.w600),
                           customText(
                               text: 'Booking status',
@@ -158,7 +167,7 @@ class _BRInspectionDetailsState extends State<BRInspectionDetails> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.locationIcon),
                     title: customText(
-                        text: bookingModel!.user!.address!,
+                        text: "Elijiji rd, close 20, Woji, Port Harcourt",
                         fontSize: 14,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -212,74 +221,34 @@ class _BRInspectionDetailsState extends State<BRInspectionDetails> {
                       textColor: AppColors.orange,
                       fontWeight: FontWeight.bold),
                   heightSpace(3),
-                  ...quotes!.map((quote){
-                    String serviceName = '';
-                    if(quote.requestedPersonalisedService != null){
-                      serviceName = quote.requestedPersonalisedService!.name!;
-                    }
-                    else if(quote.requestedSystemService != null){
-                      serviceName = quote.requestedSystemService!.name!;
-                    }
-                    return Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                SvgPicture.asset(AppImages.serviceIcon),
-                                widthSpace(2),
-                                customText(
-                                    text: serviceName,
-                                    fontSize: 13,
-                                    textColor: AppColors.black,
-                                    fontWeight: FontWeight.w600),
-                              ],
-                            ),
-                            customText(
-                                text: '${quote.price!}',
-                                fontSize: 13,
-                                textColor: AppColors.black)
-                          ],
-                        ),
-                        heightSpace(4),
-                      ],
-                    );
-                  }),
-                  heightSpace(1),
-                  const Divider(),
-                  customText(
-                      text: "Schedule",
-                      fontSize: 14,
-                      textColor: AppColors.orange,
-                      fontWeight: FontWeight.bold),
-                  heightSpace(1),
-                  ListTile(
-                    leading: SvgPicture.asset(AppImages.calendarIcon),
-                    title: customText(
-                        text: formattedDate,
-                        fontSize: 14,
-                        textColor: AppColors.black,
-                        fontWeight: FontWeight.bold),
-                    subtitle: customText(
-                        text: "Scheduled date",
-                        fontSize: 12,
-                        textColor: AppColors.textGrey),
+                  Column(
+                    children: [
+                      Row(
+                        children: [
+                          SvgPicture.asset(AppImages.serviceIcon),
+                          widthSpace(2),
+                          customText(
+                              text: 'AC Maintenance',
+                              fontSize: 13,
+                              textColor: AppColors.black,
+                              fontWeight: FontWeight.w600),
+                        ],
+                      ),
+                      heightSpace(4),
+                      Row(
+                        children: [
+                          SvgPicture.asset(AppImages.serviceIcon),
+                          widthSpace(2),
+                          customText(
+                              text: 'Electrical Repair',
+                              fontSize: 13,
+                              textColor: AppColors.black,
+                              fontWeight: FontWeight.w600),
+                        ],
+                      ),
+                    ],
                   ),
                   heightSpace(1),
-                  ListTile(
-                    leading: SvgPicture.asset(AppImages.time),
-                    title: customText(
-                        text: formattedTime,
-                        fontSize: 14,
-                        textColor: AppColors.black,
-                        fontWeight: FontWeight.bold),
-                    subtitle: customText(
-                        text: "Scheduled time",
-                        fontSize: 12,
-                        textColor: AppColors.textGrey),
-                  ),
-                  heightSpace(2),
                   const Divider(),
                   Column(
                     children: [

@@ -3,29 +3,30 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
 import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/success_modal.dart';
+import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
-class BRInspectionDetails extends StatefulWidget {
+class PRQInspectionDetails extends StatefulWidget {
   final String id;
-  const BRInspectionDetails({
-    super.key,
-    required this.id,
-  });
+  const PRQInspectionDetails({super.key, required this.id});
 
   @override
-  State<BRInspectionDetails> createState() => _BRInspectionDetailsState();
+  State<PRQInspectionDetails> createState() => _PRQInspectionDetailsState();
 }
 
-class _BRInspectionDetailsState extends State<BRInspectionDetails> {
+class _PRQInspectionDetailsState extends State<PRQInspectionDetails> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
 
-  bool isLoading = true;
+  List<Quotes>? quotes = [];
 
+  bool isLoading = true;
   BookingModel? bookingModel;
   var dateString;
   var formattedDate;
@@ -34,8 +35,6 @@ class _BRInspectionDetailsState extends State<BRInspectionDetails> {
 
   int price = 0;
   double serviceFee = 0;
-  List<Quotes>? quotes = [];
-
 
   @override
   void initState() {
@@ -47,12 +46,11 @@ class _BRInspectionDetailsState extends State<BRInspectionDetails> {
             dateString = bookingModel!.date;
             dateTime = DateTime.parse(dateString!);
             formattedDate = DateFormat('E, d MMM y').format(dateTime);
-
             formattedTime = DateFormat('hh:mm a').format(dateTime);
             isLoading = false;
             quotes = bookingModel!.quotes;
-            for(Quotes quote in quotes!){
-              if(quote.price != null){
+            for (Quotes quote in quotes!) {
+              if (quote.price != null) {
                 price += quote.price!;
               }
             }
@@ -61,7 +59,35 @@ class _BRInspectionDetailsState extends State<BRInspectionDetails> {
         ));
   }
 
-  // void resendOTP() async {
+  completeBooking() async {
+    var body = {
+      "": "",
+    };
+    bool result =
+        await _mechanicRepo.markInspectionAsCompleted(body, widget.id);
+    if (result) {
+      if (context.mounted) {
+        context.push(AppRoutes.acceptedBooking);
+        return;
+      }
+    }
+  }
+
+  showCompletedModal() {
+    showDialog(
+        context: context,
+        builder: (context) => SuccessDialogue(
+            title: 'Complete booking',
+            subtitle:
+                'Your have completed your booking and requested for payment from Kels2323',
+            action: () => context.go(AppRoutes.paymentRequest)));
+  }
+
+  completedBooking() {
+    completeBooking();
+    showCompletedModal();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,9 +149,9 @@ class _BRInspectionDetailsState extends State<BRInspectionDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           customText(
-                              text: 'Booking rejected',
+                              text: 'Pending payment request',
                               fontSize: 14,
-                              textColor: AppColors.red,
+                              textColor: AppColors.green,
                               fontWeight: FontWeight.w600),
                           customText(
                               text: 'Booking status',
@@ -158,7 +184,7 @@ class _BRInspectionDetailsState extends State<BRInspectionDetails> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.locationIcon),
                     title: customText(
-                        text: bookingModel!.user!.address!,
+                        text: "Elijiji rd, close 20, Woji, Port Harcourt",
                         fontSize: 14,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -212,74 +238,34 @@ class _BRInspectionDetailsState extends State<BRInspectionDetails> {
                       textColor: AppColors.orange,
                       fontWeight: FontWeight.bold),
                   heightSpace(3),
-                  ...quotes!.map((quote){
-                    String serviceName = '';
-                    if(quote.requestedPersonalisedService != null){
-                      serviceName = quote.requestedPersonalisedService!.name!;
-                    }
-                    else if(quote.requestedSystemService != null){
-                      serviceName = quote.requestedSystemService!.name!;
-                    }
-                    return Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                SvgPicture.asset(AppImages.serviceIcon),
-                                widthSpace(2),
-                                customText(
-                                    text: serviceName,
-                                    fontSize: 13,
-                                    textColor: AppColors.black,
-                                    fontWeight: FontWeight.w600),
-                              ],
-                            ),
-                            customText(
-                                text: '${quote.price!}',
-                                fontSize: 13,
-                                textColor: AppColors.black)
-                          ],
-                        ),
-                        heightSpace(4),
-                      ],
-                    );
-                  }),
-                  heightSpace(1),
-                  const Divider(),
-                  customText(
-                      text: "Schedule",
-                      fontSize: 14,
-                      textColor: AppColors.orange,
-                      fontWeight: FontWeight.bold),
-                  heightSpace(1),
-                  ListTile(
-                    leading: SvgPicture.asset(AppImages.calendarIcon),
-                    title: customText(
-                        text: formattedDate,
-                        fontSize: 14,
-                        textColor: AppColors.black,
-                        fontWeight: FontWeight.bold),
-                    subtitle: customText(
-                        text: "Scheduled date",
-                        fontSize: 12,
-                        textColor: AppColors.textGrey),
+                  Column(
+                    children: [
+                      Row(
+                        children: [
+                          SvgPicture.asset(AppImages.serviceIcon),
+                          widthSpace(2),
+                          customText(
+                              text: 'AC Maintenance',
+                              fontSize: 13,
+                              textColor: AppColors.black,
+                              fontWeight: FontWeight.w600),
+                        ],
+                      ),
+                      heightSpace(4),
+                      Row(
+                        children: [
+                          SvgPicture.asset(AppImages.serviceIcon),
+                          widthSpace(2),
+                          customText(
+                              text: 'Electrical Repair',
+                              fontSize: 13,
+                              textColor: AppColors.black,
+                              fontWeight: FontWeight.w600),
+                        ],
+                      ),
+                    ],
                   ),
                   heightSpace(1),
-                  ListTile(
-                    leading: SvgPicture.asset(AppImages.time),
-                    title: customText(
-                        text: formattedTime,
-                        fontSize: 14,
-                        textColor: AppColors.black,
-                        fontWeight: FontWeight.bold),
-                    subtitle: customText(
-                        text: "Scheduled time",
-                        fontSize: 12,
-                        textColor: AppColors.textGrey),
-                  ),
-                  heightSpace(2),
                   const Divider(),
                   Column(
                     children: [
@@ -329,6 +315,47 @@ class _BRInspectionDetailsState extends State<BRInspectionDetails> {
                     ],
                   ),
                   heightSpace(2),
+                  heightSpace(3),
+                  Row(
+                    children: [
+                      SvgPicture.asset(AppImages.warning),
+                      widthSpace(2),
+                      Flexible(
+                        child: customText(
+                            text:
+                                "For your own safety, all transactions should be done in the Ngbuka application.",
+                            fontSize: 12,
+                            textColor: AppColors.orange),
+                      )
+                    ],
+                  ),
+                  heightSpace(3),
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          width: 30.w,
+                          height: 7.h,
+                          decoration: BoxDecoration(
+                              color: AppColors.containerGrey,
+                              borderRadius: BorderRadius.circular(25)),
+                          child: Center(
+                            child: SvgPicture.asset(AppImages.warning),
+                          ),
+                        ),
+                      ),
+                      widthSpace(2),
+                      Expanded(
+                        child: AppButton(
+                          onTap: completedBooking,
+                          hasIcon: false,
+                          buttonText: "Complete Booking",
+                          isOrange: true,
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             )),

@@ -11,14 +11,14 @@ import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
-class AcceptedBooking extends StatefulWidget {
-  const AcceptedBooking({super.key});
+class PendingClientApproval extends StatefulWidget {
+  const PendingClientApproval({super.key});
 
   @override
-  State<AcceptedBooking> createState() => _AcceptedBookingState();
+  State<PendingClientApproval> createState() => _PendingClientApprovalState();
 }
 
-class _AcceptedBookingState extends State<AcceptedBooking> {
+class _PendingClientApprovalState extends State<PendingClientApproval> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
   List<BookingModel> _bookingHistory = [];
   bool isLoading = true;
@@ -26,7 +26,7 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
   @override
   void initState() {
     super.initState();
-    _mechanicRepo.getAllBooking('accepted').then((value) => setState(() {
+    _mechanicRepo.getAllBooking('bargaining').then((value) => setState(() {
           _bookingHistory = value;
           isLoading = false;
           print(_bookingHistory);
@@ -45,7 +45,7 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             GestureDetector(
-              onTap: () => context.pop(),
+              onTap: () => context.push(AppRoutes.bookings),
               child: Container(
                 height: 10.h,
                 width: 10.w,
@@ -64,12 +64,12 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
               ),
             ),
             customText(
-                text: "Accepted bookings",
+                text: "Pending Client approval",
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 textColor: AppColors.black),
             heightSpace(1),
-            bodyText("Send quote or reject booking")
+            bodyText("Wait for the client to accept your quote")
           ]),
         ),
       ),
@@ -80,7 +80,7 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(10),
-                  child: Wrap(
+                  child: Column(
                     children: [
                       if (_bookingHistory.isEmpty)
                             Center(
@@ -90,7 +90,7 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                                 SvgPicture.asset(AppImages.bookingWarning),
                                 customText(
                                     text:
-                                        'You have not accepted any booking yet',
+                                        'You do not have any pending unapproved quote',
                                     fontSize: 15,
                                     textColor: AppColors.black)
                               ],
@@ -106,7 +106,7 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                             DateFormat('hh:mm a').format(dateTime);
                         return GestureDetector(
                           onTap: () {
-                            context.push(AppRoutes.viewAcceptedBooking,
+                            context.push(AppRoutes.pendingQuoteApprovalDetails,
                                 extra: e.id);
                           },
                           child: Container(
@@ -120,7 +120,7 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                             child: ListTile(
                                 trailing: Column(children: [
                                   customText(
-                                      text: "",
+                                      text: "₦ 5,050",
                                       fontSize: 14,
                                       textColor: AppColors.textGrey,
                                       fontWeight: FontWeight.bold),
@@ -130,10 +130,11 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                                     height: 3.h,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
-                                        color: AppColors.green.withOpacity(.1)),
+                                        color: AppColors.green
+                                            .withOpacity(.1)),
                                     child: Center(
                                       child: customText(
-                                          text: "Accepted booking",
+                                          text: "Unapproved quote",
                                           fontSize: 10,
                                           textColor: AppColors.green),
                                     ),
@@ -150,7 +151,7 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                                             textColor: AppColors.textGrey)
                                       ],
                                     ),
-                                    widthSpace(.5),
+                                    widthSpace(1),
                                     Row(
                                       children: [
                                         SvgPicture.asset(

@@ -29,6 +29,7 @@ import 'package:ngbuka/src/features/presentation/views/mechanic/new-booking-aler
 import 'package:ngbuka/src/features/presentation/views/mechanic/new-booking-alert/new_booking_alerts.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/payment_declined/inspection_details_pd.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/payment_declined/payment_declined.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/payment_request/inspection_details_ppr.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/payment_request/inspection_details_pr.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/payment_request/payment_request.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/pending_quote_approval/Inspection_details_pqa.dart';
@@ -152,6 +153,10 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
           path: AppRoutes.bookingRejectedDetails,
           name: AppRoutes.bookingRejectedDetails,
           builder: (_, state) => BRInspectionDetails(id: state.extra as String,)),
+      GoRoute(
+          path: AppRoutes.pendingPaymentRequestDetails,
+          name: AppRoutes.pendingPaymentRequestDetails,
+          builder: (_, state) => PPRInspectionDetails(id: state.extra as String,)),
       GoRoute(
           path: AppRoutes.paymentRequestDetails,
           name: AppRoutes.paymentRequestDetails,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
@@ -20,18 +21,29 @@ class PaymentRequest extends StatefulWidget {
 class _PaymentRequestState extends State<PaymentRequest> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
   List<BookingModel> _bookingHistory = [];
+  List<BookingModel> _bookingHistory2 = [];
+  List<BookingModel> _bookingHistory3 = [];
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _mechanicRepo
-        .getAllBooking('awaiting payment')
+        .getAllBooking('approved')
         .then((value) => setState(() {
               _bookingHistory = value;
               isLoading = false;
-              print(_bookingHistory);
             }));
+    _mechanicRepo
+        .getAllBooking('awaiting payment')
+        .then((value) => setState(() {
+              _bookingHistory2 = value;
+              isLoading = false;
+            }));
+    _mechanicRepo.getAllBooking('declined').then((value) => setState(() {
+          _bookingHistory3 = value;
+          isLoading = false;
+        }));
     // log(_bookingHistory.toString());
   }
 
@@ -79,7 +91,7 @@ class _PaymentRequestState extends State<PaymentRequest> {
           : SingleChildScrollView(
               child: Column(
               children: [
-                if (_bookingHistory.isEmpty)
+                if (_bookingHistory.isEmpty && _bookingHistory2.isEmpty)
                   Center(
                       heightFactor: 3.5,
                       child: Column(
@@ -96,6 +108,58 @@ class _PaymentRequestState extends State<PaymentRequest> {
                       ))
                 else
                   ..._bookingHistory.map((e) {
+                    return GestureDetector(
+                    onTap: () => context.push(AppRoutes.pendingPaymentRequestDetails,
+                        extra: e.id),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Container(
+                        width: double.infinity,
+                        height: 10.h,
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: ListTile(
+                            subtitle: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                customText(
+                                    text: "Due: N5,050",
+                                    fontSize: 15,
+                                    textColor: AppColors.orange),
+                                Container(
+                                  width: 37.w,
+                                  height: 3.h,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: AppColors.containerGrey),
+                                  child: Center(
+                                    child: customText(
+                                        text: "Pending payment request",
+                                        fontSize: 10,
+                                        textColor: AppColors.black),
+                                  ),
+                                )
+                              ],
+                            ),
+                            title: customText(
+                                text: e.user!.username!,
+                                fontSize: 16,
+                                textColor: AppColors.black,
+                                fontWeight: FontWeight.bold),
+                            leading: Container(
+                              width: 10.w,
+                              height: 10.h,
+                              decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.containerGrey),
+                            )),
+                      ),
+                    ),
+                  );
+                  }),
+                  ..._bookingHistory2.map((e) {
                     return GestureDetector(
                     onTap: () => context.push(AppRoutes.paymentRequestDetails,
                         extra: e.id),
@@ -146,7 +210,85 @@ class _PaymentRequestState extends State<PaymentRequest> {
                       ),
                     ),
                   );
-                  })
+                  }),
+                  ..._bookingHistory3.map((e) {
+                      var dateString = e.date;
+                      var dateTime = DateTime.parse(dateString!);
+                      var formattedDate =
+                          DateFormat('dd MMM yyyy').format(dateTime);
+
+                      var formattedTime =
+                          DateFormat('hh:mm a').format(dateTime);
+                      return GestureDetector(
+                        onTap: () =>
+                            context.push(AppRoutes.paymentDeclinedDetails),
+                        child: Container(
+                          width: double.infinity,
+                          height: 10.h,
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: ListTile(
+                              trailing: Column(children: [
+                                customText(
+                                    text: "N 5,050",
+                                    fontSize: 14,
+                                    textColor: AppColors.textGrey,
+                                    fontWeight: FontWeight.bold),
+                                heightSpace(1),
+                                Container(
+                                  width: 28.w,
+                                  height: 3.h,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: AppColors.red.withOpacity(.3)),
+                                  child: Center(
+                                    child: customText(
+                                        text: "Payment declined",
+                                        fontSize: 10,
+                                        textColor: AppColors.red),
+                                  ),
+                                )
+                              ]),
+                              subtitle: Row(
+                                children: [
+                                  Row(
+                                    children: [
+                                      SvgPicture.asset(AppImages.time),
+                                      customText(
+                                          text: formattedTime,
+                                          fontSize: 10,
+                                          textColor: AppColors.textGrey)
+                                    ],
+                                  ),
+                                  widthSpace(2),
+                                  Row(
+                                    children: [
+                                      SvgPicture.asset(AppImages.calendarIcon),
+                                      customText(
+                                          text: formattedDate,
+                                          fontSize: 10,
+                                          textColor: AppColors.textGrey)
+                                    ],
+                                  )
+                                ],
+                              ),
+                              title: customText(
+                                  text: e.user!.username!,
+                                  fontSize: 16,
+                                  textColor: AppColors.black,
+                                  fontWeight: FontWeight.bold),
+                              leading: Container(
+                                width: 10.w,
+                                height: 10.h,
+                                decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.containerGrey),
+                              )),
+                        ),
+                      );
+                    })
               ],
             )),
     );

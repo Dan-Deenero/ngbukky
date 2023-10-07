@@ -10,15 +10,15 @@ import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
-class PDInspectionDetails extends StatefulWidget {
+class PDQInspectionDetails extends StatefulWidget {
   final String id;
-  const PDInspectionDetails({super.key, required this.id});
+  const PDQInspectionDetails({super.key, required this.id});
 
   @override
-  State<PDInspectionDetails> createState() => _PDInspectionDetailsState();
+  State<PDQInspectionDetails> createState() => _PDQInspectionDetailsState();
 }
 
-class _PDInspectionDetailsState extends State<PDInspectionDetails> {
+class _PDQInspectionDetailsState extends State<PDQInspectionDetails> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
   final service = TextEditingController();
 
@@ -33,7 +33,6 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
   int price = 0;
   double serviceFee = 0;
   List<Quotes>? quotes = [];
-
 
   @override
   void initState() {
@@ -50,8 +49,8 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
             isLoading = false;
 
             quotes = bookingModel!.quotes;
-            for(Quotes quote in quotes!){
-              if(quote.price != null){
+            for (Quotes quote in quotes!) {
+              if (quote.price != null) {
                 price += quote.price!;
               }
             }
@@ -229,7 +228,7 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
             ListTile(
               leading: SvgPicture.asset(AppImages.locationIcon),
               title: customText(
-                  text: bookingModel!.user!.address!,
+                  text: "Elijiji rd, close 20, Woji, Port Harcourt",
                   fontSize: 14,
                   textColor: AppColors.black,
                   fontWeight: FontWeight.bold),
@@ -283,39 +282,34 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
                 textColor: AppColors.orange,
                 fontWeight: FontWeight.bold),
             heightSpace(2),
-            ...quotes!.map((quote) {
-              String serviceName = '';
-              if (quote.requestedPersonalisedService != null) {
-                serviceName = quote.requestedPersonalisedService!.name!;
-              } else if (quote.requestedSystemService != null) {
-                serviceName = quote.requestedSystemService!.name!;
-              }
-              return Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          SvgPicture.asset(AppImages.serviceIcon),
-                          widthSpace(2),
-                          customText(
-                              text: serviceName,
-                              fontSize: 13,
-                              textColor: AppColors.black,
-                              fontWeight: FontWeight.w600),
-                        ],
-                      ),
-                      customText(
-                          text: '${quote.price!}',
-                          fontSize: 13,
-                          textColor: AppColors.black)
-                    ],
-                  ),
-                  heightSpace(4),
-                ],
-              );
-            }),
+            Column(
+              children: [
+                Row(
+                  children: [
+                    SvgPicture.asset(AppImages.serviceIcon),
+                    widthSpace(2),
+                    customText(
+                        text: 'AC Maintenance',
+                        fontSize: 13,
+                        textColor: AppColors.black,
+                        fontWeight: FontWeight.w600),
+                  ],
+                ),
+                heightSpace(4),
+                Row(
+                  children: [
+                    SvgPicture.asset(AppImages.serviceIcon),
+                    widthSpace(2),
+                    customText(
+                        text: 'Electrical Repair',
+                        fontSize: 13,
+                        textColor: AppColors.black,
+                        fontWeight: FontWeight.w600
+                    ),
+                  ],
+                ),
+              ],
+            ),
             heightSpace(1),
             const Divider(),
             customText(
@@ -377,7 +371,7 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
                         textColor: AppColors.black),
                     customText(
                         text: '$serviceFee',
-                        fontSize: 13, 
+                        fontSize: 13,
                         textColor: AppColors.black)
                   ],
                 ),

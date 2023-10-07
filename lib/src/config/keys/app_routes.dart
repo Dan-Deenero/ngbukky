@@ -26,6 +26,7 @@ class AppRoutes {
   static const String bookings = '/bookings';
   static const String paymentRequest = '/payment-request';
   static const String paymentRequestDetails = '/payment-request-details';
+  static const String pendingPaymentRequestDetails = '/pending-payment-request-details';
   static const String completedBooking = '/completed-booking';
   static const String completedBookingDetails = '/completed-booking-details';
   static const String acceptedBooking = '/accepted-book';

@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/domain/data/city_lga.dart';
 import 'package:ngbuka/src/domain/data/services_model.dart';
@@ -754,12 +753,14 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
       "availability": newItems
     };
 
-    bool result = await mechanicRepo.updateBusinessInfo(data);
-    if (result) {
-      if (context.mounted) {
-        context.push(AppRoutes.profileSettings);
-      }
-    }
+    // bool result = await mechanicRepo.updateBusinessInfo(data);
+    // if (result) {
+    //   l
+    //   if (context.mounted) {
+
+    //     context.push(AppRoutes.profileSettings);
+    //   }
+    // }
 
     log(data.toString());
   }

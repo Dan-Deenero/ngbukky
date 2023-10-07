@@ -183,7 +183,7 @@ class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.profile),
                     title: customText(
-                        text: bookingModel!.user!.username!,
+                        text: 'kels232',
                         fontSize: 15,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -196,7 +196,7 @@ class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.locationIcon),
                     title: customText(
-                        text: "Elijiji rd, close 20, Woji, Port Harcourt",
+                        text: bookingModel!.user!.address!,
                         fontSize: 15,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
