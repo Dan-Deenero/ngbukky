@@ -242,18 +242,24 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
 
                                   if (result != null) {
                                     if (context.mounted) {
-                                      setState(() {
-                                        ref.read(startTime.notifier).state =
-                                            result;
-                                        String res;
-                                        if (result.minute < 10) {
-                                          res = '0${result.minute.toString()}';
-                                        } else {
-                                          res = result.minute.toString();
-                                        }
-                                        workingHour[index]["from"] =
-                                            '${result.hour.toString()}:$res';
-                                      });
+                                      ref.read(startTime.notifier).state =
+                                          result;
+                                      String res;
+                                      if (result.minute < 10) {
+                                        res = '0${result.minute.toString()}';
+                                      } else {
+                                        res = result.minute.toString();
+                                      }
+                                      final stateNotifier =
+                                          ref.read(stateWorkingHours.notifier);
+                                      final currentState = stateNotifier.state;
+                                      List<Map<String, dynamic>> updatedState =
+                                          List.from(currentState);
+
+                                      updatedState[index]["from"] =
+                                          '${result.hour.toString()}:$res';
+
+                                      stateNotifier.state = updatedState;
                                     }
                                   }
                                 },
@@ -296,7 +302,15 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                         } else {
                                           ses = result.minute.toString();
                                         }
-                                        workingHour[index]["to"] =
+                                        final stateNotifier = ref
+                                            .read(stateWorkingHours.notifier);
+                                        final currentState =
+                                            stateNotifier.state;
+                                        List<Map<String, dynamic>>
+                                            updatedState =
+                                            List.from(currentState);
+
+                                        updatedState[index]["to"] =
                                             '${result.hour.toString()}:$ses';
                                       });
                                     }
