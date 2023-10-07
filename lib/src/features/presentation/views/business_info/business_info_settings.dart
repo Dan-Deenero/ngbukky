@@ -281,9 +281,9 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                               widthSpace(4),
                               GestureDetector(
                                 onTap: () async {
-                                  final endTime = StateProvider<TimeOfDay>(
+                                  final startTime = StateProvider<TimeOfDay>(
                                       (ref) => TimeOfDay.now());
-                                  final time = ref.watch(endTime);
+                                  final time = ref.watch(startTime);
                                   final TimeOfDay? result =
                                       await showTimePicker(
                                           context: context,
@@ -293,26 +293,24 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
 
                                   if (result != null) {
                                     if (context.mounted) {
-                                      setState(() {
-                                        ref.read(endTime.notifier).state =
-                                            result;
-                                        String ses;
-                                        if (result.minute < 10) {
-                                          ses = '0${result.minute.toString()}';
-                                        } else {
-                                          ses = result.minute.toString();
-                                        }
-                                        final stateNotifier = ref
-                                            .read(stateWorkingHours.notifier);
-                                        final currentState =
-                                            stateNotifier.state;
-                                        List<Map<String, dynamic>>
-                                            updatedState =
-                                            List.from(currentState);
+                                      ref.read(startTime.notifier).state =
+                                          result;
+                                      String res;
+                                      if (result.minute < 10) {
+                                        res = '0${result.minute.toString()}';
+                                      } else {
+                                        res = result.minute.toString();
+                                      }
+                                      final stateNotifier =
+                                          ref.read(stateWorkingHours.notifier);
+                                      final currentState = stateNotifier.state;
+                                      List<Map<String, dynamic>> updatedState =
+                                          List.from(currentState);
 
-                                        updatedState[index]["to"] =
-                                            '${result.hour.toString()}:$ses';
-                                      });
+                                      updatedState[index]["to"] =
+                                          '${result.hour.toString()}:$res';
+
+                                      stateNotifier.state = updatedState;
                                     }
                                   }
                                 },
