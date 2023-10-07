@@ -11,6 +11,7 @@ final cac = TextEditingController();
 final carsFamiliar = TextEditingController();
 final city = StateProvider<List<String>>((ref) => ["Select"]);
 final cityController = TextEditingController();
+final endTime = StateProvider<TimeOfDay>((ref) => TimeOfDay.now());
 final isLoading = StateProvider<bool>((ref) => true);
 final lga = StateProvider<List<String>>((ref) => ["Select"]);
 final lgaController = TextEditingController();
@@ -19,6 +20,7 @@ final locationofBusiness = TextEditingController();
 final MechanicRepo mechanicRepo = MechanicRepo();
 final serviceController = TextEditingController();
 final services = StateProvider<MechanicServicesModel?>((ref) => null);
+
 List<String> state = [
   "Select",
   'Abia',
@@ -70,4 +72,4 @@ final stateWorkingHours = StateProvider<List<Map<String, dynamic>>>((ref) {
     {"isChecked": false, "from": "9", "to": "9", "day": "Sunday"}
   ];
 });
-final    workingHourController = TextEditingController();
+final workingHourController = TextEditingController();

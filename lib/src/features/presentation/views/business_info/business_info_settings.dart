@@ -230,16 +230,21 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                               SvgPicture.asset(AppImages.edit),
                               GestureDetector(
                                 onTap: () async {
+                                  final startTime = StateProvider<TimeOfDay>(
+                                      (ref) => TimeOfDay.now());
+                                  final time = ref.watch(startTime);
                                   final TimeOfDay? result =
                                       await showTimePicker(
                                           context: context,
-                                          initialTime: TimeOfDay.now(),
+                                          initialTime: time,
                                           initialEntryMode:
                                               TimePickerEntryMode.input);
 
                                   if (result != null) {
                                     if (context.mounted) {
                                       setState(() {
+                                        ref.read(startTime.notifier).state =
+                                            result;
                                         String res;
                                         if (result.minute < 10) {
                                           res = '0${result.minute.toString()}';
@@ -270,16 +275,21 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                               widthSpace(4),
                               GestureDetector(
                                 onTap: () async {
+                                  final endTime = StateProvider<TimeOfDay>(
+                                      (ref) => TimeOfDay.now());
+                                  final time = ref.watch(endTime);
                                   final TimeOfDay? result =
                                       await showTimePicker(
                                           context: context,
-                                          initialTime: TimeOfDay.now(),
+                                          initialTime: time,
                                           initialEntryMode:
                                               TimePickerEntryMode.input);
 
                                   if (result != null) {
                                     if (context.mounted) {
                                       setState(() {
+                                        ref.read(endTime.notifier).state =
+                                            result;
                                         String ses;
                                         if (result.minute < 10) {
                                           ses = '0${result.minute.toString()}';
