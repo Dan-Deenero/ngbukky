@@ -6,10 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
+import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/success_modal.dart';
-import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
@@ -24,32 +23,40 @@ class PRQInspectionDetails extends StatefulWidget {
 class _PRQInspectionDetailsState extends State<PRQInspectionDetails> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
 
-  List<Quotes>? quotes = [];
-
   bool isLoading = true;
-  BookingModel? bookingModel;
+  List<Quotes>? quotes = [];
+  final service = TextEditingController();
+
+
+  QuotesModel? quoteModel;
+
+  int? totalPrice;
+  List<Services>? quote = [];
+
+  int price = 0;
+  double serviceFee = 0;
+  Services? requestedSystemService;
+  OtherServices? requestedPersonalisedService;
+
   var dateString;
   var formattedDate;
   var formattedTime;
   var dateTime;
 
-  int price = 0;
-  double serviceFee = 0;
-
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _mechanicRepo.getoneBooking(widget.id).then((value) => setState(
+    _mechanicRepo.getoneQuote(widget.id).then((value) => setState(
           () {
-            bookingModel = value;
-            dateString = bookingModel!.date;
-            dateTime = DateTime.parse(dateString!);
-            formattedDate = DateFormat('E, d MMM y').format(dateTime);
-            formattedTime = DateFormat('hh:mm a').format(dateTime);
+            quoteModel = value;
             isLoading = false;
-            quotes = bookingModel!.quotes;
-            for (Quotes quote in quotes!) {
+            dateString = quoteModel!.createdAt!;
+            dateTime = DateTime.parse(dateString);
+            formattedDate = DateFormat('E, d MMM y').format(dateTime);
+
+            formattedTime = DateFormat('hh:mm a').format(dateTime);
+            quote = quoteModel!.services!;
+            for (Quotes quote in quoteModel!.quotes!) {
               if (quote.price != null) {
                 price += quote.price!;
               }
@@ -63,8 +70,7 @@ class _PRQInspectionDetailsState extends State<PRQInspectionDetails> {
     var body = {
       "": "",
     };
-    bool result =
-        await _mechanicRepo.markInspectionAsCompleted(body, widget.id);
+    bool result = await _mechanicRepo.markQuoteAsCompleted(body, widget.id);
     if (result) {
       if (context.mounted) {
         context.push(AppRoutes.acceptedBooking);
@@ -75,17 +81,93 @@ class _PRQInspectionDetailsState extends State<PRQInspectionDetails> {
 
   showCompletedModal() {
     showDialog(
-        context: context,
-        builder: (context) => SuccessDialogue(
-            title: 'Complete booking',
-            subtitle:
-                'Your have completed your booking and requested for payment from Kels2323',
-            action: () => context.go(AppRoutes.paymentRequest)));
+      context: context,
+      builder: (context) => SuccessDialogue(
+        title: 'Complete booking',
+        subtitle:
+            'Your have completed your booking and requested for payment from Kels2323',
+        action: () => context.go(AppRoutes.paymentRequest),
+      ),
+    );
   }
 
   completedBooking() {
     completeBooking();
     showCompletedModal();
+  }
+
+  reportClient() {
+    showDialog(
+      context: context,
+      builder: (context) => SimpleDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius:
+              BorderRadius.circular(20.0), // Adjust the radius as needed
+        ),
+        contentPadding: const EdgeInsets.all(20.0),
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              customText(
+                  text: 'Report client?',
+                  fontSize: 24,
+                  textColor: AppColors.black,
+                  fontWeight: FontWeight.w700),
+              InkWell(
+                  onTap: () => context.pop(),
+                  child: SvgPicture.asset(AppImages.cancelModal))
+            ],
+          ),
+          heightSpace(1),
+          customText(
+              text: 'Do you want to report this client? ',
+              fontSize: 12,
+              textColor: AppColors.black),
+          heightSpace(2),
+          modalForm('Air conditioning', service, 8),
+          heightSpace(1),
+          Row(
+            children: [
+              SvgPicture.asset(AppImages.warning),
+              widthSpace(2),
+              Flexible(
+                child: customText(
+                    text:
+                        'Ensure this action is totally needed, or settle your differences with the client.',
+                    fontSize: 11,
+                    textColor: AppColors.textGrey),
+              )
+            ],
+          ),
+          heightSpace(2),
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                TextButton(
+                    onPressed: () => context.pop(),
+                    child: customText(
+                        text: 'cancel',
+                        fontSize: 16,
+                        textColor: AppColors.textGrey)),
+                Container(
+                  width: 1,
+                  height: 40,
+                  color: AppColors.containerGrey,
+                ),
+                TextButton(
+                    onPressed: () {},
+                    child: customText(
+                        text: 'Send report',
+                        fontSize: 16,
+                        textColor: AppColors.darkOrange))
+              ],
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   @override
@@ -149,9 +231,9 @@ class _PRQInspectionDetailsState extends State<PRQInspectionDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           customText(
-                              text: 'Pending payment request',
+                              text: 'Payment request',
                               fontSize: 14,
-                              textColor: AppColors.green,
+                              textColor: AppColors.orange,
                               fontWeight: FontWeight.w600),
                           customText(
                               text: 'Booking status',
@@ -171,7 +253,7 @@ class _PRQInspectionDetailsState extends State<PRQInspectionDetails> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.profile),
                     title: customText(
-                        text: bookingModel!.user!.username!,
+                        text: quoteModel!.user!.username!,
                         fontSize: 14,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -197,7 +279,7 @@ class _PRQInspectionDetailsState extends State<PRQInspectionDetails> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.calendarIcon),
                     title: customText(
-                        text: bookingModel!.brand!,
+                        text: quoteModel!.brand!,
                         fontSize: 14,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -209,7 +291,7 @@ class _PRQInspectionDetailsState extends State<PRQInspectionDetails> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.calendarIcon),
                     title: customText(
-                        text: "${bookingModel!.model!}, ${bookingModel!.year!}",
+                        text: "${quoteModel!.model!}, ${quoteModel!.year!}",
                         fontSize: 14,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -222,7 +304,7 @@ class _PRQInspectionDetailsState extends State<PRQInspectionDetails> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.carIcon),
                     title: customText(
-                        text: '${bookingModel!.year!}',
+                        text: '${quoteModel!.year!}',
                         fontSize: 14,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -240,32 +322,58 @@ class _PRQInspectionDetailsState extends State<PRQInspectionDetails> {
                   heightSpace(3),
                   Column(
                     children: [
-                      Row(
-                        children: [
-                          SvgPicture.asset(AppImages.serviceIcon),
-                          widthSpace(2),
-                          customText(
-                              text: 'AC Maintenance',
-                              fontSize: 13,
-                              textColor: AppColors.black,
-                              fontWeight: FontWeight.w600),
-                        ],
-                      ),
-                      heightSpace(4),
-                      Row(
-                        children: [
-                          SvgPicture.asset(AppImages.serviceIcon),
-                          widthSpace(2),
-                          customText(
-                              text: 'Electrical Repair',
-                              fontSize: 13,
-                              textColor: AppColors.black,
-                              fontWeight: FontWeight.w600),
-                        ],
+                      ...quote!.map(
+                        (qte) {
+                          return Row(
+                            children: [
+                              SvgPicture.asset(AppImages.serviceIcon),
+                              widthSpace(2),
+                              customText(
+                                  text: qte.name!,
+                                  fontSize: 13,
+                                  textColor: AppColors.black,
+                                  fontWeight: FontWeight.w600),
+                              heightSpace(4),
+                            ],
+                          );
+                        },
                       ),
                     ],
                   ),
                   heightSpace(1),
+                  const Divider(),
+                  customText(
+                      text: "Schedule",
+                      fontSize: 14,
+                      textColor: AppColors.orange,
+                      fontWeight: FontWeight.bold),
+                  heightSpace(1),
+                  ListTile(
+                    leading: SvgPicture.asset(AppImages.calendarIcon),
+                    title: customText(
+                        text: formattedDate,
+                        fontSize: 14,
+                        textColor: AppColors.black,
+                        fontWeight: FontWeight.bold),
+                    subtitle: customText(
+                        text: "Scheduled date",
+                        fontSize: 12,
+                        textColor: AppColors.textGrey),
+                  ),
+                  heightSpace(1),
+                  ListTile(
+                    leading: SvgPicture.asset(AppImages.time),
+                    title: customText(
+                        text: formattedTime,
+                        fontSize: 14,
+                        textColor: AppColors.black,
+                        fontWeight: FontWeight.bold),
+                    subtitle: customText(
+                        text: "Scheduled time",
+                        fontSize: 12,
+                        textColor: AppColors.textGrey),
+                  ),
+                  heightSpace(2),
                   const Divider(),
                   Column(
                     children: [
@@ -347,18 +455,40 @@ class _PRQInspectionDetailsState extends State<PRQInspectionDetails> {
                       ),
                       widthSpace(2),
                       Expanded(
-                        child: AppButton(
-                          onTap: completedBooking,
-                          hasIcon: false,
-                          buttonText: "Complete Booking",
-                          isOrange: true,
+                        child: TextButton(
+                          onPressed: reportClient,
+                          child: customText(
+                              text: 'Report client',
+                              fontSize: 14,
+                              textColor: AppColors.textGrey),
                         ),
                       ),
                     ],
                   ),
+                  heightSpace(3)
                 ],
               ),
             )),
+    );
+  }
+
+  TextFormField modalForm(
+      String hint, TextEditingController control, int line) {
+    return TextFormField(
+      controller: control,
+      maxLines: line,
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: const TextStyle(color: AppColors.textformGrey),
+        disabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: AppColors.textformGrey),
+            borderRadius: BorderRadius.all(Radius.circular(20))),
+        border: const OutlineInputBorder(
+            borderSide: BorderSide(color: AppColors.textformGrey),
+            borderRadius: BorderRadius.all(Radius.circular(20))),
+        contentPadding: const EdgeInsets.only(left: 10, top: 10),
+        errorStyle: const TextStyle(fontSize: 14),
+      ),
     );
   }
 }

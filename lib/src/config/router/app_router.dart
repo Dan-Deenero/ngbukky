@@ -12,8 +12,19 @@ import 'package:ngbuka/src/features/presentation/views/main_auth/new_password.da
 import 'package:ngbuka/src/features/presentation/views/main_auth/select_account_type.dart';
 import 'package:ngbuka/src/features/presentation/views/main_auth/verify_account.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/accepted_quotes.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/completed_quote_request.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/inspection_details_cqr.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/inspection_details_pca.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/inspection_details_pdq.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/inspection_details_pprq%20.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/inspection_details_prq.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/inspection_details_qr.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/inspection_detalis_rq.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/new_quote_alert.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/payment_declined_q.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/payment_request_q.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/pending_Client_approval.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/quote_rejected.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/quote_request.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/rejected_quote.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/view_accepted_quotes.dart';
@@ -38,7 +49,7 @@ import 'package:ngbuka/src/features/presentation/views/mechanic/quote_request.da
 import 'package:ngbuka/src/features/presentation/views/mechanic/send-quotes/quote_send.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/rejected-bookings/rejected_booking.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/rejected-bookings/view_rejected_booking.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/send-quotes/send_quote.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/send_quote.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/history_detail.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/wallet_history.dart';
 import 'package:ngbuka/src/features/presentation/views/notifications/notification.dart';
@@ -140,47 +151,67 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
           path: AppRoutes.inspectionBooking,
           name: AppRoutes.inspectionBooking,
-          builder: (_, state) => InspectionBooking(id: state.extra as String,)),
+          builder: (_, state) => InspectionBooking(
+                id: state.extra as String,
+              )),
       GoRoute(
           path: AppRoutes.viewAcceptedBooking,
           name: AppRoutes.viewAcceptedBooking,
-          builder: (_, state) => ViewAcceptedBooking(id: state.extra as String,)),
+          builder: (_, state) => ViewAcceptedBooking(
+                id: state.extra as String,
+              )),
       GoRoute(
           path: AppRoutes.viewRejectedBooking,
           name: AppRoutes.viewRejectedBooking,
-          builder: (_, state) => ViewRejectedBooking(id: state.extra as String,)),
+          builder: (_, state) => ViewRejectedBooking(
+                id: state.extra as String,
+              )),
       GoRoute(
           path: AppRoutes.bookingRejectedDetails,
           name: AppRoutes.bookingRejectedDetails,
-          builder: (_, state) => BRInspectionDetails(id: state.extra as String,)),
+          builder: (_, state) => BRInspectionDetails(
+                id: state.extra as String,
+              )),
       GoRoute(
           path: AppRoutes.pendingPaymentRequestDetails,
           name: AppRoutes.pendingPaymentRequestDetails,
-          builder: (_, state) => PPRInspectionDetails(id: state.extra as String,)),
+          builder: (_, state) => PPRInspectionDetails(
+                id: state.extra as String,
+              )),
       GoRoute(
           path: AppRoutes.paymentRequestDetails,
           name: AppRoutes.paymentRequestDetails,
-          builder: (_, state) => PRInspectionDetails(id: state.extra as String,)),
+          builder: (_, state) => PRInspectionDetails(
+                id: state.extra as String,
+              )),
       GoRoute(
           path: AppRoutes.paymentDeclinedDetails,
           name: AppRoutes.paymentDeclinedDetails,
-          builder: (_, state) => PDInspectionDetails(id: state.extra as String,)),
+          builder: (_, state) => PDInspectionDetails(
+                id: state.extra as String,
+              )),
       GoRoute(
           path: AppRoutes.completedBookingDetails,
           name: AppRoutes.completedBookingDetails,
-          builder: (_, state) => CompletedInspectionDetails(id: state.extra as String,)),
+          builder: (_, state) => CompletedInspectionDetails(
+                id: state.extra as String,
+              )),
       GoRoute(
           path: AppRoutes.pendingQuoteApprovalDetails,
           name: AppRoutes.pendingQuoteApprovalDetails,
-          builder: (_, state) => PQAInspectionDetails(id: state.extra as String,)),
+          builder: (_, state) => PQAInspectionDetails(
+                id: state.extra as String,
+              )),
       GoRoute(
           path: AppRoutes.sendQuotes,
           name: AppRoutes.sendQuotes,
-          builder: (_, state) =>  SendQuote(id: state.extra as String,)),
+          builder: (_, state) => SendQuote(id: state.extra as String,)),
       GoRoute(
           path: AppRoutes.quotesSend,
           name: AppRoutes.quotesSend,
-          builder: (_, state) =>  QuoteSend(id: state.extra as String,)),
+          builder: (_, state) => QuoteSend(
+                id: state.extra as String,
+              )),
       GoRoute(
           path: AppRoutes.bookingAlert,
           name: AppRoutes.bookingAlert,
@@ -264,7 +295,7 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
           path: AppRoutes.addWallet,
           name: AppRoutes.addWallet,
-          builder: (_, state) =>  AddWalletPage()),
+          builder: (_, state) => AddWalletPage()),
       GoRoute(
           path: AppRoutes.newQuoteAlert,
           name: AppRoutes.newQuoteAlert,
@@ -272,15 +303,19 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
           path: AppRoutes.quoteRequest,
           name: AppRoutes.quoteRequest,
-          builder: (_, state) =>  QuoteRequests(id: state.extra as String,)),
+          builder: (_, state) => QuoteRequests(
+                id: state.extra as String,
+              )),
       GoRoute(
           path: AppRoutes.acceptedQuotes,
           name: AppRoutes.acceptedQuotes,
-          builder: (_, state) => const  AcceptedQuotes()),
+          builder: (_, state) => const AcceptedQuotes()),
       GoRoute(
           path: AppRoutes.viewAcceptedQuote,
           name: AppRoutes.viewAcceptedQuote,
-          builder: (_, state) =>  ViewAcceptedQuote(id: state.extra as String,)),
+          builder: (_, state) => ViewAcceptedQuote(
+                id: state.extra as String,
+              )),
       GoRoute(
           path: AppRoutes.rejectedQuote,
           name: AppRoutes.rejectedQuote,
@@ -288,5 +323,64 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
           path: AppRoutes.rejectedQuoteDetails,
           name: AppRoutes.rejectedQuoteDetails,
-          builder: (_, state) =>  RQInspectionDetails(id: state.extra as String,)),
+          builder: (_, state) => RQInspectionDetails(
+                id: state.extra as String,
+              )),
+      GoRoute(
+          path: AppRoutes.pendingClientApproval,
+          name: AppRoutes.pendingClientApproval,
+          builder: (_, state) => const PendingClientApproval()),
+      GoRoute(
+          path: AppRoutes.pendingClientApprovalDetails,
+          name: AppRoutes.pendingClientApprovalDetails,
+          builder: (_, state) => PCAInspectionDetails(
+                id: state.extra as String,
+              )),
+      GoRoute(
+          path: AppRoutes.quotePaymentRequest,
+          name: AppRoutes.quotePaymentRequest,
+          builder: (_, state) => const QPaymentRequest()),
+      GoRoute(
+          path: AppRoutes.quotePaymentRequestDetails,
+          name: AppRoutes.quotePaymentRequestDetails,
+          builder: (_, state) => PRQInspectionDetails(
+                id: state.extra as String,
+              )),
+      GoRoute(
+          path: AppRoutes.pendingQuotePaymentRequestDetails,
+          name: AppRoutes.pendingQuotePaymentRequestDetails,
+          builder: (_, state) => PPRQInspectionDetails(
+                id: state.extra as String,
+              )),
+      GoRoute(
+          path: AppRoutes.quotePaymentDecline,
+          name: AppRoutes.quotePaymentDecline,
+          builder: (_, state) => const QPaymentDeclined()),
+      GoRoute(
+          path: AppRoutes.quotePaymentDeclineDetails,
+          name: AppRoutes.quotePaymentDeclineDetails,
+          builder: (_, state) => PDQInspectionDetails(
+                id: state.extra as String,
+              )),
+      GoRoute(
+          path: AppRoutes.completedQuoteRequest,
+          name: AppRoutes.completedQuoteRequest,
+          builder: (_, state) => const CompletedQuoteRequest()),
+      GoRoute(
+          path: AppRoutes.completedQuoteRequestDetails,
+          name: AppRoutes.completedQuoteRequestDetails,
+          builder: (_, state) => CQRInspectionDetails(
+                id: state.extra as String,
+              )),
+      GoRoute(
+          path: AppRoutes.quoteRejected,
+          name: AppRoutes.quoteRejected,
+          builder: (_, state) => const QuoteRejected()),
+      GoRoute(
+        path: AppRoutes.quoteRejectedDetails,
+        name: AppRoutes.quoteRejectedDetails,
+        builder: (_, state) => QRInspectionDetails(
+          id: state.extra as String,
+        ),
+      ),
     ]);

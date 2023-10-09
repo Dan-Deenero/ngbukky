@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
+// import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
+import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
 class PCAInspectionDetails extends StatefulWidget {
   final String id;
-  PCAInspectionDetails({
+  const PCAInspectionDetails({
     super.key,
     required this.id,
   });
@@ -25,42 +25,28 @@ class _PCAInspectionDetailsState extends State<PCAInspectionDetails> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
 
   bool isLoading = true;
-
-  List<String> serviceList = [];
-  List<String> otherList = [];
-  // List<Services> otherServiceList = [];
-  List<String> selectedServiceList = [];
   List<Quotes>? quotes = [];
 
-  BookingModel? bookingModel;
+  QuotesModel? quoteModel;
 
   int? totalPrice;
+  List<Services>? quote = [];
 
   int price = 0;
   double serviceFee = 0;
-  RequestedSystemService? requestedSystemService;
-  RequestedPersonalisedService? requestedPersonalisedService;
-
-  var dateString;
-  var formattedDate;
-  var formattedTime;
-  var dateTime;
+  Services? requestedSystemService;
+  OtherServices? requestedPersonalisedService;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _mechanicRepo.getoneBooking(widget.id).then((value) => setState(
+    _mechanicRepo.getoneQuote(widget.id).then((value) => setState(
           () {
-            bookingModel = value;
-            dateString = bookingModel!.date;
-            dateTime = DateTime.parse(dateString!);
-            formattedDate = DateFormat('E, d MMM y').format(dateTime);
-
-            formattedTime = DateFormat('hh:mm a').format(dateTime);
+            quoteModel = value;
             isLoading = false;
-            quotes = bookingModel!.quotes;
-            for (Quotes quote in quotes!) {
+            // quotes = quoteModel!.services!;
+            for (Quotes quote in quoteModel!.quotes!) {
               if (quote.price != null) {
                 price += quote.price!;
               }
@@ -154,7 +140,7 @@ class _PCAInspectionDetailsState extends State<PCAInspectionDetails> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.profile),
                     title: customText(
-                        text: bookingModel!.user!.username!,
+                        text: quoteModel!.user!.username!,
                         fontSize: 14,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -180,7 +166,7 @@ class _PCAInspectionDetailsState extends State<PCAInspectionDetails> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.calendarIcon),
                     title: customText(
-                        text: bookingModel!.brand!,
+                        text: quoteModel!.brand!,
                         fontSize: 14,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -192,7 +178,7 @@ class _PCAInspectionDetailsState extends State<PCAInspectionDetails> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.calendarIcon),
                     title: customText(
-                        text: "${bookingModel!.model!}, ${bookingModel!.year!}",
+                        text: "${quoteModel!.model!}, $quoteModel!.year!}",
                         fontSize: 14,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -205,7 +191,7 @@ class _PCAInspectionDetailsState extends State<PCAInspectionDetails> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.carIcon),
                     title: customText(
-                        text: '${bookingModel!.year!}',
+                        text: '${quoteModel!.year!}',
                         fontSize: 14,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -223,28 +209,21 @@ class _PCAInspectionDetailsState extends State<PCAInspectionDetails> {
                   heightSpace(3),
                   Column(
                     children: [
-                      Row(
-                        children: [
-                          SvgPicture.asset(AppImages.serviceIcon),
-                          widthSpace(2),
-                          customText(
-                              text: 'AC Maintenance',
-                              fontSize: 13,
-                              textColor: AppColors.black,
-                              fontWeight: FontWeight.w600),
-                        ],
-                      ),
-                      heightSpace(4),
-                      Row(
-                        children: [
-                          SvgPicture.asset(AppImages.serviceIcon),
-                          widthSpace(2),
-                          customText(
-                              text: 'Electrical Repair',
-                              fontSize: 13,
-                              textColor: AppColors.black,
-                              fontWeight: FontWeight.w600),
-                        ],
+                      ...quote!.map(
+                        (qte) {
+                          return Row(
+                            children: [
+                              SvgPicture.asset(AppImages.serviceIcon),
+                              widthSpace(2),
+                              customText(
+                                  text: qte.name!,
+                                  fontSize: 13,
+                                  textColor: AppColors.black,
+                                  fontWeight: FontWeight.w600),
+                              heightSpace(4),
+                            ],
+                          );
+                        },
                       ),
                     ],
                   ),

@@ -183,7 +183,7 @@ class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.profile),
                     title: customText(
-                        text: 'kels232',
+                        text: bookingModel!.user!.username!,
                         fontSize: 15,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),

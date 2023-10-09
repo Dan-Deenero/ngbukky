@@ -1,5 +1,4 @@
-class StatisticsModel {
-  int? cANCELED;
+class StatisticsModelForQuote {
   int? pENDING;
   int? aCCEPTED;
   int? rEJECTED;
@@ -10,7 +9,7 @@ class StatisticsModel {
   int? dECLINED;
   int? cOMPLETED;
 
-  StatisticsModel({
+  StatisticsModelForQuote({
     this.pENDING,
     this.aCCEPTED,
     this.rEJECTED,
@@ -20,12 +19,9 @@ class StatisticsModel {
     this.aWAITINGPAYMENT,
     this.dECLINED,
     this.cOMPLETED,
-    this.cANCELED,
   });
 
-  StatisticsModel.fromJson(Map<String, dynamic> json) {
-
-    cANCELED = json['CANCELED'];
+  StatisticsModelForQuote.fromJson(Map<String, dynamic> json) {
     pENDING = json['PENDING'];
     aCCEPTED = json['ACCEPTED'];
     rEJECTED = json['REJECTED'];
@@ -39,7 +35,6 @@ class StatisticsModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['cANCELED'] = cANCELED;
     data['PENDING'] = pENDING;
     data['ACCEPTED'] = aCCEPTED;
     data['REJECTED'] = rEJECTED;

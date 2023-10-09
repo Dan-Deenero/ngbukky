@@ -6,30 +6,35 @@ import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
+import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
-class CompletedBooking extends StatefulWidget {
-  const CompletedBooking({super.key});
+class CompletedQuoteRequest extends StatefulWidget {
+  const CompletedQuoteRequest({super.key});
 
   @override
-  State<CompletedBooking> createState() => _CompletedBookingState();
+  State<CompletedQuoteRequest> createState() => _CompletedQuoteRequestState();
 }
 
-class _CompletedBookingState extends State<CompletedBooking> {
+class _CompletedQuoteRequestState extends State<CompletedQuoteRequest> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
-  List<BookingModel> _bookingHistory = [];
+  List<QuotesModel> _quoteHistory = [];
+
   bool isLoading = true;
+  List<Quotes>? quotes = [];
+
+  QuotesModel? quoteModel;
+  int price = 0;
+  double serviceFee = 0;
 
   @override
   void initState() {
     super.initState();
-    _mechanicRepo.getAllBooking('completed').then((value) => setState(() {
-          _bookingHistory = value;
+    _mechanicRepo.getAllQuotes('completed').then((value) => setState(() {
+          _quoteHistory = value;
           isLoading = false;
-          print(_bookingHistory);
         }));
     // log(_bookingHistory.toString());
   }
@@ -45,7 +50,7 @@ class _CompletedBookingState extends State<CompletedBooking> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             GestureDetector(
-              onTap: () => context.pop(),
+              onTap: () => context.push(AppRoutes.bookings),
               child: Container(
                 height: 10.h,
                 width: 10.w,
@@ -79,10 +84,10 @@ class _CompletedBookingState extends State<CompletedBooking> {
               child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
+                  padding: const EdgeInsets.all(10),
+                  child: Wrap(
                     children: [
-                      if (_bookingHistory.isEmpty)
+                      if (_quoteHistory.isEmpty)
                         Center(
                             heightFactor: 3.5,
                             child: Column(
@@ -92,16 +97,29 @@ class _CompletedBookingState extends State<CompletedBooking> {
                                     text:
                                         'You have not gotten paid by any client yet',
                                     fontSize: 15,
-                                    textColor: AppColors.black,
-                                    textAlignment: TextAlign.center)
+                                    textColor: AppColors.black)
                               ],
                             ))
                       else
-                        ..._bookingHistory.map((e) {
-                          var dateString = e.date;
+                        ..._quoteHistory.map((e) {
+                          _mechanicRepo.getoneQuote(e.id).then(
+                                (value) => setState(
+                                  () {
+                                    quoteModel = value;
+                                    for (Quotes quote in quotes!) {
+                                      if (quote.price != null) {
+                                        price += quote.price!;
+                                      }
+                                    }
+                                    serviceFee = price * 0.01;
+                                  },
+                                ),
+                              );
+                          var dateString = e.createdAt;
                           var dateTime = DateTime.parse(dateString!);
                           var formattedDate =
                               DateFormat('dd MMM yyyy').format(dateTime);
+
                           var formattedTime =
                               DateFormat('hh:mm a').format(dateTime);
                           return GestureDetector(
@@ -110,6 +128,7 @@ class _CompletedBookingState extends State<CompletedBooking> {
                                   extra: e.id);
                             },
                             child: Container(
+                              margin: const EdgeInsets.only(bottom: 10),
                               width: double.infinity,
                               height: 10.h,
                               decoration: BoxDecoration(
@@ -119,23 +138,23 @@ class _CompletedBookingState extends State<CompletedBooking> {
                               child: ListTile(
                                   trailing: Column(children: [
                                     customText(
-                                        text: "N5,050",
-                                        fontSize: 14,
-                                        textColor: AppColors.textGrey,
-                                        fontWeight: FontWeight.bold),
+                                      text: '$price',
+                                      fontSize: 14,
+                                      textColor: AppColors.textGrey,
+                                    ),
                                     heightSpace(1),
                                     Container(
-                                      width: 19.w,
+                                      width: 28.w,
                                       height: 3.h,
                                       decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10),
                                           color:
-                                              AppColors.green.withOpacity(.3)),
+                                              AppColors.green.withOpacity(.1)),
                                       child: Center(
                                         child: customText(
-                                            text: "Completed",
-                                            fontSize: 12,
+                                            text: "Accepted booking",
+                                            fontSize: 10,
                                             textColor: AppColors.green),
                                       ),
                                     )
@@ -151,7 +170,7 @@ class _CompletedBookingState extends State<CompletedBooking> {
                                               textColor: AppColors.textGrey)
                                         ],
                                       ),
-                                      widthSpace(2),
+                                      widthSpace(1),
                                       Row(
                                         children: [
                                           SvgPicture.asset(
@@ -170,8 +189,8 @@ class _CompletedBookingState extends State<CompletedBooking> {
                                       textColor: AppColors.black,
                                       fontWeight: FontWeight.bold),
                                   leading: Container(
-                                    width: 10.w,
-                                    height: 10.h,
+                                    width: 8.w,
+                                    height: 8.h,
                                     decoration: const BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: AppColors.containerGrey),

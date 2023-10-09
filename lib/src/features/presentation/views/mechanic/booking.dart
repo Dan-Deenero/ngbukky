@@ -90,6 +90,7 @@ class Bookings extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final pending = useState<int?>(0);
+    final canceled = useState<int?>(0);
     final declined = useState<int?>(0);
     final completed = useState<int?>(0);
     final accepted = useState<int?>(0);
@@ -98,9 +99,32 @@ class Bookings extends HookWidget {
     final approved = useState<int?>(0);
     final disapproved = useState<int?>(0);
     final awaitingPayment = useState<int?>(0);
+    final pending2 = useState<int?>(0);
+    final declined2 = useState<int?>(0);
+    final completed2 = useState<int?>(0);
+    final accepted2 = useState<int?>(0);
+    final rejected2 = useState<int?>(0);
+    final bargaining2 = useState<int?>(0);
+    final approved2 = useState<int?>(0);
+    final disapproved2 = useState<int?>(0);
+    final awaitingPayment2 = useState<int?>(0);
 
-    getStatisticsInfo() {
-      _mechanicRepo.getStatisticsInfo().then((value) {
+    getQuoteStatisticsInfo() {
+      _mechanicRepo.getQuoteStatisticsInfo().then((value) {
+        pending2.value = value.pENDING;
+        declined2.value = value.dECLINED;
+        completed2.value = value.cOMPLETED;
+        accepted2.value = value.aCCEPTED;
+        rejected2.value = value.rEJECTED;
+        bargaining2.value = value.bARGAINING;
+        approved2.value = value.aPPROVED;
+        disapproved2.value = value.dISAPPROVED;
+        awaitingPayment2.value = value.aWAITINGPAYMENT;
+      });
+    }
+
+    getBookingStatisticsInfo() {
+      _mechanicRepo.getBookingStatisticsInfo().then((value) {
         pending.value = value.pENDING;
         declined.value = value.dECLINED;
         completed.value = value.cOMPLETED;
@@ -110,12 +134,15 @@ class Bookings extends HookWidget {
         approved.value = value.aPPROVED;
         disapproved.value = value.dISAPPROVED;
         awaitingPayment.value = value.aWAITINGPAYMENT;
+        canceled.value = value.cANCELED;
+
       });
     }
 
     final tabIndex = useState<int>(0);
     useEffect(() {
-      getStatisticsInfo();
+      getQuoteStatisticsInfo();
+      getBookingStatisticsInfo();
       return null;
     }, []);
     return DefaultTabController(
@@ -161,7 +188,7 @@ class Bookings extends HookWidget {
               )),
             ),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 20),
+              margin: const EdgeInsets.symmetric(horizontal: 20),
               height: 40,
               width: double.infinity,
               decoration: BoxDecoration(
@@ -206,6 +233,7 @@ class Bookings extends HookWidget {
             Expanded(
               child: TabBarView(children: [
                 InspectionBookings(
+                  canceled: canceled.value,
                   pending: pending.value,
                   declined: declined.value,
                   completed: completed.value,
@@ -216,7 +244,17 @@ class Bookings extends HookWidget {
                   disapproved: disapproved.value,
                   awaitingPayment: awaitingPayment.value,
                 ),
-                Quotes()
+                Quotes(
+                  pending: pending2.value,
+                  declined: declined2.value,
+                  completed: completed2.value,
+                  accepted: accepted2.value,
+                  rejected: rejected2.value,
+                  bargaining: bargaining2.value,
+                  approved: approved2.value,
+                  disapproved: disapproved2.value,
+                  awaitingPayment: awaitingPayment2.value,
+                )
               ]),
             )
           ],
@@ -227,6 +265,7 @@ class Bookings extends HookWidget {
 }
 
 class InspectionBookings extends StatelessWidget {
+  final int? canceled;
   final int? pending;
   final int? declined;
   final int? completed;
@@ -239,6 +278,7 @@ class InspectionBookings extends StatelessWidget {
 
   const InspectionBookings(
       {super.key,
+      this.canceled,
       this.pending,
       this.declined,
       this.completed,
@@ -326,69 +366,83 @@ class InspectionBookings extends StatelessWidget {
             ),
             heightSpace(2),
             GestureDetector(
-              onTap: ()  => context.push(AppRoutes.bookingAlert),
-              child: card("New booking alerts", "New inspection bookings",
-                  "$pending", "orange"),
+              onTap: () => context.push(AppRoutes.bookingAlert),
+              child: card(
+                "New booking alerts",
+                "New inspection bookings",
+                "$pending",
+                "orange",
+              ),
             ),
             heightSpace(2),
             GestureDetector(
               onTap: () => context.push(AppRoutes.acceptedBooking),
               child: card(
-                  "Accepted booking",
-                  "You have accepted these inspection bookings",
-                  "$accepted",
-                  "orange"),
+                "Accepted booking",
+                "You have accepted these inspection bookings",
+                "$accepted",
+                "orange",
+              ),
             ),
             heightSpace(2),
             GestureDetector(
               onTap: () => context.push(AppRoutes.pendingQuoteApproval),
               child: card(
-                  "Pending client approval",
-                  "Quote sent and awaiting client approval",
-                  "$bargaining",
-                  "orange"),
+                "Pending client approval",
+                "Quote sent and awaiting client approval",
+                "$bargaining",
+                "orange",
+              ),
             ),
             heightSpace(2),
             GestureDetector(
               onTap: () => context.push(AppRoutes.paymentRequest),
               child: card(
-                  "Payment request",
-                  "I have requested for payment for this service",
-                  "$awaitingPayment",
-                  "grey"),
+                "Payment request",
+                "I have requested for payment for this service",
+                "$awaitingPayment",
+                "grey",
+              ),
             ),
             heightSpace(2),
             GestureDetector(
               onTap: () => context.push(AppRoutes.completedBooking),
               child: card(
-                  "Completed",
-                  "Payment made and deal closed",
-                  "$completed",
-                  "green"),
+                "Completed",
+                "Payment made and deal closed",
+                "$completed",
+                "green",
+              ),
             ),
             heightSpace(2),
             GestureDetector(
               onTap: () => context.push(AppRoutes.bookingRejected),
               child: card(
-                  "Booking rejected",
-                  "The client rejected your booking quote",
-                  "$disapproved",
-                  "red"),
+                "Booking rejected",
+                "The client rejected your booking quote",
+                "$disapproved",
+                "red",
+              ),
             ),
             heightSpace(2),
             GestureDetector(
               onTap: () => context.push(AppRoutes.paymentDeclined),
               child: card(
-                  "Payment declined",
-                  "The client declined these payment",
-                  "$declined",
-                  "red"),
+                "Payment declined",
+                "The client declined these payment",
+                "$declined",
+                "red",
+              ),
             ),
             heightSpace(2),
             GestureDetector(
               onTap: () => context.push(AppRoutes.rejectedBooking),
-              child: card("Rejected", "You rejected these booking quote",
-                  "$rejected", "red"),
+              child: card(
+                "Rejected",
+                "You rejected these booking quote",
+                "$rejected",
+                "red",
+              ),
             ),
           ],
         ),
@@ -398,7 +452,27 @@ class InspectionBookings extends StatelessWidget {
 }
 
 class Quotes extends StatelessWidget {
-  const Quotes({super.key});
+  final int? pending;
+  final int? declined;
+  final int? completed;
+  final int? accepted;
+  final int? rejected;
+  final int? bargaining;
+  final int? approved;
+  final int? disapproved;
+  final int? awaitingPayment;
+
+  const Quotes(
+      {super.key,
+      this.pending,
+      this.declined,
+      this.completed,
+      this.accepted,
+      this.rejected,
+      this.bargaining,
+      this.approved,
+      this.disapproved,
+      this.awaitingPayment});
 
   @override
   Widget build(BuildContext context) {
@@ -424,7 +498,7 @@ class Quotes extends StatelessWidget {
                           fontSize: 12,
                           textColor: AppColors.textGrey),
                       customText(
-                          text: "0",
+                          text: "$accepted",
                           fontSize: 25,
                           textColor: AppColors.black,
                           fontWeight: FontWeight.bold),
@@ -479,39 +553,82 @@ class Quotes extends StatelessWidget {
             GestureDetector(
               onTap: () => context.push(AppRoutes.newQuoteAlert),
               child: card(
-                  "New quote request", "View new quote request", "0", "orange"),
+                "New quote request",
+                "View new quote request",
+                "$pending",
+                "orange",
+              ),
             ),
             heightSpace(2),
             GestureDetector(
               onTap: () => context.push(AppRoutes.acceptedQuotes),
-              child: card("Accepted quotes",
-                  "All you accepted bookings are here", "1", "orange"),
-            ),
-            heightSpace(2),
-            card(
-                "Pending booking request",
-                "YYou sent yoru quote to a client for some services",
-                "1",
-                "grey"),
-            heightSpace(2),
-            GestureDetector(
-              onTap: () => context.push(AppRoutes.paymentRequest),
-              child:
-                  card("Payment request", "Your payment requests", "1", "grey"),
+              child: card(
+                "Accepted quotes",
+                "All you accepted bookings are here",
+                "$accepted",
+                "orange",
+              ),
             ),
             heightSpace(2),
             GestureDetector(
-              onTap: () => context.push(AppRoutes.completedBooking),
-              child: card("Completed", "You were paid for these bookings", "30",
-                  "green"),
+              onTap: () => context.push(AppRoutes.pendingClientApproval),
+              child: card(
+                  "Pending Client Approval",
+                  "YYou sent yoru quote to a client for some services",
+                  "$bargaining",
+                  "grey"),
             ),
             heightSpace(2),
             GestureDetector(
-              onTap: () => context.push(AppRoutes.paymentDeclined),
-              child: card("Rejected", "You rejected these offers", "2", "red"),
+              onTap: () => context.push(AppRoutes.quotePaymentRequest),
+              child: card(
+                "Payment requests",
+                "Your payment requests",
+                "$awaitingPayment",
+                "grey",
+              ),
             ),
             heightSpace(2),
-            card("Declined", "Quotation is declined by the client", "4", "red"),
+            GestureDetector(
+              onTap: () => context.push(AppRoutes.completedQuoteRequest),
+              child: card(
+                "Completed",
+                "You were paid for these bookings",
+                "$completed",
+                "green",
+              ),
+            ),
+            heightSpace(2),
+            GestureDetector(
+              onTap: () => context.push(AppRoutes.quoteRejected),
+              child: card(
+                "Quote Rejected",
+                "You rejected these offers",
+                "$disapproved",
+                "red",
+              ),
+            ),
+            heightSpace(2),
+            GestureDetector(
+              onTap: () => context.push(AppRoutes.rejectedQuote),
+              child: card(
+                "Rejected Quotes",
+                "You rejected these offers",
+                "$rejected",
+                "red",
+              ),
+            ),
+            heightSpace(2),
+            GestureDetector(
+              onTap: () => context.push(AppRoutes.sendQuotes),
+              child: card(
+                "Declined Payment",
+                "Quotation is declined by the client",
+                "$declined",
+                "red",
+              ),
+            ),
+            heightSpace(2),
           ],
         ),
       ),
