@@ -44,8 +44,8 @@ class _PPRQInspectionDetailsState extends State<PPRQInspectionDetails> {
           () {
             quoteModel = value;
             isLoading = false;
-            // quotes = quoteModel!.services!;
-            for (Quotes quote in quotes!) {
+            quote = quoteModel!.services!;
+            for (Quotes quote in quoteModel!.quotes!) {
               if (quote.price != null) {
                 price += quote.price!;
               }
@@ -55,17 +55,14 @@ class _PPRQInspectionDetailsState extends State<PPRQInspectionDetails> {
         ));
   }
 
-  completeBooking() async {
+  completedBooking() async {
     var body = {
       "": "",
     };
     bool result =
         await _mechanicRepo.markQuoteAsCompleted(body, widget.id);
     if (result) {
-      if (context.mounted) {
-        context.push(AppRoutes.acceptedBooking);
-        return;
-      }
+        showCompletedModal();
     }
   }
 
@@ -75,16 +72,12 @@ class _PPRQInspectionDetailsState extends State<PPRQInspectionDetails> {
       builder: (context) => SuccessDialogue(
         title: 'Complete booking',
         subtitle:
-            'Your have completed your booking and requested for payment from Kels2323',
-        action: () => context.go(AppRoutes.paymentRequest),
+            'Your have completed your booking and requested for payment from ${quoteModel!.user!.username!}',
+        action: () => context.go(AppRoutes.quotePaymentRequest),
       ),
     );
   }
 
-  completedBooking() {
-    completeBooking();
-    showCompletedModal();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -347,6 +340,7 @@ class _PPRQInspectionDetailsState extends State<PPRQInspectionDetails> {
                       ),
                     ],
                   ),
+                  heightSpace(3)
                 ],
               ),
             )),

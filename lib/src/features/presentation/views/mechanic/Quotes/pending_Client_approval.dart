@@ -52,7 +52,7 @@ class _PendingClientApprovalState extends State<PendingClientApproval> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             GestureDetector(
-              onTap: () => context.push(AppRoutes.bookings),
+              onTap: () => context.push(AppRoutes.bottomNav),
               child: Container(
                 height: 10.h,
                 width: 10.w,
@@ -107,19 +107,19 @@ class _PendingClientApprovalState extends State<PendingClientApproval> {
                             ))
                       else
                         ..._quoteHistory.map((e) {
-                          _mechanicRepo.getoneQuote(e.id).then(
-                                (value) => setState(
-                                  () {
-                                    quoteModel = value;
-                                    for (Quotes quote in quotes!) {
-                                      if (quote.price != null) {
-                                        price += quote.price!;
-                                      }
-                                    }
-                                    serviceFee = price * 0.01;
-                                  },
-                                ),
-                              );
+                          // _mechanicRepo.getoneQuote(e.id).then(
+                          //       (value) => setState(
+                          //         () {
+                          //           quoteModel = value;
+                          //           for (Quotes quote in quotes!) {
+                          //             if (quote.price != null) {
+                          //               price += quote.price!;
+                          //             }
+                          //           }
+                          //           serviceFee = price * 0.01;
+                          //         },
+                          //       ),
+                          //     );
                           var dateString = e.createdAt;
                           var dateTime = DateTime.parse(dateString!);
                           var formattedDate =
@@ -144,7 +144,7 @@ class _PendingClientApprovalState extends State<PendingClientApproval> {
                               child: ListTile(
                                   trailing: Column(children: [
                                     customText(
-                                        text: "$price",
+                                        text: "",
                                         fontSize: 14,
                                         textColor: AppColors.textGrey,
                                         fontWeight: FontWeight.bold),

@@ -498,7 +498,7 @@ class Quotes extends StatelessWidget {
                           fontSize: 12,
                           textColor: AppColors.textGrey),
                       customText(
-                          text: "0",
+                          text: "$accepted",
                           fontSize: 25,
                           textColor: AppColors.black,
                           fontWeight: FontWeight.bold),

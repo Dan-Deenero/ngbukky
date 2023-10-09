@@ -9,123 +9,61 @@ import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
-import 'package:ngbuka/src/domain/data/user_model.dart';
-import 'package:ngbuka/src/domain/repository/auth_repository.dart';
+import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/dialogue.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/success_modal.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_textformfield.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
-import 'package:ngbuka/src/features/providers/work_hours.dart';
 import 'package:ngbuka/src/utils/helpers/validators.dart';
 
 import '../../../../../core/shared/colors.dart';
 
 class SendQuote extends ConsumerStatefulWidget {
-  const SendQuote({super.key});
+  final String id;
+  const SendQuote({super.key, required this.id});
 
   @override
   ConsumerState<SendQuote> createState() => _SendQuoteState();
 }
 
 class _SendQuoteState extends ConsumerState<SendQuote> {
-  // final MechanicRepo _mechanicRepo = MechanicRepo();
-  static final AuthRepo _authRepo = AuthRepo();
-  static final MechanicRepo _mechanicRepo = MechanicRepo();
+  final MechanicRepo _mechanicRepo = MechanicRepo();
   static final costOnly = TextEditingController();
-  static var serv = TextEditingController();
-  static var price = TextEditingController();
 
-  bool isLoadings = false;
+  bool isLoading = true;
 
-  List<String> serviceList = [];
-  List<String> otherList = [];
-  List<Services> otherServiceList = [];
-  List<String> selectedServiceList = [];
-  List<Services> service = [];
+  QuotesModel? quoteModel;
+  List<Services>? quote = [];
 
-  List<String> servicesItems = [];
-  Map<String, int> selectedServices = {};
-  List<String> serviceNames = [];
-  Map<String, String> serviceNameToId = {};
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
 
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   _authRepo.getMechanicProfile().then((value) => setState(
-  //         () {
-  //           service = value.services!;
-  //           otherServiceList = value.otherServices!;
-  //           // serviceList = service.map((service,) => service.id!).toList();
-  //           // otherList =
-  //           //     otherServiceList.map((service) => service.id!).toList();
-  //           serviceList = service.map((service) {
-  //             return "${service.id}: ${service.name}";
-  //           }).toList();
+    _mechanicRepo.getoneQuote(widget.id).then(
+          (value) => setState(
+            () {
+              quoteModel = value;
+              quote = quoteModel!.services!;
+              isLoading = false;
+            },
+          ),
+        );
+  }
 
-  //           otherList = otherServiceList.map((service) {
-  //             return "${service.id}: ${service.name}";
-  //           }).toList();
-  //           serviceList = serviceList + otherList;
+  sendQuote() async {
+    var data = {};
+    data = {"isOnlyAmount": 'true', "amount": costOnly.text};
 
-  //           serviceNames = serviceList.map((item) {
-  //             return item.split(': ')[1];
-  //           }).toList();
-  //           log(serviceNames.toString());
+    bool result = await _mechanicRepo.sendQuoteForQuotes(data, widget.id);
+    log(result.toString());
 
-  //           serviceList.forEach((serviceString) {
-  //             List<String> parts = serviceString.split(': ');
-  //             if (parts.length == 2) {
-  //               String serviceId = parts[0];
-  //               String serviceName = parts[1];
-  //               serviceNameToId[serviceName] = serviceId;
-  //             }
-  //           });
-  //         },
-  //       ));
-  //   _mechanicRepo.getoneBooking(widget.id).then((value) => setState(
-  //         () {
-  //           bookingModel = value;
-  //           log(bookingModel!.user!.id!);
-  //           isLoadings = false;
-  //         },
-  //       ));
-
-  // }
-
-  // sendQuote() async {
-  //   selectedServices2.forEach((serviceName, cost) {
-  //     final serviceId = serviceNameToId[serviceName];
-  //     servicesItems.add({
-  //       "serviceId": serviceId, // Convert the ID to string
-  //       "cost": cost,
-  //     });
-  //   });
-  //   // log(servicesItems.toString());
-  //   // print(servicesItems.toString());
-
-  //   var data = {};
-  //   if (selectedServices2.isNotEmpty) {
-  //     data = {
-  //       "isOnlyAmount": 'false',
-  //       "services": [...servicesItems]
-  //     };
-  //   } else {
-  //     data = {
-  //       "isOnlyAmount": 'true', 
-  //       "amount": subtotal
-  //     };
-  //   }
-  //   bool result = await mechanicRepo.sendQuoteForQuotes(data, widget.id);
-  //   log(result.toString());
-
-  //   if (result) {
-  //     showSuccesModal();
-  //   }
-  // }
+    if (result) {
+      showSuccesModal();
+    }
+  }
 
   showSuccesModal() async {
     await showDialog(
@@ -133,7 +71,7 @@ class _SendQuoteState extends ConsumerState<SendQuote> {
       builder: (context) => SuccessDialogue(
         title: 'Quote sent',
         subtitle:
-            'Your quote has been sent successfully to ${bookingModel!.user!.username!}',
+            'Your quote of ${costOnly.text} has been sent successfully to ${quoteModel!.user!.username!}',
         action: () {
           context.go(AppRoutes.pendingClientApproval);
         },
@@ -148,7 +86,6 @@ class _SendQuoteState extends ConsumerState<SendQuote> {
   int subtotal = 0;
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(16.h),
@@ -182,7 +119,7 @@ class _SendQuoteState extends ConsumerState<SendQuote> {
           ]),
         ),
       ),
-      body: isLoadings
+      body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Padding(
@@ -198,21 +135,25 @@ class _SendQuoteState extends ConsumerState<SendQuote> {
                     heightSpace(3),
                     Column(
                       children: [
-                        Row(
-                          children: [
-                            SvgPicture.asset(AppImages.serviceIcon),
-                            widthSpace(2),
-                            customText(
-                                text: 'Ac Maintainance',
-                                fontSize: 13,
-                                textColor: AppColors.black,
-                                fontWeight: FontWeight.w600),
-                            heightSpace(4),
-                          ],
+                        ...quote!.map(
+                          (qte) {
+                            return Row(
+                              children: [
+                                SvgPicture.asset(AppImages.serviceIcon),
+                                widthSpace(2),
+                                customText(
+                                    text: qte.name!,
+                                    fontSize: 13,
+                                    textColor: AppColors.black,
+                                    fontWeight: FontWeight.w600),
+                                heightSpace(4),
+                              ],
+                            );
+                          },
                         ),
-                        heightSpace(4),
                       ],
                     ),
+                    heightSpace(3),
                     CustomTextFormField(
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.digitsOnly
@@ -222,11 +163,6 @@ class _SendQuoteState extends ConsumerState<SendQuote> {
                       hintText: "Enter your service cost (₦)",
                       keyboardType: TextInputType.number,
                       validator: numericValidation,
-                      onChanged: (value) {
-                        setState(() {
-                          subtotal = int.tryParse(value) ?? 0;
-                        });
-                      },
                     ),
                     heightSpace(2),
                     heightSpace(8),
@@ -270,7 +206,7 @@ class _SendQuoteState extends ConsumerState<SendQuote> {
                               widthSpace(2),
                               Expanded(
                                 child: AppButton(
-                                  onTap: () {},
+                                  onTap: sendQuote,
                                   hasIcon: false,
                                   buttonText: "Send now",
                                   isOrange: true,

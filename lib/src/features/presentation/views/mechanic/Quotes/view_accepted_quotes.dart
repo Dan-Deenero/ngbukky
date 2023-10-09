@@ -37,7 +37,7 @@ class _ViewAcceptedQuoteState extends State<ViewAcceptedQuote> {
             quote = quoteModel!.services!;
             isLoading = false;
           },
-        ));
+        ),);
   }
 
 
@@ -267,7 +267,7 @@ class _ViewAcceptedQuoteState extends State<ViewAcceptedQuote> {
                       widthSpace(2),
                       Expanded(
                         child: InkWell(
-                          onTap: () => context.push(AppRoutes.sendQuotes),
+                          onTap: () => context.push(AppRoutes.sendQuotes, extra: quoteModel!.id),
                           child: const AppButton(
                             hasIcon: false,
                             buttonText: "Send Quote",

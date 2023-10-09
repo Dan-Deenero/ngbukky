@@ -50,7 +50,7 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             GestureDetector(
-              onTap: () => context.push(AppRoutes.bookings),
+              onTap: () => context.push(AppRoutes.bottomNav),
               child: Container(
                 height: 10.h,
                 width: 10.w,
@@ -102,19 +102,6 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
                             ))
                       else
                         ..._quoteHistory.map((e) {
-                          _mechanicRepo.getoneQuote(e.id).then(
-                                (value) => setState(
-                                  () {
-                                    quoteModel = value;
-                                    for (Quotes quote in quotes!) {
-                                      if (quote.price != null) {
-                                        price += quote.price!;
-                                      }
-                                    }
-                                    serviceFee = price * 0.01;
-                                  },
-                                ),
-                              );
                           var dateString = e.createdAt;
                           var dateTime = DateTime.parse(dateString!);
                           var formattedDate =
@@ -138,7 +125,7 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
                               child: ListTile(
                                   trailing: Column(children: [
                                     customText(
-                                      text: '$price',
+                                      text: '',
                                       fontSize: 14,
                                       textColor: AppColors.textGrey,
                                     ),

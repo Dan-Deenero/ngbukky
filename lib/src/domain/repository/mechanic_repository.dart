@@ -10,6 +10,7 @@ import 'package:ngbuka/src/domain/data/city_lga.dart';
 import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/data/services_model.dart';
+import 'package:ngbuka/src/domain/data/statistics_for_quote.dart';
 import 'package:ngbuka/src/domain/data/statistics_model.dart';
 
 import '../../config/keys/app_keys.dart';
@@ -118,13 +119,13 @@ class MechanicRepo {
     return CityLGA();
   }
 
-  Future<StatisticsModel> getQuoteStatisticsInfo() async {
+  Future<StatisticsModelForQuote> getQuoteStatisticsInfo() async {
     final response =
         await ApiClient.get(Endpoints.getQuoteStatisticsInfo, useToken: true);
     if (response.status == 200) {
-      return StatisticsModel.fromJson(response.entity);
+      return StatisticsModelForQuote.fromJson(response.entity);
     }
-    return StatisticsModel();
+    return StatisticsModelForQuote();
   }
 
   Future<StatisticsModel> getBookingStatisticsInfo() async {

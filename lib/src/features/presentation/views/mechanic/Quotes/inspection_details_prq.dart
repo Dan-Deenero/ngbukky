@@ -55,8 +55,8 @@ class _PRQInspectionDetailsState extends State<PRQInspectionDetails> {
             formattedDate = DateFormat('E, d MMM y').format(dateTime);
 
             formattedTime = DateFormat('hh:mm a').format(dateTime);
-            // quotes = quoteModel!.services!;
-            for (Quotes quote in quotes!) {
+            quote = quoteModel!.services!;
+            for (Quotes quote in quoteModel!.quotes!) {
               if (quote.price != null) {
                 price += quote.price!;
               }
@@ -322,38 +322,17 @@ class _PRQInspectionDetailsState extends State<PRQInspectionDetails> {
                   heightSpace(3),
                   Column(
                     children: [
-                      ...quotes!.map(
-                        (quote) {
-                          String serviceName = '';
-                          if (quote.requestedPersonalisedService != null) {
-                            serviceName =
-                                quote.requestedPersonalisedService!.name!;
-                          } else if (quote.requestedSystemService != null) {
-                            serviceName = quote.requestedSystemService!.name!;
-                          }
-                          return Column(
+                      ...quote!.map(
+                        (qte) {
+                          return Row(
                             children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      SvgPicture.asset(AppImages.serviceIcon),
-                                      widthSpace(2),
-                                      customText(
-                                          text: serviceName,
-                                          fontSize: 13,
-                                          textColor: AppColors.black,
-                                          fontWeight: FontWeight.w600),
-                                    ],
-                                  ),
-                                  customText(
-                                      text: '${quote.price!}',
-                                      fontSize: 13,
-                                      textColor: AppColors.black)
-                                ],
-                              ),
+                              SvgPicture.asset(AppImages.serviceIcon),
+                              widthSpace(2),
+                              customText(
+                                  text: qte.name!,
+                                  fontSize: 13,
+                                  textColor: AppColors.black,
+                                  fontWeight: FontWeight.w600),
                               heightSpace(4),
                             ],
                           );
@@ -486,6 +465,7 @@ class _PRQInspectionDetailsState extends State<PRQInspectionDetails> {
                       ),
                     ],
                   ),
+                  heightSpace(3)
                 ],
               ),
             )),

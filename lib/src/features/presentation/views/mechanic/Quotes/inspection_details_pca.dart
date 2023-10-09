@@ -46,7 +46,7 @@ class _PCAInspectionDetailsState extends State<PCAInspectionDetails> {
             quoteModel = value;
             isLoading = false;
             // quotes = quoteModel!.services!;
-            for (Quotes quote in quotes!) {
+            for (Quotes quote in quoteModel!.quotes!) {
               if (quote.price != null) {
                 price += quote.price!;
               }

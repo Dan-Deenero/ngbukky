@@ -32,7 +32,7 @@ class _QPaymentRequestState extends State<QPaymentRequest> {
   @override
   void initState() {
     super.initState();
-    _mechanicRepo.getAllQuotes('bargaining').then(
+    _mechanicRepo.getAllQuotes('approved').then(
           (value) => setState(() {
             _quoteHistory = value;
             isLoading = false;
@@ -56,7 +56,7 @@ class _QPaymentRequestState extends State<QPaymentRequest> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             GestureDetector(
-              onTap: () => context.go(AppRoutes.bookings),
+              onTap: () => context.go(AppRoutes.bottomNav),
               child: Container(
                 height: 10.h,
                 width: 10.w,
@@ -107,19 +107,19 @@ class _QPaymentRequestState extends State<QPaymentRequest> {
                 else
                   ..._quoteHistory.map(
                     (e) {
-                      _mechanicRepo.getoneQuote(e.id).then(
-                            (value) => setState(
-                              () {
-                                quoteModel = value;
-                                for (Quotes quote in quotes!) {
-                                  if (quote.price != null) {
-                                    price += quote.price!;
-                                  }
-                                }
-                                serviceFee = price * 0.01;
-                              },
-                            ),
-                          );
+                      // _mechanicRepo.getoneQuote(e.id).then(
+                      //       (value) => setState(
+                      //         () {
+                      //           quoteModel = value;
+                      //           for (Quotes quote in quotes!) {
+                      //             if (quote.price != null) {
+                      //               price += quote.price!;
+                      //             }
+                      //           }
+                      //           serviceFee = price * 0.01;
+                      //         },
+                      //       ),
+                      //     );
                       return GestureDetector(
                         onTap: () => context
                             .push(AppRoutes.pendingQuotePaymentRequestDetails, extra: e.id),
@@ -175,19 +175,6 @@ class _QPaymentRequestState extends State<QPaymentRequest> {
                     },
                   ),
                 ..._quoteHistory2.map((e) {
-                  _mechanicRepo.getoneQuote(e.id).then(
-                        (value) => setState(
-                          () {
-                            quoteModel = value;
-                            for (Quotes quote in quotes!) {
-                              if (quote.price != null) {
-                                price += quote.price!;
-                              }
-                            }
-                            serviceFee = price * 0.01;
-                          },
-                        ),
-                      );
                   return GestureDetector(
                     onTap: () => context.push(AppRoutes.quotePaymentRequestDetails,
                         extra: e.id),
@@ -216,7 +203,7 @@ class _QPaymentRequestState extends State<QPaymentRequest> {
                                       color: AppColors.containerGrey),
                                   child: Center(
                                     child: customText(
-                                        text: "Pending payment request",
+                                        text: "Payment requested",
                                         fontSize: 10,
                                         textColor: AppColors.black),
                                   ),

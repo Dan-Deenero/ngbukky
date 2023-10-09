@@ -205,7 +205,7 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
           path: AppRoutes.sendQuotes,
           name: AppRoutes.sendQuotes,
-          builder: (_, state) => const SendQuote()),
+          builder: (_, state) => SendQuote(id: state.extra as String,)),
       GoRoute(
           path: AppRoutes.quotesSend,
           name: AppRoutes.quotesSend,
