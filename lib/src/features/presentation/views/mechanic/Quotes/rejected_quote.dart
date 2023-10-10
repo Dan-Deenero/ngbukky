@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
+import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
@@ -20,16 +20,21 @@ class RejectedQuote extends StatefulWidget {
 
 class _RejectedQuoteState extends State<RejectedQuote> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
-  List<BookingModel> _bookingHistory = [];
+  List<QuotesModel> _quoteHistory = [];
+
   bool isLoading = true;
+  List<Quotes>? quotes = [];
+
+  QuotesModel? quoteModel;
+  int price = 0;
+  double serviceFee = 0;
 
   @override
   void initState() {
     super.initState();
-    _mechanicRepo.getAllBooking('rejected').then((value) => setState(() {
-          _bookingHistory = value;
+    _mechanicRepo.getAllQuotes('rejected').then((value) => setState(() {
+          _quoteHistory = value;
           isLoading = false;
-          print(_bookingHistory);
         }));
     // log(_bookingHistory.toString());
   }
@@ -82,23 +87,35 @@ class _RejectedQuoteState extends State<RejectedQuote> {
                   padding: const EdgeInsets.all(10),
                   child: Wrap(
                     children: [
-                      if (_bookingHistory.isEmpty)
+                      if (_quoteHistory.isEmpty)
                         Center(
-                            heightFactor: 3.5,
-                            child: Column(
-                              children: [
-                                SvgPicture.asset(AppImages.bookingWarning),
-                                customText(
-                                    text:
-                                        'You do not have any rejected booking',
-                                    fontSize: 15,
-                                    textColor: AppColors.black,
-                                    textAlignment: TextAlign.center)
-                              ],
-                            ))
+                          heightFactor: 3.5,
+                          child: Column(
+                            children: [
+                              SvgPicture.asset(AppImages.bookingWarning),
+                              customText(
+                                  text: 'You do not have any rejected booking',
+                                  fontSize: 15,
+                                  textColor: AppColors.black,
+                                  textAlignment: TextAlign.center)
+                            ],
+                          ),
+                        )
                       else
-                        ..._bookingHistory.map((e) {
-                          var dateString = e.date;
+                        ..._quoteHistory.map((e) {
+                          _mechanicRepo.getoneQuote(e.id).then(
+                                (value) => setState(
+                                  () {
+                                    quoteModel = value;
+                                    for (Quotes quote in quotes!) {
+                                      if (quote.price != null) {
+                                        price += quote.price!;
+                                      }
+                                    }
+                                  },
+                                ),
+                              );
+                          var dateString = e.createdAt;
                           var dateTime = DateTime.parse(dateString!);
                           var formattedDate =
                               DateFormat('dd MMM yyyy').format(dateTime);
@@ -107,7 +124,7 @@ class _RejectedQuoteState extends State<RejectedQuote> {
                               DateFormat('hh:mm a').format(dateTime);
                           return GestureDetector(
                             onTap: () {
-                              context.push(AppRoutes.bookingRejectedDetails,
+                              context.push(AppRoutes.rejectedQuoteDetails,
                                   extra: e.id);
                             },
                             child: Container(
@@ -121,7 +138,7 @@ class _RejectedQuoteState extends State<RejectedQuote> {
                               child: ListTile(
                                   trailing: Column(children: [
                                     customText(
-                                        text: "₦ 5,050",
+                                        text: "$price",
                                         fontSize: 14,
                                         textColor: AppColors.textGrey,
                                         fontWeight: FontWeight.bold),
@@ -135,7 +152,7 @@ class _RejectedQuoteState extends State<RejectedQuote> {
                                           color: AppColors.red.withOpacity(.1)),
                                       child: Center(
                                         child: customText(
-                                            text: "Accepted booking",
+                                            text: "Booking rejected",
                                             fontSize: 10,
                                             textColor: AppColors.red),
                                       ),

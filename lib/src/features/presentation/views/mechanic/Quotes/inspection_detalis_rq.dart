@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
+import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
@@ -26,7 +26,10 @@ class _RQInspectionDetailsState extends State<RQInspectionDetails> {
 
   bool isLoading = true;
 
-  BookingModel? bookingModel;
+  QuotesModel? quoteModel;
+  List<Services>? quote = [];
+  List<Quotes>? quotes = [];
+
   var dateString;
   var formattedDate;
   var formattedTime;
@@ -34,29 +37,23 @@ class _RQInspectionDetailsState extends State<RQInspectionDetails> {
 
   int price = 0;
   double serviceFee = 0;
-  List<Quotes>? quotes = [];
-
+  Services? requestedSystemService;
+  OtherServices? requestedPersonalisedService;
 
   @override
   void initState() {
-    // TODO: implement initState
+    
     super.initState();
-    _mechanicRepo.getoneBooking(widget.id).then((value) => setState(
+    _mechanicRepo.getoneQuote(widget.id).then((value) => setState(
           () {
-            bookingModel = value;
-            dateString = bookingModel!.date;
-            dateTime = DateTime.parse(dateString!);
+            quoteModel = value;
+            quote = quoteModel!.services!;
+            isLoading = false;
+            dateString = quoteModel!.createdAt!;
+            dateTime = DateTime.parse(dateString);
             formattedDate = DateFormat('E, d MMM y').format(dateTime);
 
             formattedTime = DateFormat('hh:mm a').format(dateTime);
-            isLoading = false;
-            quotes = bookingModel!.quotes;
-            for(Quotes quote in quotes!){
-              if(quote.price != null){
-                price += quote.price!;
-              }
-            }
-            serviceFee = price * 0.01;
           },
         ));
   }
@@ -79,7 +76,9 @@ class _RQInspectionDetailsState extends State<RQInspectionDetails> {
                 fontWeight: FontWeight.bold,
                 textColor: AppColors.black),
             // heightSpace(1),
-            Flexible(child: bodyText("View all necessary information about this booking "))
+            Flexible(
+                child: bodyText(
+                    "View all necessary information about this booking "))
           ],
         ),
         actions: [
@@ -145,7 +144,7 @@ class _RQInspectionDetailsState extends State<RQInspectionDetails> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.profile),
                     title: customText(
-                        text: bookingModel!.user!.username!,
+                        text: quoteModel!.user!.username!,
                         fontSize: 14,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -171,7 +170,7 @@ class _RQInspectionDetailsState extends State<RQInspectionDetails> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.calendarIcon),
                     title: customText(
-                        text: bookingModel!.brand!,
+                        text: quoteModel!.brand!,
                         fontSize: 14,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -183,7 +182,7 @@ class _RQInspectionDetailsState extends State<RQInspectionDetails> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.calendarIcon),
                     title: customText(
-                        text: "${bookingModel!.model!}, ${bookingModel!.year!}",
+                        text: "${quoteModel!.model!}, ${quoteModel!.year!}",
                         fontSize: 14,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -196,7 +195,7 @@ class _RQInspectionDetailsState extends State<RQInspectionDetails> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.carIcon),
                     title: customText(
-                        text: '${bookingModel!.year!}',
+                        text: '${quoteModel!.year!}',
                         fontSize: 14,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -212,12 +211,11 @@ class _RQInspectionDetailsState extends State<RQInspectionDetails> {
                       textColor: AppColors.orange,
                       fontWeight: FontWeight.bold),
                   heightSpace(3),
-                  ...quotes!.map((quote){
+                  ...quotes!.map((quote) {
                     String serviceName = '';
-                    if(quote.requestedPersonalisedService != null){
+                    if (quote.requestedPersonalisedService != null) {
                       serviceName = quote.requestedPersonalisedService!.name!;
-                    }
-                    else if(quote.requestedSystemService != null){
+                    } else if (quote.requestedSystemService != null) {
                       serviceName = quote.requestedSystemService!.name!;
                     }
                     return Column(
@@ -245,7 +243,7 @@ class _RQInspectionDetailsState extends State<RQInspectionDetails> {
                         heightSpace(4),
                       ],
                     );
-                  }),
+                  },),
                   heightSpace(1),
                   const Divider(),
                   customText(

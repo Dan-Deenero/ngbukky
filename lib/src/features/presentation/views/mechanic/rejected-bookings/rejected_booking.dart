@@ -45,7 +45,7 @@ class _RejectedBookingState extends State<RejectedBooking> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             GestureDetector(
-              onTap: () => context.go(AppRoutes.bookings),
+              onTap: () => context.go(AppRoutes.bottomNav),
               child: Container(
                 height: 10.h,
                 width: 10.w,
