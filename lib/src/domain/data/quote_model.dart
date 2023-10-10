@@ -225,18 +225,48 @@ class Mechanic {
 class User {
   String? id;
   String? username;
+  String? email;
+  String? address;
+  String? city;
+  String? lga;
+  String? state;
+  String? longitude;
+  String? latitude;
 
-  User({this.id, this.username});
+  User(
+      {this.id,
+      this.username,
+      this.email,
+      this.address,
+      this.city,
+      this.lga,
+      this.state,
+      this.longitude,
+      this.latitude});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     username = json['username'];
+    email = json['email'];
+    address = json['address'];
+    city = json['city'];
+    lga = json['lga'];
+    state = json['state'];
+    longitude = json['longitude'];
+    latitude = json['latitude'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = id;
-    data['username'] = username;
+    data['id'] = this.id;
+    data['username'] = this.username;
+    data['email'] = this.email;
+    data['address'] = this.address;
+    data['city'] = this.city;
+    data['lga'] = this.lga;
+    data['state'] = this.state;
+    data['longitude'] = this.longitude;
+    data['latitude'] = this.latitude;
     return data;
   }
 }

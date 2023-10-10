@@ -97,29 +97,22 @@ class _PendingClientApprovalState extends State<PendingClientApproval> {
                               children: [
                                 SvgPicture.asset(AppImages.bookingWarning),
                                 customText(
-                                    text:
-                                        'You do not have any pending unapproved quote',
-                                    fontSize: 15,
-                                    textColor: AppColors.black,
-                                    textAlignment: TextAlign.center,
+                                  text:
+                                      'You do not have any pending unapproved quote',
+                                  fontSize: 15,
+                                  textColor: AppColors.black,
+                                  textAlignment: TextAlign.center,
                                 )
                               ],
                             ))
                       else
                         ..._quoteHistory.map((e) {
-                          // _mechanicRepo.getoneQuote(e.id).then(
-                          //       (value) => setState(
-                          //         () {
-                          //           quoteModel = value;
-                          //           for (Quotes quote in quotes!) {
-                          //             if (quote.price != null) {
-                          //               price += quote.price!;
-                          //             }
-                          //           }
-                          //           serviceFee = price * 0.01;
-                          //         },
-                          //       ),
-                          //     );
+                          int price = 0;
+                          for (Quotes quote in e.quotes!) {
+                            if (quote.price != null) {
+                              price += quote.price!;
+                            }
+                          }
                           var dateString = e.createdAt;
                           var dateTime = DateTime.parse(dateString!);
                           var formattedDate =
@@ -144,7 +137,7 @@ class _PendingClientApprovalState extends State<PendingClientApproval> {
                               child: ListTile(
                                   trailing: Column(children: [
                                     customText(
-                                        text: "",
+                                        text: "$price",
                                         fontSize: 14,
                                         textColor: AppColors.textGrey,
                                         fontWeight: FontWeight.bold),

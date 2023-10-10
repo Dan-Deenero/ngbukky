@@ -99,18 +99,12 @@ class _QPaymentDeclinedState extends State<QPaymentDeclined> {
                         ))
                   else
                     ..._quoteHistory.map((e) {
-                      _mechanicRepo.getoneQuote(e.id).then(
-                            (value) => setState(
-                              () {
-                                quoteModel = value;
-                                for (Quotes quote in quotes!) {
-                                  if (quote.price != null) {
-                                    price += quote.price!;
-                                  }
-                                }
-                              },
-                            ),
-                          );
+                     int price = 0;
+                      for (Quotes quote in e.quotes!) {
+                        if (quote.price != null) {
+                          price += quote.price!;
+                        }
+                      }
                       var dateString = e.createdAt;
                       var dateTime = DateTime.parse(dateString!);
                       var formattedDate =
@@ -131,7 +125,7 @@ class _QPaymentDeclinedState extends State<QPaymentDeclined> {
                           child: ListTile(
                               trailing: Column(children: [
                                 customText(
-                                    text: "N 5,050",
+                                    text: "$price",
                                     fontSize: 14,
                                     textColor: AppColors.textGrey,
                                     fontWeight: FontWeight.bold),

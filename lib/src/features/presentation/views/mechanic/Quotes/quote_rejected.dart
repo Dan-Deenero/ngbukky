@@ -103,18 +103,12 @@ class _QuoteRejectedState extends State<QuoteRejected> {
                         )
                       else
                         ..._quoteHistory.map((e) {
-                          _mechanicRepo.getoneQuote(e.id).then(
-                                (value) => setState(
-                                  () {
-                                    quoteModel = value;
-                                    for (Quotes quote in quotes!) {
-                                      if (quote.price != null) {
-                                        price += quote.price!;
-                                      }
-                                    }
-                                  },
-                                ),
-                              );
+                          int price = 0;
+                          for (Quotes quote in e.quotes!) {
+                            if (quote.price != null) {
+                              price += quote.price!;
+                            }
+                          }
                           var dateString = e.createdAt;
                           var dateTime = DateTime.parse(dateString!);
                           var formattedDate =

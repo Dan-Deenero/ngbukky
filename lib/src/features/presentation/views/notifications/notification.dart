@@ -19,83 +19,105 @@ class NewNotification extends StatelessWidget {
           children: [
             Container(
               width: double.infinity,
-              height: 100,
-              padding: const EdgeInsets.only(top: 15),
+              // height: 120,
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 20),
               decoration: BoxDecoration(
-                  boxShadow: const [
-                    BoxShadow(
-                      color: AppColors.containerGrey,
-                      offset: Offset(
-                        5.0,
-                        5.0,
-                      ),
-                      blurRadius: 10.0,
-                      spreadRadius: 2.0,
-                    ), //BoxShadow
-                    BoxShadow(
-                      color: Colors.white,
-                      offset: Offset(0.0, 0.0),
-                      blurRadius: 0.0,
-                      spreadRadius: 0.0,
-                    ), //BoxShadow
-                  ],
-                  borderRadius: BorderRadius.circular(10),
-                  color: AppColors.white),
-              child: ListTile(
-                leading: SvgPicture.asset(
-                  AppImages.notification,
-                  width: 30,
-                  height: 30,
-                ),
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    customText(
-                        text: "New Inspection booking",
-                        fontSize: 12,
-                        textColor: AppColors.black,
-                        fontWeight: FontWeight.bold),
-                    Row(
-                      children: [
-                        Row(
-                          children: [
-                            SvgPicture.asset(
-                              AppImages.time,
-                              width: 10,
-                              height: 10,
-                            ),
-                            customText(
-                                text: "12:20pm",
-                                fontSize: 8,
-                                textColor: AppColors.textGrey)
-                          ],
-                        ),
-                        widthSpace(1),
-                        Row(
-                          children: [
-                            SvgPicture.asset(
-                              AppImages.calendarIcon,
-                              width: 10,
-                              height: 10,
-                            ),
-                            customText(
-                                text: "12 Jun 2023",
-                                fontSize: 8,
-                                textColor: AppColors.textGrey)
-                          ],
-                        )
-                      ],
+                boxShadow: const [
+                  BoxShadow(
+                    color: AppColors.containerGrey,
+                    offset: Offset(
+                      5.0,
+                      5.0,
                     ),
-                  ],
-                ),
-                subtitle: Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: customText(
-                      text:
-                          "You have a new inspection booking from {Client_username}",
-                      fontSize: 12,
-                      textColor: AppColors.textGrey),
-                ),
+                    blurRadius: 10.0,
+                    spreadRadius: 2.0,
+                  ), //BoxShadow
+                  BoxShadow(
+                    color: Colors.white,
+                    offset: Offset(0.0, 0.0),
+                    blurRadius: 0.0,
+                    spreadRadius: 0.0,
+                  ), //BoxShadow
+                ],
+                borderRadius: BorderRadius.circular(20),
+                color: AppColors.white,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: SvgPicture.asset(
+                      AppImages.notification,
+                      width: 30,
+                    ),
+                  ),
+                  widthSpace(2),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          customText(
+                            text: 'New Inspection booking',
+                            fontSize: 14,
+                            textColor: AppColors.black,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          SizedBox(
+                            width:200,
+                            child: RichText(
+                              text: const TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        'You have a new inspection booking from ',
+                                    style: TextStyle(color: AppColors.textGrey),
+                                  ),
+                                  TextSpan(
+                                    text: '{Client_username}',
+                                    style: TextStyle(color: AppColors.orange),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Row(
+                            children: [
+                              Row(
+                                children: [
+                                  SvgPicture.asset(AppImages.time),
+                                  customText(
+                                      text: '12:20pm',
+                                      fontSize: 10,
+                                      textColor: AppColors.textGrey)
+                                ],
+                              ),
+                              widthSpace(.5),
+                              Row(
+                                children: [
+                                  SvgPicture.asset(AppImages.calendarIcon),
+                                  customText(
+                                      text: '15 Jun 2023',
+                                      fontSize: 10,
+                                      textColor: AppColors.textGrey)
+                                ],
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  // widthSpace(2),
+                  
+                ],
               ),
             ),
           ],

@@ -162,7 +162,7 @@ class _QRInspectionDetailsState extends State<QRInspectionDetails> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.locationIcon),
                     title: customText(
-                        text: "Elijiji rd, close 20, Woji, Port Harcourt",
+                        text: quoteModel!.user!.address!,
                         fontSize: 14,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),

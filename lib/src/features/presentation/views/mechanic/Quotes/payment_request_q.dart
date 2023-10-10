@@ -27,6 +27,7 @@ class _QPaymentRequestState extends State<QPaymentRequest> {
 
   QuotesModel? quoteModel;
   int price = 0;
+  int price2 = 0;
   double serviceFee = 0;
 
   @override
@@ -107,22 +108,16 @@ class _QPaymentRequestState extends State<QPaymentRequest> {
                 else
                   ..._quoteHistory.map(
                     (e) {
-                      // _mechanicRepo.getoneQuote(e.id).then(
-                      //       (value) => setState(
-                      //         () {
-                      //           quoteModel = value;
-                      //           for (Quotes quote in quotes!) {
-                      //             if (quote.price != null) {
-                      //               price += quote.price!;
-                      //             }
-                      //           }
-                      //           serviceFee = price * 0.01;
-                      //         },
-                      //       ),
-                      //     );
+                      int price = 0;
+                      for (Quotes quote in e.quotes!) {
+                        if (quote.price != null) {
+                          price += quote.price!;
+                        }
+                      }
                       return GestureDetector(
-                        onTap: () => context
-                            .push(AppRoutes.pendingQuotePaymentRequestDetails, extra: e.id),
+                        onTap: () => context.push(
+                            AppRoutes.pendingQuotePaymentRequestDetails,
+                            extra: e.id),
                         child: Padding(
                           padding: const EdgeInsets.all(10),
                           child: Container(
@@ -138,7 +133,7 @@ class _QPaymentRequestState extends State<QPaymentRequest> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     customText(
-                                        text: "Due: N5,050",
+                                        text: 'Due: $price',
                                         fontSize: 15,
                                         textColor: AppColors.orange),
                                     Container(
@@ -175,8 +170,15 @@ class _QPaymentRequestState extends State<QPaymentRequest> {
                     },
                   ),
                 ..._quoteHistory2.map((e) {
+                  int totalPrice = 0;
+                  for (Quotes quote in e.quotes!) {
+                    if (quote.price != null) {
+                      totalPrice += quote.price!; 
+                    }
+                  }
                   return GestureDetector(
-                    onTap: () => context.push(AppRoutes.quotePaymentRequestDetails,
+                    onTap: () => context.push(
+                        AppRoutes.quotePaymentRequestDetails,
                         extra: e.id),
                     child: Padding(
                       padding: const EdgeInsets.all(10),
@@ -192,7 +194,7 @@ class _QPaymentRequestState extends State<QPaymentRequest> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 customText(
-                                    text: "Due: N5,050",
+                                    text: 'Due: $totalPrice',
                                     fontSize: 15,
                                     textColor: AppColors.orange),
                                 Container(
