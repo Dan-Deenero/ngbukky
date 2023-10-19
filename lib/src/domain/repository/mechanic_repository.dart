@@ -1,19 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-
-import 'package:ngbuka/src/config/locator/app_locator.dart';
 import 'package:ngbuka/src/config/services/api/api_client.dart';
 import 'package:ngbuka/src/config/services/api/endpoints.dart';
-import 'package:ngbuka/src/config/services/storage_service.dart';
 import 'package:ngbuka/src/domain/data/city_lga.dart';
 import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
+import 'package:ngbuka/src/domain/data/notification_model.dart';
 import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/data/services_model.dart';
 import 'package:ngbuka/src/domain/data/statistics_for_quote.dart';
 import 'package:ngbuka/src/domain/data/statistics_model.dart';
-
-import '../../config/keys/app_keys.dart';
 
 class MechanicRepo {
   Future<bool> acceptOrRejectBooking(Map<String, String> body, id) async {
@@ -44,7 +40,6 @@ class MechanicRepo {
   }
 
   Future<List<BookingModel>> getAllBooking(String status) async {
-    try{
       final response = await ApiClient.get(
           '${Endpoints.getAllBooking}?status=$status',
           useToken: true);
@@ -54,16 +49,8 @@ class MechanicRepo {
           booking.add(BookingModel.fromJson(bookingModel));
         }
         return booking;
-      } else if (response.status == 404) {
-        return [];
-      } else {
-        throw Exception('Login failed: ${response.status} - ${response.entity["message"]}');
       }
-    } catch (error) {
-      // print('Error during login: $error');
-      throw error; 
-      
-    }
+      return booking;
   }
 
   Future<List<QuotesModel>> getAllQuotes(String status) async {
@@ -121,7 +108,7 @@ class MechanicRepo {
 
   Future<StatisticsModelForQuote> getQuoteStatisticsInfo() async {
     final response =
-        await ApiClient.get(Endpoints.getQuoteStatisticsInfo, useToken: true);
+        await ApiClient.get('${Endpoints.getStatisticsInfo}?type=quote-request', useToken: true);
     if (response.status == 200) {
       return StatisticsModelForQuote.fromJson(response.entity);
     }
@@ -130,7 +117,7 @@ class MechanicRepo {
 
   Future<StatisticsModel> getBookingStatisticsInfo() async {
     final response =
-        await ApiClient.get(Endpoints.getQuoteStatisticsInfo, useToken: true);
+        await ApiClient.get('${Endpoints.getStatisticsInfo}?type=booking', useToken: true);
     if (response.status == 200) {
       return StatisticsModel.fromJson(response.entity);
     }
@@ -205,5 +192,19 @@ class MechanicRepo {
       return true;
     }
     return false;
+  }
+
+  Future<List<NotificationModel>> getAllNotifications () async {
+      final response = await ApiClient.get(
+          Endpoints.getAllNotifications,
+          useToken: true);
+      List<NotificationModel> notification = [];
+      if (response.status == 200) {
+        for (var notificationModel in response.entity['rows']) {
+          notification.add(NotificationModel.fromJson(notificationModel));
+        }
+        return notification;
+      }
+      return notification;
   }
 }

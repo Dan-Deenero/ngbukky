@@ -8,6 +8,7 @@ import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/config/locator/app_locator.dart';
 import 'package:ngbuka/src/config/services/storage_service.dart';
 import 'package:ngbuka/src/domain/data/onboarding_model.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/wallet.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 
@@ -72,6 +73,11 @@ class OnboardingScreen extends HookWidget {
                               onTap: () {
                                 locator<LocalStorageService>().saveDataToDisk(
                                     AppKeys.firstInstall, false);
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //       builder: (context) => const Wallet()),
+                                // );
                                 context.push(AppRoutes.boarding1);
                               }),
                           heightSpace(3),

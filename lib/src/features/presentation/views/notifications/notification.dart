@@ -2,128 +2,194 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/data/notification_model.dart';
+import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
-class NewNotification extends StatelessWidget {
+class NewNotification extends StatefulWidget {
   const NewNotification({super.key});
 
   @override
+  State<NewNotification> createState() => _NewNotificationState();
+}
+
+class _NewNotificationState extends State<NewNotification> {
+  final MechanicRepo _mechanicRepo = MechanicRepo();
+  List<NotificationModel> _notificationHistory = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _mechanicRepo.getAllNotifications().then(
+          (value) => setState(
+            () {
+              _notificationHistory = value;
+              isLoading = false;
+            },
+          ),
+        );
+    // log(_bookingHistory.toString());
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
-              // height: 120,
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 20),
-              decoration: BoxDecoration(
-                boxShadow: const [
-                  BoxShadow(
-                    color: AppColors.containerGrey,
-                    offset: Offset(
-                      5.0,
-                      5.0,
-                    ),
-                    blurRadius: 10.0,
-                    spreadRadius: 2.0,
-                  ), //BoxShadow
-                  BoxShadow(
-                    color: Colors.white,
-                    offset: Offset(0.0, 0.0),
-                    blurRadius: 0.0,
-                    spreadRadius: 0.0,
-                  ), //BoxShadow
-                ],
-                borderRadius: BorderRadius.circular(20),
-                color: AppColors.white,
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+    return isLoading
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
                 children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: SvgPicture.asset(
-                      AppImages.notification,
-                      width: 30,
-                    ),
-                  ),
-                  widthSpace(2),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  if (_notificationHistory.isEmpty)
+                    Center(
+                      heightFactor: 3.0,
+                      child: Column(
                         children: [
+                          SvgPicture.asset(AppImages.bookingWarning),
                           customText(
-                            text: 'New Inspection booking',
-                            fontSize: 14,
-                            textColor: AppColors.black,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          SizedBox(
-                            width:200,
-                            child: RichText(
-                              text: const TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text:
-                                        'You have a new inspection booking from ',
-                                    style: TextStyle(color: AppColors.textGrey),
-                                  ),
-                                  TextSpan(
-                                    text: '{Client_username}',
-                                    style: TextStyle(color: AppColors.orange),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                              text:
+                                  'No notification',
+                              fontSize: 15,
+                              textColor: AppColors.black,
+                              textAlignment: TextAlign.center)
                         ],
                       ),
-                      Column(
-                        children: [
-                          Row(
+                    )
+                  else
+                    ..._notificationHistory.map((e) {
+                      var dateString = e.viewedAt;
+                      var dateTime = DateTime.parse(dateString!);
+                      var formattedDate =
+                          DateFormat('dd MMM yyyy').format(dateTime);
+
+                      var formattedTime =
+                          DateFormat('hh:mm a').format(dateTime);
+                      return GestureDetector(
+                        onTap: () {
+                          context.push(AppRoutes.inspectionBooking,
+                              extra: e.notifiableId);
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          // height: 120,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 4, vertical: 20),
+                          decoration: BoxDecoration(
+                            boxShadow: const [
+                              BoxShadow(
+                                color: AppColors.containerGrey,
+                                offset: Offset(
+                                  5.0,
+                                  5.0,
+                                ),
+                                blurRadius: 10.0,
+                                spreadRadius: 2.0,
+                              ), //BoxShadow
+                              BoxShadow(
+                                color: Colors.white,
+                                offset: Offset(0.0, 0.0),
+                                blurRadius: 0.0,
+                                spreadRadius: 0.0,
+                              ), //BoxShadow
+                            ],
+                            borderRadius: BorderRadius.circular(20),
+                            color: AppColors.white,
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                              Align(
+                                alignment: Alignment.center,
+                                child: SvgPicture.asset(
+                                  AppImages.notification,
+                                  width: 30,
+                                ),
+                              ),
+                              widthSpace(2),
                               Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SvgPicture.asset(AppImages.time),
-                                  customText(
-                                      text: '12:20pm',
-                                      fontSize: 10,
-                                      textColor: AppColors.textGrey)
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      customText(
+                                        text: e.title!,
+                                        fontSize: 14,
+                                        textColor: AppColors.black,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      SizedBox(
+                                        width: 200,
+                                        child: RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: e.body,
+                                                style: const TextStyle(
+                                                    color: AppColors.textGrey),
+                                              ),
+                                              // TextSpan(
+                                              //   text: '{Client_username}',
+                                              //   style: TextStyle(
+                                              //       color: AppColors.orange),
+                                              // ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              SvgPicture.asset(AppImages.time),
+                                              customText(
+                                                  text: formattedTime,
+                                                  fontSize: 10,
+                                                  textColor: AppColors.textGrey)
+                                            ],
+                                          ),
+                                          widthSpace(.5),
+                                          Row(
+                                            children: [
+                                              SvgPicture.asset(
+                                                  AppImages.calendarIcon),
+                                              customText(
+                                                  text: formattedDate,
+                                                  fontSize: 10,
+                                                  textColor: AppColors.textGrey)
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ],
                               ),
-                              widthSpace(.5),
-                              Row(
-                                children: [
-                                  SvgPicture.asset(AppImages.calendarIcon),
-                                  customText(
-                                      text: '15 Jun 2023',
-                                      fontSize: 10,
-                                      textColor: AppColors.textGrey)
-                                ],
-                              )
+                              // widthSpace(2),
                             ],
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  // widthSpace(2),
-                  
+                        ),
+                      );
+                    })
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 }
 

@@ -45,7 +45,7 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             GestureDetector(
-              onTap: () => context.pop(),
+              onTap: () => context.go(AppRoutes.bottomNav),
               child: Container(
                 height: 10.h,
                 width: 10.w,

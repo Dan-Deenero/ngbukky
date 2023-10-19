@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/domain/data/city_lga.dart';
 import 'package:ngbuka/src/domain/data/services_model.dart';
@@ -61,6 +62,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
           }
         }
         workingHourController.text = trueItemsString.join(', ');
+        log(workingHourController.text);
         context.pop();
       }
 
@@ -69,7 +71,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
         builder: (BuildContext context) {
           return Consumer(builder: (BuildContext context, ref, child) {
             final workingHour = ref.watch(stateWorkingHours);
-            log(workingHours.toString());
+            // log(workingHours.toString());
             return Container(
                 color: AppColors.backgroundGrey,
                 padding: const EdgeInsets.all(20),
@@ -222,7 +224,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                           widthSpace(2),
                                           customText(
                                               text: e["day"],
-                                              fontSize: 15,
+                                              fontSize: 12,
                                               textColor: AppColors.black)
                                         ]),
                                       ),
@@ -775,14 +777,14 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
       "availability": newItems
     };
 
-    // bool result = await mechanicRepo.updateBusinessInfo(data);
-    // if (result) {
-    //   l
-    //   if (context.mounted) {
+    bool result = await mechanicRepo.updateBusinessInfo(data);
+    if (result) {
+      
+      if (context.mounted) {
 
-    //     context.push(AppRoutes.profileSettings);
-    //   }
-    // }
+        context.push(AppRoutes.profileSettings);
+      }
+    }
 
     log(data.toString());
   }
