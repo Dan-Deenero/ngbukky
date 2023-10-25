@@ -1,11 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/repository/auth_repository.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -22,10 +26,12 @@ class HomeView extends HookWidget {
     final pending = useState<int?>(0);
     final declined = useState<int?>(0);
     final completed = useState<int?>(0);
+    final bookingHistory = useState<List<BookingModel>>([]);
 
     final name = useState<String?>('Damini');
 
     var hour = DateTime.now().hour;
+
     String greetings = 'good morning';
 
     if (hour < 12) {
@@ -50,11 +56,20 @@ class HomeView extends HookWidget {
       });
     }
 
+    getNewBookings() {
+      _mechanicRepo.get5bookingAlert('pending').then(
+        (value) {
+          bookingHistory.value = value;
+        },
+      );
+    }
+
     final tabIndex = useState<int>(0);
 
     useEffect(() {
       getStatisticsInfo();
       getUserProfile();
+      getNewBookings();
       return null;
     }, []);
     return DefaultTabController(
@@ -83,8 +98,9 @@ class HomeView extends HookWidget {
                     ],
                   ),
                   GestureDetector(
-                      onTap: () => context.push(AppRoutes.notification),
-                      child: SvgPicture.asset(AppImages.notification))
+                    onTap: () => context.push(AppRoutes.notification),
+                    child: SvgPicture.asset(AppImages.notification),
+                  )
                 ],
               ),
               heightSpace(2)
@@ -93,11 +109,9 @@ class HomeView extends HookWidget {
         ),
         backgroundColor: AppColors.scaffoldColor,
         body: SingleChildScrollView(
+          physics: const ScrollPhysics(),
             child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 20
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -163,79 +177,186 @@ class HomeView extends HookWidget {
                 ],
               ),
               heightSpace(4),
-              Container(
-                width: double.infinity,
-                height: 10.h,
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: ListTile(
-                    trailing: Column(children: [
-                      Container(
-                        width: 60,
-                        height: 20,
-                        decoration: BoxDecoration(
-                            color: AppColors.green,
-                            borderRadius: BorderRadius.circular(5)),
-                        child: Center(
-                          child: customText(
-                            text: "New",
-                            fontSize: 10,
-                            textColor: AppColors.white,
-                          ),
-                        ),
-                      ),
-                      heightSpace(2.2),
-                      customText(
-                          text: "Car Insepection",
-                          fontSize: 8,
-                          textColor: AppColors.red),
-                    ]),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              Expanded(
+                child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  itemCount: bookingHistory.value.length,
+                  itemBuilder: (context, index) {
+                    var data = bookingHistory.value[index];
+                    var dateString = data.date;
+                    var dateTime = DateTime.parse(dateString!);
+                    var formattedDate = DateFormat('dd MMM yyyy').format(dateTime);
+                    var formattedTime = DateFormat('hh:mm a').format(dateTime);
+                    return Column(
                       children: [
-                        heightSpace(.5),
-                        customText(
-                            text: "Camry Hybrid",
-                            fontSize: 12,
-                            textColor: AppColors.black),
-                        heightSpace(.5),
-                        Row(
-                          children: [
-                            Row(
-                              children: [
-                                SvgPicture.asset(AppImages.time),
+                        Container(
+                          width: double.infinity,
+                          height: 10.h,
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: ListTile(
+                              trailing: Column(children: [
+                                Container(
+                                  width: 60,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                      color: AppColors.green,
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: Center(
+                                    child: customText(
+                                      text: "New",
+                                      fontSize: 10,
+                                      textColor: AppColors.white,
+                                    ),
+                                  ),
+                                ),
+                                heightSpace(2.2),
                                 customText(
-                                    text: "12:20pm",
-                                    fontSize: 10,
-                                    textColor: AppColors.textGrey)
-                              ],
-                            ),
-                            widthSpace(2),
-                            Row(
-                              children: [
-                                SvgPicture.asset(AppImages.calendarIcon),
-                                customText(
-                                    text: "12 Jun 2023",
-                                    fontSize: 10,
-                                    textColor: AppColors.textGrey)
-                              ],
-                            )
-                          ],
+                                    text: "Car Insepection",
+                                    fontSize: 8,
+                                    textColor: AppColors.red),
+                              ]),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  heightSpace(.5),
+                                  customText(
+                                      text: '${data.model}, ${data.year}',
+                                      fontSize: 12,
+                                      textColor: AppColors.black),
+                                  heightSpace(.5),
+                                  Row(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          SvgPicture.asset(AppImages.time),
+                                          customText(
+                                              text: formattedTime,
+                                              fontSize: 10,
+                                              textColor: AppColors.textGrey)
+                                        ],
+                                      ),
+                                      widthSpace(2),
+                                      Row(
+                                        children: [
+                                          SvgPicture.asset(
+                                              AppImages.calendarIcon),
+                                          customText(
+                                              text: formattedDate,
+                                              fontSize: 10,
+                                              textColor: AppColors.textGrey)
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              title: Padding(
+                                padding: const EdgeInsets.only(top: 9),
+                                child: customText(
+                                    text: data.brand!,
+                                    fontSize: 14,
+                                    textColor: AppColors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              leading: SvgPicture.asset(AppImages.carIcon)),
                         ),
+                        heightSpace(1),
                       ],
-                    ),
-                    title: Padding(
-                      padding: const EdgeInsets.only(top: 9),
-                      child: customText(
-                          text: "Toyota",
-                          fontSize: 14,
-                          textColor: AppColors.black,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    leading: SvgPicture.asset(AppImages.carIcon)),
+                    );
+                  } 
+                ),
               ),
+              // ...bookingHistory.map(
+              //   (e) {
+              //     var dateString = e.date;
+              //     var dateTime = DateTime.parse(dateString!);
+              //     var formattedDate =
+              //         DateFormat('dd MMM yyyy').format(dateTime);
+              //     var formattedTime = DateFormat('hh:mm a').format(dateTime);
+              //     return Column(
+              //       children: [
+              //         Container(
+              //           width: double.infinity,
+              //           height: 10.h,
+              //           decoration: BoxDecoration(
+              //             color: AppColors.white,
+              //             borderRadius: BorderRadius.circular(20),
+              //           ),
+              //           child: ListTile(
+              //               trailing: Column(children: [
+              //                 Container(
+              //                   width: 60,
+              //                   height: 20,
+              //                   decoration: BoxDecoration(
+              //                       color: AppColors.green,
+              //                       borderRadius: BorderRadius.circular(5)),
+              //                   child: Center(
+              //                     child: customText(
+              //                       text: "New",
+              //                       fontSize: 10,
+              //                       textColor: AppColors.white,
+              //                     ),
+              //                   ),
+              //                 ),
+              //                 heightSpace(2.2),
+              //                 customText(
+              //                     text: "Car Insepection",
+              //                     fontSize: 8,
+              //                     textColor: AppColors.red),
+              //               ]),
+              //               subtitle: Column(
+              //                 crossAxisAlignment: CrossAxisAlignment.start,
+              //                 children: [
+              //                   heightSpace(.5),
+              //                   customText(
+              //                       text: '${e.model}, ${e.year}',
+              //                       fontSize: 12,
+              //                       textColor: AppColors.black),
+              //                   heightSpace(.5),
+              //                   Row(
+              //                     children: [
+              //                       Row(
+              //                         children: [
+              //                           SvgPicture.asset(AppImages.time),
+              //                           customText(
+              //                               text: formattedTime,
+              //                               fontSize: 10,
+              //                               textColor: AppColors.textGrey)
+              //                         ],
+              //                       ),
+              //                       widthSpace(2),
+              //                       Row(
+              //                         children: [
+              //                           SvgPicture.asset(
+              //                               AppImages.calendarIcon),
+              //                           customText(
+              //                               text: formattedDate,
+              //                               fontSize: 10,
+              //                               textColor: AppColors.textGrey)
+              //                         ],
+              //                       )
+              //                     ],
+              //                   ),
+              //                 ],
+              //               ),
+              //               title: Padding(
+              //                 padding: const EdgeInsets.only(top: 9),
+              //                 child: customText(
+              //                     text: e.brand!,
+              //                     fontSize: 14,
+              //                     textColor: AppColors.black,
+              //                     fontWeight: FontWeight.bold),
+              //               ),
+              //               leading: SvgPicture.asset(AppImages.carIcon)),
+              //         ),
+              //         heightSpace(1),
+              //       ],
+              //     );
+              //   },
+              // ),
               heightSpace(4),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -257,7 +378,7 @@ class HomeView extends HookWidget {
               ),
               heightSpace(4),
               Container(
-                padding: EdgeInsets.all(5),
+                padding: const EdgeInsets.all(5),
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: AppColors.white,
@@ -495,10 +616,10 @@ class HomeView extends HookWidget {
           borderRadius: BorderRadius.circular(10), color: bgColor),
       child: Column(children: [
         customText(
-            text: "Completed Bookings",
-            fontSize: 12,
-            textColor: AppColors.black,
-            textAlignment: TextAlign.center,
+          text: "Completed Bookings",
+          fontSize: 12,
+          textColor: AppColors.black,
+          textAlignment: TextAlign.center,
         ),
         heightSpace(1),
         customText(

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
 import 'package:ngbuka/src/config/services/api/api_client.dart';
 import 'package:ngbuka/src/config/services/api/endpoints.dart';
@@ -207,4 +206,28 @@ class MechanicRepo {
       }
       return notification;
   }
+
+  Future<NotificationModel> getOneNotification(id) async {
+    final response =
+        await ApiClient.get('${Endpoints.getAllNotifications}/$id', useToken: true);
+    if (response.status == 200) {
+      log(response.entity.toString());
+      return NotificationModel.fromJson(response.entity);
+    }
+    return NotificationModel();
+  }
+
+  Future<List<BookingModel>> get5bookingAlert(String status) async {
+    final response = await ApiClient.get('${Endpoints.getAllBooking}?status=$status&limit=5', useToken: true);
+    List<BookingModel> booking = [];
+    if (response.status == 200) {
+      for (var bookingModel in response.entity['rows']) {
+          booking.add(BookingModel.fromJson(bookingModel));
+        }
+        return booking;
+    }
+    return booking;
+  }
+
+  
 }

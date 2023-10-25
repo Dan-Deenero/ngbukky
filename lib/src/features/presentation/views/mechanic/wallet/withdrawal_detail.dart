@@ -4,11 +4,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
-class HistoryDetail extends StatelessWidget {
-  const HistoryDetail({super.key});
+class WithdrawalDetail extends StatelessWidget {
+  const WithdrawalDetail({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +62,7 @@ class HistoryDetail extends StatelessWidget {
                       fontWeight: FontWeight.bold),
                   heightSpace(2),
                   customText(
-                      text: "Booking Completed  - Paid🎉",
+                      text: "Successful withdrawal",
                       fontSize: 14,
                       textColor: AppColors.green),
                   heightSpace(1),
@@ -69,12 +70,6 @@ class HistoryDetail extends StatelessWidget {
                     text: "Booking status",
                     fontSize: 12,
                     textColor: AppColors.textGrey,
-                  ),
-                  heightSpace(1),
-                  customText(
-                    text: "Receipt no: 234",
-                    fontSize: 12,
-                    textColor: AppColors.black,
                   ),
                 ],
               ),
@@ -85,163 +80,88 @@ class HistoryDetail extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   customText(
-                      text: "Personal",
+                      text: "Details",
                       fontSize: 14,
                       textColor: AppColors.orange,
                       fontWeight: FontWeight.bold),
                   heightSpace(1),
+                  ListTile(
+                    leading: SvgPicture.asset(AppImages.withdrawal),
+                    title: customText(
+                        text: '123-000',
+                        fontSize: 14,
+                        textColor: AppColors.black,
+                        fontWeight: FontWeight.bold),
+                    subtitle: customText(
+                        text: "Transaction number",
+                        fontSize: 12,
+                        textColor: AppColors.textGrey),
+                  ),
+                  heightSpace(1),
+                  ListTile(
+                    leading: SvgPicture.asset(AppImages.withdrawal),
+                    title: customText(
+                        text: '15 June, 2023',
+                        fontSize: 14,
+                        textColor: AppColors.black,
+                        fontWeight: FontWeight.bold),
+                    subtitle: customText(
+                        text: "Date",
+                        fontSize: 12,
+                        textColor: AppColors.textGrey),
+                  ),
+                  heightSpace(1),
+                  ListTile(
+                    leading: SvgPicture.asset(AppImages.time),
+                    title: customText(
+                        text: '12:00 am',
+                        fontSize: 14,
+                        textColor: AppColors.black,
+                        fontWeight: FontWeight.bold),
+                    subtitle: customText(
+                        text: 'Time',
+                        fontSize: 12,
+                        textColor: AppColors.textGrey),
+                  ),
+                  ListTile(
+                    leading: SvgPicture.asset(AppImages.accountDet),
+                    title: customText(
+                        text: "Guarantee Trust Bank",
+                        fontSize: 14,
+                        textColor: AppColors.black,
+                        fontWeight: FontWeight.bold),
+                    subtitle: customText(
+                        text: 'Bank',
+                        fontSize: 12,
+                        textColor: AppColors.textGrey),
+                  ),
+                  heightSpace(1),
+                  ListTile(
+                    leading: SvgPicture.asset(AppImages.accountDet),
+                    title: customText(
+                        text: '0013894285',
+                        fontSize: 14,
+                        textColor: AppColors.black,
+                        fontWeight: FontWeight.bold),
+                    subtitle: customText(
+                        text: "Account number",
+                        fontSize: 12,
+                        textColor: AppColors.textGrey),
+                  ),
                   ListTile(
                     leading: SvgPicture.asset(AppImages.profile),
                     title: customText(
-                        text: 'Kels2323',
+                        text: 'Damini Otobo',
                         fontSize: 14,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
                     subtitle: customText(
-                        text: "Client name",
-                        fontSize: 12,
-                        textColor: AppColors.textGrey),
-                  ),
-                  heightSpace(1),
-                  ListTile(
-                    leading: SvgPicture.asset(AppImages.locationIcon),
-                    title: customText(
-                        text: 'Elijiji rd, close 20, Woji, Port Harcourt',
-                        fontSize: 14,
-                        textColor: AppColors.black,
-                        fontWeight: FontWeight.bold),
-                    subtitle: customText(
-                        text: "Location",
-                        fontSize: 12,
-                        textColor: AppColors.textGrey),
-                  ),
-                  heightSpace(1),
-                  ListTile(
-                    leading: SvgPicture.asset(AppImages.calendarIcon),
-                    title: customText(
-                        text: 'Toyota',
-                        fontSize: 14,
-                        textColor: AppColors.black,
-                        fontWeight: FontWeight.bold),
-                    subtitle: customText(
-                        text: 'Car brand',
-                        fontSize: 12,
-                        textColor: AppColors.textGrey),
-                  ),
-                  ListTile(
-                    leading: SvgPicture.asset(AppImages.calendarIcon),
-                    title: customText(
-                        text: "Camry Hybrid 2022",
-                        fontSize: 14,
-                        textColor: AppColors.black,
-                        fontWeight: FontWeight.bold),
-                    subtitle: customText(
-                        text: 'Car model',
-                        fontSize: 12,
-                        textColor: AppColors.textGrey),
-                  ),
-                  heightSpace(1),
-                  ListTile(
-                    leading: SvgPicture.asset(AppImages.carIcon),
-                    title: customText(
-                        text: '2022',
-                        fontSize: 14,
-                        textColor: AppColors.black,
-                        fontWeight: FontWeight.bold),
-                    subtitle: customText(
-                        text: "Year of manufacture",
+                        text: "Account name",
                         fontSize: 12,
                         textColor: AppColors.textGrey),
                   ),
                   const Divider(),
-                  customText(
-                      text: "Service rendered",
-                      fontSize: 14,
-                      textColor: AppColors.orange,
-                      fontWeight: FontWeight.bold),
-                  heightSpace(3),
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          SvgPicture.asset(AppImages.serviceIcon),
-                          widthSpace(2),
-                          customText(
-                              text: 'AC Maintenance',
-                              fontSize: 13,
-                              textColor: AppColors.black,
-                              fontWeight: FontWeight.w600),
-                          heightSpace(4),
-                        ],
-                      ),
-                      heightSpace(2),
-                      Row(
-                        children: [
-                          SvgPicture.asset(AppImages.serviceIcon),
-                          widthSpace(2),
-                          customText(
-                              text: 'Electrical Repair',
-                              fontSize: 13,
-                              textColor: AppColors.black,
-                              fontWeight: FontWeight.w600),
-                          heightSpace(4),
-                        ],
-                      ),
-                    ],
-                  ),
-                  heightSpace(1),
-                  const Divider(),
-                  heightSpace(1),
-                  Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          customText(
-                              text: 'Sub-total (₦)',
-                              fontSize: 13,
-                              textColor: AppColors.black),
-                          customText(
-                              text: '5,000.00',
-                              fontSize: 13,
-                              textColor: AppColors.black)
-                        ],
-                      ),
-                      heightSpace(2),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          customText(
-                              text: 'Ngbuka Charge (1%)',
-                              fontSize: 13,
-                              textColor: AppColors.black),
-                          customText(
-                              text: '50.00',
-                              fontSize: 13,
-                              textColor: AppColors.black)
-                        ],
-                      ),
-                      heightSpace(2),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          customText(
-                              text: 'Total',
-                              fontSize: 13,
-                              textColor: AppColors.black,
-                              fontWeight: FontWeight.w600),
-                          customText(
-                              text: '5,050.00',
-                              fontSize: 13,
-                              textColor: AppColors.black,
-                              fontWeight: FontWeight.w600)
-                        ],
-                      )
-                    ],
-                  ),
-                  heightSpace(3),
-                  const Divider(),
-                  heightSpace(3),
+                  heightSpace(2),
                   Row(
                     children: [
                       Expanded(
@@ -297,9 +217,10 @@ class HistoryDetail extends StatelessWidget {
                       ),
                     ],
                   ),
+                  heightSpace(3),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

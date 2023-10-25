@@ -28,63 +28,164 @@ class Payments extends StatelessWidget {
                   color: AppColors.white,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: ListTile(
-                    trailing: Column(children: [
-                      customText(
-                          text: "N5,050",
-                          fontSize: 14,
+                child: Container(
+                  width: double.infinity,
+                  height: 10.h,
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: ListTile(
+                      trailing: Column(children: [
+                        customText(
+                            text: "N5,050",
+                            fontSize: 14,
+                            textColor: AppColors.black,
+                            fontWeight: FontWeight.bold),
+                        heightSpace(1),
+                        Container(
+                          width: 19.w,
+                          height: 3.h,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: AppColors.red.withOpacity(.3)),
+                          child: Center(
+                            child: customText(
+                                text: "Cancelled",
+                                fontSize: 12,
+                                textColor: AppColors.red),
+                          ),
+                        )
+                      ]),
+                      subtitle: Row(
+                        children: [
+                          Row(
+                            children: [
+                              SvgPicture.asset(AppImages.time),
+                              customText(
+                                  text: "12:20pm",
+                                  fontSize: 10,
+                                  textColor: AppColors.textGrey)
+                            ],
+                          ),
+                          widthSpace(2),
+                          Row(
+                            children: [
+                              SvgPicture.asset(AppImages.calendarIcon),
+                              customText(
+                                  text: "12 Jun 2023",
+                                  fontSize: 10,
+                                  textColor: AppColors.textGrey)
+                            ],
+                          )
+                        ],
+                      ),
+                      title: customText(
+                          text: "Kelechi Amadi",
+                          fontSize: 16,
                           textColor: AppColors.black,
                           fontWeight: FontWeight.bold),
-                      heightSpace(1),
-                      Container(
-                        width: 19.w,
-                        height: 3.h,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: AppColors.red.withOpacity(.3)),
-                        child: Center(
-                          child: customText(
-                              text: "Cancelled",
-                              fontSize: 12,
-                              textColor: AppColors.red),
-                        ),
-                      )
-                    ]),
-                    subtitle: Row(
-                      children: [
-                        Row(
-                          children: [
-                            SvgPicture.asset(AppImages.time),
-                            customText(
-                                text: "12:20pm",
-                                fontSize: 10,
-                                textColor: AppColors.textGrey)
-                          ],
-                        ),
-                        widthSpace(2),
-                        Row(
-                          children: [
-                            SvgPicture.asset(AppImages.calendarIcon),
-                            customText(
-                                text: "12 Jun 2023",
-                                fontSize: 10,
-                                textColor: AppColors.textGrey)
-                          ],
+                      leading: Container(
+                        width: 10.w,
+                        height: 10.h,
+                        decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.containerGrey),
+                      )),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Withdrawal extends StatelessWidget {
+  const Withdrawal({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            GestureDetector(
+              onTap: () => context.push(AppRoutes.withdrawalDetail),
+              child: Container(
+                width: double.infinity,
+                height: 10.h,
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Container(
+                  width: double.infinity,
+                  height: 10.h,
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: ListTile(
+                      trailing: Column(children: [
+                        customText(
+                            text: "N5,050",
+                            fontSize: 14,
+                            textColor: AppColors.black,
+                            fontWeight: FontWeight.bold),
+                        heightSpace(1),
+                        Container(
+                          width: 19.w,
+                          height: 3.h,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: AppColors.red.withOpacity(.3)),
+                          child: Center(
+                            child: customText(
+                                text: "Cancelled",
+                                fontSize: 12,
+                                textColor: AppColors.red),
+                          ),
                         )
-                      ],
-                    ),
-                    title: customText(
-                        text: "Kelechi Amadi",
-                        fontSize: 16,
-                        textColor: AppColors.black,
-                        fontWeight: FontWeight.bold),
-                    leading: Container(
-                      width: 10.w,
-                      height: 10.h,
-                      decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.containerGrey),
-                    )),
+                      ]),
+                      subtitle: Row(
+                        children: [
+                          Row(
+                            children: [
+                              SvgPicture.asset(AppImages.time),
+                              customText(
+                                  text: "12:20pm",
+                                  fontSize: 10,
+                                  textColor: AppColors.textGrey)
+                            ],
+                          ),
+                          widthSpace(2),
+                          Row(
+                            children: [
+                              SvgPicture.asset(AppImages.calendarIcon),
+                              customText(
+                                  text: "12 Jun 2023",
+                                  fontSize: 10,
+                                  textColor: AppColors.textGrey)
+                            ],
+                          )
+                        ],
+                      ),
+                      title: customText(
+                          text: "Kelechi Amadi",
+                          fontSize: 16,
+                          textColor: AppColors.black,
+                          fontWeight: FontWeight.bold),
+                      leading: Container(
+                        width: 10.w,
+                        height: 10.h,
+                        decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.containerGrey),
+                      )),
+                ),
               ),
             ),
           ],
@@ -103,8 +204,9 @@ class WalletHistory extends HookWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        backgroundColor: AppColors.backgroundGrey,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(25.h),
+          preferredSize: Size.fromHeight(20.h),
           child: Padding(
             padding: const EdgeInsets.only(top: 40, left: 20, right: 20),
             child:
@@ -224,7 +326,7 @@ class WalletHistory extends HookWidget {
           ),
         ),
         body: const Column(children: [
-          Expanded(child: TabBarView(children: [Payments(), Payments()]))
+          Expanded(child: TabBarView(children: [Payments(), Withdrawal()]))
         ]),
       ),
     );

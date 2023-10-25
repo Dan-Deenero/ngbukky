@@ -6,31 +6,29 @@ import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/data/notification_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
-class InspectionBooking extends StatefulWidget {
+class NTInspectionBooking extends StatefulWidget {
   final String id;
-  InspectionBooking({
+  const NTInspectionBooking({
     super.key,
     required this.id,
   });
 
   @override
-  State<InspectionBooking> createState() => _InspectionBookingState();
+  State<NTInspectionBooking> createState() => _NTInspectionBookingState();
 }
 
-class _InspectionBookingState extends State<InspectionBooking> {
+class _NTInspectionBookingState extends State<NTInspectionBooking> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
 
   bool isLoading = true;
 
-  BookingModel? bookingModel;
-  NotificationModel? notifyModel;
+  NotificationModel? bookingModel;
 
   var dateString;
   var viewedString;
@@ -40,7 +38,6 @@ class _InspectionBookingState extends State<InspectionBooking> {
   var formattedDate;
   var viewedDate;
   var viewedTime;
-  var modeling;
 
   String username = '';
 
@@ -48,36 +45,20 @@ class _InspectionBookingState extends State<InspectionBooking> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _mechanicRepo.getoneBooking(widget.id).then(
-          (value) => setState(
-            () {
-              bookingModel = value;
-              isLoading = false;
-              dateString = bookingModel!.date;
-              dateTime = DateTime.parse(dateString!);
-              formattedDate = DateFormat('E, d MMM y').format(dateTime);
-
-              formattedTime = DateFormat('hh:mm a').format(dateTime);
-            },
-          ),
-        );
-    _mechanicRepo.getOneNotification(widget.id).then(
-          (value) => setState(
-            () {
-              notifyModel = value;
-              isLoading = false;
-              bookingModel = notifyModel!.booking;
-              dateString = notifyModel!.booking!.date!;
-              viewedString = notifyModel!.viewedAt;
-              dateTime = DateTime.parse(dateString!);
-              viewed = DateTime.parse(viewedString!);
-              formattedDate = DateFormat('E, d MMM y').format(dateTime);
-              formattedTime = DateFormat('hh:mm a').format(dateTime);
-              viewedDate = DateFormat('E, d MMM y').format(viewed);
-              viewedTime = DateFormat('hh:mm a').format(viewed);
-            },
-          ),
-        );
+    _mechanicRepo.getOneNotification(widget.id).then((value) => setState(
+          () {
+            bookingModel = value;
+            isLoading = false;
+            dateString = bookingModel!.booking!.date!;
+            viewedString = bookingModel!.viewedAt;
+            dateTime = DateTime.parse(dateString!);
+            viewed = DateTime.parse(viewedString!);
+            formattedDate = DateFormat('E, d MMM y').format(dateTime);
+            formattedTime = DateFormat('hh:mm a').format(dateTime);
+            viewedDate = DateFormat('E, d MMM y').format(viewed);
+            viewedTime = DateFormat('hh:mm a').format(viewed);
+          },
+        ));
   }
 
   // void resendOTP() async {
@@ -87,7 +68,7 @@ class _InspectionBookingState extends State<InspectionBooking> {
       var body = {
         "action": "accepted",
       };
-      bool result = await _mechanicRepo.acceptOrRejectBooking(body, widget.id);
+      bool result = await _mechanicRepo.acceptOrRejectBooking(body, bookingModel!.booking!.id);
       if (result) {
         if (context.mounted) {
           context.pop();
@@ -101,7 +82,7 @@ class _InspectionBookingState extends State<InspectionBooking> {
       var body = {
         "action": "rejected",
       };
-      bool result = await _mechanicRepo.acceptOrRejectBooking(body, widget.id);
+      bool result = await _mechanicRepo.acceptOrRejectBooking(body, bookingModel!.booking!.id);
       if (result) {
         if (context.mounted) {
           context.go(AppRoutes.rejectedBooking);
@@ -112,71 +93,71 @@ class _InspectionBookingState extends State<InspectionBooking> {
 
     accept() {
       showDialog(
-        context: context,
-        builder: (context) => Center(
-          child: Container(
-            // padding: EdgeInsets.all(10.0),
-            width: 700, // Set the desired width
-            height: 200,
-            child: Dialog(
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(16.0), // Adjust the radius as needed
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      customText(
-                          text: 'Confirm acceptance',
-                          fontSize: 20,
-                          textColor: AppColors.black,
-                          fontWeight: FontWeight.w500),
-                      InkWell(
-                          onTap: () => context.pop(),
-                          child: SvgPicture.asset(AppImages.cancelModal))
-                    ],
-                  ),
-                  heightSpace(1),
-                  customText(
-                      text: 'Confirm that you want to accept this booking',
-                      fontSize: 12,
-                      textColor: AppColors.black),
-                  heightSpace(3),
-                  Center(
-                    child: Row(
+          context: context,
+          builder: (context) => Center(
+                child: Container(
+                  // padding: EdgeInsets.all(10.0),
+                  width: 700, // Set the desired width
+                  height: 200,
+                  child: Dialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          16.0), // Adjust the radius as needed
+                    ),
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        TextButton(
-                            onPressed: () => context.pop(),
-                            child: customText(
-                                text: 'No',
-                                fontSize: 16,
-                                textColor: AppColors.textGrey)),
-                        widthSpace(3),
-                        Container(
-                          width: 1,
-                          height: 40,
-                          color: AppColors.containerGrey,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            customText(
+                                text: 'Confirm acceptance',
+                                fontSize: 20,
+                                textColor: AppColors.black,
+                                fontWeight: FontWeight.w500),
+                            InkWell(
+                                onTap: () => context.pop(),
+                                child: SvgPicture.asset(AppImages.cancelModal))
+                          ],
                         ),
-                        widthSpace(3),
-                        TextButton(
-                            onPressed: acceptBooking,
-                            child: customText(
-                                text: 'Yes',
-                                fontSize: 16,
-                                textColor: AppColors.darkOrange))
+                        heightSpace(1),
+                        customText(
+                            text:
+                                'Confirm that you want to accept this booking',
+                            fontSize: 12,
+                            textColor: AppColors.black),
+                        heightSpace(3),
+                        Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextButton(
+                                  onPressed: () => context.pop(),
+                                  child: customText(
+                                      text: 'No',
+                                      fontSize: 16,
+                                      textColor: AppColors.textGrey)),
+                              widthSpace(3),
+                              Container(
+                                width: 1,
+                                height: 40,
+                                color: AppColors.containerGrey,
+                              ),
+                              widthSpace(3),
+                              TextButton(
+                                  onPressed: acceptBooking,
+                                  child: customText(
+                                      text: 'Yes',
+                                      fontSize: 16,
+                                      textColor: AppColors.darkOrange))
+                            ],
+                          ),
+                        )
                       ],
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
+                  ),
+                ),
+              ));
     }
 
     reject() {
@@ -253,35 +234,89 @@ class _InspectionBookingState extends State<InspectionBooking> {
         preferredSize: Size.fromHeight(20.h),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Container(
-              height: 10.h,
-              width: 10.w,
-              decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.black),
-                  color: AppColors.white.withOpacity(.5),
-                  shape: BoxShape.circle),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 7.0),
-                child: Center(
-                    child: GestureDetector(
-                  onTap: () => context.pop(),
-                  child: const Icon(
-                    Icons.arrow_back_ios,
-                    color: AppColors.black,
-                  ),
-                )),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 10.h,
+                width: 10.w,
+                decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.black),
+                    color: AppColors.white.withOpacity(.5),
+                    shape: BoxShape.circle),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 7.0),
+                  child: Center(
+                      child: GestureDetector(
+                    onTap: () => context.pop(),
+                    child: const Icon(
+                      Icons.arrow_back_ios,
+                      color: AppColors.black,
+                    ),
+                  )),
+                ),
               ),
-            ),
-            customText(
-                text: "View inspection booking",
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                textColor: AppColors.black),
-            heightSpace(1),
-            bodyText("Accept or reject booking")
-          ]),
+              customText(
+                  text: "View inspection booking",
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  textColor: AppColors.black),
+              heightSpace(1),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  bodyText("Accept or reject booking"),
+                  isLoading ?
+                  Row(
+                    children: [
+                      Row(
+                        children: [
+                          SvgPicture.asset(AppImages.time),
+                          customText(
+                              text: '12:20pm',
+                              fontSize: 10,
+                              textColor: AppColors.textGrey)
+                        ],
+                      ),
+                      widthSpace(.5),
+                      Row(
+                        children: [
+                          SvgPicture.asset(AppImages.calendarIcon),
+                          customText(
+                              text: '15 Jun 2023',
+                              fontSize: 10,
+                              textColor: AppColors.textGrey)
+                        ],
+                      )
+                    ],
+                  ) :
+                  Row(
+                    children: [
+                      Row(
+                        children: [
+                          SvgPicture.asset(AppImages.time),
+                          customText(
+                              text: viewedTime,
+                              fontSize: 10,
+                              textColor: AppColors.textGrey)
+                        ],
+                      ),
+                      widthSpace(.5),
+                      Row(
+                        children: [
+                          SvgPicture.asset(AppImages.calendarIcon, width: 13,),
+                          customText(
+                              text: viewedDate,
+                              fontSize: 10,
+                              textColor: AppColors.textGrey)
+                        ],
+                      )
+                    ],
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
       body: isLoading
@@ -295,7 +330,7 @@ class _InspectionBookingState extends State<InspectionBooking> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.profile),
                     title: customText(
-                        text: bookingModel!.user!.username!,
+                        text: 'kels232',
                         fontSize: 15,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -308,7 +343,7 @@ class _InspectionBookingState extends State<InspectionBooking> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.locationIcon),
                     title: customText(
-                        text: bookingModel!.user!.address!,
+                        text: 'Elijiji rd, close 20, Woji, Port Harcourt',
                         fontSize: 15,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -321,7 +356,7 @@ class _InspectionBookingState extends State<InspectionBooking> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.calendarIcon),
                     title: customText(
-                        text: bookingModel!.brand!,
+                        text: bookingModel!.booking!.brand!,
                         fontSize: 15,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -333,7 +368,8 @@ class _InspectionBookingState extends State<InspectionBooking> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.calendarIcon),
                     title: customText(
-                        text: "${bookingModel!.model!}, ${bookingModel!.year!}",
+                        text:
+                            "${bookingModel!.booking!.model!}, ${bookingModel!.booking!.year!}",
                         fontSize: 15,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -346,7 +382,7 @@ class _InspectionBookingState extends State<InspectionBooking> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.carIcon),
                     title: customText(
-                        text: '${bookingModel!.year!}',
+                        text: '${bookingModel!.booking!.year!}',
                         fontSize: 15,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),

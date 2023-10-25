@@ -40,8 +40,12 @@ class AppRoutes {
   static const String pendingQuoteApproval = '/pending-quote-approval';
   static const String pendingQuoteApprovalDetails = '/pending-quote-approval-details';
   static const String notification = '/notification';
+  static const String newBookingNotification = '/new-booking-notification';
   static const String walletHistory = '/wallet-history';
   static const String historyDetail = '/history-detail';
+  static const String withdrawalDetail = '/withdrawal-detail';
+  static const String withdrawFunds = '/withdraw-funds';
+  static const String localAccountSetup = '/local-account-setup';
   static const String selectAccount = '/select-account';
   static const String boarding1 = '/boarding1';
   static const String boarding2 = '/boarding2';

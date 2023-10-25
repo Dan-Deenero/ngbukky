@@ -6,6 +6,7 @@ import 'package:ngbuka/src/config/keys/app_routes.dart';
 // import 'package:ngbuka/src/config/router/app_router.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/wallet.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
@@ -57,9 +58,15 @@ class Boarding1 extends StatelessWidget {
                       ),
                       heightSpace(6),
                       AppButton(
-                        buttonText: 'Car mechanic',
-                        onTap: () => context.push(AppRoutes.login),
-                      ),
+                          buttonText: 'Car mechanic',
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) => const Wallet(),
+                              ),
+                            );
+                            //  context.push(AppRoutes.addWallet),
+                          }),
                       heightSpace(1),
                       AppButton(
                         buttonText: 'Spare part dealer',
@@ -75,9 +82,9 @@ class Boarding1 extends StatelessWidget {
                               textColor: AppColors.black),
                           widthSpace(1),
                           GestureDetector(
-                            onTap: () {
-                              context.push(AppRoutes.boarding2);
-                            },
+                              onTap: () {
+                                context.push(AppRoutes.boarding2);
+                              },
                               child: customText(
                                   text: 'Log me in',
                                   fontSize: 14,
@@ -95,8 +102,6 @@ class Boarding1 extends StatelessWidget {
     );
   }
 }
-
-
 
 class Boarding2 extends StatelessWidget {
   const Boarding2({super.key});
@@ -138,8 +143,7 @@ class Boarding2 extends StatelessWidget {
                       Flexible(
                         flex: 1,
                         child: customText(
-                            text:
-                                'Select who you want to login as',
+                            text: 'Select who you want to login as',
                             fontSize: 15,
                             textColor: AppColors.black),
                       ),
@@ -163,9 +167,9 @@ class Boarding2 extends StatelessWidget {
                               textColor: AppColors.black),
                           widthSpace(1),
                           GestureDetector(
-                            onTap: () {
-                              context.push(AppRoutes.login);
-                            },
+                              onTap: () {
+                                context.push(AppRoutes.login);
+                              },
                               child: customText(
                                   text: 'Get started',
                                   fontSize: 14,

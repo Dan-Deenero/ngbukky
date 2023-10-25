@@ -48,4 +48,11 @@ class AppImages {
   static const String hourGlass = "assets/images/svgs/hour_glass.svg";
   static const String successModal = "assets/images/svgs/success-modal.svg";
   static const String editIcon = "assets/images/svgs/edit_icon.svg";
+  static const String withdrawal= "assets/images/svgs/withdrawal.svg";
+  static const String user= "assets/images/svgs/user.svg";
+  static const String download= "assets/images/svgs/download.svg";
+  static const String share= "assets/images/svgs/share.svg";
+  static const String walletbase= "assets/images/pngs/walletbase.png";
+  static const String naira= "assets/images/svgs/naira.svg";
+
 }

@@ -45,13 +45,16 @@ import 'package:ngbuka/src/features/presentation/views/mechanic/payment_request/
 import 'package:ngbuka/src/features/presentation/views/mechanic/payment_request/payment_request.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/pending_quote_approval/Inspection_details_pqa.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/pending_quote_approval/pending_quote_aproval.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/quote_request.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/send-quotes/quote_send.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/rejected-bookings/rejected_booking.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/rejected-bookings/view_rejected_booking.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/send_quote.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/history_detail.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/local_account_setup.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/wallet_history.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/withdraw_funds.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/withdrawal_detail.dart';
+import 'package:ngbuka/src/features/presentation/views/notifications/booking_details_nt.dart';
 import 'package:ngbuka/src/features/presentation/views/notifications/notification.dart';
 import 'package:ngbuka/src/features/presentation/views/onboarding/account_selection.dart';
 import 'package:ngbuka/src/features/presentation/views/onboarding/onboarding.dart';
@@ -205,7 +208,9 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
           path: AppRoutes.sendQuotes,
           name: AppRoutes.sendQuotes,
-          builder: (_, state) => SendQuote(id: state.extra as String,)),
+          builder: (_, state) => SendQuote(
+                id: state.extra as String,
+              )),
       GoRoute(
           path: AppRoutes.quotesSend,
           name: AppRoutes.quotesSend,
@@ -245,17 +250,41 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
           name: AppRoutes.pendingQuoteApproval,
           builder: (_, state) => const PendingQuoteApproval()),
       GoRoute(
-          path: AppRoutes.notification,
-          name: AppRoutes.notification,
-          builder: (_, state) => const Notification()),
+        path: AppRoutes.notification,
+        name: AppRoutes.notification,
+        builder: (_, state) => const Notification(),
+      ),
       GoRoute(
-          path: AppRoutes.walletHistory,
-          name: AppRoutes.walletHistory,
-          builder: (_, state) => const WalletHistory()),
+          path: AppRoutes.newBookingNotification,
+          name: AppRoutes.newBookingNotification,
+          builder: (_, state) => NTInspectionBooking(
+                id: state.extra as String,
+              )),
       GoRoute(
-          path: AppRoutes.historyDetail,
-          name: AppRoutes.historyDetail,
-          builder: (_, state) => const HistoryDetail()),
+        path: AppRoutes.walletHistory,
+        name: AppRoutes.walletHistory,
+        builder: (_, state) => const WalletHistory(),
+      ),
+      GoRoute(
+        path: AppRoutes.historyDetail,
+        name: AppRoutes.historyDetail,
+        builder: (_, state) => const HistoryDetail(),
+      ),
+      GoRoute(
+        path: AppRoutes.withdrawalDetail,
+        name: AppRoutes.withdrawalDetail,
+        builder: (_, state) => const WithdrawalDetail(),
+      ),
+      GoRoute(
+        path: AppRoutes.withdrawFunds,
+        name: AppRoutes.withdrawFunds,
+        builder: (_, state) => const WithdrawFunds(),
+      ),
+      GoRoute(
+        path: AppRoutes.localAccountSetup,
+        name: AppRoutes.localAccountSetup,
+        builder: (_, state) => LocalAccountSetup(),
+      ),
       GoRoute(
           path: AppRoutes.selectAccount,
           name: AppRoutes.selectAccount,

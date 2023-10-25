@@ -7,6 +7,7 @@ import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
 import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
+import 'package:ngbuka/src/domain/data/notification_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -26,11 +27,18 @@ class ViewAcceptedBooking extends StatefulWidget {
 class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
 
+  NotificationModel? notifyModel;
   bool isLoading = true;
+
   var dateString;
+  var viewedString;
   var dateTime;
-  var formattedDate;
+  var viewed;
   var formattedTime;
+  var formattedDate;
+  var viewedDate;
+  var viewedTime;
+  var modeling;
 
   BookingModel? bookingModel;
 
@@ -38,17 +46,36 @@ class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _mechanicRepo.getoneBooking(widget.id).then((value) => setState(
-          () {
-            bookingModel = value;
-            isLoading = false;
-            dateString = bookingModel!.date!;
-            dateTime = DateTime.parse(dateString);
-            formattedDate = DateFormat('E, d MMM y').format(dateTime);
+    _mechanicRepo.getoneBooking(widget.id).then(
+          (value) => setState(
+            () {
+              bookingModel = value;
+              isLoading = false;
+              dateString = bookingModel!.date!;
+              dateTime = DateTime.parse(dateString);
+              formattedDate = DateFormat('E, d MMM y').format(dateTime);
 
-            formattedTime = DateFormat('hh:mm a').format(dateTime);
-          },
-        ));
+              formattedTime = DateFormat('hh:mm a').format(dateTime);
+            },
+          ),
+        );
+    _mechanicRepo.getOneNotification(widget.id).then(
+          (value) => setState(
+            () {
+              notifyModel = value;
+              isLoading = false;
+              bookingModel = notifyModel!.booking;
+              dateString = notifyModel!.booking!.date!;
+              viewedString = notifyModel!.viewedAt;
+              dateTime = DateTime.parse(dateString!);
+              viewed = DateTime.parse(viewedString!);
+              formattedDate = DateFormat('E, d MMM y').format(dateTime);
+              formattedTime = DateFormat('hh:mm a').format(dateTime);
+              viewedDate = DateFormat('E, d MMM y').format(viewed);
+              viewedTime = DateFormat('hh:mm a').format(viewed);
+            },
+          ),
+        );
   }
 
   finishBooking() async {
@@ -135,7 +162,6 @@ class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
   // void resendOTP() async {
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(20.h),
@@ -183,7 +209,7 @@ class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.profile),
                     title: customText(
-                        text: bookingModel!.user!.username!,
+                        text: 'kels@223',
                         fontSize: 15,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -196,7 +222,7 @@ class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.locationIcon),
                     title: customText(
-                        text: bookingModel!.user!.address!,
+                        text: '#5 some address',
                         fontSize: 15,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -312,7 +338,8 @@ class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
                       widthSpace(2),
                       Expanded(
                         child: AppButton(
-                          onTap: () => context.push(AppRoutes.quotesSend, extra: bookingModel!.id),
+                          onTap: () => context.push(AppRoutes.quotesSend,
+                              extra: bookingModel!.id),
                           hasIcon: false,
                           buttonText: "Send Quote",
                           isOrange: true,

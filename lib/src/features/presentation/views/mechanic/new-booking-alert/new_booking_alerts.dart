@@ -26,11 +26,15 @@ class _BookingAlertState extends State<BookingAlert> {
   @override
   void initState() {
     super.initState();
-    _mechanicRepo.getAllBooking('pending').then((value) => setState(() {
-          _bookingHistory = value;
-          isLoading = false;
-          print(_bookingHistory);
-        }));
+    _mechanicRepo.getAllBooking('pending').then(
+          (value) => setState(
+            () {
+              _bookingHistory = value;
+              isLoading = false;
+              print(_bookingHistory);
+            },
+          ),
+        );
     // log(_bookingHistory.toString());
   }
 
@@ -51,7 +55,7 @@ class _BookingAlertState extends State<BookingAlert> {
                     color: AppColors.white.withOpacity(.5),
                     shape: BoxShape.circle),
                 child: Padding(
-                  padding: EdgeInsets.only(left: 7.0),
+                  padding: const EdgeInsets.only(left: 7.0),
                   child: Center(
                       child: GestureDetector(
                     onTap: () => context.pop(),
@@ -91,19 +95,18 @@ class _BookingAlertState extends State<BookingAlert> {
                         children: [
                           if (_bookingHistory.isEmpty)
                             Center(
-                              heightFactor: 3.0,
+                                heightFactor: 3.0,
                                 child: Column(
-                              children: [
-                                SvgPicture.asset(AppImages.bookingWarning),
-                                customText(
-                                    text:
-                                        'There are no new inspection booking requests',
-                                    fontSize: 15,
-                                    textColor: AppColors.black,
-                                    textAlignment: TextAlign.center
-                                )
-                              ],
-                            ))
+                                  children: [
+                                    SvgPicture.asset(AppImages.bookingWarning),
+                                    customText(
+                                        text:
+                                            'There are no new inspection booking requests',
+                                        fontSize: 15,
+                                        textColor: AppColors.black,
+                                        textAlignment: TextAlign.center)
+                                  ],
+                                ))
                           else
                             ..._bookingHistory.map((e) {
                               var dateString = e.date;

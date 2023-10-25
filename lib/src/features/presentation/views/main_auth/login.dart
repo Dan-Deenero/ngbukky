@@ -51,7 +51,7 @@ class LoginView extends HookWidget {
             }else if(result.user?.businessName == null){
               context.go(AppRoutes.businessInfo);
             }else{
-              context.go(AppRoutes.bottomNav);
+              context.go(AppRoutes.personalInfo);
             }
           }
        }

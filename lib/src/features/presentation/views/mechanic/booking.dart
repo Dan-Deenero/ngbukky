@@ -171,7 +171,10 @@ class Bookings extends HookWidget {
                       bodyText("View your bookings and Quotes "),
                     ],
                   ),
-                  SvgPicture.asset(AppImages.notification)
+                  GestureDetector(
+                    onTap: () => context.push(AppRoutes.notification),
+                    child: SvgPicture.asset(AppImages.notification),
+                  )
                 ],
               ),
             ]),
@@ -275,7 +278,6 @@ class InspectionBookings extends StatelessWidget {
   final int? approved;
   final int? disapproved;
   final int? awaitingPayment;
-
   const InspectionBookings(
       {super.key,
       this.canceled,

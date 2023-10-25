@@ -57,6 +57,89 @@ class Wallet extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    accept() {
+      showDialog(
+        context: context,
+        builder: (context) => Center(
+          child: Container(
+            // padding: EdgeInsets.all(10.0),
+            width: 700, // Set the desired width
+            height: 200,
+            child: Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(20.0), // Adjust the radius as needed
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        customText(
+                            text: 'Withdraw funds',
+                            fontSize: 20,
+                            textColor: AppColors.textGrey,
+                            fontWeight: FontWeight.w500,
+                            textAlignment: TextAlign.start),
+                        InkWell(
+                            onTap: () => context.pop(),
+                            child: SvgPicture.asset(AppImages.cancelModal))
+                      ],
+                    ),
+                  ),
+                  heightSpace(1),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        customText(
+                          text: 'Set up your local bank account ',
+                          fontSize: 12,
+                          textColor: AppColors.black,
+                          textAlignment: TextAlign.start,
+                        ),
+                      ],
+                    ),
+                  ),
+                  heightSpace(3),
+                  Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton(
+                            onPressed: () => context.pop(),
+                            child: customText(
+                                text: 'Cancel',
+                                fontSize: 16,
+                                textColor: AppColors.textGrey)),
+                        widthSpace(3),
+                        Container(
+                          width: 1,
+                          height: 40,
+                          color: AppColors.containerGrey,
+                        ),
+                        widthSpace(3),
+                        TextButton(
+                            onPressed: () {},
+                            child: customText(
+                                text: 'Continue',
+                                fontSize: 16,
+                                textColor: AppColors.darkOrange))
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     final tabIndex = useState<int>(0);
     return DefaultTabController(
       length: 2,
@@ -92,17 +175,18 @@ class Wallet extends HookWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 20),
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 width: double.infinity,
-                height: 32.h,
+                height: 20.h,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     image: const DecorationImage(
                         fit: BoxFit.cover,
                         image: AssetImage(
-                          AppImages.homeBackground,
+                          AppImages.walletbase,
                         ))),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     customText(
                         text: "Total Balance",
@@ -110,12 +194,15 @@ class Wallet extends HookWidget {
                         textColor: AppColors.white),
                     customText(
                         text: "₦0",
-                        fontSize: 45,
+                        fontSize: 32,
                         textColor: AppColors.white,
                         fontWeight: FontWeight.bold),
-                    heightSpace(2),
-                    SvgPicture.asset(AppImages.welcomeImage),
-                    heightSpace(2),
+                    heightSpace(1),
+                    GestureDetector(
+                      onTap: () => accept(),
+                      child: SvgPicture.asset(AppImages.welcomeImage),
+                    ),
+                    // heightSpace(2),
                   ],
                 ),
               ),
@@ -126,9 +213,9 @@ class Wallet extends HookWidget {
                   scrollDirection: Axis.horizontal,
                   children: [
                     transactionBox("Total Earnings", "This year"),
-                    VerticalDivide(),
+                    verticalDivide(),
                     transactionBox("Earned", "This month"),
-                    VerticalDivide(),
+                    verticalDivide(),
                     transactionBox("Withdrawn", "This month")
                   ],
                 ),
@@ -202,10 +289,7 @@ class Wallet extends HookWidget {
               heightSpace(5),
               const Expanded(
                 child: TabBarView(
-                  children: [
-                    PaymentTab(),
-                    WithdrawalTab()
-                  ],
+                  children: [PaymentTab(), WithdrawalTab()],
                 ),
               ),
               heightSpace(5)
@@ -216,9 +300,9 @@ class Wallet extends HookWidget {
     );
   }
 
-  Padding VerticalDivide() {
+  Padding verticalDivide() {
     return const Padding(
-      padding: EdgeInsets.only(bottom: 40, top: 20),
+      padding: EdgeInsets.only(bottom: 50, top: 20),
       child: VerticalDivider(
         thickness: 1,
       ),
