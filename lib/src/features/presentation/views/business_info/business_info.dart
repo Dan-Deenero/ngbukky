@@ -51,7 +51,7 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
           if (item["isChecked"]) {
             if (item["isChecked"]) {
               var itemString =
-                  "From: ${item["from"]}, To: ${item["to"]}, Day: ${item["day"]}";
+                  "day: ${item["day"]}, from: ${item["from"]}, to: ${item["to"]}";
               trueItemsString.add(itemString);
             }
           }
@@ -120,6 +120,7 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                           ),
                           heightSpace(2),
                           ...workingHour.mapIndexed((e, index) {
+                            e["isChecked"] ?? (e["isChecked"] = false);
                             return Row(
                               children: [
                                 e["isChecked"]

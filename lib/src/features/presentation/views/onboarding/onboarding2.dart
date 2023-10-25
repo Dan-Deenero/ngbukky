@@ -60,17 +60,17 @@ class Boarding1 extends StatelessWidget {
                       AppButton(
                           buttonText: 'Car mechanic',
                           onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (BuildContext context) => const Wallet(),
-                              ),
-                            );
-                            //  context.push(AppRoutes.addWallet),
+                            // Navigator.of(context).push(
+                            //   MaterialPageRoute(
+                            //     builder: (BuildContext context) => const Wallet(),
+                            //   ),
+                            // );
+                             context.push(AppRoutes.login);
                           }),
                       heightSpace(1),
                       AppButton(
                         buttonText: 'Spare part dealer',
-                        onTap: () => context.push(AppRoutes.personalInfo),
+                        onTap: () => context.push(AppRoutes.spareLogin),
                       ),
                       heightSpace(4),
                       Row(

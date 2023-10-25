@@ -229,5 +229,18 @@ class MechanicRepo {
     return booking;
   }
 
+  Future<List<QuotesModel>> get5QuotesAlert(String status) async {
+    final response =
+        await ApiClient.get('${Endpoints.getAllQuotes}?status=$status&limit=5', useToken: true);
+    List<QuotesModel> quote = [];
+    if (response.status == 200) {
+      for (var quoteModel in response.entity['rows']) {
+        quote.add(QuotesModel.fromJson(quoteModel));
+      }
+      return quote;
+    }  
+    return quote;
+  }
+
   
 }

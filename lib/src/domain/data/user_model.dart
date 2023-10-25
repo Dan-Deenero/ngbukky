@@ -87,6 +87,7 @@ class UserModel {
     deviceToken = json['deviceToken'];
     mechanicType = json['mechanicType'];
     about = json['about'];
+    cars = json['cars'].cast<String>();
     languages = json['languages'].cast<String>();
     isActive = json['isActive'];
     if (json['services'] != null) {
@@ -101,53 +102,46 @@ class UserModel {
         otherServices!.add(Services.fromJson(v));
       });
     }
-    cars = json['cars'].cast<String>();
-    if (json['availability'] != null) {
-      availability = <Availability>[];
-      json['availability'].forEach((v) {
-        availability!.add(new Availability.fromJson(v));
-      });
-    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['firstname'] = this.firstname;
-    data['lastname'] = this.lastname;
-    data['email'] = this.email;
-    data['phoneNumber'] = this.phoneNumber;
-    data['username'] = this.username;
-    data['isEmailVerified'] = this.isEmailVerified;
-    data['verifiedEmailAt'] = this.verifiedEmailAt;
-    data['profileImageUrl'] = this.profileImageUrl;
-    data['role'] = this.role;
-    data['status'] = this.status;
-    data['ninImageUrl'] = this.ninImageUrl;
-    data['isServiceProvider'] = this.isServiceProvider;
-    data['businessName'] = this.businessName;
-    data['cacNumber'] = this.cacNumber;
-    data['address'] = this.address;
-    data['lga'] = this.lga;
-    data['city'] = this.city;
-    data['state'] = this.state;
-    data['longitude'] = this.longitude;
-    data['latitude'] = this.latitude;
-    data['deviceToken'] = this.deviceToken;
-    data['mechanicType'] = this.mechanicType;
-    data['about'] = this.about;
-    data['languages'] = this.languages;
-    data['isActive'] = this.isActive;
-    if (this.services != null) {
-      data['services'] = this.services!.map((v) => v.toJson()).toList();
+    data['id'] = id;
+    data['firstname'] = firstname;
+    data['lastname'] = lastname;
+    data['email'] = email;
+    data['phoneNumber'] = phoneNumber;
+    data['username'] = username;
+    data['isEmailVerified'] = isEmailVerified;
+    data['verifiedEmailAt'] = verifiedEmailAt;
+    data['profileImageUrl'] = profileImageUrl;
+    data['role'] = role;
+    data['status'] = status;
+    data['ninImageUrl'] = ninImageUrl;
+    data['isServiceProvider'] = isServiceProvider;
+    data['businessName'] = businessName;
+    data['cacNumber'] = cacNumber;
+    data['address'] = address;
+    data['lga'] = lga;
+    data['cars'] = cars;
+    data['city'] = city;
+    data['state'] = state;
+    data['longitude'] = longitude;
+    data['latitude'] = latitude;
+    data['deviceToken'] = deviceToken;
+    data['mechanicType'] = mechanicType;
+    data['about'] = about;
+    data['languages'] = languages;
+    data['isActive'] = isActive;
+    if (services != null) {
+      data['services'] = services!.map((v) => v.toJson()).toList();
     }
-    if (this.otherServices != null) {
+    if (otherServices != null) {
       data['otherServices'] =
-          this.otherServices!.map((v) => v.toJson()).toList();
+          otherServices!.map((v) => v.toJson()).toList();
     }
-    // data['cars'] = this.cars;
-    if (this.availability != null) {
-      data['availability'] = this.availability!.map((v) => v.toJson()).toList();
+    if (availability != null) {
+      data['availability'] = availability!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -166,8 +160,8 @@ class Services {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
+    data['id'] = id;
+    data['name'] = name;
     return data;
   }
 }
@@ -188,11 +182,11 @@ class Availability {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['day'] = this.day;
-    data['from'] = this.from;
-    data['to'] = this.to;
+    final Map<String, dynamic> data =  Map<String, dynamic>();
+    data['id'] = id;
+    data['day'] = day;
+    data['from'] = from;
+    data['to'] = to;
     return data;
   }
 }

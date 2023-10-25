@@ -80,7 +80,6 @@ class _NewNotificationState extends State<NewNotification> {
                         var dateTime = DateTime.parse(dateString);
                         var formattedDate =
                             DateFormat('dd MMM yyyy').format(dateTime);
-
                         var formattedTime =
                             DateFormat('hh:mm a').format(dateTime);
                         if (e.viewedAt == null) {
@@ -96,27 +95,40 @@ class _NewNotificationState extends State<NewNotification> {
                                             quoteModel =
                                                 notifyModel!.quoteRequest;
                                             isLoading = false;
+                                            if (notifyModel!.booking != null) {
+                                              if (notifyModel!
+                                                      .booking!.status ==
+                                                  "pending") {
+                                                context.push(
+                                                    AppRoutes.inspectionBooking,
+                                                    extra: e.id);
+                                              } else if (notifyModel!
+                                                      .booking!.status ==
+                                                  "accepted") {
+                                                context.push(
+                                                    AppRoutes
+                                                        .viewAcceptedBooking,
+                                                    extra: e.id);
+                                              }
+                                            } else if (quoteModel != null) {
+                                              if (quoteModel!.status ==
+                                                  "pending") {
+                                                context.push(
+                                                    AppRoutes.inspectionBooking,
+                                                    extra: e.id);
+                                              } else if (quoteModel!.status ==
+                                                  "accepted") {
+                                                context.push(
+                                                    AppRoutes
+                                                        .viewAcceptedBooking,
+                                                    extra: e.id);
+                                              }
+                                            }
+                                            // context.push(AppRoutes.viewAcceptedBooking,
+                                            //       extra: e.id);
                                           },
                                         ),
                                       );
-                                  if (bookingModel!.status == "pending") {
-                                    context.push(AppRoutes.inspectionBooking,
-                                        extra: e.id);
-                                  } else if (bookingModel!.status ==
-                                      "accepted") {
-                                    context.push(AppRoutes.viewAcceptedBooking,
-                                        extra: e.id);
-                                  }
-
-                                  if (quoteModel!.status == "pending") {
-                                    context.push(AppRoutes.inspectionBooking,
-                                        extra: e.id);
-                                  } else if (quoteModel!.status == "accepted") {
-                                    context.push(AppRoutes.viewAcceptedBooking,
-                                        extra: e.id);
-                                  }
-                                  // context.push(AppRoutes.viewAcceptedBooking,
-                                  //       extra: e.id);
                                 },
                                 child: Container(
                                   width: double.infinity,
@@ -233,9 +245,8 @@ class _NewNotificationState extends State<NewNotification> {
                               heightSpace(1)
                             ],
                           );
-                        } else {
-                          return const Text('');
                         }
+                        return const SizedBox.shrink();
                       },
                     ),
                 ],
@@ -307,20 +318,18 @@ class _ReadNotificationState extends State<ReadNotification> {
                   else
                     ..._notificationHistory.map(
                       (e) {
-                        // var dateString = e.viewedAt!;
-                        // var dateTime = DateTime.parse(dateString);
-                        // var formattedDate =
-                        //     DateFormat('dd MMM yyyy').format(dateTime);
+                        var dateString = e.createdAt!;
+                        var dateTime = DateTime.parse(dateString);
+                        var formattedDate =
+                            DateFormat('dd MMM yyyy').format(dateTime);
 
-                        // var formattedTime =
-                        //     DateFormat('hh:mm a').format(dateTime);
+                        var formattedTime =
+                            DateFormat('hh:mm a').format(dateTime);
                         if (e.viewedAt != null) {
                           return Column(
                             children: [
                               GestureDetector(
-                                onTap: () {
-                                  
-                                },
+                                onTap: () {},
                                 child: Container(
                                   width: double.infinity,
                                   // height: 120,
@@ -398,7 +407,7 @@ class _ReadNotificationState extends State<ReadNotification> {
                                                       SvgPicture.asset(
                                                           AppImages.time),
                                                       customText(
-                                                          text: '12:20pm',
+                                                          text: formattedTime,
                                                           fontSize:
                                                               calculateTextSize(
                                                                   context,
@@ -413,7 +422,7 @@ class _ReadNotificationState extends State<ReadNotification> {
                                                       SvgPicture.asset(AppImages
                                                           .calendarIcon),
                                                       customText(
-                                                          text: '15 Jun 2023',
+                                                          text: formattedDate,
                                                           fontSize:
                                                               calculateTextSize(
                                                                   context,
@@ -436,9 +445,8 @@ class _ReadNotificationState extends State<ReadNotification> {
                               heightSpace(1)
                             ],
                           );
-                        } else {
-                          return const Text('');
                         }
+                        return const SizedBox.shrink();
                       },
                     ),
                 ],

@@ -36,14 +36,55 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
   List<String> serviceList = [];
   List<String> selectedServiceList = [];
   List<String> serveList = [];
+  List<String> serviceNames = [];
+  List<String> serviceNamed = [];
   List<String> otherList = [];
+  List<String> mainList = [];
   List<Services> otherServiceList = [];
   List<String> selectServiceList = [];
   List<Services> service = [];
   final formKey = GlobalKey<FormState>();
   List<String> trueItemsString = [];
+  Map<String, String> serviceNameToId = {};
+
+  List<String> selectedServices2 = [];
 
   List<String> carsList = [];
+  List<String> selectedCarsList = [];
+
+  getBusinessProfile() {
+    _authRepo.getMechanicProfile().then((value) {
+      // String availabilityString = jsonEncode(value.availability!);
+      service = value.services!;
+      otherServiceList = value.otherServices!;
+      serveList = service.map((service) {
+        return "${service.id}: ${service.name}";
+      }).toList();
+      otherList = otherServiceList.map((service) {
+        return "${service.id}: ${service.name}";
+      }).toList();
+      serveList = serveList + otherList;
+      serviceNames = serveList.map((item) {
+        return item.split(': ')[1];
+      }).toList();
+      for (var serviceString in serveList) {
+        List<String> parts = serviceString.split(': ');
+        if (parts.length == 2) {
+          String serviceId = parts[0];
+          String serviceName = parts[1];
+          serviceNameToId[serviceName] = serviceId;
+        }
+      }
+      businessName.text = value.businessName!;
+      cac.text = value.cacNumber!;
+      address.text = value.address!;
+      cityController.text = value.city!;
+      lgaController.text = value.lga!;
+      stateController.text = value.state!;
+      carsList = value.cars!;
+      // log(serveList.toString());
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +97,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
           if (item["isChecked"]) {
             if (item["isChecked"]) {
               var itemString =
-                  "from: ${item["from"]}, to: ${item["to"]}, Day: ${item["day"]}";
+                  "day: ${item["day"]}, from: ${item["from"]}, to: ${item["to"]}";
               trueItemsString.add(itemString);
             }
           }
@@ -126,6 +167,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                         ),
                         heightSpace(2),
                         ...workingHour.mapIndexed((e, index) {
+                          e["isChecked"] ?? (e["isChecked"] = false);
                           return Row(
                             children: [
                               e["isChecked"]
@@ -612,6 +654,11 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                   AppImages.mechanicIcon,
                                 ),
                               ),
+                              onChanged: (val) {
+                                selectedCarsList = val!;
+                                log(val.toString());
+                                return null;
+                              },
                               selectedItems: const [
                                 'None',
                                 'Toyota',
@@ -624,8 +671,8 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                 'Mercedes-Benz',
                                 'Volkswagen',
                                 'Tesla',
-                                'Chevrolet'
-                                    'Others'
+                                'Chevrolet',
+                                'Others'
                               ],
                               // onChanged: onChanged,
                             ),
@@ -636,7 +683,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                 textColor: AppColors.black),
                             heightSpace(1),
                             AppDropdDownSearch(
-                              listOfSelectedItems: serveList,
+                              listOfSelectedItems: serviceNames,
                               onChanged: (val) {
                                 selectedServiceList = val!;
                                 log(val.toString());
@@ -649,7 +696,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                   AppImages.serviceIcon,
                                 ),
                               ),
-                              selectedItems: serviceList,
+                              selectedItems: serviceNamed,
                               // onChanged: onChanged,
                             ),
                             heightSpace(4),
@@ -696,33 +743,19 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
     );
   }
 
-  getBusinessProfile() {
-    _authRepo.getMechanicProfile().then((value) {
-      // String availabilityString = jsonEncode(value.availability!);
-      service = value.services!;
-      otherServiceList = value.otherServices!;
-      serveList = service.map((service) => service.name!).toList();
-      otherList = otherServiceList.map((service) => service.name!).toList();
-      serveList = serveList + otherList;
-      businessName.text = value.businessName!;
-      cac.text = value.cacNumber!;
-      address.text = value.address!;
-      cityController.text = value.city!;
-      lgaController.text = value.lga!;
-      stateController.text = value.state!;
-      carsList = value.cars!;
-      // selectedServiceList = services.cast<String>();
-    });
-  }
-
   getMechanicServices() {
     mechanicRepo.getMechanicProfile().then((value) {
       ref.read(services.notifier).state = value;
       final servicesState = ref.watch(services);
       log(servicesState!.systemServices!.length.toString());
+      
       for (SystemServices service in servicesState.systemServices ?? []) {
-        serviceList.add(service.name!);
+        mainList.add("${service.id}: ${service.name}");
+        serviceNamed = mainList.map((item) {
+          return item.split(': ')[1];
+        }).toList();
       }
+
       // servicesState.systemServices?.map((e) {
       //   log(e.name.toString());
       //   serviceList.add(e.name!);
@@ -746,15 +779,28 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
     final servicesState = ref.watch(services);
     final workingHour = ref.watch(stateWorkingHours);
 
+    // serviceNames.forEach((serviceName) {
+    //   final serviceId = serviceNameToId[serviceName];
+    //   selectedServiceList.add(
+    //     serviceId!, // Convert the ID to string
+    //   );
+    // });
+
     for (String serviceName in selectedServiceList) {
       for (SystemServices service in servicesState!.systemServices ?? []) {
         if (service.name == serviceName) {
           log(service.name.toString());
           id.add(service.id!);
-          name.add(service.name!);
         }
       }
     }
+
+    serviceNames.forEach((serviceName) {
+        final serviceId = serviceNameToId[serviceName];
+        selectedServices2.add(
+          serviceId!, // Convert the ID to string
+        );
+    });
 
     for (var item in workingHour) {
       if (item["isChecked"] == true) {
@@ -771,19 +817,19 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
       "address": address.text,
       "longitude": "-122.33221",
       "latitude": "789.9987",
-      "services": selectedServiceList,
+      "services": id,
       "otherServices": serviceController.text.split(","),
-      "cars": carsList + carsFamiliar.text.split(","),
+      "cars": selectedCarsList,
       "availability": newItems
     };
 
     bool result = await mechanicRepo.updateBusinessInfo(data);
     if (result) {
-      
       if (context.mounted) {
-
         context.push(AppRoutes.profileSettings);
       }
+    }else{
+      serviceNames.clear();
     }
 
     log(data.toString());
