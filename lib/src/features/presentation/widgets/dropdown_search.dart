@@ -24,6 +24,7 @@ class AppDropdDownSearch extends StatelessWidget {
         dropdownDecoratorProps: DropDownDecoratorProps(
           dropdownSearchDecoration: InputDecoration(
             hintText: hintText,
+            hintStyle: TextStyle(fontSize: 14, color: AppColors.textGrey.withOpacity(0.3)),
             fillColor: AppColors.white,
             filled: true,
             prefixIcon: prefixIcon,

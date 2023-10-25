@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,42 +10,28 @@ import 'package:ngbuka/src/features/presentation/widgets/app_dropdown.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_textformfield.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
+import 'package:ngbuka/src/features/presentation/widgets/dropdown_search.dart';
 import 'package:ngbuka/src/utils/helpers/validators.dart';
 
 class LocalAccountSetup extends HookWidget {
   LocalAccountSetup({super.key});
   static final accountNumber = TextEditingController();
   static final password = TextEditingController();
-  static final bankController= TextEditingController();
-  final List<String> bankNames = [
-    'Access Bank',
-    'Zenith Bank',
-    'First Bank of Nigeria',
-    'Guaranty Trust Bank (GTBank)',
-    'United Bank for Africa (UBA)',
-    'Fidelity Bank',
-    'Ecobank Nigeria',
-    'Union Bank of Nigeria',
-    'Sterling Bank',
-    'Stanbic IBTC Bank',
-    'Wema Bank',
-    'Heritage Bank',
-    'First City Monument Bank (FCMB)',
-    'Keystone Bank',
-    'Polaris Bank',
-    'Unity Bank',
-    'Jaiz Bank',
-    'SunTrust Bank',
-    'Titan Trust Bank',
-  ];
+  static final bankController = TextEditingController();
+  static List<String> banks = [];
 
   @override
   Widget build(BuildContext context) {
+    onChanged(List<String>? list) {
+      banks = list!;
+      log(banks.toString());
+    }
+
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
       appBar: AppBar(
         toolbarHeight: 120,
-        backgroundColor: AppColors.backgroundGrey,
+        backgroundColor: AppColors.containerGrey,
         elevation: 0,
         automaticallyImplyLeading: false,
         title: Column(
@@ -69,29 +57,47 @@ class LocalAccountSetup extends HookWidget {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AppDropdown(
-                prefixIcon: SizedBox(
-                  width: 2,
-                  child: SvgPicture.asset(
-                    AppImages.accountDet,
-                    width: 1,
-                  ),
+            customText(
+                text: 'Bank',
+                fontSize: 14,
+                textColor: AppColors.primary),
+            heightSpace(1),
+            AppDropdDownSearch(
+              listOfSelectedItems: banks,
+              hintText: "Bank you want your funds withdrawn to",
+              prefixIcon: Padding(
+                padding: const EdgeInsets.all(13.0),
+                child: SvgPicture.asset(
+                  AppImages.accountDet,
                 ),
-                // isValue: false,
-                value: bankController.text,
-                validator: (val) {
-                  if (val == "select") {
-                    return "Select a bank";
-                  }
-                  return null;
-                },
-                dropdownList: bankNames,
-                label: "Bank",
-                onChange: (val) => bankController.text = val.toString()),
+              ),
+              selectedItems: const [
+                'Access Bank',
+                'Zenith Bank',
+                'First Bank of Nigeria',
+                'Guaranty Trust Bank (GTBank)',
+                'United Bank for Africa (UBA)',
+                'Fidelity Bank',
+                'Ecobank Nigeria',
+                'Union Bank of Nigeria',
+                'Sterling Bank',
+                'Stanbic IBTC Bank',
+                'Wema Bank',
+                'Heritage Bank',
+                'First City Monument Bank (FCMB)',
+                'Keystone Bank',
+                'Polaris Bank',
+                'Unity Bank',
+                'Jaiz Bank',
+                'SunTrust Bank',
+                'Titan Trust Bank',
+              ],
+              onChanged: onChanged,
+            ),
             heightSpace(1),
             CustomTextFormField(
               validator: stringValidation,
@@ -103,7 +109,7 @@ class LocalAccountSetup extends HookWidget {
                 ),
               ),
               label: "Account Number",
-              // hintText: "Doe",
+              hintText: "Type in business registration number",
             ),
             heightSpace(3),
             CustomTextFormField(

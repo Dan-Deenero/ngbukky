@@ -70,7 +70,7 @@ class Boarding1 extends StatelessWidget {
                       heightSpace(1),
                       AppButton(
                         buttonText: 'Spare part dealer',
-                        onTap: () => context.push(AppRoutes.spareLogin),
+                        onTap: () => context.push(AppRoutes.personalInfo),
                       ),
                       heightSpace(4),
                       Row(

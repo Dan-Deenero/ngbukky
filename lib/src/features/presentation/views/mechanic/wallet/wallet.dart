@@ -124,7 +124,7 @@ class Wallet extends HookWidget {
                         ),
                         widthSpace(3),
                         TextButton(
-                            onPressed: () {},
+                            onPressed: () => context.push(AppRoutes.localAccountSetup),
                             child: customText(
                                 text: 'Continue',
                                 fontSize: 16,
