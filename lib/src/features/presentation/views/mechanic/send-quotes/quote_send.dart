@@ -718,15 +718,16 @@ class _QuoteSendState extends State<QuoteSend> {
 
   showSuccesModal() async {
     await showDialog(
-        context: context,
-        builder: (context) => SuccessDialogue(
-              title: 'Quote sent',
-              subtitle:
-                  'Your quote has been sent successfully to ${bookingModel!.user!.username!}',
-              action: () {
-                context.go(AppRoutes.pendingQuoteApproval);
-              },
-            ));
+      context: context,
+      builder: (context) => SuccessDialogue(
+        title: 'Quote sent',
+        subtitle:
+            'Your quote has been sent successfully to ${bookingModel!.user!.username!}',
+        action: () {
+          context.go(AppRoutes.pendingQuoteApproval);
+        },
+      ),
+    );
   }
 
   void submit() {

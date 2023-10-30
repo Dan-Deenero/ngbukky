@@ -61,23 +61,23 @@ class _InspectionBookingState extends State<InspectionBooking> {
             },
           ),
         );
-    _mechanicRepo.getOneNotification(widget.id).then(
-          (value) => setState(
-            () {
-              notifyModel = value;
-              isLoading = false;
-              bookingModel = notifyModel!.booking;
-              dateString = notifyModel!.booking!.date!;
-              viewedString = notifyModel!.viewedAt;
-              dateTime = DateTime.parse(dateString!);
-              viewed = DateTime.parse(viewedString!);
-              formattedDate = DateFormat('E, d MMM y').format(dateTime);
-              formattedTime = DateFormat('hh:mm a').format(dateTime);
-              viewedDate = DateFormat('E, d MMM y').format(viewed);
-              viewedTime = DateFormat('hh:mm a').format(viewed);
-            },
-          ),
-        );
+    // _mechanicRepo.getOneNotification(widget.id).then(
+    //       (value) => setState(
+    //         () {
+    //           notifyModel = value;
+    //           isLoading = false;
+    //           bookingModel = notifyModel!.booking;
+    //           dateString = notifyModel!.booking!.date!;
+    //           viewedString = notifyModel!.viewedAt;
+    //           dateTime = DateTime.parse(dateString!);
+    //           viewed = DateTime.parse(viewedString!);
+    //           formattedDate = DateFormat('E, d MMM y').format(dateTime);
+    //           formattedTime = DateFormat('hh:mm a').format(dateTime);
+    //           viewedDate = DateFormat('E, d MMM y').format(viewed);
+    //           viewedTime = DateFormat('hh:mm a').format(viewed);
+    //         },
+    //       ),
+    //     );
   }
 
   // void resendOTP() async {

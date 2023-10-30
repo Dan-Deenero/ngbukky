@@ -1,4 +1,4 @@
-package com.example.ngbuka
+package com.mechanic_spareparts.ngbuka
 
 import io.flutter.embedding.android.FlutterActivity
 

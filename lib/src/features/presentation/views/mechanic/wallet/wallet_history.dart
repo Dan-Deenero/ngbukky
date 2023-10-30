@@ -16,7 +16,7 @@ class Payments extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           children: [
             GestureDetector(
@@ -109,7 +109,7 @@ class Withdrawal extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           children: [
             GestureDetector(
@@ -205,83 +205,98 @@ class WalletHistory extends HookWidget {
       length: 2,
       child: Scaffold(
         backgroundColor: AppColors.backgroundGrey,
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(20.h),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 40, left: 20, right: 20),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        appBar: AppBar(
+          toolbarHeight: 80,
+          backgroundColor: AppColors.white,
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              customText(
+                  text: "History",
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  textColor: AppColors.black),
+              // heightSpace(1),
+              bodyText("Review your financial analytics")
+            ],
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: GestureDetector(
+                onTap: () => context.pop(),
+                child: SvgPicture.asset(AppImages.cancelModal),
+              ),
+            )
+          ],
+        ),
+        body: Column(
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                color: AppColors.white,
+              ),
+              child: Column(
                 children: [
-                  customText(
-                      text: "History",
-                      fontSize: 25,
-                      textColor: AppColors.black,
-                      fontWeight: FontWeight.bold),
-                  GestureDetector(
-                    onTap: () => context.pop(),
+                  const Divider(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Container(
-                      width: 45,
-                      height: 45,
+                      height: 40,
+                      width: double.infinity,
                       decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: AppColors.borderGrey)),
-                      child: Center(child: SvgPicture.asset(AppImages.badIcon)),
+                        color: AppColors.borderGrey,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: TabBar(
+                        labelPadding: EdgeInsets.zero,
+                        unselectedLabelColor: AppColors.primary,
+                        labelColor: AppColors.primary,
+                        indicator: const BoxDecoration(),
+                        onTap: (value) {
+                          tabIndex.value = value;
+                        },
+                        tabs: [
+                          Container(
+                            margin: const EdgeInsets.all(1),
+                            width: 400,
+                            height: 40,
+                            decoration: BoxDecoration(
+                                color: tabIndex.value == 0
+                                    ? AppColors.white.withOpacity(0.7)
+                                    : AppColors.borderGrey,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: const Tab(
+                              text: "Payments",
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.all(1),
+                            width: 400,
+                            height: 40,
+                            decoration: BoxDecoration(
+                                color: tabIndex.value == 1
+                                    ? AppColors.white.withOpacity(0.7)
+                                    : AppColors.borderGrey,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: const Tab(
+                              text: "Withdrawal",
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  )
+                  ),
+                  heightSpace(1)
                 ],
               ),
-              heightSpace(1),
-              customText(
-                  text: "Review your financial analytics",
-                  fontSize: 12,
-                  textColor: AppColors.textGrey),
-              heightSpace(1),
-              Container(
-                height: 40,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    color: AppColors.borderGrey,
-                    borderRadius: BorderRadius.circular(5)),
-                child: TabBar(
-                  labelPadding: EdgeInsets.zero,
-                  unselectedLabelColor: AppColors.primary,
-                  labelColor: AppColors.primary,
-                  indicator: const BoxDecoration(),
-                  onTap: (value) {
-                    tabIndex.value = value;
-                  },
-                  tabs: [
-                    Container(
-                      width: 400,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          color: tabIndex.value == 0
-                              ? AppColors.white
-                              : AppColors.borderGrey,
-                          borderRadius: BorderRadius.circular(5)),
-                      child: const Tab(
-                        text: "Payments",
-                      ),
-                    ),
-                    Container(
-                      width: 400,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          color: tabIndex.value == 1
-                              ? AppColors.white
-                              : AppColors.borderGrey,
-                          borderRadius: BorderRadius.circular(5)),
-                      child: const Tab(
-                        text: "Withdrawal",
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              heightSpace(2),
-              Row(
+            ),
+            heightSpace(3),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
@@ -322,12 +337,15 @@ class WalletHistory extends HookWidget {
                   )
                 ],
               ),
-            ]),
-          ),
+            ),
+            heightSpace(2),
+            const Expanded(
+              child: TabBarView(
+                children: [Payments(), Withdrawal()],
+              ),
+            ),
+          ],
         ),
-        body: const Column(children: [
-          Expanded(child: TabBarView(children: [Payments(), Withdrawal()]))
-        ]),
       ),
     );
   }

@@ -441,11 +441,12 @@ class InspectionBookings extends StatelessWidget {
               onTap: () => context.push(AppRoutes.rejectedBooking),
               child: card(
                 "Rejected",
-                "You rejected these booking quote",
+                "You rejected these bookings",
                 "$rejected",
                 "red",
               ),
             ),
+            heightSpace(2),
           ],
         ),
       ),
@@ -566,7 +567,7 @@ class Quotes extends StatelessWidget {
               onTap: () => context.push(AppRoutes.acceptedQuotes),
               child: card(
                 "Accepted quotes",
-                "All you accepted bookings are here",
+                "All your accepted bookings are here",
                 "$accepted",
                 "orange",
               ),
@@ -576,7 +577,7 @@ class Quotes extends StatelessWidget {
               onTap: () => context.push(AppRoutes.pendingClientApproval),
               child: card(
                   "Pending Client Approval",
-                  "YYou sent yoru quote to a client for some services",
+                  "You are awaiting clients approval of quote you sent",
                   "$bargaining",
                   "grey"),
             ),
@@ -605,7 +606,7 @@ class Quotes extends StatelessWidget {
               onTap: () => context.push(AppRoutes.quoteRejected),
               child: card(
                 "Quote Rejected",
-                "You rejected these offers",
+                "The client rejected your sent quote",
                 "$disapproved",
                 "red",
               ),
@@ -615,7 +616,7 @@ class Quotes extends StatelessWidget {
               onTap: () => context.push(AppRoutes.rejectedQuote),
               child: card(
                 "Rejected Quotes",
-                "You rejected these offers",
+                "You rejected these quote requests",
                 "$rejected",
                 "red",
               ),
@@ -625,7 +626,7 @@ class Quotes extends StatelessWidget {
               onTap: () => context.push(AppRoutes.sendQuotes),
               child: card(
                 "Declined Payment",
-                "Quotation is declined by the client",
+                "Payment was declined by the client",
                 "$declined",
                 "red",
               ),

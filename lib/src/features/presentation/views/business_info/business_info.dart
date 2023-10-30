@@ -225,8 +225,7 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                                             context: context,
                                             initialTime: TimeOfDay.now(),
                                             initialEntryMode:
-                                                TimePickerEntryMode.input
-                                            );
+                                                TimePickerEntryMode.input);
 
                                     if (result != null) {
                                       if (context.mounted) {
@@ -268,16 +267,16 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                                             context: context,
                                             initialTime: TimeOfDay.now(),
                                             initialEntryMode:
-                                                TimePickerEntryMode.input
-                                            );
+                                                TimePickerEntryMode.input);
 
                                     if (result != null) {
                                       if (context.mounted) {
                                         setState(() {
                                           String ses;
-                                          if(result.minute < 10){
-                                            ses = '0${result.minute.toString()}';
-                                          }else{
+                                          if (result.minute < 10) {
+                                            ses =
+                                                '0${result.minute.toString()}';
+                                          } else {
                                             ses = result.minute.toString();
                                           }
                                           workingHour[index]["to"] =
@@ -327,6 +326,7 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
       }
 
       showModalBottomSheet<void>(
+        isScrollControlled: true,
         context: context,
         builder: (BuildContext context) {
           return StatefulBuilder(builder: (context, StateSetter setState) {
@@ -337,95 +337,124 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
               return Form(
                 key: formKey,
                 child: Container(
-                    padding: const EdgeInsets.all(20),
-                    height: 500,
-                    child: SingleChildScrollView(
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  padding: const EdgeInsets.all(20),
+                  height: 600,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        customText(
+                            text: "Select your location",
+                            fontSize: 18,
+                            textColor: AppColors.black,
+                            fontWeight: FontWeight.bold),
+                        heightSpace(1),
+                        customText(
+                            text:
+                                "Let your clients know your where your business is",
+                            fontSize: 14,
+                            textColor: AppColors.textColor),
+                        heightSpace(1),
+                        AppDropdown(
+                          isValue: false,
+                          value: stateController.text,
+                          validator: (val) {
+                            if (val == "select") {
+                              return "Select a state";
+                            }
+                            return null;
+                          },
+                          dropdownList: state,
+                          label: "State",
+                          onChange: (val) async {
+                            stateController.text = val.toString();
+                            CityLGA result = await mechanicRepo
+                                .getState(val.toString().toLowerCase().trim());
+                            ref.read(city.notifier).state =
+                                ["Select"] + result.data!.cities!;
+                            ref.read(lga.notifier).state =
+                                ["Select"] + result.data!.lgas!;
+                            setState(() {});
+                          },
+                        ),
+                        heightSpace(1),
+                        Column(
                           children: [
-                            customText(
-                                text: "Select your location",
-                                fontSize: 18,
-                                textColor: AppColors.black,
-                                fontWeight: FontWeight.bold),
-                            heightSpace(1),
-                            customText(
-                                text:
-                                    "Let your clients know your where your business is",
-                                fontSize: 14,
-                                textColor: AppColors.textColor),
+                            AppDropdown(
+                                isValue: false,
+                                value: cityController.text,
+                                dropdownList: cityState,
+                                label: "City",
+                                onChange: (val) =>
+                                    cityController.text = val.toString()),
                             heightSpace(1),
                             AppDropdown(
-                              // isValue: false,
-                                value: stateController.text,
-                              validator: (val) {
-                                if (val == "select") {
-                                  return "Select a state";
-                                }
-                                return null;
-                              },
-                              dropdownList: state,
-                              label: "State",
-                              onChange: (val) async {
-                                stateController.text = val.toString();
-                                CityLGA result = await mechanicRepo.getState(
-                                    val.toString().toLowerCase().trim());
-                                ref.read(city.notifier).state =
-                                    ["Select"] + result.data!.cities!;
-                                ref.read(lga.notifier).state =
-                                    ["Select"] + result.data!.lgas!;
-                                setState(() {});
-                              },
-                            ),
+                                isValue: false,
+                                value: lgaController.text,
+                                dropdownList: lgaState,
+                                label: "LGA",
+                                onChange: (val) =>
+                                    lgaController.text = val.toString()),
                             heightSpace(1),
-                            Column(
-                              children: [
-                                AppDropdown(
-                                  // isValue: false,
-                                    value: cityController.text,
-                                    dropdownList: cityState,
-                                    label: "City",
-                                    onChange: (val) =>
-                                        cityController.text = val.toString()),
-                                heightSpace(1),
-                                AppDropdown(
-                                  // isValue: false,
-                                  value: lgaController.text,
-                                    dropdownList: lgaState,
-                                    label: "LGA",
-                                    onChange: (val) =>
-                                        lgaController.text = val.toString()),
-                                heightSpace(1),
-                                CustomTextFormField(
-                                  validator: stringValidation,
-                                  textEditingController: address,
-                                  label: "Street",
-                                  prefixIcon: Padding(
-                                    padding: const EdgeInsets.all(13.0),
-                                    child: SvgPicture.asset(
-                                      AppImages.locationIcon,
+                            SizedBox(
+                              height: 400,
+                              child: ListView(
+                                keyboardDismissBehavior:
+                                    ScrollViewKeyboardDismissBehavior.onDrag,
+                                children: [
+                                  CustomTextFormField(
+                                    validator: stringValidation,
+                                    textEditingController: address,
+                                    label: "Street",
+                                    prefixIcon: Padding(
+                                      padding: const EdgeInsets.all(13.0),
+                                      child: SvgPicture.asset(
+                                        AppImages.locationIcon,
+                                      ),
                                     ),
+                                    hintText:
+                                        "Type in your business street address",
                                   ),
-                                  hintText:
-                                      "Type in your business street address",
-                                ),
-                              ],
+                                  heightSpace(2),
+                                  AppButton(
+                                      // isActive: isActive.value,
+                                      buttonText: "Save",
+                                      isOrange: true,
+                                      onTap: saveData),
+                                  heightSpace(2),
+                                ],
+                              ),
                             ),
-                            heightSpace(2),
-                            AppButton(
-                                // isActive: isActive.value,
-                                buttonText: "Save",
-                                isOrange: true,
-                                onTap: saveData),
-                            heightSpace(2),
-                          ]),
-                    )),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               );
             });
           });
         },
       );
     }
+
+    onChanged(list) {
+      if (list!.contains('None')) {
+        list.clear();
+      }
+
+      setState(() {      
+        carsList = list;
+      });
+
+      if (list.isEmpty) {
+        setState(() {
+          carsList.clear();
+          
+        });
+      }
+    }
+
 
     return Scaffold(
       backgroundColor: AppColors.scaffoldColor,
@@ -544,39 +573,25 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                           hintText: "Type in business registration number",
                         ),
                         heightSpace(2),
-                        CustomTextFormField(
-                          textEditingController: address,
+                        GestureDetector(
                           onTap: showLocation,
-                          prefixIcon: Padding(
-                            padding: const EdgeInsets.all(13.0),
-                            child: SvgPicture.asset(
-                              AppImages.locationIcon,
+                          child: CustomTextFormField(
+                            isEnabled: false,
+                            textEditingController: address,
+                            prefixIcon: Padding(
+                              padding: const EdgeInsets.all(13.0),
+                              child: SvgPicture.asset(
+                                AppImages.locationIcon,
+                              ),
                             ),
+                            label: "Location of your business",
+                            hintText: "Enter location",
                           ),
-                          label: "Location of your business",
-                          hintText: "Enter location",
                         ),
-                        // heightSpace(2),
-                        // CustomTextFormField(
-                        //     label: "Business email (optional)",
-                        //     hintText: "johndoe@gmail.com",
-                        //     prefixIcon: Padding(
-                        //       padding: const EdgeInsets.all(13.0),
-                        //       child: SvgPicture.asset(
-                        //         AppImages.emailIcon,
-                        //       ),
-                        //     )),
                         heightSpace(2),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // customText(
-                            //     text: "Business phone no (optional)",
-                            //     fontSize: 14,
-                            //     textColor: AppColors.primary),
-                            // heightSpace(2),
-                            // const CustomPhoneField(),
-                            // heightSpace(2),
                             customText(
                                 text: "What cars are you familiar with?",
                                 fontSize: 14,
@@ -603,9 +618,9 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                                 'Volkswagen',
                                 'Tesla',
                                 'Chevrolet'
-                                'Others'
+                                    'Others'
                               ],
-                              // onChanged: onChanged,
+                              onChanged: onChanged,
                             ),
                             heightSpace(2),
                             CustomTextFormField(
@@ -642,32 +657,36 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                             ),
                             heightSpace(2),
                             CustomTextFormField(
-                                textEditingController: serviceController,
-                                label: "Other Services",
-                                hintText: "separate with a comma",
-                                prefixIcon: Padding(
-                                  padding: const EdgeInsets.all(13.0),
-                                  child: SvgPicture.asset(
-                                    AppImages.serviceIcon,
-                                  ),
-                                )),
+                              textEditingController: serviceController,
+                              label: "Other Services",
+                              hintText: "separate with a comma",
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.all(13.0),
+                                child: SvgPicture.asset(
+                                  AppImages.serviceIcon,
+                                ),
+                              ),
+                            ),
                             heightSpace(4),
                             customText(
                                 text: "Availabiity",
                                 fontSize: 14,
                                 textColor: AppColors.black),
                             heightSpace(2),
-                            CustomTextFormField(
-                              textEditingController: workingHourController,
-                              onTap: () => workingHours(),
-                              prefixIcon: Padding(
-                                padding: const EdgeInsets.all(13.0),
-                                child: SvgPicture.asset(
-                                  AppImages.calendarIcon,
+                            GestureDetector(
+                              onTap: workingHours,
+                              child: CustomTextFormField(
+                                isEnabled: false,
+                                textEditingController: workingHourController,
+                                prefixIcon: Padding(
+                                  padding: const EdgeInsets.all(13.0),
+                                  child: SvgPicture.asset(
+                                    AppImages.calendarIcon,
+                                  ),
                                 ),
+                                label: "Working hours",
+                                hintText: "Set working hours",
                               ),
-                              label: "Working hours",
-                              hintText: "Set working hours",
                             ),
                             heightSpace(3),
                             Row(
@@ -703,8 +722,6 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                                 Expanded(
                                   child: AppButton(
                                     onTap: updateBusinessProfile,
-                                    // updateInfo();
-
                                     buttonText: "Save",
                                     isOrange: true,
                                     isSmall: true,
@@ -747,18 +764,6 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
     getMechanicServices();
   }
 
-  updateInfo() async {
-    var body = {
-      "cars": carsList + carsFamiliar.text.split(","),
-    };
-    bool result = await _authRepo.updateInfo(body);
-    if (result) {
-      if (context.mounted) {
-        context.push(AppRoutes.businessInfo);
-      }
-    }
-  }
-
   updateBusinessProfile() async {
     List<String> id = [];
     List<Map<String, dynamic>> newItems = [];
@@ -772,6 +777,14 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
           id.add(service.id!);
         }
       }
+    }
+
+    List<String> otservces;
+
+    if (serviceController.text.isEmpty) {
+      otservces = [];
+    } else {
+      otservces = serviceController.text.split(",");
     }
 
     for (var item in workingHour) {
@@ -790,7 +803,7 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
       "longitude": "-122.33221",
       "latitude": "789.9987",
       "services": id,
-      "otherServices": serviceController.text.split(","),
+      "otherServices": otservces,
       "cars": carsList + carsFamiliar.text.split(","),
       "availability": newItems
     };
@@ -799,6 +812,8 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
     if (result) {
       if (context.mounted) {
         context.push(AppRoutes.bottomNav);
+      } else {
+        workingHourController.clear();
       }
     }
 

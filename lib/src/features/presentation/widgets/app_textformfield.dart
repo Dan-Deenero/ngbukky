@@ -13,6 +13,7 @@ class CustomTextFormField extends StatefulWidget {
   final Widget? prefixIcon;
   final bool isPassword;
   final bool hasMaxline;
+  final bool? isEnabled;
   final String? Function(String?)? validator;
   final List<TextInputFormatter>? inputFormatters;
   final VoidCallback? onTap;
@@ -33,7 +34,8 @@ class CustomTextFormField extends StatefulWidget {
       this.keyboardType = TextInputType.text,
       this.textEditingController,
       this.isPassword = false,
-      this.validator});
+      this.validator,
+      this.isEnabled});
 
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
@@ -53,10 +55,11 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             textColor: AppColors.primary),
         heightSpace(1),
         TextFormField(
+          enabled: widget.isEnabled,
           onTap: widget.onTap,
           maxLines: widget.hasMaxline ? 8 : 1,
           cursorColor: AppColors.primary,
-          cursorWidth: 0.2,
+          cursorWidth: 1,
           onChanged: widget.onChanged,
           keyboardType: widget.keyboardType,
           controller: widget.textEditingController,
@@ -64,45 +67,47 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           validator: widget.validator,
           style: const TextStyle(fontSize: 14),
           decoration: InputDecoration(
-              disabledBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.textformGrey),
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
-              errorText: widget.error,
-              border: const OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.textformGrey),
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
-              contentPadding: const EdgeInsets.only(left: 10, top: 10),
-              errorStyle: const TextStyle(fontSize: 14),
-              // suffixIcon:  showPasswordIcon(widget.isPassword),
+            disabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: AppColors.textformGrey),
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            errorText: widget.error,
+            border: const OutlineInputBorder(
+                borderSide: BorderSide(color: AppColors.textformGrey),
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            contentPadding: const EdgeInsets.only(left: 10, top: 10),
+            errorStyle: const TextStyle(fontSize: 14),
+            // suffixIcon:  showPasswordIcon(widget.isPassword),
 
-              suffixIcon: (() {
-                if (widget.isPassword) {
-                  return showPasswordIcon(widget.isPassword);
-                }
-                if (widget.isAddress) {
-                  return GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      margin: const EdgeInsets.all(10),
-                      width: 30,
-                      height: 30,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.textformGrey),
-                          shape: BoxShape.circle),
-                      child: const Icon(Icons.location_on_outlined),
-                    ),
-                  );
-                }
-              }()),
-              hintText: widget.hintText,
-              hintStyle: TextStyle(fontSize: 14, color: AppColors.textGrey.withOpacity(0.3)),
-              prefixIcon: widget.prefixIcon,
-              fillColor: AppColors.white,
-              filled: true,
-              enabledBorder: AppColors.normalBorder,
-              errorBorder: AppColors.errorBorder,
-              focusedBorder: AppColors.normalBorder,
-              focusedErrorBorder: AppColors.normalBorder),
+            suffixIcon: (() {
+              if (widget.isPassword) {
+                return showPasswordIcon(widget.isPassword);
+              }
+              if (widget.isAddress) {
+                return GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.textformGrey),
+                        shape: BoxShape.circle),
+                    child: const Icon(Icons.location_on_outlined),
+                  ),
+                );
+              }
+            }()),
+            hintText: widget.hintText,
+            hintStyle: TextStyle(
+                fontSize: 14, color: AppColors.textGrey.withOpacity(0.3)),
+            prefixIcon: widget.prefixIcon,
+            fillColor: AppColors.white,
+            filled: true,
+            enabledBorder: AppColors.emptyBorder,
+            errorBorder: AppColors.errorBorder,
+            focusedBorder: AppColors.normalBorder,
+            focusedErrorBorder: AppColors.normalBorder,
+          ),
         ),
       ],
     );

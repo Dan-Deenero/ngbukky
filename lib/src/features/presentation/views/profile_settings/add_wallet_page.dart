@@ -104,6 +104,7 @@ class AddWalletPage extends HookWidget {
                   child: Column(children: [
                     heightSpace(3),
                     AppDropdown(
+                      isValue: false,
                       prefixIcon: SizedBox(
                         width: 2,
                         child: SvgPicture.asset(

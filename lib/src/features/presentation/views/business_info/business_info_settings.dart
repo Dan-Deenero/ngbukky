@@ -33,6 +33,7 @@ class BusinessInfoSettings extends ConsumerStatefulWidget {
 
 class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
   static final AuthRepo _authRepo = AuthRepo();
+
   List<String> serviceList = [];
   List<String> selectedServiceList = [];
   List<String> serveList = [];
@@ -82,6 +83,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
       lgaController.text = value.lga!;
       stateController.text = value.state!;
       carsList = value.cars!;
+      log(carsList.toString());
       // log(serveList.toString());
     });
   }
@@ -90,20 +92,21 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
   Widget build(BuildContext context) {
     final loading = ref.watch(isLoading);
     final workingHour = ref.watch(stateWorkingHours);
+    double size = MediaQuery.of(context).size.width;
 
     workingHours() {
       saveData() {
+        workingHourController.clear();
+        trueItemsString.clear();
+        log(workingHourController.text);
         for (var item in workingHour) {
           if (item["isChecked"]) {
-            if (item["isChecked"]) {
-              var itemString =
-                  "day: ${item["day"]}, from: ${item["from"]}, to: ${item["to"]}";
-              trueItemsString.add(itemString);
-            }
+            var itemString =
+                "day: ${item["day"]}, from: ${item["from"]}, to: ${item["to"]}";
+            trueItemsString.add(itemString);
           }
         }
         workingHourController.text = trueItemsString.join(', ');
-        log(workingHourController.text);
         context.pop();
       }
 
@@ -119,270 +122,308 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                 height: 500,
                 child: SingleChildScrollView(
                   child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        customText(
-                            text: "Working Hours",
-                            fontSize: 18,
-                            textColor: AppColors.black,
-                            fontWeight: FontWeight.bold),
-                        heightSpace(1),
-                        customText(
-                          text: "Let your clients know your working hours",
-                          fontSize: 12,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      customText(
+                          text: "Working Hours",
+                          fontSize: 18,
                           textColor: AppColors.black,
-                        ),
-                        heightSpace(2),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: customText(
-                                text: "Days",
-                                fontSize: 15,
-                                textColor: AppColors.black,
-                              ),
+                          fontWeight: FontWeight.bold),
+                      heightSpace(1),
+                      customText(
+                        text: "Let your clients know your working hours",
+                        fontSize: 12,
+                        textColor: AppColors.black,
+                      ),
+                      heightSpace(2),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: customText(
+                              text: "Days",
+                              fontSize: 15,
+                              textColor: AppColors.black,
                             ),
-                            Row(
-                              children: [
-                                customText(
-                                  text: "From",
-                                  fontSize: 12,
-                                  textColor: AppColors.textGrey,
-                                ),
-                                widthSpace(2),
-                                customText(
-                                  text: "AM",
-                                  fontSize: 12,
-                                  textColor: AppColors.black,
-                                ),
-                                widthSpace(2),
-                                customText(
-                                  text: "PM",
-                                  fontSize: 12,
-                                  textColor: AppColors.black,
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                        heightSpace(2),
-                        ...workingHour.mapIndexed((e, index) {
-                          e["isChecked"] ?? (e["isChecked"] = false);
-                          return Row(
-                            children: [
-                              e["isChecked"]
-                                  ? GestureDetector(
-                                      onTap: () {
-                                        final stateNotifier = ref
-                                            .read(stateWorkingHours.notifier);
-                                        final currentState =
-                                            stateNotifier.state;
-                                        List<Map<String, dynamic>>
-                                            updatedState =
-                                            List.from(currentState);
+                          ),
+                        ],
+                      ),
+                      heightSpace(2),
+                      Column(
+                        children: [
+                          ...workingHour.mapIndexed(
+                            (e, index) {
+                              e["isChecked"] ?? (e["isChecked"] = false);
+                              return SizedBox(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    e["isChecked"]
+                                        ? GestureDetector(
+                                            onTap: () {
+                                              final stateNotifier = ref.read(
+                                                  stateWorkingHours.notifier);
+                                              final currentState =
+                                                  stateNotifier.state;
+                                              List<Map<String, dynamic>>
+                                                  updatedState =
+                                                  List.from(currentState);
 
-                                        updatedState[index]["isChecked"] =
-                                            !updatedState[index]["isChecked"];
+                                              updatedState[index]["isChecked"] =
+                                                  !updatedState[index]
+                                                      ["isChecked"];
 
-                                        stateNotifier.state = updatedState;
+                                              stateNotifier.state =
+                                                  updatedState;
 
-                                        log(ref
-                                            .read(stateWorkingHours.notifier)
-                                            .state[index]["isChecked"]
-                                            .toString());
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 18, vertical: 10),
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            color: AppColors.white),
-                                        child: Row(children: [
-                                          Container(
-                                              width: 20,
-                                              height: 20,
+                                              log(ref
+                                                  .read(stateWorkingHours
+                                                      .notifier)
+                                                  .state[index]["isChecked"]
+                                                  .toString());
+                                            },
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 8,
+                                                vertical: 8,
+                                              ),
+                                              width: size * 0.32,
+                                              height: 45,
                                               decoration: BoxDecoration(
-                                                  color: AppColors.darkOrange,
                                                   borderRadius:
-                                                      BorderRadius.circular(5)),
-                                              child: const Padding(
-                                                padding: EdgeInsets.all(1.0),
-                                                child: Icon(Icons.check,
-                                                    color: AppColors.white,
-                                                    size: 15),
-                                              )),
-                                          widthSpace(2),
-                                          customText(
-                                              text: e["day"],
-                                              fontSize: 12,
-                                              textColor: AppColors.black)
-                                        ]),
-                                      ),
-                                    )
-                                  : GestureDetector(
-                                      onTap: () {
-                                        final stateNotifier = ref
-                                            .read(stateWorkingHours.notifier);
-                                        final currentState = stateNotifier
-                                            .state; // Get the current state
-                                        List<
-                                            Map<String,
-                                                dynamic>> updatedState = List.from(
-                                            currentState); // Create a copy of the state
+                                                      BorderRadius.circular(5),
+                                                  color: AppColors.white),
+                                              child: Row(
+                                                children: [
+                                                  Container(
+                                                    width: 20,
+                                                    height: 20,
+                                                    decoration: BoxDecoration(
+                                                        color: AppColors
+                                                            .darkOrange,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5)),
+                                                    child: const Padding(
+                                                      padding:
+                                                          EdgeInsets.all(1.0),
+                                                      child: Icon(Icons.check,
+                                                          color:
+                                                              AppColors.white,
+                                                          size: 15),
+                                                    ),
+                                                  ),
+                                                  widthSpace(2),
+                                                  customText(
+                                                      text: e["day"],
+                                                      fontSize: size * 0.0334,
+                                                      textColor:
+                                                          AppColors.black)
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                        : GestureDetector(
+                                            onTap: () {
+                                              final stateNotifier = ref.read(
+                                                  stateWorkingHours.notifier);
+                                              final currentState = stateNotifier
+                                                  .state; // Get the current state
+                                              List<Map<String, dynamic>>
+                                                  updatedState = List.from(
+                                                      currentState); // Create a copy of the state
 
-                                        updatedState[index]
-                                            ["isChecked"] = !updatedState[
-                                                index][
-                                            "isChecked"]; // Toggle the property
+                                              updatedState[index]
+                                                  ["isChecked"] = !updatedState[
+                                                      index][
+                                                  "isChecked"]; // Toggle the property
 
-                                        stateNotifier.state = updatedState;
-                                        log(ref
-                                            .read(stateWorkingHours.notifier)
-                                            .state[index]["isChecked"]
-                                            .toString());
-                                        setState(() {});
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 18, vertical: 10),
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            color: AppColors.white),
-                                        child: Row(children: [
-                                          Container(
-                                            width: 20,
-                                            height: 20,
-                                            decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color: AppColors
-                                                        .containerGrey),
-                                                borderRadius:
-                                                    BorderRadius.circular(5)),
+                                              stateNotifier.state =
+                                                  updatedState;
+                                              log(ref
+                                                  .read(stateWorkingHours
+                                                      .notifier)
+                                                  .state[index]["isChecked"]
+                                                  .toString());
+                                              setState(() {});
+                                            },
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8,
+                                                      vertical: 8),
+                                              width: size * 0.32,
+                                              height: 40,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  color: AppColors.white),
+                                              child: Row(children: [
+                                                Container(
+                                                  width: 20,
+                                                  height: 20,
+                                                  decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          color: AppColors
+                                                              .containerGrey),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5)),
+                                                ),
+                                                widthSpace(2),
+                                                customText(
+                                                    text: e["day"],
+                                                    fontSize: size * 0.0334,
+                                                    textColor: AppColors.black)
+                                              ]),
+                                            ),
                                           ),
-                                          widthSpace(2),
-                                          customText(
-                                              text: e["day"],
-                                              fontSize: 12,
-                                              textColor: AppColors.black)
-                                        ]),
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 15),
+                                      width: size * 0.12,
+                                      height: 45,
+                                      decoration: BoxDecoration(
+                                          color: AppColors.white,
+                                          border: Border.all(
+                                              color: AppColors.white),
+                                          borderRadius:
+                                              BorderRadius.circular(50)),
+                                      child: Center(
+                                        child: SvgPicture.asset(
+                                            AppImages.boldediticon),
                                       ),
                                     ),
-                              SvgPicture.asset(AppImages.edit),
-                              GestureDetector(
-                                onTap: () async {
-                                  final startTime = StateProvider<TimeOfDay>(
-                                      (ref) => TimeOfDay.now());
-                                  final time = ref.watch(startTime);
-                                  final TimeOfDay? result =
-                                      await showTimePicker(
-                                          context: context,
-                                          initialTime: time,
-                                          initialEntryMode:
-                                              TimePickerEntryMode.input);
+                                    GestureDetector(
+                                      onTap: () async {
+                                        final startTime =
+                                            StateProvider<TimeOfDay>(
+                                                (ref) => TimeOfDay.now());
+                                        final time = ref.watch(startTime);
+                                        final TimeOfDay? result =
+                                            await showTimePicker(
+                                                context: context,
+                                                initialTime: time,
+                                                initialEntryMode:
+                                                    TimePickerEntryMode.input);
 
-                                  if (result != null) {
-                                    if (context.mounted) {
-                                      ref.read(startTime.notifier).state =
-                                          result;
-                                      String res;
-                                      if (result.minute < 10) {
-                                        res = '0${result.minute.toString()}';
-                                      } else {
-                                        res = result.minute.toString();
-                                      }
-                                      final stateNotifier =
-                                          ref.read(stateWorkingHours.notifier);
-                                      final currentState = stateNotifier.state;
-                                      List<Map<String, dynamic>> updatedState =
-                                          List.from(currentState);
+                                        if (result != null) {
+                                          if (context.mounted) {
+                                            ref.read(startTime.notifier).state =
+                                                result;
+                                            String res;
+                                            if (result.minute < 10) {
+                                              res =
+                                                  '0${result.minute.toString()}';
+                                            } else {
+                                              res = result.minute.toString();
+                                            }
+                                            final stateNotifier = ref.read(
+                                                stateWorkingHours.notifier);
+                                            final currentState =
+                                                stateNotifier.state;
+                                            List<Map<String, dynamic>>
+                                                updatedState =
+                                                List.from(currentState);
 
-                                      updatedState[index]["from"] =
-                                          '${result.hour.toString()}:$res';
+                                            updatedState[index]["from"] =
+                                                '${result.hour.toString()}:$res';
 
-                                      stateNotifier.state = updatedState;
-                                    }
-                                  }
-                                },
-                                child: Container(
-                                    width: 50,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                        color: AppColors.white,
-                                        border:
-                                            Border.all(color: AppColors.white),
-                                        borderRadius: BorderRadius.circular(5)),
-                                    child: Center(
-                                      child: customText(
-                                          text: e["from"],
-                                          fontSize: 15,
-                                          textColor: AppColors.black),
-                                    )),
-                              ),
-                              widthSpace(4),
-                              GestureDetector(
-                                onTap: () async {
-                                  final startTime = StateProvider<TimeOfDay>(
-                                      (ref) => TimeOfDay.now());
-                                  final time = ref.watch(startTime);
-                                  final TimeOfDay? result =
-                                      await showTimePicker(
-                                          context: context,
-                                          initialTime: time,
-                                          initialEntryMode:
-                                              TimePickerEntryMode.input);
+                                            stateNotifier.state = updatedState;
+                                          }
+                                        }
+                                      },
+                                      child: Container(
+                                        width: size * 0.12,
+                                        height: 45,
+                                        decoration: BoxDecoration(
+                                            color: AppColors.white,
+                                            border: Border.all(
+                                                color: AppColors.white),
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        child: Center(
+                                          child: customText(
+                                              text: e["from"],
+                                              fontSize: size * 0.035,
+                                              textColor: AppColors.black),
+                                        ),
+                                      ),
+                                    ),
+                                    widthSpace(4),
+                                    GestureDetector(
+                                      onTap: () async {
+                                        final startTime =
+                                            StateProvider<TimeOfDay>(
+                                                (ref) => TimeOfDay.now());
+                                        final time = ref.watch(startTime);
+                                        final TimeOfDay? result =
+                                            await showTimePicker(
+                                                context: context,
+                                                initialTime: time,
+                                                initialEntryMode:
+                                                    TimePickerEntryMode.input);
 
-                                  if (result != null) {
-                                    if (context.mounted) {
-                                      ref.read(startTime.notifier).state =
-                                          result;
-                                      String res;
-                                      if (result.minute < 10) {
-                                        res = '0${result.minute.toString()}';
-                                      } else {
-                                        res = result.minute.toString();
-                                      }
-                                      final stateNotifier =
-                                          ref.read(stateWorkingHours.notifier);
-                                      final currentState = stateNotifier.state;
-                                      List<Map<String, dynamic>> updatedState =
-                                          List.from(currentState);
+                                        if (result != null) {
+                                          if (context.mounted) {
+                                            ref.read(startTime.notifier).state =
+                                                result;
+                                            String res;
+                                            if (result.minute < 10) {
+                                              res =
+                                                  '0${result.minute.toString()}';
+                                            } else {
+                                              res = result.minute.toString();
+                                            }
+                                            final stateNotifier = ref.read(
+                                                stateWorkingHours.notifier);
+                                            final currentState =
+                                                stateNotifier.state;
+                                            List<Map<String, dynamic>>
+                                                updatedState =
+                                                List.from(currentState);
 
-                                      updatedState[index]["to"] =
-                                          '${result.hour.toString()}:$res';
+                                            updatedState[index]["to"] =
+                                                '${result.hour.toString()}:$res';
 
-                                      stateNotifier.state = updatedState;
-                                    }
-                                  }
-                                },
-                                child: Container(
-                                    width: 50,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                        color: AppColors.white,
-                                        border:
-                                            Border.all(color: AppColors.white),
-                                        borderRadius: BorderRadius.circular(5)),
-                                    child: Center(
-                                      child: customText(
-                                          text: e["to"],
-                                          fontSize: 15,
-                                          textColor: AppColors.black),
-                                    )),
-                              ),
-                            ],
-                          );
-                        }),
-                        AppButton(
-                            // isActive: isActive.value,
-                            buttonText: "Save",
-                            isOrange: true,
-                            onTap: saveData),
-                        heightSpace(2),
-                      ]),
+                                            stateNotifier.state = updatedState;
+                                          }
+                                        }
+                                      },
+                                      child: Container(
+                                        width: size * 0.12,
+                                        height: 45,
+                                        decoration: BoxDecoration(
+                                            color: AppColors.white,
+                                            border: Border.all(
+                                                color: AppColors.white),
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        child: Center(
+                                          child: customText(
+                                              text: e["to"],
+                                              fontSize: size * 0.035,
+                                              textColor: AppColors.black),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                          heightSpace(3)
+                        ],
+                      ),
+                      AppButton(
+                          // isActive: isActive.value,
+                          buttonText: "Save",
+                          isOrange: true,
+                          onTap: saveData),
+                      heightSpace(2),
+                    ],
+                  ),
                 ));
           });
         },
@@ -397,6 +438,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
       }
 
       showModalBottomSheet<void>(
+        isScrollControlled: true,
         context: context,
         builder: (BuildContext context) {
           return StatefulBuilder(builder: (context, StateSetter setState) {
@@ -407,101 +449,112 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
               return Form(
                 key: formKey,
                 child: Container(
-                    padding: const EdgeInsets.all(20),
-                    height: 500,
-                    child: SingleChildScrollView(
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  padding: const EdgeInsets.all(20),
+                  height: 600,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        customText(
+                            text: "Select your location",
+                            fontSize: 18,
+                            textColor: AppColors.black,
+                            fontWeight: FontWeight.bold),
+                        heightSpace(1),
+                        customText(
+                            text:
+                                "Let your clients know your where your business is",
+                            fontSize: 14,
+                            textColor: AppColors.textColor),
+                        heightSpace(1),
+                        AppDropdown(
+                          isValue: true,
+                          value: stateController.text,
+                          validator: (val) {
+                            if (val == "select") {
+                              return "Select a state";
+                            }
+                            return null;
+                          },
+                          dropdownList: state,
+                          label: "State",
+                          onChange: (val) async {
+                            stateController.text = val.toString();
+                            CityLGA result = await mechanicRepo
+                                .getState(val.toString().toLowerCase().trim());
+                            ref.read(city.notifier).state =
+                                ["Select"] + result.data!.cities!;
+                            ref.read(lga.notifier).state =
+                                ["Select"] + result.data!.lgas!;
+                            setState(() {});
+                          },
+                        ),
+                        heightSpace(1),
+                        Column(
                           children: [
-                            customText(
-                                text: "Select your location",
-                                fontSize: 18,
-                                textColor: AppColors.black,
-                                fontWeight: FontWeight.bold),
-                            heightSpace(1),
-                            customText(
-                                text:
-                                    "Let your clients know your where your business is",
-                                fontSize: 14,
-                                textColor: AppColors.textColor),
+                            AppDropdown(
+                                isValue: false,
+                                value: cityController.text,
+                                validator: (val) {
+                                  if (val == "select") {
+                                    return "Select a city";
+                                  }
+                                  return null;
+                                },
+                                dropdownList: cityState,
+                                label: "City",
+                                onChange: (val) =>
+                                    cityController.text = val.toString()),
                             heightSpace(1),
                             AppDropdown(
-                              // isValue: true,
-                              value: stateController.text,
-                              validator: (val) {
-                                if (val == "select") {
-                                  return "Select a state";
-                                }
-                                return null;
-                              },
-                              dropdownList: state,
-                              label: "State",
-                              onChange: (val) async {
-                                stateController.text = val.toString();
-                                CityLGA result = await mechanicRepo.getState(
-                                    val.toString().toLowerCase().trim());
-                                ref.read(city.notifier).state =
-                                    ["Select"] + result.data!.cities!;
-                                ref.read(lga.notifier).state =
-                                    ["Select"] + result.data!.lgas!;
-                                setState(() {});
-                              },
-                            ),
+                                isValue: false,
+                                value: lgaController.text,
+                                validator: (val) {
+                                  if (val == "select") {
+                                    return "Select a lga";
+                                  }
+                                  return null;
+                                },
+                                dropdownList: lgaState,
+                                label: "LGA",
+                                onChange: (val) =>
+                                    lgaController.text = val.toString()),
                             heightSpace(1),
-                            Column(
-                              children: [
-                                AppDropdown(
-                                    // isValue: false,
-                                    value: cityController.text,
-                                    validator: (val) {
-                                      if (val == "select") {
-                                        return "Select a city";
-                                      }
-                                      return null;
-                                    },
-                                    dropdownList: cityState,
-                                    label: "City",
-                                    onChange: (val) =>
-                                        cityController.text = val.toString()),
-                                heightSpace(1),
-                                AppDropdown(
-                                    // isValue: false,
-                                    value: lgaController.text,
-                                    validator: (val) {
-                                      if (val == "select") {
-                                        return "Select a lga";
-                                      }
-                                      return null;
-                                    },
-                                    dropdownList: lgaState,
-                                    label: "LGA",
-                                    onChange: (val) =>
-                                        lgaController.text = val.toString()),
-                                heightSpace(1),
-                                CustomTextFormField(
-                                  validator: stringValidation,
-                                  textEditingController: address,
-                                  label: "Street",
-                                  prefixIcon: Padding(
-                                    padding: const EdgeInsets.all(13.0),
-                                    child: SvgPicture.asset(
-                                      AppImages.locationIcon,
+                            SizedBox(
+                              height: 400,
+                              child: ListView(
+                                keyboardDismissBehavior:
+                                    ScrollViewKeyboardDismissBehavior.onDrag,
+                                children: [
+                                  CustomTextFormField(
+                                    validator: stringValidation,
+                                    textEditingController: address,
+                                    label: "Street",
+                                    prefixIcon: Padding(
+                                      padding: const EdgeInsets.all(13.0),
+                                      child: SvgPicture.asset(
+                                        AppImages.locationIcon,
+                                      ),
                                     ),
+                                    hintText:
+                                        "Type in your business street address",
                                   ),
-                                  hintText:
-                                      "Type in your business street address",
-                                ),
-                              ],
+                                  heightSpace(2),
+                                  AppButton(
+                                      // isActive: isActive.value,
+                                      buttonText: "Save",
+                                      isOrange: true,
+                                      onTap: saveData),
+                                  heightSpace(2),
+                                ],
+                              ),
                             ),
-                            heightSpace(2),
-                            AppButton(
-                                // isActive: isActive.value,
-                                buttonText: "Save",
-                                isOrange: true,
-                                onTap: saveData),
-                            heightSpace(2),
-                          ]),
-                    )),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               );
             });
           });
@@ -598,17 +651,20 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                           hintText: "Type in business registration number",
                         ),
                         heightSpace(2),
-                        CustomTextFormField(
-                          textEditingController: address,
+                        GestureDetector(
                           onTap: showLocation,
-                          prefixIcon: Padding(
-                            padding: const EdgeInsets.all(13.0),
-                            child: SvgPicture.asset(
-                              AppImages.locationIcon,
+                          child: CustomTextFormField(
+                            isEnabled: false,
+                            textEditingController: address,
+                            prefixIcon: Padding(
+                              padding: const EdgeInsets.all(13.0),
+                              child: SvgPicture.asset(
+                                AppImages.locationIcon,
+                              ),
                             ),
+                            label: "Location of your business",
+                            hintText: "Enter location",
                           ),
-                          label: "Location of your business",
-                          hintText: "Enter location",
                         ),
                         heightSpace(2),
                         Padding(
@@ -700,23 +756,38 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                               // onChanged: onChanged,
                             ),
                             heightSpace(4),
+                            CustomTextFormField(
+                              textEditingController: serviceController,
+                              label: "Other Services",
+                              hintText: "separate with a comma",
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.all(13.0),
+                                child: SvgPicture.asset(
+                                  AppImages.serviceIcon,
+                                ),
+                              ),
+                            ),
+                            heightSpace(4),
                             customText(
                                 text: "Availabiity",
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
                                 textColor: AppColors.black),
                             heightSpace(2),
-                            CustomTextFormField(
-                              textEditingController: workingHourController,
-                              onTap: () => workingHours(),
-                              prefixIcon: Padding(
-                                padding: const EdgeInsets.all(13.0),
-                                child: SvgPicture.asset(
-                                  AppImages.calendarIcon,
+                            GestureDetector(
+                              onTap: workingHours,
+                              child: CustomTextFormField(
+                                isEnabled: false,
+                                textEditingController: workingHourController,
+                                prefixIcon: Padding(
+                                  padding: const EdgeInsets.all(13.0),
+                                  child: SvgPicture.asset(
+                                    AppImages.calendarIcon,
+                                  ),
                                 ),
+                                label: "Working hours",
+                                hintText: "Set working hours",
                               ),
-                              label: "Working hours",
-                              hintText: "Set working hours",
                             ),
                             heightSpace(3),
                             Row(
@@ -748,7 +819,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
       ref.read(services.notifier).state = value;
       final servicesState = ref.watch(services);
       log(servicesState!.systemServices!.length.toString());
-      
+
       for (SystemServices service in servicesState.systemServices ?? []) {
         mainList.add("${service.id}: ${service.name}");
         serviceNamed = mainList.map((item) {
@@ -779,13 +850,6 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
     final servicesState = ref.watch(services);
     final workingHour = ref.watch(stateWorkingHours);
 
-    // serviceNames.forEach((serviceName) {
-    //   final serviceId = serviceNameToId[serviceName];
-    //   selectedServiceList.add(
-    //     serviceId!, // Convert the ID to string
-    //   );
-    // });
-
     for (String serviceName in selectedServiceList) {
       for (SystemServices service in servicesState!.systemServices ?? []) {
         if (service.name == serviceName) {
@@ -796,18 +860,32 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
     }
 
     serviceNames.forEach((serviceName) {
-        final serviceId = serviceNameToId[serviceName];
-        selectedServices2.add(
-          serviceId!, // Convert the ID to string
-        );
+      final serviceId = serviceNameToId[serviceName];
+      selectedServices2.add(
+        serviceId!, // Convert the ID to string
+      );
     });
 
     for (var item in workingHour) {
       if (item["isChecked"] == true) {
         item.remove("isChecked");
         newItems.add(item);
+        log(newItems.toString());
       }
     }
+
+    List<String> otservces;
+
+    if (serviceController.text.isEmpty) {
+      otservces = [];
+    } else {
+      otservces = serviceController.text.split(",");
+    }
+
+    if(selectedCarsList.isEmpty){
+      selectServiceList + carsList;
+    }
+
     var data = {
       "businessName": businessName.text,
       "cacNumber": cac.text,
@@ -818,7 +896,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
       "longitude": "-122.33221",
       "latitude": "789.9987",
       "services": id,
-      "otherServices": serviceController.text.split(","),
+      "otherServices": otservces,
       "cars": selectedCarsList,
       "availability": newItems
     };
@@ -827,9 +905,12 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
     if (result) {
       if (context.mounted) {
         context.push(AppRoutes.profileSettings);
+        trueItemsString.clear();
       }
-    }else{
+    } else {
       serviceNames.clear();
+      workingHourController.clear();
+      // newItems.clear();
     }
 
     log(data.toString());

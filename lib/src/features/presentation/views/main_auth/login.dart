@@ -4,8 +4,10 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
+import 'package:ngbuka/src/core/managers/notification_manger.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/core/storage/secure_storage.dart';
 import 'package:ngbuka/src/domain/data/login_model.dart';
 import 'package:ngbuka/src/domain/repository/auth_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
@@ -38,23 +40,35 @@ class LoginView extends HookWidget {
     }
 
     void login() async {
-        var data = {
-          "email": email.text,
-          "password": password.text,
-          "isEmailLogin": true
-        };
-        LoginModel result = await _authRepo.loginEmail(data);
-        if(context.mounted){
-          if(result.user != null){
-            if (result.user?.mechanicType == null) {
-                context.go(AppRoutes.personalInfo);
-            }else if(result.user?.businessName == null){
-              context.go(AppRoutes.businessInfo);
-            }else{
-              context.go(AppRoutes.bottomNav);
+      var data = {
+        "email": email.text,
+        "password": password.text,
+        "isEmailLogin": true
+      };
+      LoginModel result = await _authRepo.loginEmail(data);
+      if (context.mounted) {
+        if (result.user != null) {
+          NotificationsManager.getFcmToken().then((value) async {
+            final token = await SecureStorage.readSecureData('device-token');
+            if (token != null || token != '') {
+              if (token != value) {
+                final data = {
+                  'deviceToken': value,
+                };
+                _authRepo.updateDeviceToken(data);
+              }
             }
+          });
+          NotificationsManager.init();
+          if (result.user?.mechanicType == null) {
+            context.go(AppRoutes.personalInfo);
+          } else if (result.user?.businessName == null) {
+            context.go(AppRoutes.businessInfo);
+          } else {
+            context.go(AppRoutes.bottomNav);
           }
-       }
+        }
+      }
     }
 
     return Scaffold(

@@ -8,7 +8,8 @@ class Endpoints {
   static const String resetOTPVerify = "auth/reset-password/verify";
   static const String resendOTP = "/auth/resend";
   static const String newPasword = "auth/password/reset";
-  static const String userProfileImage = "/user/profile/image";
+  static const String updateToken = "auth/device-token";
+  static const String mechanicProfileImage = "mechanic/profile/image";
   static const String getProfileMechanic = 'mechanic/profile';
   static const String getMechanicServices = 'services';
   static const String getLocation = 'location/sub-domains';

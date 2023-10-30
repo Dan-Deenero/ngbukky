@@ -65,7 +65,7 @@ class Boarding1 extends StatelessWidget {
                             //     builder: (BuildContext context) => const Wallet(),
                             //   ),
                             // );
-                             context.push(AppRoutes.login);
+                             context.push(AppRoutes.createAccount);
                           }),
                       heightSpace(1),
                       AppButton(

@@ -74,7 +74,7 @@ class OnboardingScreen extends HookWidget {
                                 locator<LocalStorageService>().saveDataToDisk(
                                     AppKeys.firstInstall, false);
                                 // Navigator.push(
-                                //   context,
+                                //   context,e
                                 //   MaterialPageRoute(
                                 //       builder: (context) => const Wallet()),
                                 // );

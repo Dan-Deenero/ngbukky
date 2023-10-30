@@ -29,6 +29,8 @@ class PersonalInfoSettings extends HookWidget {
   static final description = TextEditingController();
   static final otherLanguages = TextEditingController();
   static List<String> languages = [];
+  // static List<String> selectedLanguages = [];
+
   static final _formKey = GlobalKey<FormState>();
   const PersonalInfoSettings({super.key});
 
@@ -37,16 +39,18 @@ class PersonalInfoSettings extends HookWidget {
     final isLoading = useState<bool>(true);
     final userModel = useState<UserModel?>(null);
     final isValidated = useState<bool>(false);
+    var selectedLanguages = useState<List<String>?>([]);
     getUserProfile() {
       _authRepo.getMechanicProfile().then((value) {
         String phoneStr = value.phoneNumber.toString();
-        String updatedStr = phoneStr.substring(3); 
+        String updatedStr = phoneStr.substring(3);
         // int updatedNumber = int.parse(updatedStr);
         isLoading.value = false;
         userModel.value = value;
         firstName.text = value.firstname!;
         lastName.text = value.lastname!;
         languages = value.languages!;
+        selectedLanguages.value = languages;
         mechanicType.text = value.mechanicType!;
         description.text = value.about!;
         phone.text = updatedStr;
@@ -55,19 +59,38 @@ class PersonalInfoSettings extends HookWidget {
     }
 
     onChanged(List<String>? list) {
-      languages = list!;
-      log(languages.toString());
+      if (list!.contains('None')) {
+        list.clear();
+      }
+      selectedLanguages.value = list;
+
+      if (list.isEmpty) {
+        selectedLanguages.value!.clear();
+      } 
+      log(selectedLanguages.toString());
+      // log(list.toString());
     }
 
     List<String> otherLang = otherLanguages.text.split(',');
 
     updateInfo() async {
+      List<String> otservces;
+
+      if (otherLanguages.text.isEmpty) {
+        otservces = [];
+      } else {
+        otservces = otherLang;
+      }
+      if(selectedLanguages.value!.isEmpty){
+        selectedLanguages.value = languages;
+      }
+
       var body = {
         "firstname": firstName.text,
         "lastname": lastName.text,
         "mechanicType": mechanicType.text,
         "about": description.text,
-        "languages": languages + otherLang,
+        "languages": selectedLanguages.value! + otservces,
       };
       bool result = await _authRepo.updateInfo(body);
       if (result) {
@@ -129,8 +152,7 @@ class PersonalInfoSettings extends HookWidget {
                                 textColor: AppColors.white),
                             heightSpace(1),
                             customText(
-                                text:
-                                    "Edit your personal information",
+                                text: "Edit your personal information",
                                 fontSize: 15,
                                 textColor: AppColors.white),
                           ]),
@@ -149,9 +171,7 @@ class PersonalInfoSettings extends HookWidget {
                                   text: "Edit Personal Profile",
                                   fontSize: 18,
                                   textColor: AppColors.primary,
-                                  fontWeight: FontWeight.w800
-                                ),
-                              
+                                  fontWeight: FontWeight.w800),
                             ],
                           ),
                           heightSpace(3),
@@ -181,12 +201,9 @@ class PersonalInfoSettings extends HookWidget {
                             hintText: "Doe",
                           ),
                           heightSpace(2),
-                          
-
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              
                               heightSpace(2),
                               CustomTextFormField(
                                 textEditingController: mechanicType,
@@ -208,7 +225,7 @@ class PersonalInfoSettings extends HookWidget {
                                   textColor: AppColors.primary),
                               heightSpace(1),
                               AppDropdDownSearch(
-                                listOfSelectedItems: languages,
+                                listOfSelectedItems: selectedLanguages.value,
                                 hintText: "What languages do you speak?",
                                 prefixIcon: Padding(
                                   padding: const EdgeInsets.all(13.0),
@@ -223,9 +240,8 @@ class PersonalInfoSettings extends HookWidget {
                                   'Yoruba',
                                   'Pidgin',
                                 ],
-                                onChanged: onChanged,
+                                onChanged: onChanged
                               ),
-                              
                               heightSpace(2),
                               CustomTextFormField(
                                 validator: stringValidation,
@@ -234,13 +250,13 @@ class PersonalInfoSettings extends HookWidget {
                                 textEditingController: description,
                               ),
                               heightSpace(3),
-
                               AbsorbPointer(
                                 absorbing: true,
                                 child: Opacity(
                                   opacity: 0.2,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       customText(
                                           text: "Phone number",
@@ -250,9 +266,7 @@ class PersonalInfoSettings extends HookWidget {
                                       CustomPhoneField(
                                         controller: phone,
                                       ),
-                              
                                       heightSpace(2),
-                              
                                       CustomTextFormField(
                                         textEditingController: email,
                                         prefixIcon: Padding(
@@ -268,12 +282,12 @@ class PersonalInfoSettings extends HookWidget {
                                   ),
                                 ),
                               ),
-
                               heightSpace(5),
                               Row(
                                 children: [
                                   SizedBox(
-                                    width: MediaQuery.of(context).size.width * 0.87,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.87,
                                     child: AppButton(
                                       // isActive: isValidated.value,
                                       onTap: updateInfo,
@@ -282,7 +296,6 @@ class PersonalInfoSettings extends HookWidget {
                                       isSmall: true,
                                     ),
                                   ),
-                                  
                                 ],
                               ),
                               heightSpace(2),

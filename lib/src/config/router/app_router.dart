@@ -122,7 +122,7 @@ GoRouter router() => GoRouter(routes: <GoRoute>[
       GoRoute(
           path: AppRoutes.profileSettings,
           name: AppRoutes.profileSettings,
-          builder: (_, state) => const ProfileSettings()),
+          builder: (_, state) => ProfileSettings()),
       GoRoute(
           path: AppRoutes.personalInfoSettings,
           name: AppRoutes.personalInfoSettings,

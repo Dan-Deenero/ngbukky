@@ -28,7 +28,7 @@ class AppColors {
       ),
       borderRadius: BorderRadius.all(Radius.circular(20)));
   static OutlineInputBorder normalBorder = const OutlineInputBorder(
-      borderSide: BorderSide(color: AppColors.textformGrey),
+      borderSide: BorderSide(color: AppColors.black),
       borderRadius: BorderRadius.all(Radius.circular(20)));
 
   static OutlineInputBorder emptyBorder = const OutlineInputBorder(

@@ -54,5 +54,12 @@ class AppImages {
   static const String share= "assets/images/svgs/share.svg";
   static const String walletbase= "assets/images/pngs/walletbase.png";
   static const String naira= "assets/images/svgs/naira.svg";
+  static const String cameraicon= "assets/images/svgs/Cameraicon.svg";
+  static const String nobookingicon= "assets/images/svgs/nobookingicon.svg";
+  static const String noquoteicon= "assets/images/svgs/noquoteicon.svg";
+  static const String usericon= "assets/images/pngs/usericon.jpeg";
+  static const String boldediticon= "assets/images/svgs/boldediticon.svg";
+  static const String nowithdrawalicon= "assets/images/svgs/nowithdrawalicon.svg";
+  static const String nopaymenticon= "assets/images/svgs/nopaymenticon.svg";
 
 }

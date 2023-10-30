@@ -158,7 +158,7 @@ class MechanicRepo {
 
   Future<bool> saveProfileImage(Map<String, dynamic> data) async {
     final response =
-        await ApiClient.put(Endpoints.userProfileImage, body: data);
+        await ApiClient.put(Endpoints.mechanicProfileImage, body: data);
     if (response.status == 200) {
       return true;
     }

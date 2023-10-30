@@ -8,6 +8,7 @@ import 'package:ngbuka/src/config/keys/app_keys.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/config/locator/app_locator.dart';
 import 'package:ngbuka/src/config/services/storage_service.dart';
+import 'package:ngbuka/src/core/managers/notification_manger.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
 
@@ -57,5 +58,6 @@ class _SplashscreenState extends State<Splashscreen> {
     super.initState();
 
     Timer(const Duration(seconds: 3), () => context.go(AppRoutes.onboarding));
+    NotificationsManager.requestPermissions();
   }
 }

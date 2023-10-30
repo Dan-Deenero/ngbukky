@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/controller/Helpers.dart';
 import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/data/notification_model.dart';
 import 'package:ngbuka/src/domain/data/quote_model.dart';
@@ -95,37 +96,8 @@ class _NewNotificationState extends State<NewNotification> {
                                             quoteModel =
                                                 notifyModel!.quoteRequest;
                                             isLoading = false;
-                                            if (notifyModel!.booking != null) {
-                                              if (notifyModel!
-                                                      .booking!.status ==
-                                                  "pending") {
-                                                context.push(
-                                                    AppRoutes.inspectionBooking,
-                                                    extra: e.id);
-                                              } else if (notifyModel!
-                                                      .booking!.status ==
-                                                  "accepted") {
-                                                context.push(
-                                                    AppRoutes
-                                                        .viewAcceptedBooking,
-                                                    extra: e.id);
-                                              }
-                                            } else if (quoteModel != null) {
-                                              if (quoteModel!.status ==
-                                                  "pending") {
-                                                context.push(
-                                                    AppRoutes.inspectionBooking,
-                                                    extra: e.id);
-                                              } else if (quoteModel!.status ==
-                                                  "accepted") {
-                                                context.push(
-                                                    AppRoutes
-                                                        .viewAcceptedBooking,
-                                                    extra: e.id);
-                                              }
-                                            }
-                                            // context.push(AppRoutes.viewAcceptedBooking,
-                                            //       extra: e.id);
+
+                                            Helpers.routeToRespectiveNotificationScreens(notifyModel, context);
                                           },
                                         ),
                                       );
@@ -329,7 +301,21 @@ class _ReadNotificationState extends State<ReadNotification> {
                           return Column(
                             children: [
                               GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  _mechanicRepo.getOneNotification(e.id).then(
+                                        (value) => setState(
+                                          () {
+                                            notifyModel = value;
+                                            bookingModel = notifyModel!.booking;
+                                            quoteModel =
+                                                notifyModel!.quoteRequest;
+                                            isLoading = false;
+
+                                            Helpers.routeToRespectiveNotificationScreens(notifyModel, context);
+                                          },
+                                        ),
+                                      );
+                                },
                                 child: Container(
                                   width: double.infinity,
                                   // height: 120,

@@ -32,7 +32,7 @@ class PersonalInfoPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = useState<bool>(false);
+    final isLoading = useState<bool>(true);
     final userModel = useState<UserModel?>(null);
     final isValidated = useState<bool>(false);
     getUserProfile() {

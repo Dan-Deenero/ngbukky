@@ -128,4 +128,13 @@ class AuthRepo {
     }
     return false;
   }
+
+  Future<bool> updateDeviceToken(Map<String, dynamic> data) async {
+    final response =
+        await ApiClient.put(Endpoints.updateToken, body: data);
+    if (response.status == 200) {
+      return true;
+    }
+    return false;
+  }
 }

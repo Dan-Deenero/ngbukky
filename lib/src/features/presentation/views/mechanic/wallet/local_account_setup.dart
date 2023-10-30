@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/success_modal.dart';
+import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_dropdown.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_textformfield.dart';
@@ -27,6 +30,19 @@ class LocalAccountSetup extends HookWidget {
       log(banks.toString());
     }
 
+    showSuccesModal() async {
+    await showDialog(
+      context: context,
+      builder: (context) => SuccessDialogue(
+        title: 'Quote sent',
+        subtitle:
+            'Your local account number and bank has been saved, you can go ahead and withdraw now',
+        action: () {
+          context.go(AppRoutes.withdrawFunds);
+        },
+      ),
+    );
+  }
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
       appBar: AppBar(
@@ -62,9 +78,7 @@ class LocalAccountSetup extends HookWidget {
           // mainAxisAlignment: MainAxisAlignment.center,
           children: [
             customText(
-                text: 'Bank',
-                fontSize: 14,
-                textColor: AppColors.primary),
+                text: 'Bank', fontSize: 14, textColor: AppColors.primary),
             heightSpace(1),
             AppDropdDownSearch(
               listOfSelectedItems: banks,
@@ -124,6 +138,13 @@ class LocalAccountSetup extends HookWidget {
               label: "Your Ngbuka login password",
               validator: passwordValidation,
               hintText: "Enter password",
+            ),
+            heightSpace(24),
+            AppButton(
+              onTap: showSuccesModal,
+              hasIcon: false,
+              buttonText: "Save account number",
+              isOrange: true,
             ),
           ],
         ),

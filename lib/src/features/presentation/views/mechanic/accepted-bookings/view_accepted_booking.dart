@@ -209,7 +209,7 @@ class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.profile),
                     title: customText(
-                        text: 'kels@223',
+                        text: bookingModel!.user!.username!,
                         fontSize: 15,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -222,7 +222,7 @@ class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.locationIcon),
                     title: customText(
-                        text: '#5 some address',
+                        text: bookingModel!.user!.address!,
                         fontSize: 15,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
