@@ -6,7 +6,6 @@ import 'package:ngbuka/src/config/keys/app_routes.dart';
 // import 'package:ngbuka/src/config/router/app_router.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/wallet.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
@@ -70,7 +69,7 @@ class Boarding1 extends StatelessWidget {
                       heightSpace(1),
                       AppButton(
                         buttonText: 'Spare part dealer',
-                        onTap: () => context.push(AppRoutes.spareLogin),
+                        onTap: () => context.push(AppRoutes.dealerLogin),
                       ),
                       heightSpace(4),
                       Row(
@@ -155,7 +154,7 @@ class Boarding2 extends StatelessWidget {
                       heightSpace(1),
                       AppButton(
                         buttonText: 'Spare part dealer',
-                        onTap: () => context.push(AppRoutes.spareSetup),
+                        onTap: () => context.push(AppRoutes.dealerLogin),
                       ),
                       heightSpace(4),
                       Row(

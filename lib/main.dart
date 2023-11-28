@@ -8,7 +8,7 @@ import 'package:ngbuka/src/config/locator/app_locator.dart';
 import 'package:ngbuka/src/config/themes/app_theme.dart';
 import 'package:overlay_support/overlay_support.dart';
 
-void main() async{
+void main() async {
   setUplocator();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -26,10 +26,11 @@ class Ngbuka extends StatelessWidget {
       child: FlutterSizer(
         builder: (context, orientation, screenType) {
           return MaterialApp.router(
-              debugShowCheckedModeBanner: false,
-              title: 'Ngbuka',
-              theme: AppTheme.defaultTheme,
-              routerConfig: _router);
+            debugShowCheckedModeBanner: false,
+            title: 'Ngbuka',
+            theme: AppTheme.defaultTheme,
+            routerConfig: _router,
+          );
         },
       ),
     );

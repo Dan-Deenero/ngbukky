@@ -9,7 +9,6 @@ import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/success_modal.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
-import 'package:ngbuka/src/features/presentation/widgets/app_dropdown.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_textformfield.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';

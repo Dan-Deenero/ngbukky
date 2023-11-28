@@ -164,9 +164,12 @@ class Wallet extends HookWidget {
             ],
           ),
           actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 10.0),
-              child: SvgPicture.asset(AppImages.notification),
+            GestureDetector(
+              onTap: () => context.push(AppRoutes.notification),
+              child: Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: SvgPicture.asset(AppImages.notification),
+              ),
             )
           ],
         ),
@@ -180,12 +183,14 @@ class Wallet extends HookWidget {
                 width: double.infinity,
                 height: 20.h,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    image: const DecorationImage(
-                        fit: BoxFit.cover,
-                        image: AssetImage(
-                          AppImages.walletbase,
-                        ))),
+                  borderRadius: BorderRadius.circular(20),
+                  image: const DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage(
+                      AppImages.walletbase,
+                    ),
+                  ),
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -319,7 +324,7 @@ class PaymentTab extends StatelessWidget {
     // Center(
     //                   child: Column(
     //                     children: [
-                          // SvgPicture.asset(AppImages.nopaymenticon), 
+    // SvgPicture.asset(AppImages.nopaymenticon),
     //                       heightSpace(1),
     //                       SizedBox(
     //                         width: 130,
@@ -360,7 +365,9 @@ class PaymentTab extends StatelessWidget {
                       color: AppColors.red.withOpacity(.3)),
                   child: Center(
                     child: customText(
-                        text: "Cancelled", fontSize: 12, textColor: AppColors.red),
+                        text: "Cancelled",
+                        fontSize: 12,
+                        textColor: AppColors.red),
                   ),
                 )
               ]),
@@ -455,7 +462,9 @@ class WithdrawalTab extends StatelessWidget {
                       color: AppColors.red.withOpacity(.3)),
                   child: Center(
                     child: customText(
-                        text: "Cancelled", fontSize: 12, textColor: AppColors.red),
+                        text: "Cancelled",
+                        fontSize: 12,
+                        textColor: AppColors.red),
                   ),
                 )
               ]),

@@ -4,11 +4,15 @@ import 'package:ngbuka/src/config/services/api/api_client.dart';
 import 'package:ngbuka/src/config/services/api/endpoints.dart';
 import 'package:ngbuka/src/domain/data/city_lga.dart';
 import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
+import 'package:ngbuka/src/domain/data/inventory_model.dart';
 import 'package:ngbuka/src/domain/data/notification_model.dart';
+import 'package:ngbuka/src/domain/data/orders_model.dart';
 import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/data/services_model.dart';
 import 'package:ngbuka/src/domain/data/statistics_for_quote.dart';
 import 'package:ngbuka/src/domain/data/statistics_model.dart';
+import 'package:ngbuka/src/domain/data/user_model.dart';
+
 
 class MechanicRepo {
   Future<bool> acceptOrRejectBooking(Map<String, String> body, id) async {
@@ -39,22 +43,23 @@ class MechanicRepo {
   }
 
   Future<List<BookingModel>> getAllBooking(String status) async {
-      final response = await ApiClient.get(
-          '${Endpoints.getAllBooking}?status=$status',
-          useToken: true);
-      List<BookingModel> booking = [];
-      if (response.status == 200) {
-        for (var bookingModel in response.entity['rows']) {
-          booking.add(BookingModel.fromJson(bookingModel));
-        }
-        return booking;
+    final response = await ApiClient.get(
+        '${Endpoints.getAllBooking}?status=$status',
+        useToken: true);
+    List<BookingModel> booking = [];
+    if (response.status == 200) {
+      for (var bookingModel in response.entity['rows']) {
+        booking.add(BookingModel.fromJson(bookingModel));
       }
       return booking;
+    }
+    return booking;
   }
 
   Future<List<QuotesModel>> getAllQuotes(String status) async {
-    final response =
-        await ApiClient.get('${Endpoints.getAllQuotes}?status=$status', useToken: true);
+    final response = await ApiClient.get(
+        '${Endpoints.getAllQuotes}?status=$status',
+        useToken: true);
     List<QuotesModel> quote = [];
     if (response.status == 200) {
       for (var quoteModel in response.entity['rows']) {
@@ -105,9 +110,19 @@ class MechanicRepo {
     return CityLGA();
   }
 
-  Future<StatisticsModelForQuote> getQuoteStatisticsInfo() async {
+  Future<StatisticsModelForQuote> getAllStatisticsInfo() async {
     final response =
-        await ApiClient.get('${Endpoints.getStatisticsInfo}?type=quote-request', useToken: true);
+        await ApiClient.get(Endpoints.getStatisticsInfo, useToken: true);
+    if (response.status == 200) {
+      return StatisticsModelForQuote.fromJson(response.entity);
+    }
+    return StatisticsModelForQuote();
+  }
+
+  Future<StatisticsModelForQuote> getQuoteStatisticsInfo() async {
+    final response = await ApiClient.get(
+        '${Endpoints.getStatisticsInfo}?type=quote-request',
+        useToken: true);
     if (response.status == 200) {
       return StatisticsModelForQuote.fromJson(response.entity);
     }
@@ -115,8 +130,9 @@ class MechanicRepo {
   }
 
   Future<StatisticsModel> getBookingStatisticsInfo() async {
-    final response =
-        await ApiClient.get('${Endpoints.getStatisticsInfo}?type=booking', useToken: true);
+    final response = await ApiClient.get(
+        '${Endpoints.getStatisticsInfo}?type=booking',
+        useToken: true);
     if (response.status == 200) {
       return StatisticsModel.fromJson(response.entity);
     }
@@ -193,23 +209,37 @@ class MechanicRepo {
     return false;
   }
 
-  Future<List<NotificationModel>> getAllNotifications () async {
-      final response = await ApiClient.get(
-          Endpoints.getAllNotifications,
-          useToken: true);
-      List<NotificationModel> notification = [];
-      if (response.status == 200) {
-        for (var notificationModel in response.entity['rows']) {
-          notification.add(NotificationModel.fromJson(notificationModel));
-        }
-        return notification;
+  Future<List<NotificationModel>> getAllNotifications() async {
+    final response = await ApiClient.get(
+        '${Endpoints.getAllNotifications}?type=unseen',
+        useToken: true);
+    List<NotificationModel> notification = [];
+    if (response.status == 200) {
+      for (var notificationModel in response.entity['rows']) {
+        notification.add(NotificationModel.fromJson(notificationModel));
       }
       return notification;
+    }
+    return notification;
+  }
+
+  Future<List<NotificationModel>> getAllSeenNotifications() async {
+    final response = await ApiClient.get(
+        '${Endpoints.getAllNotifications}?type=seen',
+        useToken: true);
+    List<NotificationModel> notification = [];
+    if (response.status == 200) {
+      for (var notificationModel in response.entity['rows']) {
+        notification.add(NotificationModel.fromJson(notificationModel));
+      }
+      return notification;
+    }
+    return notification;
   }
 
   Future<NotificationModel> getOneNotification(id) async {
-    final response =
-        await ApiClient.get('${Endpoints.getAllNotifications}/$id', useToken: true);
+    final response = await ApiClient.get('${Endpoints.getAllNotifications}/$id',
+        useToken: true);
     if (response.status == 200) {
       log(response.entity.toString());
       return NotificationModel.fromJson(response.entity);
@@ -218,29 +248,142 @@ class MechanicRepo {
   }
 
   Future<List<BookingModel>> get5bookingAlert(String status) async {
-    final response = await ApiClient.get('${Endpoints.getAllBooking}?status=$status&limit=5', useToken: true);
+    final response = await ApiClient.get(
+        '${Endpoints.getAllBooking}?status=$status&limit=5',
+        useToken: true);
     List<BookingModel> booking = [];
     if (response.status == 200) {
       for (var bookingModel in response.entity['rows']) {
-          booking.add(BookingModel.fromJson(bookingModel));
-        }
-        return booking;
+        booking.add(BookingModel.fromJson(bookingModel));
+      }
+      return booking;
     }
     return booking;
   }
 
   Future<List<QuotesModel>> get5QuotesAlert(String status) async {
-    final response =
-        await ApiClient.get('${Endpoints.getAllQuotes}?status=$status&limit=5', useToken: true);
+    final response = await ApiClient.get(
+        '${Endpoints.getAllQuotes}?status=$status&limit=5',
+        useToken: true);
     List<QuotesModel> quote = [];
     if (response.status == 200) {
       for (var quoteModel in response.entity['rows']) {
         quote.add(QuotesModel.fromJson(quoteModel));
       }
       return quote;
-    }  
+    }
     return quote;
   }
 
-  
+  Future<bool> reportClient(Map<dynamic, dynamic> body) async {
+    final response = await ApiClient.post(Endpoints.reportClient,
+        body: body, useToken: true);
+    if (response.status == 200) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> updateDealerProfile(Map<String, dynamic> data, int level) async {
+    final response = await ApiClient.put(
+        '${Endpoints.updateDealerStoreProfile}?level=$level',
+        body: data);
+    if (response.status == 200) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<UserModel> getDealerProfile() async {
+    final response =
+        await ApiClient.get(Endpoints.getDealerProfile, useToken: true);
+    if (response.status == 200) {
+      // log(response.entity);
+      return UserModel.fromJson(response.entity);
+    }
+    return UserModel();
+  }
+
+  Future<List<InventoryModel>> getAllInventory(String status) async {
+    final response =
+        await ApiClient.get('${Endpoints.dealerSparePart}?&inventory=$status', useToken: true);
+    List<InventoryModel> inventory = [];
+    if (response.status == 200) {
+      for (var inventoryModel in response.entity['rows']) {
+        inventory.add(InventoryModel.fromJson(inventoryModel));
+      }
+      return inventory;
+    }
+    return inventory;
+  }
+
+  Future<InventoryModel> getOneInventory(id) async {
+    final response =
+        await ApiClient.get('${Endpoints.dealerSparePart}/$id', useToken: true);
+    if (response.status == 200) {
+      log(response.entity.toString());
+      return InventoryModel.fromJson(response.entity);
+    }
+    return InventoryModel();
+  }
+
+  Future<bool> addInventory(Map<dynamic, dynamic> body) async {
+    final response = await ApiClient.post(Endpoints.dealerSparePart,
+        body: body, useToken: true);
+    if (response.status == 200) {
+      log(true.toString());
+      return true;
+    }
+    return true;
+  }
+
+  Future<bool> updateInventory(Map<String, dynamic> data, id) async {
+    final response =
+        await ApiClient.put('${Endpoints.dealerSparePart}/$id', body: data, useToken: true);
+    if (response.status == 200) {
+      return true;
+    }
+    return true;
+  }
+
+  Future<bool> deleteInventory(id) async {
+    final response = await ApiClient.delete('${Endpoints.dealerSparePart}/$id',
+        useToken: true,);
+    if (response.status == 200) {
+      return true;
+    }
+    return true;
+  }
+
+  Future<List<OrdersModel>> getAllOrder(String? status) async {
+    final response =
+        await ApiClient.get('${Endpoints.dealerOrders}?&type=$status', useToken: true);
+    List<OrdersModel> orders = [];
+    if (response.status == 200) {
+      for (var ordersModel in response.entity['rows']) {
+        orders.add(OrdersModel.fromJson(ordersModel));
+      }
+      return orders;
+    }
+    return orders;
+  }
+
+  Future<OrdersModel> getOneOrder(id) async {
+    final response =
+        await ApiClient.get('${Endpoints.dealerOrders}/$id', useToken: true);
+    if (response.status == 200) {
+      log(response.entity.toString());
+      return OrdersModel.fromJson(response.entity);
+    }
+    return OrdersModel();
+  }
+
+  Future<bool> processOrder(Map<String, String> body, id) async {
+    final response = await ApiClient.patch('${Endpoints.dealerOrders}/$id',
+        body: body, useToken: true);
+    if (response.status == 200) {
+      return true;
+    }
+    return false;
+  }
 }

@@ -112,7 +112,7 @@ class _ViewAcceptedQuoteState extends State<ViewAcceptedQuote> {
                         ListTile(
                           leading: SvgPicture.asset(AppImages.locationIcon),
                           title: customText(
-                              text: "Elijiji rd, close 20, Woji, Port Harcourt",
+                              text: quoteModel!.user!.address!,
                               fontSize: 14,
                               textColor: AppColors.black,
                               fontWeight: FontWeight.bold),
@@ -216,7 +216,7 @@ class _ViewAcceptedQuoteState extends State<ViewAcceptedQuote> {
                           children: [
                             customText(
                                 text:
-                                    'My AC keeps loosing cold air. I have replaced it with a brand new AC  but ater a while, it stops working',
+                                    quoteModel!.description!,
                                 fontSize: 13,
                                 textColor: AppColors.black,
                                 fontWeight: FontWeight.w600),

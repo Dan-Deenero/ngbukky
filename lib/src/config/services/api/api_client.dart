@@ -35,9 +35,8 @@ class ApiClient {
 
   static String get _token => _getToken();
 
-  static Future delete(
+  static delete(
     String endpoint, {
-    required Map<String, dynamic> body,
     bool useToken = true,
   }) async {
     final result = await _makeRequest(
@@ -51,12 +50,11 @@ class ApiClient {
         }
 
         final options = Options(headers: header);
-        debugPrint('Making PUT request $body to $endpoint');
+        debugPrint('Making DELETE request to $endpoint');
 
-        final response =
-            await _dio.delete(endpoint, data: body, options: options);
+        final response = await _dio.delete(endpoint, options: options);
         debugPrint('Response from $endpoint \n${response.data}');
-        return response;
+        return response.data;
       },
     );
 

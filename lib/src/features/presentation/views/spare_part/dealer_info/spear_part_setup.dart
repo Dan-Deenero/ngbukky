@@ -31,7 +31,7 @@ class SpearSetupPage extends StatelessWidget {
           bodyText("Tell us few things about your business"),
           heightSpace(8),
           AppButton(
-            onTap: () => context.push(AppRoutes.sparePersonalInfo),
+            onTap: () => context.push(AppRoutes.spareStoreInfo),
             buttonText: "Continue",
             isOrange: true,
             isSmall: true,

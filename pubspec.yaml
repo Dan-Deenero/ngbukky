@@ -61,6 +61,7 @@ dependencies:
   flutter_secure_storage: ^9.0.0
   firebase_storage: ^11.4.0
   path: ^1.8.0
+  country_picker: 
 
 dev_dependencies:
   flutter_test:

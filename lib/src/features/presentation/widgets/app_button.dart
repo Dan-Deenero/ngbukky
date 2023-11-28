@@ -27,35 +27,36 @@ class AppButton extends StatelessWidget {
     return GestureDetector(
       onTap: !isActive ? null : onTap,
       child: Container(
-          width: isSmall ? 225 : double.infinity,
-          height: 7.h,
-          decoration: BoxDecoration(
-              color: (() {
-                if (isActive) {
-                  if (isOrange) {
-                    return AppColors.orange;
-                  }
-                  return AppColors.primary;
+        width: isSmall ? 225 : double.infinity,
+        height: 7.h,
+        decoration: BoxDecoration(
+            color: (() {
+              if (isActive) {
+                if (isOrange) {
+                  return AppColors.darkOrange;
                 }
-                return AppColors.containerGrey;
-              }()),
-              borderRadius: BorderRadius.circular(20)),
-          child: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                customText(
-                    text: buttonText, textColor: AppColors.white, fontSize: 14),
-                widthSpace(2),
-                hasIcon
-                    ? const Icon(
-                        Icons.arrow_forward,
-                        color: AppColors.white,
-                      )
-                    : const SizedBox.shrink()
-              ],
-            ),
-          )),
+                return AppColors.primary;
+              }
+              return AppColors.containerGrey;
+            }()),
+            borderRadius: BorderRadius.circular(30)),
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              customText(
+                  text: buttonText, textColor: AppColors.white, fontSize: 14),
+              widthSpace(2),
+              hasIcon
+                  ? const Icon(
+                      Icons.arrow_forward,
+                      color: AppColors.white,
+                    )
+                  : const SizedBox.shrink()
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

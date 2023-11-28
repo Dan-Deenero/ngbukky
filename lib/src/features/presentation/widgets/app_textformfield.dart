@@ -14,6 +14,7 @@ class CustomTextFormField extends StatefulWidget {
   final bool isPassword;
   final bool hasMaxline;
   final bool? isEnabled;
+  final bool? hasLabel;
   final String? Function(String?)? validator;
   final List<TextInputFormatter>? inputFormatters;
   final VoidCallback? onTap;
@@ -35,7 +36,8 @@ class CustomTextFormField extends StatefulWidget {
       this.textEditingController,
       this.isPassword = false,
       this.validator,
-      this.isEnabled});
+      this.isEnabled,
+      this.hasLabel});
 
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();

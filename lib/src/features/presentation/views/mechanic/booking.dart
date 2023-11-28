@@ -135,7 +135,6 @@ class Bookings extends HookWidget {
         disapproved.value = value.dISAPPROVED;
         awaitingPayment.value = value.aWAITINGPAYMENT;
         canceled.value = value.cANCELED;
-
       });
     }
 
@@ -186,9 +185,10 @@ class Bookings extends HookWidget {
             Container(
               height: 2.h,
               decoration: const BoxDecoration(
-                  border: Border(
-                top: BorderSide(color: AppColors.borderGrey),
-              )),
+                border: Border(
+                  top: BorderSide(color: AppColors.borderGrey),
+                ),
+              ),
             ),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -258,7 +258,7 @@ class Bookings extends HookWidget {
                   disapproved: disapproved2.value,
                   awaitingPayment: awaitingPayment2.value,
                 )
-              ]),
+              ],),
             )
           ],
         ),

@@ -45,35 +45,37 @@ class _BookingAlertState extends State<BookingAlert> {
           preferredSize: Size.fromHeight(20.h),
           child: Padding(
             padding: const EdgeInsets.all(20.0),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Container(
-                height: 10.h,
-                width: 10.w,
-                decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.black),
-                    color: AppColors.white.withOpacity(.5),
-                    shape: BoxShape.circle),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 7.0),
-                  child: Center(
-                      child: GestureDetector(
-                    onTap: () => context.pop(),
-                    child: const Icon(
-                      Icons.arrow_back_ios,
-                      color: AppColors.black,
-                    ),
-                  )),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 10.h,
+                  width: 10.w,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.black),
+                      color: AppColors.white.withOpacity(.5),
+                      shape: BoxShape.circle),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 7.0),
+                    child: Center(
+                        child: GestureDetector(
+                      onTap: () => context.pop(),
+                      child: const Icon(
+                        Icons.arrow_back_ios,
+                        color: AppColors.black,
+                      ),
+                    )),
+                  ),
                 ),
-              ),
-              customText(
-                  text: "New booking alerts",
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  textColor: AppColors.black),
-              heightSpace(1),
-              bodyText("View, accept or reject booking")
-            ]),
+                customText(
+                    text: "New booking alerts",
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    textColor: AppColors.black),
+                heightSpace(1),
+                bodyText("View, accept or reject booking")
+              ],
+            ),
           ),
         ),
         backgroundColor: AppColors.scaffoldColor,

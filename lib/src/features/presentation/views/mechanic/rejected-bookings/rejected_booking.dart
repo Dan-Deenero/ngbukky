@@ -134,7 +134,7 @@ class _RejectedBookingState extends State<RejectedBooking> {
                                             .withOpacity(.1)),
                                     child: Center(
                                       child: customText(
-                                          text: "Accepted booking",
+                                          text: "Rejected booking",
                                           fontSize: 10,
                                           textColor: AppColors.red),
                                     ),

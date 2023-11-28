@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -27,6 +25,12 @@ class HomeView extends HookWidget {
     final pending = useState<int?>(0);
     final declined = useState<int?>(0);
     final completed = useState<int?>(0);
+    final pending2 = useState<int?>(0);
+    final declined2 = useState<int?>(0);
+    final completed2 = useState<int?>(0);
+    final pending3 = useState<int?>(0);
+    final declined3 = useState<int?>(0);
+    final completed3 = useState<int?>(0);
     final bookingHistory = useState<List<BookingModel>>([]);
     final quoteHistory = useState<List<QuotesModel>>([]);
 
@@ -51,11 +55,24 @@ class HomeView extends HookWidget {
     }
 
     getStatisticsInfo() {
-      _mechanicRepo.getBookingStatisticsInfo().then((value) {
-        pending.value = value.pENDING;
-        declined.value = value.dECLINED;
-        completed.value = value.cOMPLETED;
-      });
+      _mechanicRepo.getBookingStatisticsInfo().then(
+        (value) {
+          pending.value = value.pENDING!;
+          declined.value = value.dECLINED!;
+          completed.value = value.cOMPLETED!;
+        },
+      );
+      _mechanicRepo.getQuoteStatisticsInfo().then(
+        (value) {
+          pending2.value = value.pENDING!;
+          declined2.value = value.dECLINED;
+          completed2.value = value.cOMPLETED;
+          pending3.value = (pending.value ?? 0) + (pending2.value ?? 0);
+          declined3.value = (declined.value ?? 0) + (declined2.value ?? 0);
+          completed3.value = (completed.value ?? 0) + (completed2.value ?? 0);
+        },
+      );
+
     }
 
     getNewBookings() {
@@ -82,7 +99,7 @@ class HomeView extends HookWidget {
       getNewBookings();
       getNewQuotes();
       return null;
-    }, []);
+    }, [bookingHistory.value.length, quoteHistory.value.length]);
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -142,7 +159,7 @@ class HomeView extends HookWidget {
                                 textColor: AppColors.black),
                             heightSpace(2),
                             customText(
-                                text: "${pending.value}",
+                                text: "${pending3.value}",
                                 fontSize: 24,
                                 textColor: AppColors.black),
                             heightSpace(2),
@@ -158,18 +175,20 @@ class HomeView extends HookWidget {
                         child: Column(
                           children: [
                             BookingStatusDiv(
-                                completed,
-                                AppColors.black,
-                                AppColors.green,
-                                AppColors.white,
-                                'Completed Bookings'),
+                              completed3,
+                              AppColors.black,
+                              AppColors.green,
+                              AppColors.white,
+                              'Completed Bookings',
+                            ),
                             heightSpace(1),
                             BookingStatusDiv(
-                                declined,
-                                AppColors.red,
-                                AppColors.lightOrange,
-                                AppColors.containerOrange,
-                                'Declined bookings'),
+                              declined3,
+                              AppColors.red,
+                              AppColors.lightOrange,
+                              AppColors.containerOrange,
+                              'Declined bookings',
+                            ),
                           ],
                         ),
                       )
@@ -413,7 +432,6 @@ class HomeView extends HookWidget {
                   else
                     ...quoteHistory.value.map(
                       (e) {
-                        log(quoteHistory.value.length.toString());
                         var dateString = e.createdAt;
                         var dateTime = DateTime.parse(dateString!);
                         var formattedDate =

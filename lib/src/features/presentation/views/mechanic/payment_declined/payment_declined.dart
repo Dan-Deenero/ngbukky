@@ -26,11 +26,15 @@ class _PaymentDeclinedState extends State<PaymentDeclined> {
   @override
   void initState() {
     super.initState();
-    _mechanicRepo.getAllBooking('declined').then((value) => setState(() {
-          _bookingHistory = value;
-          isLoading = false;
-          print(_bookingHistory);
-        }));
+    _mechanicRepo.getAllBooking('declined').then(
+          (value) => setState(
+            () {
+              _bookingHistory = value;
+              isLoading = false;
+              print(_bookingHistory);
+            },
+          ),
+        );
     // log(_bookingHistory.toString());
   }
 
@@ -87,8 +91,7 @@ class _PaymentDeclinedState extends State<PaymentDeclined> {
                           children: [
                             SvgPicture.asset(AppImages.bookingWarning),
                             customText(
-                                text:
-                                    'You do not have any declined payment',
+                                text: 'You do not have any declined payment',
                                 fontSize: 15,
                                 textColor: AppColors.black)
                           ],

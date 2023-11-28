@@ -1,4 +1,4 @@
-class LoginModel {
+class   LoginModel {
   String? token;
   String? refreshToken;
   User? user;

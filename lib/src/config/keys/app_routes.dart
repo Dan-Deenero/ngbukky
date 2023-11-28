@@ -49,12 +49,6 @@ class AppRoutes {
   static const String selectAccount = '/select-account';
   static const String boarding1 = '/boarding1';
   static const String boarding2 = '/boarding2';
-  static const String spareLogin = '/spare-login';
-  static const String spareSetup = '/spare-setup';
-  static const String spareBottomNav = '/spare-bottomnav';
-  static const String sparePersonalInfo = '/spare-personalinfo';
-  static const String spareStoreInfo = '/spare-storeinfo';
-  static const String spareBusinessInfo = '/spare-businessinfo';
   static const String newQuoteAlert = '/new-quote-Alert';
   static const String quoteRequest = '/quote-request';
   static const String acceptedQuotes = '/accepted-quotes';
@@ -73,7 +67,38 @@ class AppRoutes {
   static const String quoteRejected = '/quote-rejected';
   static const String quoteRejectedDetails = '/quote-rejected-details';
 
-
+  // Dealer
+  static const String dealerCreateAccount = '/dealer-create-account';
+  static const String dealerLogin = '/dealer-login';
+  static const String spareForgotPassword = '/spare-forgot-password';
+  static const String spareForgotPasswordPhone = '/spare-forgot-password-phone';
+  static const String spareNewPassword = '/spare-new-password';
+  static const String spareVerifyAccount = '/spare-verify-account';
+  static const String spareSetup = '/spare-setup';
+  static const String spareBottomNav = '/spare-bottom-nav';
+  static const String spareDashboard = '/spare-dashboard';
+  static const String spareStoreInfo = '/spare-storeinfo';
+  static const String spareBusinessInfo = '/spare-business-info';
+  static const String spareWalletHistory = '/spare-wallet-history';
+  static const String spareHistoryDetail = '/spare-history-detail';
+  static const String spareWithdrawalDetail = '/spare-withdrawal-detail';
+  static const String spareWithdrawFunds = '/spare-withdraw-funds';
+  static const String spareProfileSettings = '/spare-profileSettings';
+  static const String spareLocalAccountSetup = '/spare-local-account-setup';
+  static const String spareContactPage = '/spare-contact-page';
+  static const String sparePersonalInfo = '/spare-personal-info';
+  static const String spareBusinessProfile = '/spare-business-profile';
+  static const String spareAddWallet = '/spare-add-wallet';
+  static const String spareWallet = '/spare-wallet';
+  static const String spareNotification = '/spare-notification';
+  static const String inventory = '/inventory';
+  static const String addInventory = '/add-inventory';
+  static const String editInventory = '/edit-inventory';
+  static const String viewInventoryDetails = '/view-inventory-details';
+  static const String orders = '/orders';
+  static const String ordersInfo = '/orders-info';
+  static const String processOrder = '/process-order';
+  static const String sendToCenter = '/send-to-center';
 
 
 

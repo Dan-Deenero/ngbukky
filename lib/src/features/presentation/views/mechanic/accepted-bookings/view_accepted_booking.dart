@@ -14,8 +14,8 @@ import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
 class ViewAcceptedBooking extends StatefulWidget {
-  final String id;
-  ViewAcceptedBooking({
+  final dynamic id;
+  const ViewAcceptedBooking({
     super.key,
     required this.id,
   });

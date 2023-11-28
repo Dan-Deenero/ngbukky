@@ -29,7 +29,6 @@ class _NewQuoteAlertState extends State<NewQuoteAlert> {
     _mechanicRepo.getAllQuotes('pending').then((value) => setState(() {
           _quoteHistory = value;
           isLoading = false;
-          print(_quoteHistory);
         }));
     // log(_bookingHistory.toString());
   }
@@ -51,7 +50,7 @@ class _NewQuoteAlertState extends State<NewQuoteAlert> {
                     color: AppColors.white.withOpacity(.5),
                     shape: BoxShape.circle),
                 child: Padding(
-                  padding: EdgeInsets.only(left: 7.0),
+                  padding: const EdgeInsets.only(left: 7.0),
                   child: Center(
                       child: GestureDetector(
                     onTap: () => context.pop(),
@@ -112,15 +111,15 @@ class _NewQuoteAlertState extends State<NewQuoteAlert> {
 
                               var formattedTime =
                                   DateFormat('hh:mm a').format(dateTime);
-                              
-                              var names = e.services!.map((service){
+
+                              var names = e.services!.map((service) {
                                 return "${service.name}";
                               }).toList();
                               String serviceNames = names.join(', ');
 
                               return GestureDetector(
-                                onTap: () =>
-                                    context.push(AppRoutes.quoteRequest, extra: e.id),
+                                onTap: () => context
+                                    .push(AppRoutes.quoteRequest, extra: e.id),
                                 child: Container(
                                   margin: const EdgeInsets.only(bottom: 10),
                                   alignment: Alignment.center,
@@ -156,7 +155,8 @@ class _NewQuoteAlertState extends State<NewQuoteAlert> {
                                                         FontWeight.w600),
                                                 heightSpace(.5),
                                                 customText(
-                                                    text: '${e.model}, ${e.year}',
+                                                    text:
+                                                        '${e.model}, ${e.year}',
                                                     fontSize: 13,
                                                     textColor: AppColors.black,
                                                     fontWeight:
@@ -170,8 +170,7 @@ class _NewQuoteAlertState extends State<NewQuoteAlert> {
                                                     SizedBox(
                                                       width: 150,
                                                       child: customText(
-                                                          text:
-                                                              serviceNames,
+                                                          text: serviceNames,
                                                           fontSize: 10,
                                                           textColor:
                                                               AppColors.black),
@@ -184,25 +183,29 @@ class _NewQuoteAlertState extends State<NewQuoteAlert> {
                                                     Row(
                                                       children: [
                                                         SvgPicture.asset(
-                                                            AppImages.time),
+                                                          AppImages.time,
+                                                        ),
                                                         customText(
-                                                            text: formattedTime,
-                                                            fontSize: 10,
-                                                            textColor: AppColors
-                                                                .textGrey)
+                                                          text: formattedTime,
+                                                          fontSize: 10,
+                                                          textColor: AppColors
+                                                              .textGrey,
+                                                        )
                                                       ],
                                                     ),
                                                     widthSpace(2),
                                                     Row(
                                                       children: [
                                                         SvgPicture.asset(
-                                                            AppImages
-                                                                .calendarIcon),
+                                                          AppImages
+                                                              .calendarIcon,
+                                                        ),
                                                         customText(
-                                                            text: formattedDate,
-                                                            fontSize: 10,
-                                                            textColor: AppColors
-                                                                .textGrey)
+                                                          text: formattedDate,
+                                                          fontSize: 10,
+                                                          textColor: AppColors
+                                                              .textGrey,
+                                                        ),
                                                       ],
                                                     )
                                                   ],

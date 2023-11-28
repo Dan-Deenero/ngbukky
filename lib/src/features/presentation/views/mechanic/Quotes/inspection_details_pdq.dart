@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
 import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/success_modal.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
@@ -19,7 +21,7 @@ class PDQInspectionDetails extends StatefulWidget {
 
 class _PDQInspectionDetailsState extends State<PDQInspectionDetails> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
-  final service = TextEditingController();
+  static final description = TextEditingController();
 
   bool isLoading = true;
   List<Quotes>? quotes = [];
@@ -53,9 +55,34 @@ class _PDQInspectionDetailsState extends State<PDQInspectionDetails> {
         ));
   }
 
-  // void resendOTP() async {
+  showCompletedModal() {
+    showDialog(
+      context: context,
+      builder: (context) => SuccessDialogue(
+        title: 'Complete booking',
+        subtitle:
+            'Your have completed your booking and requested for payment from ${quoteModel!.user!.username}',
+        action: () => context.go(AppRoutes.bottomNav),
+      ),
+    );
+  }
 
-  reportClient() {
+  reportClient() async {
+    var data = {
+      "description": description.text,
+      "reportableId": quoteModel!.id!,
+      "reportableType": "quote_request",
+      "userId": quoteModel!.user!.id!,
+    };
+
+    bool result = await _mechanicRepo.reportClient(data);
+
+    if (result) {
+      showCompletedModal();
+    }
+  }
+
+  showReportClient() {
     showDialog(
         context: context,
         builder: (context) => SimpleDialog(
@@ -84,7 +111,7 @@ class _PDQInspectionDetailsState extends State<PDQInspectionDetails> {
                     fontSize: 12,
                     textColor: AppColors.black),
                 heightSpace(2),
-                modalForm('Air conditioning', service, 8),
+                modalForm('Air conditioning', description, 8),
                 heightSpace(1),
                 Row(
                   children: [
@@ -116,7 +143,7 @@ class _PDQInspectionDetailsState extends State<PDQInspectionDetails> {
                         color: AppColors.containerGrey,
                       ),
                       TextButton(
-                          onPressed: () {},
+                          onPressed: reportClient,
                           child: customText(
                               text: 'Send report',
                               fontSize: 16,
@@ -366,7 +393,7 @@ class _PDQInspectionDetailsState extends State<PDQInspectionDetails> {
                       widthSpace(2),
                       Expanded(
                         child: TextButton(
-                          onPressed: reportClient,
+                          onPressed: showReportClient,
                           child: customText(
                               text: 'Report client',
                               fontSize: 14,

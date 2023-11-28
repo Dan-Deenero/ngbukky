@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/booking.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/wallet.dart';
-import 'package:ngbuka/src/features/presentation/views/profile_settings/profile_page.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/profile_settings/profile_page.dart';
 
 import '../../../../core/shared/app_images.dart';
 import 'home.dart';

@@ -63,13 +63,13 @@ List<String> state = [
 final stateController = TextEditingController();
 final stateWorkingHours = StateProvider<List<Map<String, dynamic>>>((ref) {
   return [
-    {"isChecked": true, "day": "Monday", "from": "9", "to": "9", },
-    {"isChecked": true,  "day": "Tuesday", "from": "9", "to": "9", },
-    {"isChecked": true, "day": "Wednesday", "from": "9", "to": "9",},
-    {"isChecked": true, "day": "Thursday", "from": "9", "to": "9",},
-    {"isChecked": true, "day": "Friday", "from": "9", "to": "9",},
-    {"isChecked": false, "day": "Saturday", "from": "9", "to": "9", },
-    {"isChecked": false, "day": "Sunday", "from": "9", "to": "9", }
+    {"isChecked": true, "day": "Monday", "from": "9AM", "to": "9PM", },
+    {"isChecked": true,  "day": "Tuesday", "from": "9AM", "to": "9PM", },
+    {"isChecked": true, "day": "Wednesday", "from": "9AM", "to": "9PM",},
+    {"isChecked": true, "day": "Thursday", "from": "9AM", "to": "9PM",},
+    {"isChecked": true, "day": "Friday", "from": "9AM", "to": "9PM",},
+    {"isChecked": false, "day": "Saturday", "from": "9AM", "to": "9PM", },
+    {"isChecked": false, "day": "Sunday", "from": "9AM", "to": "9PM", }
   ];
 });
 final workingHourController = TextEditingController();

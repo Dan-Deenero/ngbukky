@@ -36,7 +36,7 @@ class Helpers{
          context.push(AppRoutes.pendingPaymentRequestDetails, extra: data.booking!.id);
          break;
      }
-     case "quoteRequest":
+     case "quote request":
        switch (data.quoteRequest!.status) {
          case "pending":
          context.push(AppRoutes.quoteRequest, extra: data.quoteRequest!.id);
@@ -68,4 +68,26 @@ class Helpers{
      }
   }
 }
+
+  static onItemTapped(int index, BuildContext context,) {
+
+      switch (index) {
+        case 0:
+          context.go(AppRoutes.spareDashboard);
+          break;
+        case 1:
+          context.go(AppRoutes.orders);
+          break;
+        case 2:
+          context.go(AppRoutes.inventory);
+          break;
+        case 3:
+          context.go(AppRoutes.spareWallet);
+          break;
+        case 4:
+          context.go(AppRoutes.spareProfileSettings);
+          break;
+      }
+    }
+
 }
