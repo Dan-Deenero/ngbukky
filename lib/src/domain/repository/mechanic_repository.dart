@@ -1,8 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
+import 'package:ngbuka/src/config/keys/app_keys.dart';
 import 'package:ngbuka/src/config/services/api/api_client.dart';
 import 'package:ngbuka/src/config/services/api/endpoints.dart';
+import 'package:ngbuka/src/config/services/api/payment_client.dart';
+import 'package:ngbuka/src/domain/data/account.dart';
+import 'package:ngbuka/src/domain/data/account_name_model.dart';
 import 'package:ngbuka/src/domain/data/city_lga.dart';
+import 'package:ngbuka/src/domain/data/dealer_dashboard_model.dart';
 import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/data/inventory_model.dart';
 import 'package:ngbuka/src/domain/data/notification_model.dart';
@@ -11,8 +16,12 @@ import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/data/services_model.dart';
 import 'package:ngbuka/src/domain/data/statistics_for_quote.dart';
 import 'package:ngbuka/src/domain/data/statistics_model.dart';
+import 'package:ngbuka/src/domain/data/transaction_model.dart';
 import 'package:ngbuka/src/domain/data/user_model.dart';
+import 'package:ngbuka/src/domain/data/wallet_model.dart';
 
+import '../../config/locator/app_locator.dart';
+import '../../config/services/storage_service.dart';
 
 class MechanicRepo {
   Future<bool> acceptOrRejectBooking(Map<String, String> body, id) async {
@@ -305,8 +314,9 @@ class MechanicRepo {
   }
 
   Future<List<InventoryModel>> getAllInventory(String status) async {
-    final response =
-        await ApiClient.get('${Endpoints.dealerSparePart}?&inventory=$status', useToken: true);
+    final response = await ApiClient.get(
+        '${Endpoints.dealerSparePart}?&inventory=$status',
+        useToken: true);
     List<InventoryModel> inventory = [];
     if (response.status == 200) {
       for (var inventoryModel in response.entity['rows']) {
@@ -331,33 +341,38 @@ class MechanicRepo {
     final response = await ApiClient.post(Endpoints.dealerSparePart,
         body: body, useToken: true);
     if (response.status == 200) {
-      log(true.toString());
       return true;
+    } else {
+      return false;
     }
-    return true;
   }
 
   Future<bool> updateInventory(Map<String, dynamic> data, id) async {
-    final response =
-        await ApiClient.put('${Endpoints.dealerSparePart}/$id', body: data, useToken: true);
+    final response = await ApiClient.put('${Endpoints.dealerSparePart}/$id',
+        body: data, useToken: true);
     if (response.status == 200) {
       return true;
+    } else {
+      return false;
     }
-    return true;
   }
 
   Future<bool> deleteInventory(id) async {
-    final response = await ApiClient.delete('${Endpoints.dealerSparePart}/$id',
-        useToken: true,);
+    final response = await ApiClient.delete(
+      '${Endpoints.dealerSparePart}/$id',
+      useToken: true,
+    );
     if (response.status == 200) {
       return true;
+    } else {
+      return false;
     }
-    return true;
   }
 
   Future<List<OrdersModel>> getAllOrder(String? status) async {
-    final response =
-        await ApiClient.get('${Endpoints.dealerOrders}?&type=$status', useToken: true);
+    final response = await ApiClient.get(
+        '${Endpoints.dealerOrders}?&type=$status',
+        useToken: true);
     List<OrdersModel> orders = [];
     if (response.status == 200) {
       for (var ordersModel in response.entity['rows']) {
@@ -385,5 +400,149 @@ class MechanicRepo {
       return true;
     }
     return false;
+  }
+
+  Future<List<TransactionModel>> getAllTransaction(String? type) async {
+    final response = await ApiClient.get(
+        '${Endpoints.transactions}?&type=$type',
+        useToken: true);
+    List<TransactionModel> transaction = [];
+    if (response.status == 200) {
+      for (var transactionModel in response.entity['rows']) {
+        transaction.add(TransactionModel.fromJson(transactionModel));
+      }
+      return transaction;
+    }
+    return transaction;
+  }
+
+  Future<TransactionModel> getOneTransaction(id) async {
+    final response =
+        await ApiClient.get('${Endpoints.transactions}/$id', useToken: true);
+    if (response.status == 200) {
+      log(response.entity.toString());
+      return TransactionModel.fromJson(response.entity);
+    }
+    return TransactionModel();
+  }
+
+  Future<DashboardModel> getDealerDahsboardInfo() async {
+    final response =
+        await ApiClient.get(Endpoints.dealerDashboard, useToken: true);
+    if (response.status == 200) {
+      return DashboardModel.fromJson(response.entity);
+    }
+    return DashboardModel();
+  }
+
+  Future<bool> addAccount(Map<dynamic, dynamic> body, String password) async {
+    final storedPassword =
+        locator<LocalStorageService>().getDataFromDisk(AppKeys.mechPassword);
+
+    if (storedPassword == password) {
+      final response =
+          await ApiClient.post(Endpoints.account, body: body, useToken: true);
+      if (response.status == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> addAccountDealer(
+      Map<dynamic, dynamic> body, String password) async {
+    final storedPassword =
+        locator<LocalStorageService>().getDataFromDisk(AppKeys.dealerPassword);
+
+    if (storedPassword == password) {
+      final response =
+          await ApiClient.post(Endpoints.account, body: body, useToken: true);
+      if (response.status == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  Future<List<Account>> getAllBank() async {
+    final response = await PaymentClient.get(
+        '${Endpoints.getBankList}?&country=nigeria',
+        useToken: true);
+    List<Account> account = [];
+    if (response.status == true) {
+      for (var accountModel in response.data) {
+        account.add(Account.fromJson(accountModel));
+      }
+      return account;
+    }
+    return account;
+  }
+
+  Future<AccountName> getAccountOwner(acctNo, bankCode) async {
+    final response = await PaymentClient.get(
+        '${Endpoints.getBankList}/resolve?account_number=$acctNo&bank_code=$bankCode',
+        useToken: true);
+    if (response.status == true) {
+      String message = response.message ?? '';
+
+      if (message.toLowerCase() == 'account number resolved') {
+        return AccountName.fromJson(response.data);
+      } else {
+        // Handle incorrect account number scenario
+        // You can throw an exception, return a special object, or handle it based on your requirements.
+        throw Exception("Invalid account number");
+      }
+    }
+    return AccountName();
+  }
+
+  Future<bool> withdrawFunds(
+      Map<dynamic, dynamic> body, String password) async {
+    final storedPassword =
+        locator<LocalStorageService>().getDataFromDisk(AppKeys.mechPassword);
+
+    if (storedPassword == password) {
+      final response = await ApiClient.post(Endpoints.walletWithdraw,
+          body: body, useToken: true);
+      if (response.status == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> withdrawFundsDealer(
+      Map<dynamic, dynamic> body, String password) async {
+    final storedPassword =
+        locator<LocalStorageService>().getDataFromDisk(AppKeys.dealerPassword);
+
+    if (storedPassword == password) {
+      final response = await ApiClient.post(Endpoints.walletWithdraw,
+          body: body, useToken: true);
+      if (response.status == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  Future<WalletModel> getWallet() async {
+    final response = await ApiClient.get(Endpoints.wallet, useToken: true);
+    if (response.status == 200) {
+      return WalletModel.fromJson(response.entity);
+    }
+    return WalletModel();
   }
 }

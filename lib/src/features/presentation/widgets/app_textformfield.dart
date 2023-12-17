@@ -14,6 +14,7 @@ class CustomTextFormField extends StatefulWidget {
   final bool isPassword;
   final bool hasMaxline;
   final bool? isEnabled;
+  final bool? isDropdown;
   final bool? hasLabel;
   final String? Function(String?)? validator;
   final List<TextInputFormatter>? inputFormatters;
@@ -37,7 +38,8 @@ class CustomTextFormField extends StatefulWidget {
       this.isPassword = false,
       this.validator,
       this.isEnabled,
-      this.hasLabel});
+      this.isDropdown,
+      this.hasLabel,});
 
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
@@ -76,7 +78,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             border: const OutlineInputBorder(
                 borderSide: BorderSide(color: AppColors.textformGrey),
                 borderRadius: BorderRadius.all(Radius.circular(20))),
-            contentPadding: const EdgeInsets.only(left: 10, top: 10),
+            contentPadding: const EdgeInsets.only(left: 10, top: 20),
             errorStyle: const TextStyle(fontSize: 14),
             // suffixIcon:  showPasswordIcon(widget.isPassword),
 
@@ -97,6 +99,9 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
                     child: const Icon(Icons.location_on_outlined),
                   ),
                 );
+              }
+              if (widget.isDropdown != null || widget.isDropdown == true) {
+                return const Icon(Icons.keyboard_arrow_down);
               }
             }()),
             hintText: widget.hintText,

@@ -5,7 +5,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ngbuka/src/config/keys/app_keys.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
+import 'package:ngbuka/src/config/locator/app_locator.dart';
+import 'package:ngbuka/src/config/services/storage_service.dart';
 import 'package:ngbuka/src/core/managers/notification_manger.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
@@ -188,6 +191,7 @@ class SpareEmailLogin extends HookWidget {
       log(result.toString());
       if (context.mounted) {
         if (result.user != null) {
+          locator<LocalStorageService>().saveDataToDisk(AppKeys.mechPassword, password.text);
           NotificationsManager.getFcmToken().then(
             (value) async {
               final token = await SecureStorage.readSecureData('device-token');
@@ -338,6 +342,7 @@ class SparePhoneNumberLogin extends HookWidget {
       LoginModel result = await _authRepo.loginEmail(data);
       if (context.mounted) {
         if (result.user != null) {
+          locator<LocalStorageService>().saveDataToDisk(AppKeys.mechPassword, password.text);
           NotificationsManager.getFcmToken().then((value) async {
             final token = await SecureStorage.readSecureData('device-token');
             if (token != null || token != '') {

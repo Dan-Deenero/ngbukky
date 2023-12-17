@@ -23,13 +23,16 @@ Widget customText(
         required Color textColor,
         FontWeight? fontWeight,
         TextAlign? textAlignment}) =>
-    Text(text,
-        textAlign: textAlignment ?? TextAlign.left,
-        style: TextStyle(
-            fontFamily: 'Fira',
-            color: textColor,
-            fontWeight: fontWeight ?? FontWeight.w500,
-            fontSize: fontSize.dp));
+    Text(
+      text,
+      textAlign: textAlignment ?? TextAlign.left,
+      style: TextStyle(
+        fontFamily: 'Fira',
+        color: textColor,
+        fontWeight: fontWeight ?? FontWeight.w500,
+        fontSize: fontSize.dp,
+      ),
+    );
 
 Widget haveanaccount() {
   final router = locator<GoRouter>();

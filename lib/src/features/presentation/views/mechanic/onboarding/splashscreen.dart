@@ -30,13 +30,12 @@ class _SplashscreenState extends State<Splashscreen> {
 
   checkForLogin() {
     final token = locator<LocalStorageService>().getDataFromDisk(AppKeys.token);
+    log(token.toString());
+
     if (token != null) {
-      context.push(AppRoutes.businessInfo);
-      // context.push(AppRoutes.bottomNav);
-      // selectAccountView();
-      return;
-    } else {
       context.push(AppRoutes.bottomNav);
+    } else {
+      context.push(AppRoutes.boarding2);
     }
   }
 
@@ -48,16 +47,19 @@ class _SplashscreenState extends State<Splashscreen> {
     log(firstInstall.toString());
     if (firstInstall) {
       context.push(AppRoutes.onboarding);
-      return;
+    } else {
+      context.push(AppRoutes.boarding1);
     }
-    checkForLogin();
   }
 
   @override
   void initState() {
     super.initState();
 
-    Timer(const Duration(seconds: 3), () => context.go(AppRoutes.onboarding));
+    Future.delayed(const Duration(seconds: 3), () {
+      checkForOnBoarding();
+      // checkForLogin();
+    });
     NotificationsManager.requestPermissions();
   }
 }

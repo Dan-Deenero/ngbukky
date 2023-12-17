@@ -31,7 +31,6 @@ class _PaymentDeclinedState extends State<PaymentDeclined> {
             () {
               _bookingHistory = value;
               isLoading = false;
-              print(_bookingHistory);
             },
           ),
         );
@@ -107,7 +106,7 @@ class _PaymentDeclinedState extends State<PaymentDeclined> {
                           DateFormat('hh:mm a').format(dateTime);
                       return GestureDetector(
                         onTap: () =>
-                            context.push(AppRoutes.paymentDeclinedDetails),
+                            context.push(AppRoutes.paymentDeclinedDetails, extra: e.id),
                         child: Container(
                           width: double.infinity,
                           height: 10.h,
@@ -116,7 +115,9 @@ class _PaymentDeclinedState extends State<PaymentDeclined> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: ListTile(
-                              trailing: Column(children: [
+                              trailing: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
                                 customText(
                                     text: "N 5,050",
                                     fontSize: 14,
@@ -124,7 +125,7 @@ class _PaymentDeclinedState extends State<PaymentDeclined> {
                                     fontWeight: FontWeight.bold),
                                 heightSpace(1),
                                 Container(
-                                  width: 28.w,
+                                  width: 26.w,
                                   height: 3.h,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
@@ -148,7 +149,7 @@ class _PaymentDeclinedState extends State<PaymentDeclined> {
                                           textColor: AppColors.textGrey)
                                     ],
                                   ),
-                                  widthSpace(2),
+                                  widthSpace(1),
                                   Row(
                                     children: [
                                       SvgPicture.asset(AppImages.calendarIcon),

@@ -30,28 +30,33 @@ class SuccessDialogue extends StatelessWidget {
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
-          children: [         
+          children: [
             InkWell(
-                onTap: action,
-                child: SvgPicture.asset(AppImages.cancelModal))
+                onTap: action, child: SvgPicture.asset(AppImages.cancelModal))
           ],
         ),
         // heightSpace(1),
         SvgPicture.asset(AppImages.successModal),
         customText(
-            text: title,
-            fontSize: 24,
-            textColor: AppColors.black,
-            fontWeight: FontWeight.w600,
-            textAlignment: TextAlign.center),
+          text: title,
+          fontSize: 24,
+          textColor: AppColors.black,
+          fontWeight: FontWeight.w600,
+          textAlignment: TextAlign.center,
+        ),
         heightSpace(1),
         customText(
-            text: subtitle,
-            fontSize: 12,
-            textColor: AppColors.black,
-            textAlignment: TextAlign.center),
+          text: subtitle,
+          fontSize: 12,
+          textColor: AppColors.black,
+          textAlignment: TextAlign.center,
+        ),
         heightSpace(2),
-        AppButton(buttonText: 'Ok, thanks',hasIcon: false, onTap: action,),
+        AppButton(
+          buttonText: 'Ok, thanks',
+          hasIcon: false,
+          onTap: action,
+        ),
         heightSpace(2),
       ],
     );

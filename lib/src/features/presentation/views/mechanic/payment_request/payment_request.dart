@@ -183,7 +183,7 @@ class _PaymentRequestState extends State<PaymentRequest> {
                                       color: AppColors.containerGrey),
                                   child: Center(
                                     child: customText(
-                                        text: "Pending payment request",
+                                        text: "payment request",
                                         fontSize: 10,
                                         textColor: AppColors.black),
                                   ),

@@ -80,7 +80,7 @@ class OrderCard extends StatelessWidget {
                 ),
                 heightSpace(1),
                 customText(
-                  text: 'N$price',
+                  text: 'N${quantity! * price!}',
                   fontSize: 12,
                   textColor: AppColors.black,
                   fontWeight: FontWeight.w700,

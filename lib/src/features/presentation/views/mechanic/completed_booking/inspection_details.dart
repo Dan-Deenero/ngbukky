@@ -10,19 +10,20 @@ import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
-
 class CompletedInspectionDetails extends StatefulWidget {
   final String id;
-  CompletedInspectionDetails({
+  const CompletedInspectionDetails({
     super.key,
     required this.id,
   });
 
   @override
-  State<CompletedInspectionDetails> createState() => _CompletedInspectionDetailsState();
+  State<CompletedInspectionDetails> createState() =>
+      _CompletedInspectionDetailsState();
 }
 
-class _CompletedInspectionDetailsState extends State<CompletedInspectionDetails> {
+class _CompletedInspectionDetailsState
+    extends State<CompletedInspectionDetails> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
 
   bool isLoading = true;
@@ -37,35 +38,35 @@ class _CompletedInspectionDetailsState extends State<CompletedInspectionDetails>
   double serviceFee = 0;
   List<Quotes>? quotes = [];
 
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _mechanicRepo.getoneBooking(widget.id).then((value) => setState(
-          () {
-            bookingModel = value;
-            dateString = bookingModel!.date;
-            dateTime = DateTime.parse(dateString!);
-            formattedDate = DateFormat('E, d MMM y').format(dateTime);
+    _mechanicRepo.getoneBooking(widget.id).then(
+          (value) => setState(
+            () {
+              bookingModel = value;
+              dateString = bookingModel!.date;
+              dateTime = DateTime.parse(dateString!);
+              formattedDate = DateFormat('E, d MMM y').format(dateTime);
 
-            formattedTime = DateFormat('hh:mm a').format(dateTime);
-            isLoading = false;
-            quotes = bookingModel!.quotes;
-            for(Quotes quote in quotes!){
-              if(quote.price != null){
-                price += quote.price!;
+              formattedTime = DateFormat('hh:mm a').format(dateTime);
+              isLoading = false;
+              quotes = bookingModel!.quotes;
+              for (Quotes quote in quotes!) {
+                if (quote.price != null) {
+                  price += quote.price!;
+                }
               }
-            }
-            serviceFee = price * 0.01;
-          },
-        ));
+              serviceFee = price * 0.01;
+            },
+          ),
+        );
   }
 
   // void resendOTP() async {
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(24.h),
@@ -217,12 +218,11 @@ class _CompletedInspectionDetailsState extends State<CompletedInspectionDetails>
                       textColor: AppColors.orange,
                       fontWeight: FontWeight.bold),
                   heightSpace(3),
-                  ...quotes!.map((quote){
+                  ...quotes!.map((quote) {
                     String serviceName = '';
-                    if(quote.requestedPersonalisedService != null){
+                    if (quote.requestedPersonalisedService != null) {
                       serviceName = quote.requestedPersonalisedService!.name!;
-                    }
-                    else if(quote.requestedSystemService != null){
+                    } else if (quote.requestedSystemService != null) {
                       serviceName = quote.requestedSystemService!.name!;
                     }
                     return Column(

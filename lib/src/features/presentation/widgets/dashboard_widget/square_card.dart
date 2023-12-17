@@ -35,7 +35,7 @@ class SquareCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
      bool runningOut;
-    if(quantity! >= 5){
+    if(quantity! <= 5){
       runningOut = true;
     }else{
       runningOut = false;
@@ -56,6 +56,7 @@ class SquareCard extends StatelessWidget {
               ),
             ),
           ),
+          heightSpace(2),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -78,7 +79,7 @@ class SquareCard extends StatelessWidget {
                 heightSpace(2),
                 runningOut
                     ? customText(
-                        text: '$quantity',
+                        text: '$quantity left',
                         fontSize: 10,
                         textColor: AppColors.red,
                       )

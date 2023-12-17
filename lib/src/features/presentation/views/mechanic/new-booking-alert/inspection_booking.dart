@@ -33,8 +33,8 @@ class _InspectionBookingState extends State<InspectionBooking> {
   NotificationModel? notifyModel;
 
   var dateString;
-  var viewedString;
   var dateTime;
+  var viewedString;
   var viewed;
   var formattedTime;
   var formattedDate;
@@ -295,7 +295,7 @@ class _InspectionBookingState extends State<InspectionBooking> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.profile),
                     title: customText(
-                        text: bookingModel!.user!.username!,
+                        text: '${bookingModel!.user!.username}',
                         fontSize: 15,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),

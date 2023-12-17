@@ -146,7 +146,7 @@ GoRouter router() => GoRouter(
         GoRoute(
             path: AppRoutes.profileSettings,
             name: AppRoutes.profileSettings,
-            builder: (_, state) => ProfileSettings()),
+            builder: (_, state) => const ProfileSettings()),
         GoRoute(
             path: AppRoutes.personalInfoSettings,
             name: AppRoutes.personalInfoSettings,
@@ -292,7 +292,7 @@ GoRouter router() => GoRouter(
         GoRoute(
           path: AppRoutes.historyDetail,
           name: AppRoutes.historyDetail,
-          builder: (_, state) => const HistoryDetail(),
+          builder: (_, state) => HistoryDetail(id: state.extra as String,),
         ),
         GoRoute(
           path: AppRoutes.withdrawalDetail,
@@ -302,7 +302,7 @@ GoRouter router() => GoRouter(
         GoRoute(
           path: AppRoutes.withdrawFunds,
           name: AppRoutes.withdrawFunds,
-          builder: (_, state) => const WithdrawFunds(),
+          builder: (_, state) => WithdrawFunds(),
         ),
         GoRoute(
           path: AppRoutes.localAccountSetup,
@@ -325,7 +325,7 @@ GoRouter router() => GoRouter(
         GoRoute(
             path: AppRoutes.addWallet,
             name: AppRoutes.addWallet,
-            builder: (_, state) => AddWalletPage()),
+            builder: (_, state) => const AddWalletPage()),
         GoRoute(
             path: AppRoutes.newQuoteAlert,
             name: AppRoutes.newQuoteAlert,
@@ -478,12 +478,14 @@ GoRouter router() => GoRouter(
         GoRoute(
           path: AppRoutes.spareWithdrawFunds,
           name: AppRoutes.spareWithdrawFunds,
-          builder: (_, state) => const SpareWithdrawFunds(),
+          builder: (_, state) => SpareWithdrawFunds(),
         ),
         GoRoute(
           path: AppRoutes.spareWithdrawalDetail,
           name: AppRoutes.spareWithdrawalDetail,
-          builder: (_, state) => const SpareWithdrawalDetail(),
+          builder: (_, state) => SpareWithdrawalDetail(
+            id: state.extra as String,
+          ),
         ),
         GoRoute(
           path: AppRoutes.spareWalletHistory,
@@ -493,7 +495,9 @@ GoRouter router() => GoRouter(
         GoRoute(
           path: AppRoutes.spareHistoryDetail,
           name: AppRoutes.spareHistoryDetail,
-          builder: (_, state) => const SpareHistoryDetail(),
+          builder: (_, state) => SpareHistoryDetail(
+            id: state.extra as String,
+          ),
         ),
         GoRoute(
           path: AppRoutes.sparePersonalInfo,

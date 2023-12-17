@@ -1,197 +1,165 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ngbuka/src/config/keys/app_routes.dart';
+import 'package:intl/intl.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/data/transaction_model.dart';
+import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
+import 'package:ngbuka/src/features/presentation/widgets/wallet_tile.dart';
 
-class Payments extends StatelessWidget {
-  const Payments({super.key});
+class Payments extends HookWidget {
+  Payments({Key? key}) : super(key: key ?? UniqueKey());
+  static final MechanicRepo mechanicRepo = MechanicRepo();
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: Column(
-          children: [
-            GestureDetector(
-              onTap: () => context.push(AppRoutes.spareHistoryDetail),
-              child: Container(
-                width: double.infinity,
-                height: 10.h,
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Container(
-                  width: double.infinity,
-                  height: 10.h,
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: ListTile(
-                      trailing: Column(children: [
-                        customText(
-                            text: "N5,050",
-                            fontSize: 14,
-                            textColor: AppColors.black,
-                            fontWeight: FontWeight.bold),
-                        heightSpace(1),
-                        Container(
-                          width: 19.w,
-                          height: 3.h,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: AppColors.red.withOpacity(.3)),
-                          child: Center(
-                            child: customText(
-                                text: "Cancelled",
-                                fontSize: 12,
-                                textColor: AppColors.red),
-                          ),
-                        )
-                      ]),
-                      subtitle: Row(
+    final transactionHistory = useState<List<TransactionModel>>([]);
+    final isLoading = useState<bool>(true);
+    getTransaction() {
+      mechanicRepo.getAllTransaction('credit').then(
+        (value) {
+          transactionHistory.value = value;
+          isLoading.value = false;
+        },
+      );
+    }
+
+    useEffect(() {
+      getTransaction();
+      return null;
+    }, [transactionHistory.value.length]);
+    return isLoading.value
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Column(
+                children: [
+                  if (transactionHistory.value.isEmpty)
+                    Center(
+                      child: Column(
                         children: [
-                          Row(
-                            children: [
-                              SvgPicture.asset(AppImages.time),
-                              customText(
-                                  text: "12:20pm",
-                                  fontSize: 10,
-                                  textColor: AppColors.textGrey)
-                            ],
-                          ),
-                          widthSpace(2),
-                          Row(
-                            children: [
-                              SvgPicture.asset(AppImages.calendarIcon),
-                              customText(
-                                  text: "12 Jun 2023",
-                                  fontSize: 10,
-                                  textColor: AppColors.textGrey)
-                            ],
+                          SvgPicture.asset(AppImages.nopaymenticon),
+                          heightSpace(1),
+                          SizedBox(
+                            width: 130,
+                            child: customText(
+                              text: 'No payments were made to you',
+                              fontSize: 15,
+                              textColor: AppColors.textGrey.withOpacity(0.3),
+                              textAlignment: TextAlign.center,
+                            ),
                           )
                         ],
                       ),
-                      title: customText(
-                          text: "Kelechi Amadi",
-                          fontSize: 16,
-                          textColor: AppColors.black,
-                          fontWeight: FontWeight.bold),
-                      leading: Container(
-                        width: 10.w,
-                        height: 10.h,
-                        decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.containerGrey),
-                      )),
-                ),
+                    )
+                  else
+                  ...transactionHistory.value.map(
+                    (e) {
+                      var dateString = e.createdAt;
+                      var dateTime = DateTime.parse(dateString!);
+                      var formattedDate =
+                          DateFormat('dd MMM yyyy').format(dateTime);
+
+                      var formattedTime =
+                          DateFormat('hh:mm a').format(dateTime);
+                      return WalletTile(
+                        id: e.id,
+                        isWithdrawal: false,
+                        isMechanic: false,
+                        date: formattedDate,
+                        amount: e.amount,
+                        status: e.status,
+                        time: formattedTime,
+                      );
+                    },
+                  )
+                ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 }
 
-class Withdrawal extends StatelessWidget {
-  const Withdrawal({super.key});
+class Withdrawal extends HookWidget {
+  Withdrawal({Key? key}) : super(key: key ?? UniqueKey());
+  static final MechanicRepo mechanicRepo = MechanicRepo();
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: Column(
-          children: [
-            GestureDetector(
-              onTap: () => context.push(AppRoutes.spareWithdrawalDetail),
-              child: Container(
-                width: double.infinity, 
-                height: 10.h,
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Container(
-                  width: double.infinity,
-                  height: 10.h,
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: ListTile(
-                      trailing: Column(children: [
-                        customText(
-                            text: "N5,050",
-                            fontSize: 14,
-                            textColor: AppColors.black,
-                            fontWeight: FontWeight.bold),
-                        heightSpace(1),
-                        Container(
-                          width: 19.w,
-                          height: 3.h,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: AppColors.red.withOpacity(.3)),
-                          child: Center(
-                            child: customText(
-                                text: "Cancelled",
-                                fontSize: 12,
-                                textColor: AppColors.red),
-                          ),
-                        )
-                      ]),
-                      subtitle: Row(
+    final transactionHistory = useState<List<TransactionModel>>([]);
+    final isLoading = useState<bool>(true);
+    getTransaction() {
+      mechanicRepo.getAllTransaction('debit').then(
+        (value) {
+          transactionHistory.value = value;
+          isLoading.value = false;
+        },
+      );
+    }
+
+    useEffect(() {
+      getTransaction();
+      return null;
+    }, [transactionHistory.value.length]);
+    return isLoading.value
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Column(
+                children: [
+                  if (transactionHistory.value.isEmpty)
+                    Center(
+                      child: Column(
                         children: [
-                          Row(
-                            children: [
-                              SvgPicture.asset(AppImages.time),
-                              customText(
-                                  text: "12:20pm",
-                                  fontSize: 10,
-                                  textColor: AppColors.textGrey)
-                            ],
-                          ),
-                          widthSpace(2),
-                          Row(
-                            children: [
-                              SvgPicture.asset(AppImages.calendarIcon),
-                              customText(
-                                  text: "12 Jun 2023",
-                                  fontSize: 10,
-                                  textColor: AppColors.textGrey)
-                            ],
+                          SvgPicture.asset(AppImages.nopaymenticon),
+                          heightSpace(1),
+                          SizedBox(
+                            width: 130,
+                            child: customText(
+                              text: 'No payments were made to you',
+                              fontSize: 15,
+                              textColor: AppColors.textGrey.withOpacity(0.3),
+                              textAlignment: TextAlign.center,
+                            ),
                           )
                         ],
                       ),
-                      title: customText(
-                          text: "Kelechi Amadi",
-                          fontSize: 16,
-                          textColor: AppColors.black,
-                          fontWeight: FontWeight.bold),
-                      leading: Container(
-                        width: 10.w,
-                        height: 10.h,
-                        decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.containerGrey),
-                      )),
-                ),
+                    )
+                  else
+                  ...transactionHistory.value.map(
+                    (e) {
+                      var dateString = e.createdAt;
+                      var dateTime = DateTime.parse(dateString!);
+                      var formattedDate =
+                          DateFormat('dd MMM yyyy').format(dateTime);
+
+                      var formattedTime =
+                          DateFormat('hh:mm a').format(dateTime);
+                      return WalletTile(
+                        id: e.id,
+                        isWithdrawal: true,
+                        isMechanic: false,
+                        date: formattedDate,
+                        amount: e.amount,
+                        status: e.status,
+                        time: formattedTime,
+                      );
+                    },
+                  )
+                ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 }
 
@@ -339,7 +307,7 @@ class SpareWalletHistory extends HookWidget {
               ),
             ),
             heightSpace(2),
-            const Expanded(
+            Expanded(
               child: TabBarView(
                 children: [Payments(), Withdrawal()],
               ),

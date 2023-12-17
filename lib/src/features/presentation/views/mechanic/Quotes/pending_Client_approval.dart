@@ -135,29 +135,32 @@ class _PendingClientApprovalState extends State<PendingClientApproval> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: ListTile(
-                                  trailing: Column(children: [
-                                    customText(
-                                        text: "$price",
-                                        fontSize: 14,
-                                        textColor: AppColors.textGrey,
-                                        fontWeight: FontWeight.bold),
-                                    heightSpace(1),
-                                    Container(
-                                      width: 28.w,
-                                      height: 3.h,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color:
-                                              AppColors.green.withOpacity(.1)),
-                                      child: Center(
-                                        child: customText(
-                                            text: "Unapproved quote",
-                                            fontSize: 10,
-                                            textColor: AppColors.green),
-                                      ),
-                                    )
-                                  ]),
+                                  trailing: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        customText(
+                                            text: "$price",
+                                            fontSize: 14,
+                                            textColor: AppColors.textGrey,
+                                            fontWeight: FontWeight.bold),
+                                        heightSpace(1),
+                                        Container(
+                                          width: 28.w,
+                                          height: 3.h,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              color: AppColors.green
+                                                  .withOpacity(.1)),
+                                          child: Center(
+                                            child: customText(
+                                                text: "Unapproved quote",
+                                                fontSize: 10,
+                                                textColor: AppColors.green),
+                                          ),
+                                        )
+                                      ]),
                                   subtitle: Row(
                                     children: [
                                       Row(

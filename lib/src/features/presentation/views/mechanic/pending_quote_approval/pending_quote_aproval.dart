@@ -140,7 +140,9 @@ class _PendingQuoteApprovalState extends State<PendingQuoteApproval> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: ListTile(
-                                  trailing: Column(children: [
+                                  trailing: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
                                     customText(
                                         text: "₦$price",
                                         fontSize: 14,

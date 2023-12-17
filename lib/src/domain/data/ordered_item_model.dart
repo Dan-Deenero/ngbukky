@@ -1,30 +1,30 @@
-class OrdersModel {
+class OrderedItem {
+  String? id;
   String? status;
   int? quantity;
-  int? subtotal;
-  String? id;
   int? price;
+  int? subtotal;
   String? createdAt;
   Product? product;
   Order? order;
 
-  OrdersModel(
-      {this.status,
+  OrderedItem(
+      {this.id,
+      this.status,
       this.quantity,
-      this.id,
       this.price,
-      this.product,
       this.subtotal,
-      this.order,
-      this.createdAt});
+      this.createdAt,
+      this.product,
+      this.order});
 
-  OrdersModel.fromJson(Map<String, dynamic> json) {
+  OrderedItem.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
     status = json['status'];
     quantity = json['quantity'];
-    id = json['id'];
-    createdAt = json['createdAt'];
     price = json['price'];
     subtotal = json['subtotal'];
+    createdAt = json['createdAt'];
     product =
         json['product'] != null ? Product.fromJson(json['product']) : null;
     order = json['order'] != null ? Order.fromJson(json['order']) : null;
@@ -32,9 +32,9 @@ class OrdersModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
+    data['id'] = id;
     data['status'] = status;
     data['quantity'] = quantity;
-    data['id'] = id;
     data['price'] = price;
     data['subtotal'] = subtotal;
     data['createdAt'] = createdAt;
@@ -54,22 +54,19 @@ class Product {
   String? description;
   String? imageUrl;
   Specifications? specifications;
-  int? quantityInStock;
   int? price;
   int? discount;
   int? finalPrice;
 
-  Product({
-    this.id,
-    this.name,
-    this.description,
-    this.imageUrl,
-    this.specifications,
-    this.price,
-    this.discount,
-    this.quantityInStock,
-    this.finalPrice,
-  });
+  Product(
+      {this.id,
+      this.name,
+      this.description,
+      this.imageUrl,
+      this.specifications,
+      this.price,
+      this.discount,
+      this.finalPrice});
 
   Product.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -79,7 +76,6 @@ class Product {
     specifications = json['specifications'] != null
         ? Specifications.fromJson(json['specifications'])
         : null;
-    quantityInStock = json['quantityInStock'];
     price = json['price'];
     discount = json['discount'];
     finalPrice = json['finalPrice'];
@@ -94,7 +90,6 @@ class Product {
     if (specifications != null) {
       data['specifications'] = specifications!.toJson();
     }
-    data['quantityInStock'] = quantityInStock;
     data['price'] = price;
     data['discount'] = discount;
     data['finalPrice'] = finalPrice;
@@ -103,8 +98,9 @@ class Product {
 }
 
 class Specifications {
+
   String? color;
-  String? width;
+  String? width; 
   String? placement;
   String? weight;
   String? length;
@@ -113,12 +109,28 @@ class Specifications {
   dynamic countryOfProducton;
   String? modelNumber;
 
-  Specifications({this.color, this.width, this.placement});
+  Specifications({
+    this.color,
+    this.width,
+    this.placement,
+    this.weight,
+    this.length,
+    this.height,
+    this.volume,
+    this.countryOfProducton,
+    this.modelNumber,
+  });
 
-  Specifications.fromJson(Map<String, dynamic> json) {
+  Specifications.fromJson(Map<String, dynamic> json){
     color = json['color'];
     width = json['width'];
-    placement = json['placement'];
+    placement = json['placement']; 
+    weight = json['weight'];
+    length = json['length'];
+    height = json['height'];
+    volume = json['volume'];
+    countryOfProducton = json['countryOfProducton'];
+    modelNumber = json['modelNumber'];
   }
 
   Map<String, dynamic> toJson() {
@@ -126,8 +138,15 @@ class Specifications {
     data['color'] = color;
     data['width'] = width;
     data['placement'] = placement;
+    data['weight'] = weight; 
+    data['length'] = length;
+    data['height'] = height;
+    data['volume'] = volume;
+    data['countryOfProducton'] = countryOfProducton; 
+    data['modelNumber'] = modelNumber;
     return data;
   }
+
 }
 
 class Order {
@@ -139,15 +158,14 @@ class Order {
   String? state;
   User? user;
 
-  Order({
-    this.id,
-    this.deliveryMethod,
-    this.address,
-    this.city,
-    this.lga,
-    this.state,
-    this.user,
-  });
+  Order(
+      {this.id,
+      this.deliveryMethod,
+      this.address,
+      this.city,
+      this.lga,
+      this.state,
+      this.user});
 
   Order.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -161,7 +179,7 @@ class Order {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['id'] = this.id;
+    data['id'] = id;
     data['deliveryMethod'] = deliveryMethod;
     data['address'] = address;
     data['city'] = city;
@@ -177,26 +195,20 @@ class Order {
 class User {
   String? id;
   String? username;
-  String? deviceToken;
-  String? email;
   String? profileImageUrl;
 
-  User({this.id, this.username, this.deviceToken, this.email, this.profileImageUrl});
+  User({this.id, this.username, this.profileImageUrl});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     username = json['username'];
-    deviceToken = json['deviceToken'];
-    email = json['email'];
     profileImageUrl = json['profileImageUrl'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = id;
     data['username'] = username;
-    data['deviceToken'] = deviceToken;
-    data['email'] = email;
     data['profileImageUrl'] = profileImageUrl;
     return data;
   }

@@ -129,13 +129,6 @@ class _OrdersInfoState extends State<OrdersInfo> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    customText(
-                      text: 'Order No: #53',
-                      fontSize: 16,
-                      textColor: AppColors.black,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    heightSpace(2),
                     OrderCard(
                       image: ordersModel!.product!.imageUrl,
                       price: ordersModel!.product!.price! -
@@ -283,11 +276,14 @@ class _OrdersInfoState extends State<OrdersInfo> {
                     else
                     const SizedBox.shrink(),
                     heightSpace(3),
+                    if (ordersModel!.status == 'processed')
+                    const SizedBox.shrink()
+                    else
                     AppButton(
                       onTap: confirmOrder,
                       buttonText: ordersModel!.status == 'processed'
                           ? 'Confirm pickup'
-                          : 'accept order',
+                          : 'Accept order',
                       hasIcon: false, 
                       isOrange: true,
                     ),

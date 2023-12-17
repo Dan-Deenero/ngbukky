@@ -6,5 +6,9 @@ class AppKeys {
   static const String userType = 'userType';
   static const String userData = 'userData';
   static const String vendorData = 'vendorData';
+  static const String mechPassword= 'password';
+  static const String accountNo= '';
+  static const String dealerAccountNo= '';
+  static const String dealerPassword= 'password';
   static const String onBoardingStatus = 'onBoardingStatus';
 }

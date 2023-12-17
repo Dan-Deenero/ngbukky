@@ -67,13 +67,13 @@ class Orders extends HookWidget {
                     width: 400,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: tabIndex.value == 0
-                          ? AppColors.white
-                          : AppColors.borderGrey,
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(10),
                         bottomLeft: Radius.circular(10),
                       ),
+                      color: tabIndex.value == 0
+                          ? AppColors.white
+                          : AppColors.borderGrey,
                       border: tabIndex.value == 0
                           ? Border.all(
                               width: 1.0,
@@ -83,7 +83,7 @@ class Orders extends HookWidget {
                               width: 0, color: AppColors.backgroundGrey),
                     ),
                     child: const Tab(
-                      text: "All",
+                      text: "New",
                     ),
                   ),
                   Container(
@@ -102,7 +102,7 @@ class Orders extends HookWidget {
                               width: 0, color: AppColors.backgroundGrey),
                     ),
                     child: const Tab(
-                      text: "New",
+                      text: "Pending",
                     ),
                   ),
                   Container(
@@ -121,7 +121,7 @@ class Orders extends HookWidget {
                               width: 0, color: AppColors.backgroundGrey),
                     ),
                     child: const Tab(
-                      text: "Awaiting",
+                      text: "Processed",
                     ),
                   ),
                   Container(
@@ -144,7 +144,7 @@ class Orders extends HookWidget {
                               width: 0, color: AppColors.backgroundGrey),
                     ),
                     child: const Tab(
-                      text: "Processed",
+                      text: "Completed",
                     ),
                   ),
                 ],
@@ -153,7 +153,7 @@ class Orders extends HookWidget {
             heightSpace(2),
             Expanded(
               child: TabBarView(
-                children: [All(), New(), Awaiting(), Processed()],
+                children: [New(), Awaiting(), Processed(), Completed()],
               ),
             )
           ],
@@ -163,96 +163,7 @@ class Orders extends HookWidget {
   }
 }
 
-class All extends HookWidget {
-  static const bool empty = false;
-  static final MechanicRepo mechanicRepo = MechanicRepo();
-  All({Key? key}) : super(key: key ?? UniqueKey());
 
-  @override
-  Widget build(BuildContext context) {
-    final ordersHistory = useState<List<OrdersModel>>([]);
-    final isLoading = useState<bool>(true);
-
-    getOrders() {
-      mechanicRepo.getAllOrder('All').then(
-        (value) {
-          ordersHistory.value = value;
-          isLoading.value = false;
-        },
-      );
-    }
-
-    useEffect(() {
-      getOrders();
-      return null;
-    }, [ordersHistory.value.length]);
-    return isLoading.value
-        ? const Center(
-            child: CircularProgressIndicator(),
-          )
-        : SingleChildScrollView(
-            physics: const ScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                children: [
-                  if (ordersHistory.value.isEmpty)
-                    Center(
-                      child: Column(
-                        children: [
-                          heightSpace(5),
-                          SvgPicture.asset(AppImages.noInventory),
-                          heightSpace(1),
-                          SizedBox(
-                            width: 400,
-                            child: customText(
-                              text: 'You have no orders yet',
-                              fontSize: 15,
-                              textColor: AppColors.textGrey.withOpacity(0.3),
-                              textAlignment: TextAlign.center,
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  else
-                    ...ordersHistory.value.map(
-                      (e) {
-                        var dateString = e.createdAt;
-                        var dateTime = DateTime.parse(dateString!);
-                        var formattedDate =
-                            DateFormat('dd MMM yyyy').format(dateTime);
-
-                        var formattedTime =
-                            DateFormat('hh:mm a').format(dateTime);
-                        // var disPrice = e.product!.price! * (e.product!.discount! / 100);
-                        // var price = e.product!.price! - disPrice;
-                        return ListRect(
-                          isOrders: true,
-                          image: e.product!.imageUrl,
-                          price: e.product!.price! - e.product!.discount!,
-                          item: e.product!.name,
-                          quantity: e.quantity,
-                          ontap: e.status == 'awaiting processing'
-                              ? () => context.push(AppRoutes.processOrder,
-                                  extra: e.id)
-                              : () => context.push(AppRoutes.ordersInfo,
-                                  extra: e.id),
-                          // length: e.product!.specifications!.length,
-                          time: formattedTime,
-                          date: formattedDate,
-                          status: e.status,
-                          deliveryMethod: e.order!.deliveryMethod,
-                        );
-                      },
-                    ),
-                  heightSpace(2),
-                ],
-              ),
-            ),
-          );
-  }
-}
 
 class New extends HookWidget {
   New({Key? key}) : super(key: key ?? UniqueKey());
@@ -533,7 +444,7 @@ class Completed extends HookWidget {
     final isLoading = useState<bool>(true);
 
     getOrders() {
-      mechanicRepo.getAllOrder('processed').then(
+      mechanicRepo.getAllOrder('completed').then(
         (value) {
           ordersHistory.value = value;
           isLoading.value = false;

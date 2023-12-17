@@ -13,6 +13,7 @@ import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_textformfield.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
+import 'package:ngbuka/src/utils/helpers/validators.dart';
 
 class EditInventory extends HookWidget {
   final String id;
@@ -363,12 +364,14 @@ class EditInventory extends HookWidget {
                                       ),
                                       heightSpace(2),
                                       CustomTextFormField(
+                                        validator: numericValidation,
                                         label: 'Price',
                                         textEditingController: price,
                                       ),
                                       heightSpace(2),
                                       CustomTextFormField(
-                                        label: 'Discount',
+                                        validator: numericValidation,
+                                        label: 'Discount (₦)',
                                         textEditingController: discount,
                                       ),
                                       heightSpace(2),

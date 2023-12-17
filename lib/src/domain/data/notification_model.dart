@@ -1,4 +1,5 @@
 import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
+import 'package:ngbuka/src/domain/data/orders_model.dart';
 import 'package:ngbuka/src/domain/data/quote_model.dart';
 
 class NotificationModel {
@@ -14,7 +15,7 @@ class NotificationModel {
   String? priority;
   User? user;
   BookingModel? booking;
-  String? order;
+  OrdersModel? order;
   String? ban;
   QuotesModel? quoteRequest;
 

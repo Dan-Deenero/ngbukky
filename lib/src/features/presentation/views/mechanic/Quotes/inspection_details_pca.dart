@@ -25,7 +25,6 @@ class _PCAInspectionDetailsState extends State<PCAInspectionDetails> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
 
   bool isLoading = true;
-  List<Quotes>? quotes = [];
 
   QuotesModel? quoteModel;
 
@@ -45,7 +44,7 @@ class _PCAInspectionDetailsState extends State<PCAInspectionDetails> {
           () {
             quoteModel = value;
             isLoading = false;
-            // quotes = quoteModel!.services!;
+            quote = quoteModel!.services!;
             for (Quotes quote in quoteModel!.quotes!) {
               if (quote.price != null) {
                 price += quote.price!;
@@ -178,7 +177,7 @@ class _PCAInspectionDetailsState extends State<PCAInspectionDetails> {
                     ListTile(
                       leading: SvgPicture.asset(AppImages.calendarIcon),
                       title: customText(
-                          text: "${quoteModel!.model!}, $quoteModel!.year!}",
+                          text: "${quoteModel!.model!}, ${quoteModel!.year!}",
                           fontSize: 14,
                           textColor: AppColors.black,
                           fontWeight: FontWeight.bold),

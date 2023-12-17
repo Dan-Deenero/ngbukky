@@ -187,9 +187,9 @@ class SpareProfileSettings extends HookWidget {
                         context),
                     card("Business profile", "Edit your business information",
                         AppImages.box, AppRoutes.spareBusinessProfile, context),
-                    card("Contact Ngbuka", "Manage your saved account number",
+                    card("Contact Ngbuka", "Contact Ngbuka customer care",
                         AppImages.box, AppRoutes.spareContactPage, context),
-                    card("Wallet", "Contact Ngbuka customer care",
+                    card("Wallet", "Manage your saved account number",
                         AppImages.contact, AppRoutes.spareAddWallet, context),
                     heightSpace(10),
                     GestureDetector(

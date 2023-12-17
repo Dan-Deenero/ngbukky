@@ -34,7 +34,7 @@ class Boarding1 extends StatelessWidget {
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height * 0.5,
                   decoration: const BoxDecoration(
-                      color: Colors.white,
+                      color: AppColors.boardingBlue,
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30),
                           topRight: Radius.circular(30))),
@@ -121,7 +121,7 @@ class Boarding2 extends StatelessWidget {
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height * 0.5,
                   decoration: const BoxDecoration(
-                      color: Colors.white,
+                      color: AppColors.boardingBlue,
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30),
                           topRight: Radius.circular(30))),
@@ -156,13 +156,13 @@ class Boarding2 extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           customText(
-                              text: 'I already have an account,',
+                              text: "Don't have an account?",
                               fontSize: 14,
                               textColor: AppColors.black),
                           widthSpace(1),
                           GestureDetector(
                             onTap: () {
-                              context.push(AppRoutes.login);
+                              context.push(AppRoutes.boarding1);
                             },
                             child: customText(
                               text: 'Get started',

@@ -301,7 +301,6 @@ class All extends HookWidget {
 }
 
 class RunningOut extends HookWidget {
-  static const bool empty = false;
   static final MechanicRepo mechanicRepo = MechanicRepo();
 
   RunningOut({Key? key}) : super(key: key ?? UniqueKey());

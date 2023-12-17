@@ -4,11 +4,20 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:ngbuka/src/config/keys/app_keys.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
+import 'package:ngbuka/src/config/services/storage_service.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/data/transaction_model.dart';
+import 'package:ngbuka/src/domain/data/wallet_model.dart';
+import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
+import 'package:ngbuka/src/features/presentation/widgets/wallet_tile.dart';
+
+import '../../../../../config/locator/app_locator.dart';
 
 Widget transactionBox(String heading, String time) => Container(
       margin: const EdgeInsets.symmetric(
@@ -54,9 +63,22 @@ Widget transactionBox(String heading, String time) => Container(
 
 class Wallet extends HookWidget {
   const Wallet({super.key});
+  static final MechanicRepo mechanicRepo = MechanicRepo();
 
   @override
   Widget build(BuildContext context) {
+    final wallet = useState<WalletModel?>(null);
+    final isLoad = useState<bool>(true);
+
+    getWallet() {
+      mechanicRepo.getWallet().then(
+        (value) {
+          wallet.value = value;
+          isLoad.value = false;
+        },
+      );
+    }
+
     accept() {
       showDialog(
         context: context,
@@ -111,11 +133,16 @@ class Wallet extends HookWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         TextButton(
-                            onPressed: () => context.pop(),
-                            child: customText(
-                                text: 'Cancel',
-                                fontSize: 16,
-                                textColor: AppColors.textGrey)),
+                          onPressed: () {
+                            context.pop();
+                            context.push(AppRoutes.withdrawFunds);
+                          },
+                          child: customText(
+                            text: 'Cancel',
+                            fontSize: 16,
+                            textColor: AppColors.textGrey,
+                          ),
+                        ),
                         widthSpace(3),
                         Container(
                           width: 1,
@@ -124,12 +151,16 @@ class Wallet extends HookWidget {
                         ),
                         widthSpace(3),
                         TextButton(
-                            onPressed: () =>
-                                context.push(AppRoutes.localAccountSetup),
-                            child: customText(
-                                text: 'Continue',
-                                fontSize: 16,
-                                textColor: AppColors.darkOrange))
+                          onPressed: () {
+                            context.pop();
+                            context.push(AppRoutes.localAccountSetup);
+                          },
+                          child: customText(
+                            text: 'Continue',
+                            fontSize: 16,
+                            textColor: AppColors.darkOrange,
+                          ),
+                        )
                       ],
                     ),
                   )
@@ -140,6 +171,23 @@ class Wallet extends HookWidget {
         ),
       );
     }
+
+    final transactionHistory = useState<List<TransactionModel>>([]);
+    final isLoading = useState<bool>(true);
+    getTransaction() {
+      mechanicRepo.getAllTransaction('all').then(
+        (value) {
+          transactionHistory.value = value;
+          isLoading.value = false;
+        },
+      );
+    }
+
+    useEffect(() {
+      getTransaction();
+      getWallet();
+      return null;
+    }, [transactionHistory.value.length]);
 
     final tabIndex = useState<int>(0);
     return DefaultTabController(
@@ -164,143 +212,180 @@ class Wallet extends HookWidget {
             ],
           ),
           actions: [
-            GestureDetector(
-              onTap: () => context.push(AppRoutes.notification),
-              child: Padding(
-                padding: const EdgeInsets.only(right: 10.0),
-                child: SvgPicture.asset(AppImages.notification),
-              ),
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: SvgPicture.asset(AppImages.notification),
             )
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                width: double.infinity,
-                height: 20.h,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  image: const DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage(
-                      AppImages.walletbase,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    width: double.infinity,
+                    height: 20.h,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        image: const DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AssetImage(
+                              AppImages.walletbase,
+                            ))),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        customText(
+                          text: "Total Balance",
+                          fontSize: 15,
+                          textColor: AppColors.white,
+                        ),
+                        isLoad.value
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : customText(
+                                text: '₦${wallet.value!.balance}',
+                                fontSize: 32,
+                                textColor: AppColors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                        heightSpace(1),
+                        GestureDetector(
+                          onTap: () {
+                            final storedAccount = locator<LocalStorageService>()
+                                .getDataFromDisk(AppKeys.accountNo);
+                            
+
+                            if (storedAccount == '' || storedAccount == null) {
+                              accept();
+                            } else {
+                              context.push(AppRoutes.withdrawFunds);
+                            }
+                          },
+                          child: SvgPicture.asset(AppImages.welcomeImage),
+                        ),
+                        // heightSpace(2),
+                      ],
                     ),
                   ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    customText(
-                        text: "Total Balance",
-                        fontSize: 15,
-                        textColor: AppColors.white),
-                    customText(
-                        text: "₦0",
-                        fontSize: 32,
-                        textColor: AppColors.white,
-                        fontWeight: FontWeight.bold),
-                    heightSpace(1),
-                    GestureDetector(
-                      onTap: () => accept(),
-                      child: SvgPicture.asset(AppImages.welcomeImage),
+                  heightSpace(2),
+                  SizedBox(
+                    height: 14.h,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        transactionBox("Total Earnings", "This year"),
+                        verticalDivide(),
+                        transactionBox("Earned", "This month"),
+                        verticalDivide(),
+                        transactionBox("Withdrawn", "This month")
+                      ],
                     ),
-                    // heightSpace(2),
-                  ],
-                ),
-              ),
-              heightSpace(2),
-              SizedBox(
-                height: 14.h,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    transactionBox("Total Earnings", "This year"),
-                    verticalDivide(),
-                    transactionBox("Earned", "This month"),
-                    verticalDivide(),
-                    transactionBox("Withdrawn", "This month")
-                  ],
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  customText(
-                      text: "History",
-                      fontSize: 15,
-                      textColor: AppColors.black,
-                      fontWeight: FontWeight.bold),
+                  ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      GestureDetector(
-                        onTap: () => context.push(AppRoutes.walletHistory),
-                        child: customText(
-                            text: "See all",
-                            fontSize: 15,
-                            textColor: AppColors.textGrey),
-                      ),
-                      widthSpace(1),
-                      SvgPicture.asset(AppImages.rightArrow)
+                      customText(
+                          text: "History",
+                          fontSize: 15,
+                          textColor: AppColors.black,
+                          fontWeight: FontWeight.bold),
+                      if (transactionHistory.value.isEmpty)
+                        IgnorePointer(
+                          ignoring: true,
+                          child: Row(
+                            children: [
+                              customText(
+                                text: "See all",
+                                fontSize: 15,
+                                textColor: AppColors.primary.withOpacity(0.1),
+                              ),
+                              Icon(
+                                Icons.arrow_forward,
+                                size: 20,
+                                color: AppColors.primary.withOpacity(0.1),
+                              )
+                            ],
+                          ),
+                        )
+                      else
+                        GestureDetector(
+                          onTap: () => context.push(AppRoutes.walletHistory),
+                          child: Row(
+                            children: [
+                              customText(
+                                  text: "See all",
+                                  fontSize: 15,
+                                  textColor: AppColors.primary),
+                              const Icon(
+                                Icons.arrow_forward,
+                                size: 20,
+                              )
+                            ],
+                          ),
+                        )
                     ],
-                  )
+                  ),
                 ],
               ),
-              heightSpace(3),
-              Container(
-                height: 40,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    color: AppColors.borderGrey,
-                    borderRadius: BorderRadius.circular(5)),
-                child: TabBar(
-                  labelPadding: EdgeInsets.zero,
-                  unselectedLabelColor: AppColors.primary,
-                  labelColor: AppColors.primary,
-                  indicator: const BoxDecoration(),
-                  onTap: (value) {
-                    tabIndex.value = value;
-                  },
-                  tabs: [
-                    Container(
-                      width: 200,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          color: tabIndex.value == 0
-                              ? AppColors.white
-                              : AppColors.borderGrey,
-                          borderRadius: BorderRadius.circular(5)),
-                      child: const Tab(
-                        text: "Payment",
-                      ),
+            ),
+            heightSpace(3),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 15),
+              height: 40,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: AppColors.borderGrey,
+                  borderRadius: BorderRadius.circular(5)),
+              child: TabBar(
+                labelPadding: EdgeInsets.zero,
+                unselectedLabelColor: AppColors.primary,
+                labelColor: AppColors.primary,
+                indicator: const BoxDecoration(),
+                onTap: (value) {
+                  tabIndex.value = value;
+                },
+                tabs: [
+                  Container(
+                    width: 200,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: tabIndex.value == 0
+                            ? AppColors.white
+                            : AppColors.borderGrey,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: const Tab(
+                      text: "Payment",
                     ),
-                    Container(
-                      width: 400,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          color: tabIndex.value == 1
-                              ? AppColors.white
-                              : AppColors.borderGrey,
-                          borderRadius: BorderRadius.circular(5)),
-                      child: const Tab(
-                        text: "Withdrawal",
-                      ),
+                  ),
+                  Container(
+                    width: 400,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: tabIndex.value == 1
+                            ? AppColors.white
+                            : AppColors.borderGrey,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: const Tab(
+                      text: "Withdrawal",
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              heightSpace(5),
-              const Expanded(
-                child: TabBarView(
-                  children: [PaymentTab(), WithdrawalTab()],
-                ),
+            ),
+            heightSpace(2),
+            const Expanded(
+              child: TabBarView(
+                children: [PaymentTab(), WithdrawalTab()],
               ),
-              heightSpace(5)
-            ],
-          ),
+            ),
+
+          ],
         ),
       ),
     );
@@ -308,7 +393,7 @@ class Wallet extends HookWidget {
 
   Padding verticalDivide() {
     return const Padding(
-      padding: EdgeInsets.only(bottom: 80, top: 20),
+      padding: EdgeInsets.only(bottom: 35, top: 15),
       child: VerticalDivider(
         thickness: 1,
       ),
@@ -316,196 +401,164 @@ class Wallet extends HookWidget {
   }
 }
 
-class PaymentTab extends StatelessWidget {
+class PaymentTab extends HookWidget {
   const PaymentTab({super.key});
+  static final MechanicRepo mechanicRepo = MechanicRepo();
 
   @override
   Widget build(BuildContext context) {
-    // Center(
-    //                   child: Column(
-    //                     children: [
-    // SvgPicture.asset(AppImages.nopaymenticon),
-    //                       heightSpace(1),
-    //                       SizedBox(
-    //                         width: 130,
-    //                         child: customText(
-    //                           text: 'No payments were made to you',
-    //                           fontSize: 15,
-    //                           textColor: AppColors.textGrey.withOpacity(0.3),
-    //                           textAlignment: TextAlign.center,
-    //                         ),
-    //                       )
-    //                     ],
-    //                   ),
-    //                 )
-    return SizedBox(
-      height: 20,
-      child: ListView(
-        children: [
-          Container(
-            width: double.infinity,
-            // height: 10.h,
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: ListTile(
-              trailing: Column(children: [
-                customText(
-                    text: "N5,050",
-                    fontSize: 14,
-                    textColor: AppColors.black,
-                    fontWeight: FontWeight.bold),
-                heightSpace(1),
-                Container(
-                  width: 19.w,
-                  height: 3.h,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: AppColors.red.withOpacity(.3)),
-                  child: Center(
-                    child: customText(
-                        text: "Cancelled",
-                        fontSize: 12,
-                        textColor: AppColors.red),
-                  ),
-                )
-              ]),
-              subtitle: Row(
+    final transactionHistory = useState<List<TransactionModel>>([]);
+    final isLoading = useState<bool>(true);
+    getTransaction() {
+      mechanicRepo.getAllTransaction('credit').then(
+        (value) {
+          transactionHistory.value = value;
+          isLoading.value = false;
+        },
+      );
+    }
+
+    useEffect(() {
+      getTransaction();
+      return null;
+    }, [transactionHistory.value.length]);
+    return isLoading.value
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Column(
                 children: [
-                  Row(
-                    children: [
-                      SvgPicture.asset(AppImages.time),
-                      customText(
-                          text: "12:20pm",
-                          fontSize: 10,
-                          textColor: AppColors.textGrey)
-                    ],
-                  ),
-                  widthSpace(2),
-                  Row(
-                    children: [
-                      SvgPicture.asset(AppImages.calendarIcon),
-                      customText(
-                          text: "12 Jun 2023",
-                          fontSize: 10,
-                          textColor: AppColors.textGrey)
-                    ],
-                  )
+                  if (transactionHistory.value.isEmpty)
+                    Center(
+                      child: Column(
+                        children: [
+                          SvgPicture.asset(AppImages.nopaymenticon),
+                          heightSpace(1),
+                          SizedBox(
+                            width: 130,
+                            child: customText(
+                              text: 'No payments were made to you',
+                              fontSize: 15,
+                              textColor: AppColors.textGrey.withOpacity(0.3),
+                              textAlignment: TextAlign.center,
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  else
+                    ...transactionHistory.value.map(
+                      (e) {
+                        var dateString = e.createdAt;
+                        var dateTime = DateTime.parse(dateString!);
+                        var formattedDate =
+                            DateFormat('dd MMM yyyy').format(dateTime);
+
+                        var formattedTime =
+                            DateFormat('hh:mm a').format(dateTime);
+                        return Column(
+                          children: [
+                            WalletTile(
+                              id: e.id,
+                              isWithdrawal: false,
+                              isMechanic: true,
+                              date: formattedDate,
+                              amount: e.amount,
+                              status: e.status,
+                              time: formattedTime,
+                            ),
+                            heightSpace(2)
+                          ],
+                        );
+                      },
+                    )
                 ],
               ),
-              title: customText(
-                  text: "Kelechi Amadi",
-                  fontSize: 16,
-                  textColor: AppColors.black,
-                  fontWeight: FontWeight.bold),
-              leading: Container(
-                width: 10.w,
-                height: 10.h,
-                decoration: const BoxDecoration(
-                    shape: BoxShape.circle, color: AppColors.containerGrey),
-              ),
             ),
-          ),
-        ],
-      ),
-    );
+          );
   }
 }
 
-class WithdrawalTab extends StatelessWidget {
+class WithdrawalTab extends HookWidget {
   const WithdrawalTab({super.key});
+  static final MechanicRepo mechanicRepo = MechanicRepo();
 
   @override
   Widget build(BuildContext context) {
-    // Center(
-    //                   child: Column(
-    //                     children: [
-    //                       SvgPicture.asset(AppImages.nowithdrawalicon),
-    //                       heightSpace(1),
-    //                       SizedBox(
-    //                         width: 130,
-    //                         child: customText(
-    //                           text: 'You have not made any withdrawal',
-    //                           fontSize: 15,
-    //                           textColor: AppColors.textGrey.withOpacity(0.3),
-    //                           textAlignment: TextAlign.center,
-    //                         ),
-    //                       )
-    //                     ],
-    //                   ),
-    //                 )
-    return SizedBox(
-      // height: 40,
-      child: ListView(
-        children: [
-          Container(
-            width: double.infinity,
-            // height: 40.h,
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: ListTile(
-              trailing: Column(children: [
-                customText(
-                    text: "N5,050",
-                    fontSize: 14,
-                    textColor: AppColors.black,
-                    fontWeight: FontWeight.bold),
-                heightSpace(1),
-                Container(
-                  width: 19.w,
-                  height: 3.h,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: AppColors.red.withOpacity(.3)),
-                  child: Center(
-                    child: customText(
-                        text: "Cancelled",
-                        fontSize: 12,
-                        textColor: AppColors.red),
-                  ),
-                )
-              ]),
-              subtitle: Row(
+    final transactionHistory = useState<List<TransactionModel>>([]);
+    final isLoading = useState<bool>(true);
+    getTransaction() {
+      mechanicRepo.getAllTransaction('debit').then(
+        (value) {
+          transactionHistory.value = value;
+          isLoading.value = false;
+        },
+      );
+    }
+
+    useEffect(() {
+      getTransaction();
+      return null;
+    }, [transactionHistory.value.length]);
+    return isLoading.value
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Column(
                 children: [
-                  Row(
-                    children: [
-                      SvgPicture.asset(AppImages.time),
-                      customText(
-                          text: "12:20pm",
-                          fontSize: 10,
-                          textColor: AppColors.textGrey)
-                    ],
-                  ),
-                  widthSpace(2),
-                  Row(
-                    children: [
-                      SvgPicture.asset(AppImages.calendarIcon),
-                      customText(
-                          text: "12 Jun 2023",
-                          fontSize: 10,
-                          textColor: AppColors.textGrey)
-                    ],
-                  )
+                  if (transactionHistory.value.isEmpty)
+                    Center(
+                      child: Column(
+                        children: [
+                          SvgPicture.asset(AppImages.nopaymenticon),
+                          heightSpace(1),
+                          SizedBox(
+                            width: 130,
+                            child: customText(
+                              text: 'No payments were made to you',
+                              fontSize: 15,
+                              textColor: AppColors.textGrey.withOpacity(0.3),
+                              textAlignment: TextAlign.center,
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  else
+                    ...transactionHistory.value.map(
+                      (e) {
+                        var dateString = e.createdAt;
+                        var dateTime = DateTime.parse(dateString!);
+                        var formattedDate =
+                            DateFormat('dd MMM yyyy').format(dateTime);
+
+                        var formattedTime =
+                            DateFormat('hh:mm a').format(dateTime);
+                        return Column(
+                          children: [
+                            WalletTile(
+                              id: e.id,
+                              isWithdrawal: true,
+                              isMechanic: true,
+                              date: formattedDate,
+                              amount: e.amount,
+                              status: e.status,
+                              time: formattedTime,
+                            ),
+                            heightSpace(2)
+                          ],
+                        );
+                      },
+                    )
                 ],
               ),
-              title: customText(
-                  text: "Kelechi Amadi",
-                  fontSize: 16,
-                  textColor: AppColors.black,
-                  fontWeight: FontWeight.bold),
-              leading: Container(
-                width: 10.w,
-                height: 10.h,
-                decoration: const BoxDecoration(
-                    shape: BoxShape.circle, color: AppColors.containerGrey),
-              ),
             ),
-          ),
-        ],
-      ),
-    );
+          );
   }
 }

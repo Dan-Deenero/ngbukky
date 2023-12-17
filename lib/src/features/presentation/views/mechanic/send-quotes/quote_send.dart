@@ -456,40 +456,12 @@ class _QuoteSendState extends State<QuoteSend> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           customText(
-                              text: 'Sub-total (₦)',
-                              fontSize: 13,
-                              textColor: AppColors.black),
-                          customText(
-                              text: '$subtotal',
-                              fontSize: 13,
-                              textColor: AppColors.black)
-                        ],
-                      ),
-                      heightSpace(2),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          customText(
-                              text: 'Ngbuka Charge (1%)',
-                              fontSize: 13,
-                              textColor: AppColors.black),
-                          customText(
-                              text: '$serviceFee',
-                              fontSize: 13,
-                              textColor: AppColors.black)
-                        ],
-                      ),
-                      heightSpace(2),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          customText(
                               text: 'Total',
                               fontSize: 13,
                               textColor: AppColors.black,
                               fontWeight: FontWeight.w600),
                           customText(
-                              text: '${subtotal + serviceFee}',
+                              text: '$subtotal',
                               fontSize: 13,
                               textColor: AppColors.black,
                               fontWeight: FontWeight.w600)

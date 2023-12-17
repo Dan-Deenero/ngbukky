@@ -15,10 +15,7 @@ import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
 class PPRInspectionDetails extends StatefulWidget {
   final String id;
-  const PPRInspectionDetails({
-    super.key,
-    required this.id
-  });
+  const PPRInspectionDetails({super.key, required this.id});
 
   @override
   State<PPRInspectionDetails> createState() => _PPRInspectionDetailsState();
@@ -28,7 +25,7 @@ class _PPRInspectionDetailsState extends State<PPRInspectionDetails> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
 
   List<Quotes>? quotes = [];
-  
+
   bool isLoading = true;
   BookingModel? bookingModel;
   var dateString;
@@ -52,8 +49,8 @@ class _PPRInspectionDetailsState extends State<PPRInspectionDetails> {
             formattedTime = DateFormat('hh:mm a').format(dateTime);
             isLoading = false;
             quotes = bookingModel!.quotes;
-            for(Quotes quote in quotes!){
-              if(quote.price != null){
+            for (Quotes quote in quotes!) {
+              if (quote.price != null) {
                 price += quote.price!;
               }
             }
@@ -62,29 +59,29 @@ class _PPRInspectionDetailsState extends State<PPRInspectionDetails> {
         ));
   }
 
-
   completeBooking() async {
-      var body = {
-        "": "",
-      };
-      bool result = await _mechanicRepo.markInspectionAsCompleted(body, widget.id);
-      if (result) {
-        if (context.mounted) {
-          context.push(AppRoutes.acceptedBooking);
-          return;
-        }
+    var body = {
+      "": "",
+    };
+    bool result =
+        await _mechanicRepo.markInspectionAsCompleted(body, widget.id);
+    if (result) {
+      if (context.mounted) {
+        context.pop();
+        return;
       }
+    }
   }
 
-  showCompletedModal(){
+  showCompletedModal() {
     showDialog(
-        context: context,
-        builder: (context) => SuccessDialogue(
-              title: 'Complete booking',
-              subtitle:
-                  'Your have completed your booking and requested for payment from Kels2323',
-              action: () => context.go(AppRoutes.paymentRequest)
-            ));
+      context: context,
+      builder: (context) => SuccessDialogue(
+          title: 'Complete booking',
+          subtitle:
+              'Your have completed your booking and requested for payment from Kels2323',
+          action: () => context.go(AppRoutes.paymentRequest)),
+    );
   }
 
   completedBooking() {
@@ -94,7 +91,6 @@ class _PPRInspectionDetailsState extends State<PPRInspectionDetails> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 120,
@@ -243,12 +239,11 @@ class _PPRInspectionDetailsState extends State<PPRInspectionDetails> {
                       textColor: AppColors.orange,
                       fontWeight: FontWeight.bold),
                   heightSpace(3),
-                  ...quotes!.map((quote){
+                  ...quotes!.map((quote) {
                     String serviceName = '';
-                    if(quote.requestedPersonalisedService != null){
+                    if (quote.requestedPersonalisedService != null) {
                       serviceName = quote.requestedPersonalisedService!.name!;
-                    }
-                    else if(quote.requestedSystemService != null){
+                    } else if (quote.requestedSystemService != null) {
                       serviceName = quote.requestedSystemService!.name!;
                     }
                     return Column(
@@ -318,40 +313,12 @@ class _PPRInspectionDetailsState extends State<PPRInspectionDetails> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           customText(
-                              text: 'Sub-total (₦)',
-                              fontSize: 13,
-                              textColor: AppColors.black),
-                          customText(
-                              text: '$price',
-                              fontSize: 13,
-                              textColor: AppColors.black)
-                        ],
-                      ),
-                      heightSpace(2),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          customText(
-                              text: 'Ngbuka Charge (1%)',
-                              fontSize: 13,
-                              textColor: AppColors.black),
-                          customText(
-                              text: '$serviceFee',
-                              fontSize: 13,
-                              textColor: AppColors.black)
-                        ],
-                      ),
-                      heightSpace(2),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          customText(
                               text: 'Total',
                               fontSize: 13,
                               textColor: AppColors.black,
                               fontWeight: FontWeight.w600),
                           customText(
-                              text: '${price + serviceFee}',
+                              text: '$price',
                               fontSize: 13,
                               textColor: AppColors.black,
                               fontWeight: FontWeight.w600)
@@ -361,48 +328,47 @@ class _PPRInspectionDetailsState extends State<PPRInspectionDetails> {
                   ),
                   heightSpace(2),
                   heightSpace(3),
-            Row(
-              children: [
-                SvgPicture.asset(AppImages.warning),
-                widthSpace(2),
-                Flexible(
-                  child: customText(
-                      text:
-                          "For your own safety, all transactions should be done in the Ngbuka application.",
-                      fontSize: 12,
-                      textColor: AppColors.orange),
-                )
-              ],
-            ),
-            heightSpace(3),
-            Row(
-              children: [
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    width: 30.w,
-                    height: 7.h,
-                    decoration: BoxDecoration(
-                        color: AppColors.containerGrey,
-                        borderRadius: BorderRadius.circular(25)),
-                    child: Center(
-                      child: SvgPicture.asset(AppImages.warning),
-                    ),
+                  Row(
+                    children: [
+                      SvgPicture.asset(AppImages.warning),
+                      widthSpace(2),
+                      Flexible(
+                        child: customText(
+                            text:
+                                "For your own safety, all transactions should be done in the Ngbuka application.",
+                            fontSize: 12,
+                            textColor: AppColors.orange),
+                      )
+                    ],
                   ),
-                ),
-                widthSpace(2),
-                Expanded(
-                  child: AppButton(
-                    onTap: completedBooking,
-                    hasIcon: false,
-                    buttonText: "Complete Booking",
-                    isOrange: true,
+                  heightSpace(3),
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          width: 30.w,
+                          height: 7.h,
+                          decoration: BoxDecoration(
+                              color: AppColors.containerGrey,
+                              borderRadius: BorderRadius.circular(25)),
+                          child: Center(
+                            child: SvgPicture.asset(AppImages.warning),
+                          ),
+                        ),
+                      ),
+                      widthSpace(2),
+                      Expanded(
+                        child: AppButton(
+                          onTap: completedBooking,
+                          hasIcon: false,
+                          buttonText: "Complete Booking",
+                          isOrange: true,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-            heightSpace(3),
-
+                  heightSpace(3),
                 ],
               ),
             )),

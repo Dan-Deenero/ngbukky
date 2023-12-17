@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
@@ -43,11 +42,6 @@ class ListRect extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            customText(
-              text: 'Order No: #53',
-              fontSize: 12,
-              textColor: AppColors.textGrey,
-            ),
             Row(
               children: [
                 Row(
@@ -84,8 +78,8 @@ class ListRect extends StatelessWidget {
               decoration: BoxDecoration(
                   color: AppColors.green,
                   borderRadius: BorderRadius.circular(10)),
-              child: SizedBox(
-                width: 8.h,
+              child: Padding(
+                padding: const EdgeInsets.all(3.0),
                 child: Center(
                   child: customText(
                     text: status!,
@@ -156,7 +150,7 @@ class ListRect extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   customText(
-                    text: 'N$price',
+                    text: 'N${quantity! * price!}',
                     fontSize: 12,
                     textColor: AppColors.black,
                     fontWeight: FontWeight.w700,
@@ -165,17 +159,6 @@ class ListRect extends StatelessWidget {
               ),
             ],
           ),
-        ),
-        heightSpace(1),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            customText(
-              text: deliveryMethod!,
-              fontSize: 12,
-              textColor: AppColors.textGrey,
-            ),
-          ],
         ),
         heightSpace(2),
         isOrders

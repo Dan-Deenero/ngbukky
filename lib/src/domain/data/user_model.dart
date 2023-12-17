@@ -88,7 +88,9 @@ class UserModel {
     mechanicType = json['mechanicType'];
     about = json['about'];
     cars = json['cars'].cast<String>();
-    languages = json['languages'].cast<String>();
+    languages = json['languages'] != null
+    ? (json['languages'] as List).cast<String>()
+    : null;
     isActive = json['isActive'];
     if (json['services'] != null) {
       services = <Services>[];

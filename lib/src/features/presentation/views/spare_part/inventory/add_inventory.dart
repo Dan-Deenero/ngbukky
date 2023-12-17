@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
@@ -13,9 +14,10 @@ import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_textformfield.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
+import 'package:ngbuka/src/utils/helpers/validators.dart';
 
 class AddInventory extends HookWidget {
-  AddInventory({super.key});
+  const AddInventory({super.key});
   static final productName = TextEditingController();
   static final description = TextEditingController();
   static final length = TextEditingController();
@@ -85,11 +87,11 @@ class AddInventory extends HookWidget {
         "discount": discount.text,
         "specifications": {
           "color": color.text,
-          "width": width.text,
-          "length": length.text,
-          "height": height.text,
-          "weight": weight.text,
-          "volume": volume.text,
+          "width": '${width.text}mm',
+          "length": '${length.text}mm',
+          "height": '${height.text}mm',
+          "weight": '${weight.text}kg',
+          "volume": '${volume.text}l',
           "countryOfProducton": country.text,
           "modelNumber": modelNumber.text
         }
@@ -100,10 +102,48 @@ class AddInventory extends HookWidget {
 
       if (result) {
         clearFields();
-        if (context.mounted) { 
+        if (context.mounted) {
           context.pop();
         }
       }
+    }
+
+    showInfoModal() {
+      showDialog(
+        context: context,
+        builder: (context) => SimpleDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius:
+                BorderRadius.circular(20.0), // Adjust the radius as needed
+          ),
+          contentPadding: const EdgeInsets.all(16.0),
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                InkWell(
+                    onTap: () => context.pop(),
+                    child: SvgPicture.asset(AppImages.cancelModal))
+              ],
+            ),
+            customText(
+              text: 'About Markup',
+              fontSize: 24,
+              textColor: AppColors.black,
+              fontWeight: FontWeight.w600,
+              textAlignment: TextAlign.center,
+            ),
+            heightSpace(1),
+            customText(
+              text: 'A 10% markup will be included in your product price for enhanced platform services. Appreciate your understanding!',
+              fontSize: 12,
+              textColor: AppColors.black,
+              textAlignment: TextAlign.center,
+            ),
+            heightSpace(4)
+          ],
+        ),
+      );
     }
 
     return Scaffold(
@@ -124,13 +164,13 @@ class AddInventory extends HookWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 7.0),
                   child: Center(
-                      child: GestureDetector(
+                      child: InkWell(
                     onTap: () => context.pop(),
                     child: const Icon(
                       Icons.arrow_back_ios,
                       color: AppColors.black,
                     ),
-                  )),
+                  ),),
                 ),
               ),
               customText(
@@ -193,6 +233,7 @@ class AddInventory extends HookWidget {
                       CustomTextFormField(
                         label: 'Product Name',
                         textEditingController: productName,
+                        validator: stringValidation,
                       ),
                       heightSpace(3),
                       customText(
@@ -242,6 +283,8 @@ class AddInventory extends HookWidget {
                                       child: CustomTextFormField(
                                         label: 'Length (L)',
                                         textEditingController: length,
+                                        validator: numericValidation,
+                                        keyboardType: TextInputType.number,
                                       ),
                                     ),
                                     widthSpace(3),
@@ -249,6 +292,8 @@ class AddInventory extends HookWidget {
                                       child: CustomTextFormField(
                                         label: 'Width (W)',
                                         textEditingController: width,
+                                        validator: numericValidation,
+                                        keyboardType: TextInputType.number,
                                       ),
                                     ),
                                     widthSpace(3),
@@ -256,6 +301,8 @@ class AddInventory extends HookWidget {
                                       child: CustomTextFormField(
                                         label: 'Height (H)',
                                         textEditingController: height,
+                                        validator: numericValidation,
+                                        keyboardType: TextInputType.number,
                                       ),
                                     ),
                                   ],
@@ -267,6 +314,8 @@ class AddInventory extends HookWidget {
                                       child: CustomTextFormField(
                                         label: 'Weight',
                                         textEditingController: weight,
+                                        validator: numericValidation,
+                                        keyboardType: TextInputType.number,
                                       ),
                                     ),
                                     widthSpace(3),
@@ -274,6 +323,8 @@ class AddInventory extends HookWidget {
                                       child: CustomTextFormField(
                                         label: 'Volume (V)',
                                         textEditingController: volume,
+                                        validator: numericValidation,
+                                        keyboardType: TextInputType.number,
                                       ),
                                     ),
                                     widthSpace(3),
@@ -281,6 +332,8 @@ class AddInventory extends HookWidget {
                                       child: CustomTextFormField(
                                         label: 'Colour',
                                         textEditingController: color,
+                                        validator: stringValidation,
+                                      
                                       ),
                                     ),
                                   ],
@@ -289,6 +342,7 @@ class AddInventory extends HookWidget {
                                 CustomTextFormField(
                                   label: 'Country of production',
                                   textEditingController: country,
+                                  validator: stringValidation,
                                 ),
                                 heightSpace(2),
                                 CustomTextFormField(
@@ -335,13 +389,17 @@ class AddInventory extends HookWidget {
                                 ),
                                 heightSpace(2),
                                 CustomTextFormField(
+                                  validator: numericValidation,
                                   label: 'Price',
                                   textEditingController: price,
+                                  keyboardType: TextInputType.number,
                                 ),
                                 heightSpace(2),
                                 CustomTextFormField(
-                                  label: 'Discount',
+                                  validator: numericValidation, 
+                                  label: 'Discount (₦)',
                                   textEditingController: discount,
+                                  keyboardType: TextInputType.number,
                                 ),
                                 heightSpace(2),
                               ],
@@ -355,36 +413,25 @@ class AddInventory extends HookWidget {
                 ),
               ),
               heightSpace(5),
-              AppButton(
-                isActive: isValidated.value,
-                buttonText: 'Save',
-                hasIcon: false,
-                isOrange: true,
-                onTap: addInventory,
-              ),
-              heightSpace(3),
-              GestureDetector(
-                child: Container(
-                  width: double.infinity,
-                  height: 7.h,
-                  decoration: BoxDecoration(
-                    color: AppColors.backgroundGrey,
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(width: 1.0, color: AppColors.darkOrange),
-                  ),
-                  child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        customText(
-                          text: 'Remove from inventory',
-                          textColor: AppColors.darkOrange,
-                          fontSize: 14,
-                        ),
-                      ],
+              Row(
+                children: [
+                  Expanded(
+                    child: AppButton(
+                      isActive: isValidated.value,
+                      buttonText: 'Save',
+                      hasIcon: false,
+                      isOrange: true,
+                      onTap: addInventory,
                     ),
                   ),
-                ),
+                  widthSpace(2),
+                  GestureDetector(
+                    onTap: showInfoModal,
+                    child: Center(
+                      child: SvgPicture.asset(AppImages.warning, width: 33, height: 33,),
+                    ),
+                  ),
+                ],
               ),
               heightSpace(3),
             ],

@@ -11,7 +11,7 @@ class Endpoints {
   static const String updateToken = "auth/device-token";
   static const String mechanicProfileImage = "mechanic/profile/image";
   static const String getProfileMechanic = 'mechanic/profile';
-  static const String getMechanicServices = 'services';
+  static const String getMechanicServices = 'services'; 
   static const String getLocation = 'location/sub-domains';
   static const String updateBusiness = 'mechanic/business-profile';
   static const String getStatisticsInfo = 'mechanic/summary';
@@ -25,4 +25,12 @@ class Endpoints {
   static const String getDealerProfile = 'dealer/profile';
   static const String dealerSparePart = 'dealer/spare-parts';
   static const String dealerOrders = 'dealer/orders';
+  static const String dealerDashboard = 'dealer/dashboard';
+  static const String transactions = 'transactions';
+  static const String account = 'account';
+  static const String wallet = 'wallet/';
+  static const String walletWithdraw = 'wallet/withdraw';
+  static const String paystack = "https://api.paystack.co/";
+  static const String getBankList = "bank";
+
 }

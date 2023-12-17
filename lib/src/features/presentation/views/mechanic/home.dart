@@ -18,7 +18,7 @@ class HomeView extends HookWidget {
   static final MechanicRepo _mechanicRepo = MechanicRepo();
   static final AuthRepo _authRepo = AuthRepo();
 
-  const HomeView({super.key});
+  HomeView({Key? key}) : super(key: key ?? UniqueKey());
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +99,7 @@ class HomeView extends HookWidget {
       getNewBookings();
       getNewQuotes();
       return null;
-    }, [bookingHistory.value.length, quoteHistory.value.length]);
+    }, [bookingHistory.value, quoteHistory.value]);
     return DefaultTabController(
       length: 2,
       child: Scaffold(

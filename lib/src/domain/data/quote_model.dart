@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_this, prefer_collection_literals
+
 class QuotesModel {
   String? id;
   String? status;
@@ -60,14 +62,13 @@ class QuotesModel {
         responses!.add(Responses.fromJson(v));
       });
     }
-    mechanic = json['mechanic'] != null
-        ? Mechanic.fromJson(json['mechanic'])
-        : null;
+    mechanic =
+        json['mechanic'] != null ? Mechanic.fromJson(json['mechanic']) : null;
     user = json['user'] != null ? User.fromJson(json['user']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = id;
     data['status'] = status;
     data['description'] = description;
@@ -79,8 +80,7 @@ class QuotesModel {
       data['Services'] = services!.map((v) => v.toJson()).toList();
     }
     if (otherServices != null) {
-      data['OtherServices'] =
-          otherServices!.map((v) => v.toJson()).toList();
+      data['OtherServices'] = otherServices!.map((v) => v.toJson()).toList();
     }
     if (quotes != null) {
       data['quotes'] = quotes!.map((v) => v.toJson()).toList();
@@ -110,7 +110,7 @@ class Services {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['name'] = name;
     data['description'] = description;
     return data;
@@ -129,7 +129,7 @@ class OtherServices {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['name'] = name;
     data['description'] = description;
     return data;
@@ -192,7 +192,7 @@ class Responses {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['previousResponse'] = previousResponse;
     data['response'] = response;
     data['owner'] = owner;
@@ -214,7 +214,7 @@ class Mechanic {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = id;
     data['firstname'] = firstname;
     data['lastname'] = lastname;
@@ -227,22 +227,25 @@ class User {
   String? username;
   String? email;
   String? address;
+  String? profileImageUrl;
   String? city;
   String? lga;
   String? state;
   String? longitude;
   String? latitude;
 
-  User(
-      {this.id,
-      this.username,
-      this.email,
-      this.address,
-      this.city,
-      this.lga,
-      this.state,
-      this.longitude,
-      this.latitude});
+  User({
+    this.id,
+    this.username,
+    this.email,
+    this.address,
+    this.city,
+    this.lga,
+    this.state,
+    this.longitude,
+    this.latitude,
+    this.profileImageUrl,
+  });
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -253,17 +256,19 @@ class User {
     lga = json['lga'];
     state = json['state'];
     longitude = json['longitude'];
+    profileImageUrl = json['profileImageUrl'];
     latitude = json['latitude'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['username'] = this.username;
     data['email'] = this.email;
     data['address'] = this.address;
     data['city'] = this.city;
     data['lga'] = this.lga;
+    data['profileImageUrl'] = profileImageUrl;
     data['state'] = this.state;
     data['longitude'] = this.longitude;
     data['latitude'] = this.latitude;

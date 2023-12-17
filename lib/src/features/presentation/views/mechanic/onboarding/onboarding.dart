@@ -39,49 +39,45 @@ class OnboardingScreen extends HookWidget {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                      padding: EdgeInsets.all(4.h),
-                      width: double.infinity,
-                      height: 45.h,
-                      decoration: const BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
-                          )),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          customHeading(onboarding[index].heading),
-                          heightSpace(1),
-                          DotsIndicator(
-                            dotsCount: onboarding.length,
-                            position: currentPage.value,
-                            decorator: DotsDecorator(
-                              size: const Size.square(9.0),
-                              activeSize: const Size(18.0, 9.0),
-                              activeShape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5.0)),
-                            ),
+                    padding: EdgeInsets.all(4.h),
+                    width: double.infinity,
+                    height: 45.h,
+                    decoration: const BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        )),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        customHeading(onboarding[index].heading),
+                        heightSpace(1),
+                        DotsIndicator(
+                          dotsCount: onboarding.length,
+                          position: currentPage.value,
+                          decorator: DotsDecorator(
+                            size: const Size.square(9.0),
+                            activeSize: const Size(18.0, 9.0),
+                            activeShape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0)),
                           ),
-                          heightSpace(1),
-                          bodyText(onboarding[index].description),
-                          heightSpace(5),
-                          AppButton(
-                              buttonText: "Start connecting",
-                              onTap: () {
-                                locator<LocalStorageService>().saveDataToDisk(
-                                    AppKeys.firstInstall, false);
-                                // Navigator.push(
-                                //   context,e
-                                //   MaterialPageRoute(
-                                //       builder: (context) => const Wallet()),
-                                // );
-                                context.push(AppRoutes.boarding1);
-                              }),
-                          heightSpace(3),
-                          haveanaccount()
-                        ],
-                      )),
+                        ),
+                        heightSpace(1),
+                        bodyText(onboarding[index].description),
+                        heightSpace(5),
+                        AppButton(
+                            buttonText: "Start connecting",
+                            onTap: () {
+                              locator<LocalStorageService>()
+                                  .saveDataToDisk(AppKeys.firstInstall, false);
+                              context.push(AppRoutes.boarding1);
+                            }),
+                        heightSpace(3),
+                        haveanaccount()
+                      ],
+                    ),
+                  ),
                 )
               ],
             );

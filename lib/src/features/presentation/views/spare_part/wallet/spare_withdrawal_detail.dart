@@ -7,9 +7,16 @@ import 'package:ngbuka/src/core/shared/colors.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
-class SpareWithdrawalDetail extends StatelessWidget {
-  const SpareWithdrawalDetail({super.key});
+class SpareWithdrawalDetail extends StatefulWidget {
+  final String id;
 
+  const SpareWithdrawalDetail({super.key, required this.id});
+
+  @override
+  State<SpareWithdrawalDetail> createState() => _SpareWithdrawalDetailState();
+}
+
+class _SpareWithdrawalDetailState extends State<SpareWithdrawalDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

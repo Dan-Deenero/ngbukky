@@ -35,7 +35,7 @@ class AppButton extends StatelessWidget {
                 if (isOrange) {
                   return AppColors.darkOrange;
                 }
-                return AppColors.primary;
+                return AppColors.normalBlue;
               }
               return AppColors.containerGrey;
             }()),
