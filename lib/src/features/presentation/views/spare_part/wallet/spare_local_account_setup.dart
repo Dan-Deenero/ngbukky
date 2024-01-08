@@ -286,112 +286,130 @@ class _SpareLocalAccountSetupState
           Padding(
             padding: const EdgeInsets.only(right: 10.0),
             child: GestureDetector(
-              onTap: () => context.pop(),
+              onTap: () {
+                context.pop();
+                password.clear();
+                accountNumber.clear();
+                setState(() {
+                  bankController.text = '';
+                });
+              },
               child: SvgPicture.asset(AppImages.cancelModal),
             ),
           )
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              heightSpace(1),
-              GestureDetector(
-                onTap: showBankList,
-                child: CustomTextFormField(
-                  isDropdown: true,
-                  isEnabled: false,
-                  textEditingController: bankController,
-                  prefixIcon: Padding(
-                    padding: const EdgeInsets.all(13.0),
-                    child: SvgPicture.asset(
-                      AppImages.accountDet,
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Column(
+                // mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  heightSpace(1),
+                  GestureDetector(
+                    onTap: showBankList,
+                    child: CustomTextFormField(
+                      isDropdown: true,
+                      isEnabled: false,
+                      textEditingController: bankController,
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.all(13.0),
+                        child: SvgPicture.asset(
+                          AppImages.accountDet,
+                        ),
+                      ),
+                      label: "Bank",
+                      hintText: "select Bank",
                     ),
                   ),
-                  label: "Bank",
-                  hintText: "select Bank",
-                ),
-              ),
-              heightSpace(1),
-              CustomTextFormField(
-                onChanged: (value) {
-                  if (value.length == 10) {
-                    getAccountOwner();
-                  }
-                },
-                validator: numericValidation,
-                textEditingController: accountNumber,
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.all(13.0),
-                  child: SvgPicture.asset(
-                    AppImages.accountDet,
+                  heightSpace(1),
+                  CustomTextFormField(
+                    onChanged: (value) {
+                      if (value.length == 10) {
+                        getAccountOwner();
+                      }
+                    },
+                    validator: numericValidation,
+                    textEditingController: accountNumber,
+                    prefixIcon: Padding(
+                      padding: const EdgeInsets.all(13.0),
+                      child: SvgPicture.asset(
+                        AppImages.accountDet,
+                      ),
+                    ),
+                    label: "Account Number",
+                    hintText: "Type in business registration number",
                   ),
-                ),
-                label: "Account Number",
-                hintText: "Type in business registration number",
-              ),
-              if (acctName == null)
-                const SizedBox.shrink()
-              else
-                Padding(
-                  padding: const EdgeInsets.only(top: 3),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Row(
+                  if (acctName == null)
+                    const SizedBox.shrink()
+                  else
+                    Padding(
+                      padding: const EdgeInsets.only(top: 3),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          customText(
-                            text: acctName!,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                            textColor: AppColors.green,
-                            textAlignment: TextAlign.right,
+                          Row(
+                            children: [
+                              customText(
+                                text: acctName!,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                                textColor: AppColors.green,
+                                textAlignment: TextAlign.right,
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
+                    ),
+                  heightSpace(3),
+                  CustomTextFormField(
+                    isEnabled: acctName == null ? false : true,
+                    onChanged: (value) {
+                      if (value.length >= 6) {
+                        setState(() {
+                          isValidated = true;
+                        });
+                      } else {
+                        setState(() {
+                          isValidated = false;
+                        });
+                      }
+                    },
+                    isPassword: true,
+                    prefixIcon: Padding(
+                      padding: const EdgeInsets.all(13.0),
+                      child: SvgPicture.asset(
+                        AppImages.passwordIcon,
+                      ),
+                    ),
+                    textEditingController: password,
+                    label: "Your Ngbuka login password",
+                    validator: passwordValidation,
+                    hintText: "Enter password",
                   ),
-                ),
-              heightSpace(3),
-              CustomTextFormField(
-                isEnabled: acctName == null ? false : true,
-                onChanged: (value) {
-                  if (value.length >= 6) {
-                    setState(() {
-                      isValidated = true;
-                    });
-                  } else {
-                    setState(() {
-                      isValidated = false;
-                    });
-                  }
-                },
-                isPassword: true,
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.all(13.0),
-                  child: SvgPicture.asset(
-                    AppImages.passwordIcon,
+                  heightSpace(24),
+                  AppButton(
+                    isActive: isValidated,
+                    onTap: saveAccount,
+                    hasIcon: false,
+                    buttonText: "Save account number",
+                    isOrange: true,
                   ),
-                ),
-                textEditingController: password,
-                label: "Your Ngbuka login password",
-                validator: passwordValidation,
-                hintText: "Enter password",
+                ],
               ),
-              heightSpace(24),
-              AppButton(
-                isActive: isValidated,
-                onTap: saveAccount,
-                hasIcon: false,
-                buttonText: "Save account number",
-                isOrange: true,
-              ),
-            ],
+            ),
           ),
-        ),
+          if (isFetchingAccountName)
+            Container(
+              color: Colors.black.withOpacity(0.7), // Adjust opacity as needed
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+        ],
       ),
     );
   }

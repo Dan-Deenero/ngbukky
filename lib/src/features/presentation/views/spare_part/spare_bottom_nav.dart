@@ -20,7 +20,7 @@ class BottomNavBarView extends HookWidget {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  static  final List<Widget> _widgetOptions = <Widget>[
+  static final List<Widget> _widgetOptions = <Widget>[
     DashboardView(),
     const Orders(),
     const Inventory(),
@@ -42,6 +42,8 @@ class BottomNavBarView extends HookWidget {
           isLoading.value = false;
           if (inventoryHistory.value.isEmpty) {
             selectedIndex.value = 2;
+          } else {
+            selectedIndex.value = 0;
           }
         },
       );
@@ -66,24 +68,34 @@ class BottomNavBarView extends HookWidget {
               selectedItemColor: AppColors.black,
               showUnselectedLabels: true,
               unselectedItemColor: AppColors.black,
-              // unselectedFontSize: 14,
+              unselectedFontSize: 14,
+              selectedFontSize: 14,
               items: <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
                   icon: selectedIndex.value == 0
                       ? SvgPicture.asset(
                           AppImages.home,
                           color: AppColors.orange,
+                          width: 30,
                         )
-                      : SvgPicture.asset(AppImages.home,
-                          color: AppColors.black),
+                      : SvgPicture.asset(
+                          AppImages.home,
+                          color: AppColors.black,
+                          width: 30,
+                        ),
                   label: 'Home',
                 ),
                 BottomNavigationBarItem(
                   icon: selectedIndex.value == 1
-                      ? SvgPicture.asset(AppImages.wallet,
-                          color: AppColors.orange)
+                      ? SvgPicture.asset(
+                          AppImages.packageR,
+                          color: AppColors.orange,
+                          width: 25,
+                        )
                       : SvgPicture.asset(
-                          AppImages.orders,
+                          AppImages.packageR,
+                          color: AppColors.black,
+                          width: 25,
                         ),
                   label: 'Orders',
                 ),
@@ -92,10 +104,12 @@ class BottomNavBarView extends HookWidget {
                         ? SvgPicture.asset(
                             AppImages.orders,
                             color: AppColors.orange,
+                            width: 30,
                           )
                         : SvgPicture.asset(
                             AppImages.orders,
                             color: AppColors.black,
+                            width: 30,
                           ),
                     label: "Inventory"),
                 BottomNavigationBarItem(
@@ -103,16 +117,24 @@ class BottomNavBarView extends HookWidget {
                         ? SvgPicture.asset(
                             AppImages.profile,
                             color: AppColors.orange,
+                            width: 30,
                           )
-                        : SvgPicture.asset(AppImages.wallet),
+                        : SvgPicture.asset(
+                            AppImages.wallet,
+                            width: 30,
+                          ),
                     label: "Wallet"),
                 BottomNavigationBarItem(
                     icon: selectedIndex.value == 4
                         ? SvgPicture.asset(
                             AppImages.profile,
                             color: AppColors.orange,
+                            width: 30,
                           )
-                        : SvgPicture.asset(AppImages.profile),
+                        : SvgPicture.asset(
+                            AppImages.profile,
+                            width: 30,
+                          ),
                     label: "Profile"),
               ],
               currentIndex: selectedIndex.value,

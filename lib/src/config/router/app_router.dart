@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/domain/data/otp_model.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/send_quote.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/business_info/business_info.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/business_info/business_info_settings.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/business_info/business_location.dart';
@@ -48,7 +49,6 @@ import 'package:ngbuka/src/features/presentation/views/mechanic/pending_quote_ap
 import 'package:ngbuka/src/features/presentation/views/mechanic/send-quotes/quote_send.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/rejected-bookings/rejected_booking.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/rejected-bookings/view_rejected_booking.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/send_quote.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/history_detail.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/local_account_setup.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/wallet_history.dart';
@@ -230,12 +230,6 @@ GoRouter router() => GoRouter(
                   id: state.extra as String,
                 )),
         GoRoute(
-            path: AppRoutes.sendQuotes,
-            name: AppRoutes.sendQuotes,
-            builder: (_, state) => SendQuote(
-                  id: state.extra as String,
-                )),
-        GoRoute(
             path: AppRoutes.quotesSend,
             name: AppRoutes.quotesSend,
             builder: (_, state) => QuoteSend(
@@ -292,12 +286,16 @@ GoRouter router() => GoRouter(
         GoRoute(
           path: AppRoutes.historyDetail,
           name: AppRoutes.historyDetail,
-          builder: (_, state) => HistoryDetail(id: state.extra as String,),
+          builder: (_, state) => HistoryDetail(
+            id: state.extra as String,
+          ),
         ),
         GoRoute(
           path: AppRoutes.withdrawalDetail,
           name: AppRoutes.withdrawalDetail,
-          builder: (_, state) => const WithdrawalDetail(),
+          builder: (_, state) => WithdrawalDetail(
+            id: state.extra as String,
+          ),
         ),
         GoRoute(
           path: AppRoutes.withdrawFunds,
@@ -307,7 +305,7 @@ GoRouter router() => GoRouter(
         GoRoute(
           path: AppRoutes.localAccountSetup,
           name: AppRoutes.localAccountSetup,
-          builder: (_, state) => LocalAccountSetup(),
+          builder: (_, state) => const LocalAccountSetup(),
         ),
         GoRoute(
             path: AppRoutes.selectAccount,
@@ -341,11 +339,19 @@ GoRouter router() => GoRouter(
             name: AppRoutes.acceptedQuotes,
             builder: (_, state) => const AcceptedQuotes()),
         GoRoute(
-            path: AppRoutes.viewAcceptedQuote,
-            name: AppRoutes.viewAcceptedQuote,
-            builder: (_, state) => ViewAcceptedQuote(
-                  id: state.extra as String,
-                )),
+          path: AppRoutes.viewAcceptedQuote,
+          name: AppRoutes.viewAcceptedQuote,
+          builder: (_, state) => ViewAcceptedQuote(
+            id: state.extra as String,
+          ),
+        ),
+        GoRoute(
+          path: AppRoutes.sendQuotes,
+          name: AppRoutes.sendQuotes,
+          builder: (_, state) => SendQuote(
+            id: state.extra as String,
+          ),
+        ),
         GoRoute(
             path: AppRoutes.rejectedQuote,
             name: AppRoutes.rejectedQuote,
@@ -532,7 +538,7 @@ GoRouter router() => GoRouter(
         GoRoute(
           path: AppRoutes.addInventory,
           name: AppRoutes.addInventory,
-          builder: (_, state) => AddInventory(),
+          builder: (_, state) => const AddInventory(),
         ),
         GoRoute(
           path: AppRoutes.editInventory,

@@ -29,6 +29,7 @@ class Ngbuka extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Ngbuka',
             theme: AppTheme.defaultTheme,
+            // theme: ThemeData(useMaterial3: false),
             routerConfig: _router,
           );
         },

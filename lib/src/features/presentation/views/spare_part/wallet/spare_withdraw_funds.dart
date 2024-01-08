@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/controller/Helpers.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/success_modal.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
@@ -13,6 +14,8 @@ import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_textformfield.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 import 'package:ngbuka/src/utils/helpers/validators.dart';
+
+import '../../../../../domain/data/wallet_model.dart';
 
 class SpareWithdrawFunds extends HookWidget {
   SpareWithdrawFunds({super.key});
@@ -30,11 +33,24 @@ class SpareWithdrawFunds extends HookWidget {
         builder: (context) => SuccessDialogue(
           title: 'Withdrawal Successful',
           subtitle:
-              'You have successfully withdrawn 35,000 to your GTB account.',
+              'You have successfully withdrawn 35,000 to your account.',
           action: () {
             context.go(AppRoutes.bottomNav);
           },
         ),
+      );
+    }
+
+    final wallet = useState<WalletModel?>(null);
+    final isLoad = useState<bool>(true);
+
+
+    getWallet() {
+      _mechanicRepo.getWallet().then(
+        (value) {
+          wallet.value = value;
+          isLoad.value = false;
+        },
       );
     }
 
@@ -53,7 +69,10 @@ class SpareWithdrawFunds extends HookWidget {
       }
     }
 
-
+    useEffect(() {
+      getWallet();
+      return null;
+    }, []);
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
       appBar: AppBar(
@@ -77,7 +96,7 @@ class SpareWithdrawFunds extends HookWidget {
           Padding(
             padding: const EdgeInsets.only(right: 10.0),
             child: GestureDetector(
-              onTap: () => context.go(AppRoutes.bottomNav),
+              onTap: () => context.pop(),
               child: SvgPicture.asset(AppImages.cancelModal),
             ),
           )
@@ -110,7 +129,7 @@ class SpareWithdrawFunds extends HookWidget {
                     ),
                     heightSpace(2),
                     customText(
-                      text: "₦130,000.00",
+                      text: '₦${Helpers.formatBalance(wallet.value!.wallet!.balance!)}',
                       fontSize: 32,
                       textColor: AppColors.white,
                       fontWeight: FontWeight.bold,

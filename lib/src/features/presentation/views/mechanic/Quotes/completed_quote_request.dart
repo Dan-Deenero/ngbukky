@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/controller/Helpers.dart';
 import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -130,9 +131,11 @@ class _CompletedQuoteRequestState extends State<CompletedQuoteRequest> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: ListTile(
-                                  trailing: Column(children: [
+                                trailing: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
                                     customText(
-                                      text: '$price',
+                                      text: '₦${Helpers.formatBalance(price)}',
                                       fontSize: 14,
                                       textColor: AppColors.textGrey,
                                     ),
@@ -147,48 +150,57 @@ class _CompletedQuoteRequestState extends State<CompletedQuoteRequest> {
                                               AppColors.green.withOpacity(.1)),
                                       child: Center(
                                         child: customText(
-                                            text: "Accepted booking",
+                                            text: "Completed quote",
                                             fontSize: 10,
                                             textColor: AppColors.green),
                                       ),
                                     )
-                                  ]),
-                                  subtitle: Row(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          SvgPicture.asset(AppImages.time),
-                                          customText(
-                                              text: formattedTime,
-                                              fontSize: 10,
-                                              textColor: AppColors.textGrey)
-                                        ],
-                                      ),
-                                      widthSpace(1),
-                                      Row(
-                                        children: [
-                                          SvgPicture.asset(
-                                              AppImages.calendarIcon),
-                                          customText(
-                                              text: formattedDate,
-                                              fontSize: 10,
-                                              textColor: AppColors.textGrey)
-                                        ],
-                                      )
-                                    ],
+                                  ],
+                                ),
+                                subtitle: Row(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(AppImages.time),
+                                        customText(
+                                            text: formattedTime,
+                                            fontSize: 2.5.w,
+                                            textColor: AppColors.textGrey)
+                                      ],
+                                    ),
+                                    widthSpace(1),
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                            AppImages.calendarIcon),
+                                        customText(
+                                            text: formattedDate,
+                                            fontSize: 2.5.w,
+                                            textColor: AppColors.textGrey)
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                title: customText(
+                                    text: e.user!.username!,
+                                    fontSize: 16,
+                                    textColor: AppColors.black,
+                                    fontWeight: FontWeight.bold),
+                                leading: Container(
+                                  width: 9.w,
+                                  height: 9.h,
+                                  decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: AppColors.containerGrey),
+                                  child: CircleAvatar(
+                                    backgroundColor: AppColors.backgroundGrey,
+                                    backgroundImage:
+                                        NetworkImage(e.user!.profileImageUrl!),
+                                    radius:
+                                        55, // Adjust the size of the circle as needed
                                   ),
-                                  title: customText(
-                                      text: e.user!.username!,
-                                      fontSize: 16,
-                                      textColor: AppColors.black,
-                                      fontWeight: FontWeight.bold),
-                                  leading: Container(
-                                    width: 8.w,
-                                    height: 8.h,
-                                    decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: AppColors.containerGrey),
-                                  )),
+                                ),
+                              ),
                             ),
                           );
                         })

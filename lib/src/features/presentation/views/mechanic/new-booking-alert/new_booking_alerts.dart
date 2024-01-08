@@ -124,54 +124,63 @@ class _BookingAlertState extends State<BookingAlert> {
                                     context.push(AppRoutes.inspectionBooking,
                                         extra: e.id);
                                   },
-                                  child: Container(
-                                    margin: const EdgeInsets.only(bottom: 10),
-                                    alignment: Alignment.center,
-                                    padding: const EdgeInsets.all(1),
-                                    width: double.infinity,
-                                    height: 12.h,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.white,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            alignment: Alignment.center,
-                                            width: double.infinity,
-                                            height: 10.h,
-                                            decoration: BoxDecoration(
-                                              color: AppColors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            ),
-                                            child: ListTile(
-                                              leading: SvgPicture.asset(
-                                                  AppImages.carIcon),
-                                              title: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 9),
-                                                child: customText(
-                                                    text: e.brand!,
-                                                    fontSize: 14,
-                                                    textColor: AppColors.black,
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Card(
+                                        color: Colors.white,
+                                        surfaceTintColor: Colors.transparent,
+                                        child: ListTile(
+                                          leading: SvgPicture.asset(
+                                              AppImages.carIcon),
+                                          title: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceBetween,
+                                            children: [
+                                              customText(
+                                                  text: e.brand!,
+                                                  fontSize: 14,
+                                                  textColor: AppColors.black,
+                                                  fontWeight:
+                                                      FontWeight.bold),
+                                              Container(
+                                                width: 60,
+                                                height: 20,
+                                                decoration: BoxDecoration(
+                                                  color: AppColors.green,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          5),
+                                                ),
+                                                child: Center(
+                                                  child: customText(
+                                                    text: "New",
+                                                    fontSize: 10,
+                                                    textColor:
+                                                        AppColors.white,
+                                                  ),
+                                                ),
                                               ),
-                                              subtitle: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                            ],
+                                          ),
+                                          subtitle: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              heightSpace(.5),
+                                              customText(
+                                                  text:
+                                                      '${e.model}, ${e.year}',
+                                                  fontSize: 12,
+                                                  textColor: AppColors.black),
+                                              heightSpace(.5),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
-                                                  heightSpace(.5),
-                                                  customText(
-                                                      text:
-                                                          '${e.model}, ${e.year}',
-                                                      fontSize: 12,
-                                                      textColor:
-                                                          AppColors.black),
-                                                  heightSpace(.5),
                                                   Row(
                                                     children: [
                                                       Row(
@@ -179,65 +188,45 @@ class _BookingAlertState extends State<BookingAlert> {
                                                           SvgPicture.asset(
                                                               AppImages.time),
                                                           customText(
-                                                              text:
-                                                                  formattedTime,
-                                                              fontSize: 9,
-                                                              textColor:
-                                                                  AppColors
-                                                                      .textGrey)
+                                                            text:
+                                                                formattedTime,
+                                                            fontSize: 10,
+                                                            textColor:
+                                                                AppColors
+                                                                    .textGrey,
+                                                          )
                                                         ],
                                                       ),
-                                                      widthSpace(2),
+                                                      widthSpace(1),
                                                       Row(
                                                         children: [
                                                           SvgPicture.asset(
                                                               AppImages
                                                                   .calendarIcon),
                                                           customText(
-                                                              text:
-                                                                  formattedDate,
-                                                              fontSize: 9,
-                                                              textColor:
-                                                                  AppColors
-                                                                      .textGrey)
+                                                            text:
+                                                                formattedDate,
+                                                            fontSize: 10,
+                                                            textColor:
+                                                                AppColors
+                                                                    .textGrey,
+                                                          )
                                                         ],
                                                       )
                                                     ],
                                                   ),
+                                                  customText(
+                                                    text: "Car Insepection",
+                                                    fontSize: 3.w,
+                                                    textColor: AppColors.red,
+                                                  ),
                                                 ],
                                               ),
-                                              trailing: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.end,
-                                                  children: [
-                                                    Container(
-                                                      width: 60,
-                                                      height: 20,
-                                                      decoration: BoxDecoration(
-                                                          color:
-                                                              AppColors.green,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(5)),
-                                                      child: Center(
-                                                        child: customText(
-                                                          text: "New",
-                                                          fontSize: 10,
-                                                          textColor:
-                                                              AppColors.white,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    heightSpace(2.2),
-                                                    customText(
-                                                        text: "Car Insepection",
-                                                        fontSize: 12,
-                                                        textColor:
-                                                            AppColors.red),
-                                                  ]),
-                                            ),
+                                            ],
                                           ),
-                                        ]),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 );
                               },

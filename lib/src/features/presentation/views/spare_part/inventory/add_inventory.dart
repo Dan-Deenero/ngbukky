@@ -135,7 +135,8 @@ class AddInventory extends HookWidget {
             ),
             heightSpace(1),
             customText(
-              text: 'A 10% markup will be included in your product price for enhanced platform services. Appreciate your understanding!',
+              text:
+                  'A 10% markup will be included in your product price for enhanced platform services. Appreciate your understanding!',
               fontSize: 12,
               textColor: AppColors.black,
               textAlignment: TextAlign.center,
@@ -155,7 +156,7 @@ class AddInventory extends HookWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: 10.h,
+                height: 9.h,
                 width: 10.w,
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.black),
@@ -164,13 +165,14 @@ class AddInventory extends HookWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 7.0),
                   child: Center(
-                      child: InkWell(
-                    onTap: () => context.pop(),
-                    child: const Icon(
-                      Icons.arrow_back_ios,
-                      color: AppColors.black,
+                    child: InkWell(
+                      onTap: () => context.pop(),
+                      child: const Icon(
+                        Icons.arrow_back_ios,
+                        color: AppColors.black,
+                      ),
                     ),
-                  ),),
+                  ),
                 ),
               ),
               customText(
@@ -283,7 +285,6 @@ class AddInventory extends HookWidget {
                                       child: CustomTextFormField(
                                         label: 'Length (L)',
                                         textEditingController: length,
-                                        validator: numericValidation,
                                         keyboardType: TextInputType.number,
                                       ),
                                     ),
@@ -292,7 +293,6 @@ class AddInventory extends HookWidget {
                                       child: CustomTextFormField(
                                         label: 'Width (W)',
                                         textEditingController: width,
-                                        validator: numericValidation,
                                         keyboardType: TextInputType.number,
                                       ),
                                     ),
@@ -301,7 +301,6 @@ class AddInventory extends HookWidget {
                                       child: CustomTextFormField(
                                         label: 'Height (H)',
                                         textEditingController: height,
-                                        validator: numericValidation,
                                         keyboardType: TextInputType.number,
                                       ),
                                     ),
@@ -314,7 +313,6 @@ class AddInventory extends HookWidget {
                                       child: CustomTextFormField(
                                         label: 'Weight',
                                         textEditingController: weight,
-                                        validator: numericValidation,
                                         keyboardType: TextInputType.number,
                                       ),
                                     ),
@@ -323,7 +321,6 @@ class AddInventory extends HookWidget {
                                       child: CustomTextFormField(
                                         label: 'Volume (V)',
                                         textEditingController: volume,
-                                        validator: numericValidation,
                                         keyboardType: TextInputType.number,
                                       ),
                                     ),
@@ -332,8 +329,6 @@ class AddInventory extends HookWidget {
                                       child: CustomTextFormField(
                                         label: 'Colour',
                                         textEditingController: color,
-                                        validator: stringValidation,
-                                      
                                       ),
                                     ),
                                   ],
@@ -342,7 +337,6 @@ class AddInventory extends HookWidget {
                                 CustomTextFormField(
                                   label: 'Country of production',
                                   textEditingController: country,
-                                  validator: stringValidation,
                                 ),
                                 heightSpace(2),
                                 CustomTextFormField(
@@ -389,14 +383,25 @@ class AddInventory extends HookWidget {
                                 ),
                                 heightSpace(2),
                                 CustomTextFormField(
+                                  hasWidg: true,
                                   validator: numericValidation,
                                   label: 'Price',
+                                  widg: GestureDetector(
+                                    onTap: showInfoModal,
+                                    child: Center(
+                                      child: SvgPicture.asset(
+                                        AppImages.warning,
+                                        width: 15,
+                                        height: 15,
+                                      ),
+                                    ),
+                                  ),
                                   textEditingController: price,
                                   keyboardType: TextInputType.number,
                                 ),
                                 heightSpace(2),
                                 CustomTextFormField(
-                                  validator: numericValidation, 
+                                  validator: numericValidation,
                                   label: 'Discount (₦)',
                                   textEditingController: discount,
                                   keyboardType: TextInputType.number,
@@ -422,13 +427,6 @@ class AddInventory extends HookWidget {
                       hasIcon: false,
                       isOrange: true,
                       onTap: addInventory,
-                    ),
-                  ),
-                  widthSpace(2),
-                  GestureDetector(
-                    onTap: showInfoModal,
-                    child: Center(
-                      child: SvgPicture.asset(AppImages.warning, width: 33, height: 33,),
                     ),
                   ),
                 ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/domain/data/notification_model.dart';
 
@@ -40,7 +41,7 @@ class Helpers {
             context.push(AppRoutes.bookingRejectedDetails,
                 extra: data.booking!.id);
             break;
-          case "awaiting paymen":
+          case "awaiting payment":
             context.push(AppRoutes.pendingPaymentRequestDetails,
                 extra: data.booking!.id);
             break;
@@ -88,6 +89,15 @@ class Helpers {
       case "sparepart":
     }
   }
+
+  static String formatBalance(int balance) {
+    // Create a NumberFormat instance with the desired format
+    final NumberFormat formatter = NumberFormat('#,###');
+
+    // Format the balance using the NumberFormat instance
+    return formatter.format(balance);
+  }
+
 
   static onItemTapped(
     int index,

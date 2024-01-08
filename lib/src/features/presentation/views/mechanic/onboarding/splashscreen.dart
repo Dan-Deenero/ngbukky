@@ -33,7 +33,11 @@ class _SplashscreenState extends State<Splashscreen> {
     log(token.toString());
 
     if (token != null) {
-      context.push(AppRoutes.bottomNav);
+      if(locator<LocalStorageService>().getDataFromDisk(AppKeys.userType) == 'mechanic'){
+          locator<GoRouter>().push(AppRoutes.bottomNav);
+        }else if(locator<LocalStorageService>().getDataFromDisk(AppKeys.userType) == 'dealer'){
+          locator<GoRouter>().push(AppRoutes.spareBottomNav);
+        }
     } else {
       context.push(AppRoutes.boarding2);
     }
@@ -58,7 +62,7 @@ class _SplashscreenState extends State<Splashscreen> {
 
     Future.delayed(const Duration(seconds: 3), () {
       checkForOnBoarding();
-      // checkForLogin();
+      checkForLogin();
     });
     NotificationsManager.requestPermissions();
   }

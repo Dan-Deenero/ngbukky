@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -43,8 +45,10 @@ class _CQRInspectionDetailsState extends State<CQRInspectionDetails> {
             quoteModel = value;
             isLoading = false;
             quote = quoteModel!.services!;
-
+            quotes = quoteModel!.quotes;
+          
             for (Quotes quote in quotes!) {
+              log(quote.toString());
               if (quote.price != null) {
                 price += quote.price!;
               }
@@ -176,7 +180,7 @@ class _CQRInspectionDetailsState extends State<CQRInspectionDetails> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.calendarIcon),
                     title: customText(
-                        text: "${quoteModel!.model!}, $quoteModel!.year!}",
+                        text: "${quoteModel!.model!}, ${quoteModel!.year!}",
                         fontSize: 14,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),
@@ -233,40 +237,12 @@ class _CQRInspectionDetailsState extends State<CQRInspectionDetails> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           customText(
-                              text: 'Sub-total (₦)',
-                              fontSize: 13,
-                              textColor: AppColors.black),
-                          customText(
-                              text: '$price',
-                              fontSize: 13,
-                              textColor: AppColors.black)
-                        ],
-                      ),
-                      heightSpace(2),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          customText(
-                              text: 'Ngbuka Charge (1%)',
-                              fontSize: 13,
-                              textColor: AppColors.black),
-                          customText(
-                              text: '$serviceFee',
-                              fontSize: 13,
-                              textColor: AppColors.black)
-                        ],
-                      ),
-                      heightSpace(2),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          customText(
                               text: 'Total',
                               fontSize: 13,
                               textColor: AppColors.black,
                               fontWeight: FontWeight.w600),
                           customText(
-                              text: '${price + serviceFee}',
+                              text: '$price',
                               fontSize: 13,
                               textColor: AppColors.black,
                               fontWeight: FontWeight.w600)

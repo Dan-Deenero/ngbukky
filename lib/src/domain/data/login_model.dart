@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_this, prefer_collection_literals
+
 class   LoginModel {
   String? token;
   String? refreshToken;
@@ -8,11 +10,11 @@ class   LoginModel {
   LoginModel.fromJson(Map<String, dynamic> json) {
     token = json['token'];
     refreshToken = json['refreshToken'];
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    user = json['user'] != null ? User.fromJson(json['user']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['token'] = this.token;
     data['refreshToken'] = this.refreshToken;
     if (this.user != null) {
@@ -60,7 +62,7 @@ class User {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['isEmailVerified'] = this.isEmailVerified;
     data['role'] = this.role;
     data['businessName'] = this.businessName;

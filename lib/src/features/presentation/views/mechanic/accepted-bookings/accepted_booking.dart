@@ -83,9 +83,9 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                   child: Wrap(
                     children: [
                       if (_bookingHistory.isEmpty)
-                            Center(
-                              heightFactor: 3.5,
-                                child: Column(
+                        Center(
+                            heightFactor: 3.5,
+                            child: Column(
                               children: [
                                 SvgPicture.asset(AppImages.bookingWarning),
                                 customText(
@@ -96,49 +96,49 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                               ],
                             ))
                       else
-                      ..._bookingHistory.map((e) {
-                        var dateString = e.date;
-                        var dateTime = DateTime.parse(dateString!);
-                        var formattedDate =
-                            DateFormat('dd MMM yyyy').format(dateTime);
+                        ..._bookingHistory.map((e) {
+                          var dateString = e.date;
+                          var dateTime = DateTime.parse(dateString!);
+                          var formattedDate =
+                              DateFormat('dd MMM yyyy').format(dateTime);
 
-                        var formattedTime =
-                            DateFormat('hh:mm a').format(dateTime);
-                        return GestureDetector(
-                          onTap: () {
-                            context.push(AppRoutes.viewAcceptedBooking,
-                                extra: e.id);
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.only(bottom: 10),
-                            width: double.infinity,
-                            height: 10.h,
-                            decoration: BoxDecoration(
-                              color: AppColors.white,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: ListTile(
-                                trailing: Column(children: [
-                                  customText(
-                                      text: "",
-                                      fontSize: 14,
-                                      textColor: AppColors.textGrey,
-                                      fontWeight: FontWeight.bold),
-                                  heightSpace(1),
-                                  Container(
-                                    width: 28.w,
-                                    height: 3.h,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: AppColors.green.withOpacity(.1)),
-                                    child: Center(
-                                      child: customText(
-                                          text: "Accepted booking",
-                                          fontSize: 10,
-                                          textColor: AppColors.green),
-                                    ),
-                                  )
-                                ]),
+                          var formattedTime =
+                              DateFormat('hh:mm a').format(dateTime);
+                          return GestureDetector(
+                            onTap: () {
+                              context.push(AppRoutes.viewAcceptedBooking,
+                                  extra: e.id);
+                            },
+                            child: Card(
+                              color: Colors.white,
+                              surfaceTintColor: Colors.transparent,
+                              child: ListTile(
+                                trailing: Column(
+                                  children: [
+                                    customText(
+                                        text: "",
+                                        fontSize: 14,
+                                        textColor: AppColors.textGrey,
+                                        fontWeight: FontWeight.bold),
+                                    heightSpace(1),
+                                    Container(
+                                      width: 27.w,
+                                      height: 3.h,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color:
+                                              AppColors.green.withOpacity(.1)),
+                                      child: Center(
+                                        child: customText(
+                                            text: "Accepted booking",
+                                            fontSize: 2.8.w,
+                                            fontWeight: FontWeight.bold,
+                                            textColor: AppColors.green),
+                                      ),
+                                    )
+                                  ],
+                                ),
                                 subtitle: Row(
                                   children: [
                                     Row(
@@ -146,7 +146,7 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                                         SvgPicture.asset(AppImages.time),
                                         customText(
                                             text: formattedTime,
-                                            fontSize: 10,
+                                            fontSize: 2.5.w,
                                             textColor: AppColors.textGrey)
                                       ],
                                     ),
@@ -157,7 +157,7 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                                             AppImages.calendarIcon),
                                         customText(
                                             text: formattedDate,
-                                            fontSize: 10,
+                                            fontSize: 2.5.w,
                                             textColor: AppColors.textGrey)
                                       ],
                                     )
@@ -174,10 +174,18 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                                   decoration: const BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: AppColors.containerGrey),
-                                )),
-                          ),
-                        );
-                      })
+                                  child: CircleAvatar(
+                                    backgroundColor: AppColors.backgroundGrey,
+                                    backgroundImage:
+                                        NetworkImage(e.user!.profileImageUrl!),
+                                    radius:
+                                        55, // Adjust the size of the circle as needed
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        })
                     ],
                   ),
                 ),

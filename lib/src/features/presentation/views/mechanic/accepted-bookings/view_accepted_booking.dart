@@ -85,78 +85,152 @@ class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
     bool result = await _mechanicRepo.markInspection(body, widget.id);
     if (result) {
       if (context.mounted) {
-        context.push(AppRoutes.acceptedBooking);
+        context.go(AppRoutes.bottomNav);
         return;
       }
     }
   }
 
-  finish() {
+  inspectionComplete() {
     showDialog(
-        context: context,
-        builder: (context) => Center(
-              child: Container(
-                // padding: EdgeInsets.all(10.0),
-                width: 700, // Set the desired width
-                height: 200,
-                child: Dialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                        16.0), // Adjust the radius as needed
-                  ),
-                  child: Column(
+      context: context,
+      builder: (context) => Center(
+        child: Container(
+          // padding: EdgeInsets.all(10.0),
+          width: 700, // Set the desired width
+          height: 200,
+          child: Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(16.0), // Adjust the radius as needed
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    customText(
+                        text: 'Inspection completed',
+                        fontSize: 20,
+                        textColor: AppColors.black,
+                        fontWeight: FontWeight.w500),
+                    InkWell(
+                        onTap: () => context.pop(),
+                        child: SvgPicture.asset(AppImages.cancelModal))
+                  ],
+                ),
+                heightSpace(1),
+                customText(
+                    text:
+                        'Completed the car inspection and is ready to send a quote?',
+                    fontSize: 12,
+                    textColor: AppColors.black),
+                heightSpace(3),
+                Center(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          customText(
-                              text: 'Confirm acceptance',
-                              fontSize: 20,
-                              textColor: AppColors.black,
-                              fontWeight: FontWeight.w500),
-                          InkWell(
-                              onTap: () => context.pop(),
-                              child: SvgPicture.asset(AppImages.cancelModal))
-                        ],
+                      TextButton(
+                          onPressed: () => context.go(AppRoutes.bottomNav),
+                          child: customText(
+                              text: 'No',
+                              fontSize: 16,
+                              textColor: AppColors.textGrey)),
+                      widthSpace(3),
+                      Container(
+                        width: 1,
+                        height: 40,
+                        color: AppColors.containerGrey,
                       ),
-                      heightSpace(1),
-                      customText(
-                          text: 'Confirm that you want to accept this booking',
-                          fontSize: 12,
-                          textColor: AppColors.black),
-                      heightSpace(3),
-                      Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            TextButton(
-                                onPressed: () => context.pop(),
-                                child: customText(
-                                    text: 'No',
-                                    fontSize: 16,
-                                    textColor: AppColors.textGrey)),
-                            widthSpace(3),
-                            Container(
-                              width: 1,
-                              height: 40,
-                              color: AppColors.containerGrey,
-                            ),
-                            widthSpace(3),
-                            TextButton(
-                                onPressed: finishBooking,
-                                child: customText(
-                                    text: 'Yes',
-                                    fontSize: 16,
-                                    textColor: AppColors.darkOrange))
-                          ],
+                      widthSpace(3),
+                      TextButton(
+                        onPressed: () => context.push(AppRoutes.quotesSend,
+                            extra: bookingModel!.id),
+                        child: customText(
+                          text: 'Yes',
+                          fontSize: 16,
+                          textColor: AppColors.darkOrange,
                         ),
-                      )
+                      ),
                     ],
                   ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  finish() {
+    showDialog(
+      context: context,
+      builder: (context) => Center(
+        child: Container(
+          // padding: EdgeInsets.all(10.0),
+          width: 700, // Set the desired width
+          height: 200,
+          child: Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(16.0), // Adjust the radius as needed
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    customText(
+                        text: 'Confirm Completion',
+                        fontSize: 20,
+                        textColor: AppColors.black,
+                        fontWeight: FontWeight.w500),
+                    InkWell(
+                        onTap: () => context.pop(),
+                        child: SvgPicture.asset(AppImages.cancelModal))
+                  ],
                 ),
-              ),
-            ));
+                heightSpace(1),
+                customText(
+                    text: 'Confirm that you\'ve completed this booking',
+                    fontSize: 12,
+                    textColor: AppColors.black),
+                heightSpace(3),
+                Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                          onPressed: () => context.pop(),
+                          child: customText(
+                              text: 'No',
+                              fontSize: 16,
+                              textColor: AppColors.textGrey)),
+                      widthSpace(3),
+                      Container(
+                        width: 1,
+                        height: 40,
+                        color: AppColors.containerGrey,
+                      ),
+                      widthSpace(3),
+                      TextButton(
+                          onPressed: finishBooking,
+                          child: customText(
+                              text: 'Yes',
+                              fontSize: 16,
+                              textColor: AppColors.darkOrange))
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   // void resendOTP() async {
@@ -338,8 +412,7 @@ class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
                       widthSpace(2),
                       Expanded(
                         child: AppButton(
-                          onTap: () => context.push(AppRoutes.quotesSend,
-                              extra: bookingModel!.id),
+                          onTap: inspectionComplete,
                           hasIcon: false,
                           buttonText: "Send Quote",
                           isOrange: true,

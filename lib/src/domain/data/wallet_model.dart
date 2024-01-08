@@ -1,40 +1,48 @@
-class WalletModel {
-  String? id;
-  String? userId;
-  int? balance;
-  String? deletedAt;
-  String? createdAt;
-  String? updatedAt;
-  Owner? owner;
+// ignore_for_file: prefer_collection_literals
 
-  WalletModel(
-      {this.id,
-      this.userId,
-      this.balance,
-      this.deletedAt,
-      this.createdAt,
-      this.updatedAt,
-      this.owner});
+class WalletModel{
+  Wallet? wallet;
+  Analytics? analytics;
+
+  WalletModel({this.wallet, this.analytics});
 
   WalletModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    userId = json['userId'];
+    wallet =
+        json['wallet'] != null ? Wallet.fromJson(json['wallet']) : null;
+    analytics = json['analytics'] != null
+        ? Analytics.fromJson(json['analytics'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    if (wallet != null) {
+      data['wallet'] = wallet!.toJson();
+    }
+    if (analytics != null) {
+      data['analytics'] = analytics!.toJson();
+    }
+    return data;
+  }
+}
+
+class Wallet {
+  int? balance;
+  String? id;
+  Owner? owner;
+
+  Wallet({this.balance, this.id, this.owner});
+
+  Wallet.fromJson(Map<String, dynamic> json) {
     balance = json['balance'];
-    deletedAt = json['deletedAt'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
+    id = json['id'];
     owner = json['owner'] != null ? Owner.fromJson(json['owner']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    // ignore: prefer_collection_literals
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['id'] = id;
-    data['userId'] = userId;
     data['balance'] = balance;
-    data['deletedAt'] = deletedAt;
-    data['createdAt'] = createdAt;
-    data['updatedAt'] = updatedAt;
+    data['id'] = id;
     if (owner != null) {
       data['owner'] = owner!.toJson();
     }
@@ -58,12 +66,36 @@ class Owner {
   }
 
   Map<String, dynamic> toJson() {
-    // ignore: prefer_collection_literals
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = id;
     data['firstname'] = firstname;
     data['lastname'] = lastname;
     data['username'] = username;
+    return data;
+  }
+}
+
+class Analytics {
+  int? totalEarnedForTheYear;
+  int? totalEarnedForTheMonth;
+  int? totalWithdrawnThisMonth;
+
+  Analytics(
+      {this.totalEarnedForTheYear,
+      this.totalEarnedForTheMonth,
+      this.totalWithdrawnThisMonth});
+
+  Analytics.fromJson(Map<String, dynamic> json) {
+    totalEarnedForTheYear = json['totalEarnedForTheYear'];
+    totalEarnedForTheMonth = json['totalEarnedForTheMonth'];
+    totalWithdrawnThisMonth = json['totalWithdrawnThisMonth'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['totalEarnedForTheYear'] = totalEarnedForTheYear;
+    data['totalEarnedForTheMonth'] = totalEarnedForTheMonth;
+    data['totalWithdrawnThisMonth'] = totalWithdrawnThisMonth;
     return data;
   }
 }

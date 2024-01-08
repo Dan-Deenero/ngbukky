@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/controller/Helpers.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
@@ -62,7 +63,7 @@ class WalletTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(10),
         width: double.infinity,
-        height: 10.h,
+        height: 13.h,
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(20),
@@ -83,9 +84,8 @@ class WalletTile extends StatelessWidget {
                   )
                 : const SizedBox.shrink(),
             Container(
-              width: isWithdrawal ? 75.w : 86.w,
+              width: isWithdrawal ? 70.w : 86.w,
               decoration: BoxDecoration(
-                color: AppColors.white,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
@@ -95,11 +95,16 @@ class WalletTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      customText(
-                        text: isWithdrawal ? 'Withdrawal' : 'Order No: #52',
-                        fontSize: 14,
-                        textColor: AppColors.black,
-                        fontWeight: FontWeight.w600,
+                      SizedBox(
+                        width: 50.w,
+                        child: Flexible(
+                          child: customText(
+                            text: isWithdrawal ? 'Withdrawal' : 'ID: $id',
+                            fontSize: 14,
+                            textColor: AppColors.black,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
                       Row(
                         children: [
@@ -126,20 +131,18 @@ class WalletTile extends StatelessWidget {
                       ),
                     ],
                   ),
-                  heightSpace(2),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       customText(
-                        text: '₦ $amount',
+                        text: '₦${Helpers.formatBalance(amount!)}',
                         fontSize: 14,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.w600,
                       ),
                       Container(
-                        width: 19.w,
-                        height: 3.h,
+                        padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: bgcol),

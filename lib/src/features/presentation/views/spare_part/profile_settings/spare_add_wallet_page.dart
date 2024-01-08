@@ -61,7 +61,7 @@ class _SpareAddWalletPageState extends ConsumerState<SpareAddWalletPage> {
     await showDialog(
       context: context,
       builder: (context) => SuccessDialogue(
-        title: 'Quote sent',
+        title: 'Account Saved',
         subtitle:
             'Your local account number and bank has been saved, you can go ahead and withdraw now',
         action: () {
@@ -115,7 +115,7 @@ class _SpareAddWalletPageState extends ConsumerState<SpareAddWalletPage> {
   Widget build(BuildContext context) {
     showBankList() {
       List<Account> filteredBanks = [];
-  bool isSearching = false;
+      bool isSearching = false;
       getAllBanks();
       showModalBottomSheet<void>(
         isScrollControlled: true,
@@ -161,15 +161,15 @@ class _SpareAddWalletPageState extends ConsumerState<SpareAddWalletPage> {
                         heightSpace(5),
                         TextFormField(
                           onChanged: (value) {
-                        setState(() {
-                          isSearching = true;
-                          filteredBanks = _bank
-                              .where((bank) => bank.name!
-                                  .toLowerCase()
-                                  .contains(value.toLowerCase()))
-                              .toList();
-                        });
-                      },
+                            setState(() {
+                              isSearching = true;
+                              filteredBanks = _bank
+                                  .where((bank) => bank.name!
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase()))
+                                  .toList();
+                            });
+                          },
                           cursorColor: AppColors.black,
                           cursorWidth: 1,
                           style: const TextStyle(fontSize: 16),
@@ -259,174 +259,192 @@ class _SpareAddWalletPageState extends ConsumerState<SpareAddWalletPage> {
 
     return Scaffold(
       backgroundColor: AppColors.scaffoldColor,
-      body: Column(
+      body: Stack(
         children: [
-          GestureDetector(
-            onTap: () => context.pop(),
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              width: double.infinity,
-              height: 25.h,
-              decoration: const BoxDecoration(
-                  color: AppColors.orange,
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(20),
-                      bottomRight: Radius.circular(20))),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 10.h,
-                      width: 10.w,
-                      decoration: BoxDecoration(
-                          color: AppColors.white.withOpacity(.5),
-                          shape: BoxShape.circle),
-                      child: const Padding(
-                        padding: EdgeInsets.only(left: 7.0),
-                        child: Center(
-                            child: Icon(
-                          Icons.arrow_back_ios,
-                          color: AppColors.white,
-                        )),
-                      ),
-                    ),
-                    heightSpace(1),
-                    customText(
-                        text: "Withdrawal details",
-                        fontSize: 20,
-                        textColor: AppColors.white),
-                    heightSpace(1),
-                    customText(
-                        text: "Edit your bank and card details here",
-                        fontSize: 15,
-                        textColor: AppColors.white),
-                  ]),
-            ),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(children: [
-                  heightSpace(3),
-                  GestureDetector(
-                    onTap: showBankList,
-                    child: CustomTextFormField(
-                      isDropdown: true,
-                      isEnabled: false,
-                      textEditingController: bankController,
-                      prefixIcon: Padding(
-                        padding: const EdgeInsets.all(13.0),
-                        child: SvgPicture.asset(
-                          AppImages.accountDet,
+          Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20),
+                width: double.infinity,
+                height: 25.h,
+                decoration: const BoxDecoration(
+                    color: AppColors.orange,
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(20))),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          context.pop();
+                          password.clear();
+                          accountNumber.clear();
+                          setState(() {
+                            bankController.text = '';
+                          });
+                        },
+                        child: Container(
+                          height: 10.h,
+                          width: 10.w,
+                          decoration: BoxDecoration(
+                              color: AppColors.white.withOpacity(.5),
+                              shape: BoxShape.circle),
+                          child: const Padding(
+                            padding: EdgeInsets.only(left: 7.0),
+                            child: Center(
+                                child: Icon(
+                              Icons.arrow_back_ios,
+                              color: AppColors.white,
+                            )),
+                          ),
                         ),
                       ),
-                      label: "Bank",
-                      hintText: "select Bank",
-                    ),
-                  ),
-                  heightSpace(1),
-                  CustomTextFormField(
-                    onChanged: (value) {
-                      if (value.length == 10) {
-                        getAccountOwner();
-                      }
-                    },
-                    validator: numericValidation,
-                    textEditingController: accountNumber,
-                    prefixIcon: Padding(
-                      padding: const EdgeInsets.all(13.0),
-                      child: SvgPicture.asset(
-                        AppImages.accountDet,
+                      heightSpace(1),
+                      customText(
+                          text: "Withdrawal details",
+                          fontSize: 20,
+                          textColor: AppColors.white),
+                      heightSpace(1),
+                      customText(
+                          text: "Edit your bank and card details here",
+                          fontSize: 15,
+                          textColor: AppColors.white),
+                    ]),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(children: [
+                      heightSpace(3),
+                      GestureDetector(
+                        onTap: showBankList,
+                        child: CustomTextFormField(
+                          isDropdown: true,
+                          isEnabled: false,
+                          textEditingController: bankController,
+                          prefixIcon: Padding(
+                            padding: const EdgeInsets.all(13.0),
+                            child: SvgPicture.asset(
+                              AppImages.accountDet,
+                            ),
+                          ),
+                          label: "Bank",
+                          hintText: "select Bank",
+                        ),
                       ),
-                    ),
-                    label: "Account Number",
-                    hintText: "Type in business registration number",
-                  ),
-                  if (acctName == null)
-                    const SizedBox.shrink()
-                  else
-                    Padding(
-                      padding: const EdgeInsets.only(top: 3),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Row(
+                      heightSpace(1),
+                      CustomTextFormField(
+                        onChanged: (value) {
+                          if (value.length == 10) {
+                            getAccountOwner();
+                          }
+                        },
+                        validator: numericValidation,
+                        textEditingController: accountNumber,
+                        prefixIcon: Padding(
+                          padding: const EdgeInsets.all(13.0),
+                          child: SvgPicture.asset(
+                            AppImages.accountDet,
+                          ),
+                        ),
+                        label: "Account Number",
+                        hintText: "Type in business registration number",
+                      ),
+                      if (acctName == null)
+                        const SizedBox.shrink()
+                      else
+                        Padding(
+                          padding: const EdgeInsets.only(top: 3),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              customText(
-                                text: acctName!,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
-                                textColor: AppColors.green,
-                                textAlignment: TextAlign.right,
+                              Row(
+                                children: [
+                                  customText(
+                                    text: acctName!,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                    textColor: colos,
+                                    textAlignment: TextAlign.right,
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                    ),
-                  heightSpace(3),
-                  CustomTextFormField(
-                    isEnabled: acctName == null ? false : true,
-                    onChanged: (value) {
-                      if (value.length >= 6) {
-                        setState(() {
-                          isValidated = true;
-                        });
-                      } else {
-                        setState(() {
-                          isValidated = false;
-                        });
-                      }
-                    },
-                    isPassword: true,
-                    prefixIcon: Padding(
-                      padding: const EdgeInsets.all(13.0),
-                      child: SvgPicture.asset(
-                        AppImages.passwordIcon,
-                      ),
-                    ),
-                    textEditingController: password,
-                    label: "Your Ngbuka login password",
-                    validator: passwordValidation,
-                    hintText: "Enter password",
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                        ),
                       heightSpace(3),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.87,
-                            child: AppButton(
-                              isActive: isValidated,
-                              onTap: saveAccount,
-                              buttonText: "Save",
-                              isOrange: true,
-                              isSmall: true,
-                            ),
+                      CustomTextFormField(
+                        isEnabled: acctName == null ? false : true,
+                        onChanged: (value) {
+                          if (value.length >= 6) {
+                            setState(() {
+                              isValidated = true;
+                            });
+                          } else {
+                            setState(() {
+                              isValidated = false;
+                            });
+                          }
+                        },
+                        isPassword: true,
+                        prefixIcon: Padding(
+                          padding: const EdgeInsets.all(13.0),
+                          child: SvgPicture.asset(
+                            AppImages.passwordIcon,
                           ),
-                        ],
+                        ),
+                        textEditingController: password,
+                        label: "Your Ngbuka login password",
+                        validator: passwordValidation,
+                        hintText: "Enter password",
                       ),
-                      heightSpace(2),
-                      Row(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SvgPicture.asset(AppImages.info),
-                          widthSpace(2),
-                          Flexible(
-                            child: bodyText(
-                                "You can always edit every information entered and saved later if you want"),
-                          )
+                          heightSpace(3),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.87,
+                                child: AppButton(
+                                  isActive: isValidated,
+                                  onTap: saveAccount,
+                                  buttonText: "Save",
+                                  isOrange: true,
+                                  isSmall: true,
+                                ),
+                              ),
+                            ],
+                          ),
+                          heightSpace(2),
+                          Row(
+                            children: [
+                              SvgPicture.asset(AppImages.info),
+                              widthSpace(2),
+                              Flexible(
+                                child: bodyText(
+                                    "You can always edit every information entered and saved later if you want"),
+                              )
+                            ],
+                          ),
+                          heightSpace(3),
                         ],
-                      ),
-                      heightSpace(3),
-                    ],
-                  )
-                ]),
+                      )
+                    ]),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if (isFetchingAccountName)
+            Container(
+              color: Colors.black.withOpacity(0.7), // Adjust opacity as needed
+              child: const Center(
+                child: CircularProgressIndicator(),
               ),
             ),
-          ),
         ],
       ),
     );

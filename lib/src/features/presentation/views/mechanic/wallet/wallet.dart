@@ -5,11 +5,10 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:ngbuka/src/config/keys/app_keys.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
-import 'package:ngbuka/src/config/services/storage_service.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/controller/Helpers.dart';
 import 'package:ngbuka/src/domain/data/transaction_model.dart';
 import 'package:ngbuka/src/domain/data/wallet_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
@@ -17,9 +16,7 @@ import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 import 'package:ngbuka/src/features/presentation/widgets/wallet_tile.dart';
 
-import '../../../../../config/locator/app_locator.dart';
-
-Widget transactionBox(String heading, String time) => Container(
+Widget transactionBox(String heading, String time, String amount) => Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 10,
       ),
@@ -34,7 +31,8 @@ Widget transactionBox(String heading, String time) => Container(
           customText(
               text: heading, fontSize: 10, textColor: AppColors.textColor),
           heightSpace(1),
-          customText(text: "₦0", fontSize: 24, textColor: AppColors.black),
+          customText(
+              text: "₦$amount", fontSize: 24, textColor: AppColors.black),
           heightSpace(1),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 7),
@@ -84,7 +82,6 @@ class Wallet extends HookWidget {
         context: context,
         builder: (context) => Center(
           child: Container(
-            // padding: EdgeInsets.all(10.0),
             width: 700, // Set the desired width
             height: 200,
             child: Dialog(
@@ -138,7 +135,7 @@ class Wallet extends HookWidget {
                             context.push(AppRoutes.withdrawFunds);
                           },
                           child: customText(
-                            text: 'Cancel',
+                            text: 'Withdraw',
                             fontSize: 16,
                             textColor: AppColors.textGrey,
                           ),
@@ -190,205 +187,211 @@ class Wallet extends HookWidget {
     }, [transactionHistory.value.length]);
 
     final tabIndex = useState<int>(0);
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundGrey,
-        appBar: AppBar(
-          toolbarHeight: 120,
-          backgroundColor: AppColors.backgroundGrey,
-          elevation: 0,
-          automaticallyImplyLeading: false,
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              customText(
-                  text: "Wallet",
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  textColor: AppColors.black),
-              // heightSpace(1),
-              bodyText("View analytics and withdraw from your wallet")
-            ],
-          ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 10.0),
-              child: SvgPicture.asset(AppImages.notification),
-            )
-          ],
-        ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Column(
+    return isLoad.value
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : DefaultTabController(
+            length: 2,
+            child: Scaffold(
+              backgroundColor: AppColors.backgroundGrey,
+              appBar: AppBar(
+                toolbarHeight: 120,
+                backgroundColor: AppColors.backgroundGrey,
+                elevation: 0,
+                automaticallyImplyLeading: false,
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    customText(
+                        text: "Wallet",
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        textColor: AppColors.black),
+                    // heightSpace(1),
+                    bodyText("View analytics and withdraw from your wallet")
+                  ],
+                ),
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10.0),
+                    child: InkWell(
+                        onTap: () => context.push(AppRoutes.notification),
+                        child: SvgPicture.asset(AppImages.notification)),
+                  )
+                ],
+              ),
+              body: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 5),
-                    width: double.infinity,
-                    height: 20.h,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        image: const DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage(
-                              AppImages.walletbase,
-                            ))),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        customText(
-                          text: "Total Balance",
-                          fontSize: 15,
-                          textColor: AppColors.white,
-                        ),
-                        isLoad.value
-                            ? const Center(
-                                child: CircularProgressIndicator(),
-                              )
-                            : customText(
-                                text: '₦${wallet.value!.balance}',
+                        Container(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          width: double.infinity,
+                          height: 20.h,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              image: const DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: AssetImage(
+                                    AppImages.walletbase,
+                                  ))),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              customText(
+                                text: "Total Balance",
+                                fontSize: 15,
+                                textColor: AppColors.white,
+                              ),
+                              customText(
+                                text:
+                                    '₦${Helpers.formatBalance(wallet.value!.wallet!.balance!)}',
                                 fontSize: 32,
                                 textColor: AppColors.white,
                                 fontWeight: FontWeight.bold,
                               ),
-                        heightSpace(1),
-                        GestureDetector(
-                          onTap: () {
-                            final storedAccount = locator<LocalStorageService>()
-                                .getDataFromDisk(AppKeys.accountNo);
-                            
-
-                            if (storedAccount == '' || storedAccount == null) {
-                              accept();
-                            } else {
-                              context.push(AppRoutes.withdrawFunds);
-                            }
-                          },
-                          child: SvgPicture.asset(AppImages.welcomeImage),
+                              heightSpace(1),
+                              GestureDetector(
+                                onTap: accept,
+                                child: SvgPicture.asset(AppImages.welcomeImage),
+                              ),
+                              // heightSpace(2),
+                            ],
+                          ),
                         ),
-                        // heightSpace(2),
+                        heightSpace(2),
+                        SizedBox(
+                          height: 14.h,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: [
+                              transactionBox(
+                                "Total Earnings",
+                                "This year",
+                                Helpers.formatBalance(wallet.value!.analytics!.totalEarnedForTheYear!),
+                              ),
+                              verticalDivide(),
+                              transactionBox(
+                                "Earned",
+                                "This month",
+                                Helpers.formatBalance(wallet.value!.analytics!.totalEarnedForTheMonth!),
+                              ),
+                              verticalDivide(),
+                              transactionBox(
+                                "Withdrawn",
+                                "This month",
+                                Helpers.formatBalance(wallet.value!.analytics!.totalWithdrawnThisMonth!),
+                              )
+                            ],
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            customText(
+                                text: "History",
+                                fontSize: 15,
+                                textColor: AppColors.black,
+                                fontWeight: FontWeight.bold),
+                            if (transactionHistory.value.isEmpty)
+                              IgnorePointer(
+                                ignoring: true,
+                                child: Row(
+                                  children: [
+                                    customText(
+                                      text: "See all",
+                                      fontSize: 15,
+                                      textColor:
+                                          AppColors.primary.withOpacity(0.1),
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward,
+                                      size: 20,
+                                      color: AppColors.primary.withOpacity(0.1),
+                                    )
+                                  ],
+                                ),
+                              )
+                            else
+                              GestureDetector(
+                                onTap: () =>
+                                    context.push(AppRoutes.walletHistory),
+                                child: Row(
+                                  children: [
+                                    customText(
+                                        text: "See all",
+                                        fontSize: 15,
+                                        textColor: AppColors.primary),
+                                    const Icon(
+                                      Icons.arrow_forward,
+                                      size: 20,
+                                    )
+                                  ],
+                                ),
+                              )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  heightSpace(3),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
+                    height: 40,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: AppColors.borderGrey,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: TabBar(
+                      labelPadding: EdgeInsets.zero,
+                      unselectedLabelColor: AppColors.primary,
+                      labelColor: AppColors.primary,
+                      indicator: const BoxDecoration(),
+                      onTap: (value) {
+                        tabIndex.value = value;
+                      },
+                      tabs: [
+                        Container(
+                          width: 200,
+                          height: 40,
+                          decoration: BoxDecoration(
+                              color: tabIndex.value == 0
+                                  ? AppColors.white
+                                  : AppColors.borderGrey,
+                              borderRadius: BorderRadius.circular(5)),
+                          child: const Tab(
+                            text: "Payment",
+                          ),
+                        ),
+                        Container(
+                          width: 400,
+                          height: 40,
+                          decoration: BoxDecoration(
+                              color: tabIndex.value == 1
+                                  ? AppColors.white
+                                  : AppColors.borderGrey,
+                              borderRadius: BorderRadius.circular(5)),
+                          child: const Tab(
+                            text: "Withdrawal",
+                          ),
+                        ),
                       ],
                     ),
                   ),
                   heightSpace(2),
-                  SizedBox(
-                    height: 14.h,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        transactionBox("Total Earnings", "This year"),
-                        verticalDivide(),
-                        transactionBox("Earned", "This month"),
-                        verticalDivide(),
-                        transactionBox("Withdrawn", "This month")
-                      ],
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      customText(
-                          text: "History",
-                          fontSize: 15,
-                          textColor: AppColors.black,
-                          fontWeight: FontWeight.bold),
-                      if (transactionHistory.value.isEmpty)
-                        IgnorePointer(
-                          ignoring: true,
-                          child: Row(
-                            children: [
-                              customText(
-                                text: "See all",
-                                fontSize: 15,
-                                textColor: AppColors.primary.withOpacity(0.1),
-                              ),
-                              Icon(
-                                Icons.arrow_forward,
-                                size: 20,
-                                color: AppColors.primary.withOpacity(0.1),
-                              )
-                            ],
-                          ),
-                        )
-                      else
-                        GestureDetector(
-                          onTap: () => context.push(AppRoutes.walletHistory),
-                          child: Row(
-                            children: [
-                              customText(
-                                  text: "See all",
-                                  fontSize: 15,
-                                  textColor: AppColors.primary),
-                              const Icon(
-                                Icons.arrow_forward,
-                                size: 20,
-                              )
-                            ],
-                          ),
-                        )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            heightSpace(3),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 15),
-              height: 40,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: AppColors.borderGrey,
-                  borderRadius: BorderRadius.circular(5)),
-              child: TabBar(
-                labelPadding: EdgeInsets.zero,
-                unselectedLabelColor: AppColors.primary,
-                labelColor: AppColors.primary,
-                indicator: const BoxDecoration(),
-                onTap: (value) {
-                  tabIndex.value = value;
-                },
-                tabs: [
-                  Container(
-                    width: 200,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        color: tabIndex.value == 0
-                            ? AppColors.white
-                            : AppColors.borderGrey,
-                        borderRadius: BorderRadius.circular(5)),
-                    child: const Tab(
-                      text: "Payment",
-                    ),
-                  ),
-                  Container(
-                    width: 400,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        color: tabIndex.value == 1
-                            ? AppColors.white
-                            : AppColors.borderGrey,
-                        borderRadius: BorderRadius.circular(5)),
-                    child: const Tab(
-                      text: "Withdrawal",
+                  const Expanded(
+                    child: TabBarView(
+                      children: [PaymentTab(), WithdrawalTab()],
                     ),
                   ),
                 ],
               ),
             ),
-            heightSpace(2),
-            const Expanded(
-              child: TabBarView(
-                children: [PaymentTab(), WithdrawalTab()],
-              ),
-            ),
-
-          ],
-        ),
-      ),
-    );
+          );
   }
 
   Padding verticalDivide() {

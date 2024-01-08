@@ -1,21 +1,24 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ngbuka/src/config/keys/app_keys.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
+import 'package:ngbuka/src/config/locator/app_locator.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
-Widget card(String title, String subtitle, String number, String color) =>
-    Container(
-      width: double.infinity,
-      height: 12.h,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20), color: AppColors.white),
+import '../../../../config/services/storage_service.dart';
+
+Widget card(String title, String subtitle, String number, String color) => Card(
+      color: Colors.white,
+      surfaceTintColor: Colors.transparent,
       child: ListTile(
         leading: SvgPicture.asset(
           AppImages.file,
@@ -121,6 +124,8 @@ class Bookings extends HookWidget {
         disapproved2.value = value.dISAPPROVED;
         awaitingPayment2.value = value.aWAITINGPAYMENT;
       });
+      log(locator<LocalStorageService>().getDataFromDisk(AppKeys.userType));
+
     }
 
     getBookingStatisticsInfo() {
@@ -234,31 +239,33 @@ class Bookings extends HookWidget {
               ),
             ),
             Expanded(
-              child: TabBarView(children: [
-                InspectionBookings(
-                  canceled: canceled.value,
-                  pending: pending.value,
-                  declined: declined.value,
-                  completed: completed.value,
-                  accepted: accepted.value,
-                  rejected: rejected.value,
-                  bargaining: bargaining.value,
-                  approved: approved.value,
-                  disapproved: disapproved.value,
-                  awaitingPayment: awaitingPayment.value,
-                ),
-                Quotes(
-                  pending: pending2.value,
-                  declined: declined2.value,
-                  completed: completed2.value,
-                  accepted: accepted2.value,
-                  rejected: rejected2.value,
-                  bargaining: bargaining2.value,
-                  approved: approved2.value,
-                  disapproved: disapproved2.value,
-                  awaitingPayment: awaitingPayment2.value,
-                )
-              ],),
+              child: TabBarView(
+                children: [
+                  InspectionBookings(
+                    canceled: canceled.value,
+                    pending: pending.value,
+                    declined: declined.value,
+                    completed: completed.value,
+                    accepted: accepted.value,
+                    rejected: rejected.value,
+                    bargaining: bargaining.value,
+                    approved: approved.value,
+                    disapproved: disapproved.value,
+                    awaitingPayment: awaitingPayment.value,
+                  ),
+                  Quotes(
+                    pending: pending2.value,
+                    declined: declined2.value,
+                    completed: completed2.value,
+                    accepted: accepted2.value,
+                    rejected: rejected2.value,
+                    bargaining: bargaining2.value,
+                    approved: approved2.value,
+                    disapproved: disapproved2.value,
+                    awaitingPayment: awaitingPayment2.value,
+                  )
+                ],
+              ),
             )
           ],
         ),

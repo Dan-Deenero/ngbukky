@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/success_modal.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_phone_field.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -39,6 +40,40 @@ class SpareContactPage extends HookWidget {
         email.text = value.email!;
       },);
     }
+
+    showSuccesModal() async {
+      await showDialog(
+        context: context,
+        builder: (context) => SuccessDialogue(
+          title: 'Email sent',
+          subtitle:
+              'You have successfully sent the Ngbuka team an email. Thank you',
+          action: () {
+            context.pop();
+          },
+        ),
+      );
+    }
+
+    contactUs() async {
+      var data = {
+        "email": email.text,
+        "name": "${firstName.text} ${lastName.text}",
+        "message": body.text
+      };
+
+      bool result = await _mechanicRepo.contactSupport(data);
+
+      if (result) {
+        if(context.mounted){
+          context.pop();
+        }
+        showSuccesModal();
+        body.clear();
+        title.clear();
+      }
+    }
+
 
 
     useEffect(() {
@@ -206,7 +241,7 @@ class SpareContactPage extends HookWidget {
                                         0.87,
                                     child: AppButton(
                                       // isActive: isValidated.value,
-                                      onTap: (){},
+                                      onTap: contactUs,
                                       buttonText: "Save",
                                       isOrange: true,
                                       isSmall: true,

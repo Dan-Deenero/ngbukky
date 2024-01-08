@@ -9,6 +9,7 @@ import 'package:ngbuka/src/core/shared/colors.dart';
 import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/data/notification_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/success_modal.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
@@ -83,6 +84,21 @@ class _InspectionBookingState extends State<InspectionBooking> {
   // void resendOTP() async {
   @override
   Widget build(BuildContext context) {
+
+    showSuccesModal() async {
+    await showDialog(
+      context: context,
+      builder: (context) => SuccessDialogue(
+        title: 'Proceed to client location',
+        subtitle:
+            'You can start heading to the client’s location immediately to offer your service.',
+        action: () {
+          context.pop();
+        },
+      ),
+    );
+  }
+  
     acceptBooking() async {
       var body = {
         "action": "accepted",
@@ -91,6 +107,7 @@ class _InspectionBookingState extends State<InspectionBooking> {
       if (result) {
         if (context.mounted) {
           context.pop();
+          showSuccesModal();
           context.go(AppRoutes.acceptedBooking);
           return;
         }

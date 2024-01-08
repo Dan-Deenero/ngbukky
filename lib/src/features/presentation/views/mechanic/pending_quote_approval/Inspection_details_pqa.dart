@@ -138,7 +138,7 @@ class _PQAInspectionDetailsState extends State<PQAInspectionDetails> {
                           customText(
                               text: 'Quote not approved by client',
                               fontSize: 14,
-                              textColor: AppColors.green,
+                              textColor: AppColors.red,
                               fontWeight: FontWeight.w600),
                           customText(
                               text: 'Booking status',

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/controller/Helpers.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
@@ -26,7 +27,7 @@ class ListRect extends StatelessWidget {
     this.image = AppImages.engineoil,
     this.price = 6000,
     this.item = 'Spark plug',
-    this.quantity = 3,
+    this.quantity = 0,
     this.length = '14mm',
     this.time = '12:20pm',
     this.date = '12 Jun 2023',
@@ -150,7 +151,7 @@ class ListRect extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   customText(
-                    text: 'N${quantity! * price!}',
+                    text: '₦${Helpers.formatBalance(quantity! * price!)}',
                     fontSize: 12,
                     textColor: AppColors.black,
                     fontWeight: FontWeight.w700,

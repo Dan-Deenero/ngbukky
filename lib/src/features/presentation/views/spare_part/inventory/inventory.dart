@@ -21,6 +21,7 @@ class Inventory extends HookWidget {
     final sw = mediaQueryData.size.width;
 
     final tabIndex = useState<int>(0);
+    final searchQuery = useState<String>('');
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -90,6 +91,9 @@ class Inventory extends HookWidget {
                     ),
                     heightSpace(5),
                     TextFormField(
+                      onChanged: (value) {
+                        searchQuery.value = value; // Update search query
+                      },
                       cursorColor: AppColors.black,
                       cursorWidth: 1,
                       style: const TextStyle(fontSize: 16),
@@ -212,7 +216,7 @@ class Inventory extends HookWidget {
               heightSpace(2),
               Expanded(
                 child: TabBarView(
-                  children: [All(), RunningOut(), StockOut()],
+                  children: [All(searchQuery: searchQuery.value,), RunningOut(searchQuery: searchQuery.value,), StockOut(searchQuery: searchQuery.value,),],
                 ),
               )
             ],
@@ -224,10 +228,11 @@ class Inventory extends HookWidget {
 }
 
 class All extends HookWidget {
+  final String searchQuery;
   static const bool empty = false;
   static final MechanicRepo mechanicRepo = MechanicRepo();
 
-  All({Key? key}) : super(key: key ?? UniqueKey());
+  All({Key? key, required this.searchQuery}) : super(key: key ?? UniqueKey());
 
   @override
   Widget build(BuildContext context) {
@@ -243,8 +248,18 @@ class All extends HookWidget {
       );
     }
 
+    searchInventory(){
+      mechanicRepo.searchAnyInventory(searchQuery).then(
+        (value) {
+          inventoryHistory.value = value;
+          isLoading.value = false;
+        },
+      );
+    }
+
     useEffect(() {
       getInventory();
+      searchInventory();
       return null;
     }, [inventoryHistory.value.length]);
     return isLoading.value
@@ -282,7 +297,7 @@ class All extends HookWidget {
                           children: [
                             InventoryTile(
                               name: e.name,
-                              price: e.price! - e.discount!,
+                              price: e.finalPrice,
                               length: '${e.specifications!.length}',
                               image: e.imageUrl,
                               inStock: e.quantityInStock,
@@ -303,7 +318,8 @@ class All extends HookWidget {
 class RunningOut extends HookWidget {
   static final MechanicRepo mechanicRepo = MechanicRepo();
 
-  RunningOut({Key? key}) : super(key: key ?? UniqueKey());
+  final String searchQuery;
+  RunningOut({Key? key, required this.searchQuery}) : super(key: key ?? UniqueKey());
 
   @override
   Widget build(BuildContext context) {
@@ -320,8 +336,18 @@ class RunningOut extends HookWidget {
       );
     }
 
-    useEffect(() {
+    searchInventory(){
+      mechanicRepo.searchAnyInventory(searchQuery).then(
+        (value) {
+          inventoryHistory.value = value;
+          isLoading.value = false;
+        },
+      );
+    }
+
+    useEffect(() { 
       getInventory();
+      searchInventory();
       return null;
     }, [inventoryHistory.value.length]);
     return isLoading.value
@@ -359,7 +385,7 @@ class RunningOut extends HookWidget {
                           children: [
                             InventoryTile(
                               name: e.name,
-                              price: e.price! - e.discount!,
+                              price: e.finalPrice!,
                               length: '${e.specifications!.length}',
                               image: e.imageUrl,
                               inStock: e.quantityInStock,
@@ -379,9 +405,10 @@ class RunningOut extends HookWidget {
 
 class StockOut extends HookWidget {
   static const bool empty = false;
+  final String searchQuery;
   static final MechanicRepo mechanicRepo = MechanicRepo();
 
-  StockOut({Key? key}) : super(key: key ?? UniqueKey());
+  StockOut({Key? key, required this.searchQuery}) : super(key: key ?? UniqueKey());
 
   @override
   Widget build(BuildContext context) {
@@ -397,9 +424,18 @@ class StockOut extends HookWidget {
         },
       );
     }
+    searchInventory(){
+      mechanicRepo.searchAnyInventory(searchQuery).then(
+        (value) {
+          inventoryHistory.value = value;
+          isLoading.value = false;
+        },
+      );
+    }
 
     useEffect(() {
       getInventory();
+      searchInventory();
       return null;
     }, [inventoryHistory.value.length]);
     return isLoading.value
@@ -444,7 +480,7 @@ class StockOut extends HookWidget {
                           children: [
                             InventoryTile(
                               name: e.name,
-                              price: e.price! - e.discount!,
+                              price: e.finalPrice!,
                               length: '$size',
                               image: e.imageUrl,
                               inStock: e.quantityInStock,

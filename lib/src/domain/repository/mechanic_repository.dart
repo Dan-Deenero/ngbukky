@@ -8,6 +8,7 @@ import 'package:ngbuka/src/domain/data/account.dart';
 import 'package:ngbuka/src/domain/data/account_name_model.dart';
 import 'package:ngbuka/src/domain/data/city_lga.dart';
 import 'package:ngbuka/src/domain/data/dealer_dashboard_model.dart';
+import 'package:ngbuka/src/domain/data/get_account.dart';
 import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/data/inventory_model.dart';
 import 'package:ngbuka/src/domain/data/notification_model.dart';
@@ -155,8 +156,9 @@ class MechanicRepo {
         useToken: true);
     if (response.status == 200) {
       return true;
+    } else {
+      return false;
     }
-    return false;
   }
 
   Future<bool> markInspectionAsCompleted(Map<String, String> body, id) async {
@@ -186,8 +188,9 @@ class MechanicRepo {
         await ApiClient.put(Endpoints.mechanicProfileImage, body: data);
     if (response.status == 200) {
       return true;
+    } else {
+      return false;
     }
-    return false;
   }
 
   Future<bool> sendQuoteForBooking(Map<dynamic, dynamic> body, id) async {
@@ -316,6 +319,20 @@ class MechanicRepo {
   Future<List<InventoryModel>> getAllInventory(String status) async {
     final response = await ApiClient.get(
         '${Endpoints.dealerSparePart}?&inventory=$status',
+        useToken: true);
+    List<InventoryModel> inventory = [];
+    if (response.status == 200) {
+      for (var inventoryModel in response.entity['rows']) {
+        inventory.add(InventoryModel.fromJson(inventoryModel));
+      }
+      return inventory;
+    }
+    return inventory;
+  }
+
+  Future<List<InventoryModel>> searchAnyInventory(String keyword) async {
+    final response = await ApiClient.get(
+        '${Endpoints.dealerSparePart}/search?q=$keyword',
         useToken: true);
     List<InventoryModel> inventory = [];
     if (response.status == 200) {
@@ -484,6 +501,14 @@ class MechanicRepo {
     return account;
   }
 
+  Future<GetAccount> getAccount() async {
+    final response = await ApiClient.get(Endpoints.account, useToken: true);
+    if (response.status == 200) {
+      return GetAccount.fromJson(response.entity);
+    }
+    return GetAccount();
+  }
+
   Future<AccountName> getAccountOwner(acctNo, bankCode) async {
     final response = await PaymentClient.get(
         '${Endpoints.getBankList}/resolve?account_number=$acctNo&bank_code=$bankCode',
@@ -544,5 +569,15 @@ class MechanicRepo {
       return WalletModel.fromJson(response.entity);
     }
     return WalletModel();
+  }
+
+  Future<bool> contactSupport(Map<dynamic, dynamic> body) async {
+    final response =
+        await ApiClient.post(Endpoints.contact, body: body, useToken: true);
+    if (response.status == 201) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

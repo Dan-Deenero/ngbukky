@@ -140,7 +140,7 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
                                               AppColors.green.withOpacity(.1)),
                                       child: Center(
                                         child: customText(
-                                            text: "Accepted booking",
+                                            text: "Accepted quote",
                                             fontSize: 10,
                                             textColor: AppColors.green),
                                       ),
@@ -178,7 +178,8 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
                                   leading: Container(
                                     width: 8.w,
                                     height: 8.h,
-                                    decoration: const BoxDecoration(
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(image: NetworkImage(e.user!.profileImageUrl!)),
                                         shape: BoxShape.circle,
                                         color: AppColors.containerGrey),
                                   )),

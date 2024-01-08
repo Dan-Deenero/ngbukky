@@ -54,18 +54,33 @@ class EditInventory extends HookWidget {
       _mechanicRepo.getOneInventory(id).then(
         (value) {
           productName.text = value.name!;
-          description.text = value.description!;
+          description.text =
+              value.description == null ? "" : value.description!;
           inStock.text = value.quantityInStock!.toString();
           price.text = value.price!.toString();
           discount.text = value.discount!.toString();
-          length.text = value.specifications!.length!;
-          width.text = value.specifications!.width!;
-          height.text = value.specifications!.height!;
-          weight.text = value.specifications!.weight!;
-          volume.text = value.specifications!.volume!;
+          length.text = value.specifications!.length == null
+              ? ""
+              : value.specifications!.length!;
+          width.text = value.specifications!.width == null
+              ? ""
+              : value.specifications!.width!;
+          height.text = value.specifications!.height == null
+              ? ""
+              : value.specifications!.height!;
+          weight.text = value.specifications!.weight == null
+              ? ""
+              : value.specifications!.weight!;
+          volume.text = value.specifications!.volume == null
+              ? ""
+              : value.specifications!.volume!;
           color.text = value.specifications!.color!;
-          modelNumber.text = value.specifications!.modelNumber!;
-          country.text = value.specifications!.countryOfProducton;
+          modelNumber.text = value.specifications!.modelNumber == null
+              ? ""
+              : value.specifications!.modelNumber!;
+          country.text = value.specifications!.countryOfProducton == null
+              ? ""
+              : value.specifications!.countryOfProducton!;
           profileImage.value = value.imageUrl!;
           // image = value.imageUrl!;
 
@@ -130,7 +145,7 @@ class EditInventory extends HookWidget {
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(19.h),
+        preferredSize: Size.fromHeight(20.h),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -271,6 +286,8 @@ class EditInventory extends HookWidget {
                                             child: CustomTextFormField(
                                               label: 'Length (L)',
                                               textEditingController: length,
+                                              keyboardType:
+                                                  TextInputType.number,
                                             ),
                                           ),
                                           widthSpace(3),
@@ -278,6 +295,8 @@ class EditInventory extends HookWidget {
                                             child: CustomTextFormField(
                                               label: 'Width (W)',
                                               textEditingController: width,
+                                              keyboardType:
+                                                  TextInputType.number,
                                             ),
                                           ),
                                           widthSpace(3),
@@ -285,6 +304,8 @@ class EditInventory extends HookWidget {
                                             child: CustomTextFormField(
                                               label: 'Height (H)',
                                               textEditingController: height,
+                                              keyboardType:
+                                                  TextInputType.number,
                                             ),
                                           ),
                                         ],
@@ -296,6 +317,8 @@ class EditInventory extends HookWidget {
                                             child: CustomTextFormField(
                                               label: 'Weight',
                                               textEditingController: weight,
+                                              keyboardType:
+                                                  TextInputType.number,
                                             ),
                                           ),
                                           widthSpace(3),
@@ -303,6 +326,8 @@ class EditInventory extends HookWidget {
                                             child: CustomTextFormField(
                                               label: 'Volume (V)',
                                               textEditingController: volume,
+                                              keyboardType:
+                                                  TextInputType.number,
                                             ),
                                           ),
                                           widthSpace(3),

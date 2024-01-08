@@ -130,6 +130,7 @@ class _OrdersInfoState extends State<OrdersInfo> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     OrderCard(
+                      id: ordersModel!.id!,
                       image: ordersModel!.product!.imageUrl,
                       price: ordersModel!.product!.price! -
                           ordersModel!.product!.discount!,

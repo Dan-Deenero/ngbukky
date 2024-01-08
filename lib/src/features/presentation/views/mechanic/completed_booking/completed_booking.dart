@@ -98,6 +98,12 @@ class _CompletedBookingState extends State<CompletedBooking> {
                             ))
                       else
                         ..._bookingHistory.map((e) {
+                          int price = 0;
+                          for (Quotes quote in e.quotes!) {
+                            if (quote.price != null) {
+                              price += quote.price!;
+                            }
+                          }
                           var dateString = e.date;
                           var dateTime = DateTime.parse(dateString!);
                           var formattedDate =
@@ -106,7 +112,7 @@ class _CompletedBookingState extends State<CompletedBooking> {
                               DateFormat('hh:mm a').format(dateTime);
                           return GestureDetector(
                             onTap: () {
-                              context.push(AppRoutes.completedQuoteRequestDetails,
+                              context.push(AppRoutes.completedBookingDetails,
                                   extra: e.id);
                             },
                             child: Container(
@@ -119,7 +125,7 @@ class _CompletedBookingState extends State<CompletedBooking> {
                               child: ListTile(
                                   trailing: Column(children: [
                                     customText(
-                                        text: "N5,050",
+                                        text: "N$price",
                                         fontSize: 14,
                                         textColor: AppColors.textGrey,
                                         fontWeight: FontWeight.bold),

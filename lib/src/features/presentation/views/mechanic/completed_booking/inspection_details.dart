@@ -69,7 +69,7 @@ class _CompletedInspectionDetailsState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(24.h),
+        preferredSize: Size.fromHeight(22.h),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 70),
           child: Row(
@@ -129,9 +129,9 @@ class _CompletedInspectionDetailsState
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           customText(
-                              text: 'Booking rejected',
+                              text: 'Booking Completed  - Paid🎉',
                               fontSize: 14,
-                              textColor: AppColors.red,
+                              textColor: AppColors.green,
                               fontWeight: FontWeight.w600),
                           customText(
                               text: 'Booking status',
@@ -300,6 +300,7 @@ class _CompletedInspectionDetailsState
                       )
                     ],
                   ),
+                  heightSpace(4)
                 ],
               ),
             )),

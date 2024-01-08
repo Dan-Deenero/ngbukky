@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/controller/Helpers.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
@@ -23,7 +24,7 @@ class SquareCard extends StatelessWidget {
     this.image = 'https://www-konga-com-res.cloudinary.com/w_400,f_auto,fl_lossy,dpr_3.0,q_auto/media/catalog/product/5/W/5W-30-Synthetic-Engine-Oil---4-73-Litres-7109544.jpg',
     this.price = 6000,
     this.item = 'Spark plug',
-    this.quantity = 3,
+    this.quantity = 0,
     this.length = '14mm',
     this.time = '12:20pm',
     this.date = '12 Jun 2023',
@@ -41,6 +42,8 @@ class SquareCard extends StatelessWidget {
       runningOut = false;
     }
     return Card(
+      color: Colors.white,
+      surfaceTintColor: Colors.transparent,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -49,11 +52,12 @@ class SquareCard extends StatelessWidget {
             width: sw,
             decoration:  BoxDecoration(
               image: DecorationImage(
-                fit: BoxFit.contain,
+                fit: BoxFit.cover,
                 image: NetworkImage(
                   image!,
                 ),
               ),
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10))
             ),
           ),
           heightSpace(2),
@@ -70,7 +74,7 @@ class SquareCard extends StatelessWidget {
                 ),
                 heightSpace(2),
                 customText(
-                  text: 'N$price',
+                  text: '₦${Helpers.formatBalance(price!)}',
                   fontSize: 12,
                   textColor: AppColors.black,
                   fontWeight: FontWeight.w700,

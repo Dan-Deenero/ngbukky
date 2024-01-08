@@ -98,6 +98,12 @@ class _BookingRejectedState extends State<BookingRejected> {
                             ))
                       else
                         ..._bookingHistory.map((e) {
+                          int price = 0;
+                          for (Quotes quote in e.quotes!) {
+                            if (quote.price != null) {
+                              price += quote.price!;
+                            }
+                          }
                           var dateString = e.date;
                           var dateTime = DateTime.parse(dateString!);
                           var formattedDate =
@@ -121,7 +127,7 @@ class _BookingRejectedState extends State<BookingRejected> {
                               child: ListTile(
                                   trailing: Column(children: [
                                     customText(
-                                        text: "₦ 5,050",
+                                        text: "₦ $price",
                                         fontSize: 14,
                                         textColor: AppColors.textGrey,
                                         fontWeight: FontWeight.bold),

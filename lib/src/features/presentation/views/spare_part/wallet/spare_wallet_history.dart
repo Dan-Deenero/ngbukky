@@ -96,7 +96,7 @@ class Withdrawal extends HookWidget {
     final transactionHistory = useState<List<TransactionModel>>([]);
     final isLoading = useState<bool>(true);
     getTransaction() {
-      mechanicRepo.getAllTransaction('debit').then(
+      mechanicRepo.getAllTransaction('withdrawal').then(
         (value) {
           transactionHistory.value = value;
           isLoading.value = false;

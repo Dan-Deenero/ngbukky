@@ -119,7 +119,7 @@ class _PCAInspectionDetailsState extends State<PCAInspectionDetails> {
                             customText(
                                 text: 'Quote not approved by client',
                                 fontSize: 14,
-                                textColor: AppColors.green,
+                                textColor: AppColors.red,
                                 fontWeight: FontWeight.w600),
                             customText(
                                 text: 'Booking status',

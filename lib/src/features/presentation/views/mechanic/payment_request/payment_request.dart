@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/controller/Helpers.dart';
 import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -21,18 +22,16 @@ class _PaymentRequestState extends State<PaymentRequest> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
   List<BookingModel> _bookingHistory = [];
   List<BookingModel> _bookingHistory2 = [];
-  
+
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _mechanicRepo
-        .getAllBooking('approved')
-        .then((value) => setState(() {
-              _bookingHistory = value;
-              isLoading = false;
-            }));
+    _mechanicRepo.getAllBooking('approved').then((value) => setState(() {
+          _bookingHistory = value;
+          isLoading = false;
+        }));
     _mechanicRepo
         .getAllBooking('awaiting payment')
         .then((value) => setState(() {
@@ -97,65 +96,78 @@ class _PaymentRequestState extends State<PaymentRequest> {
                                   'You do not have any booking awaiting client approval',
                               fontSize: 15,
                               textColor: AppColors.black,
-                              textAlignment: TextAlign.center
-                          )
+                              textAlignment: TextAlign.center)
                         ],
                       ))
                 else
                   ..._bookingHistory.map((e) {
+                    int price = 0;
+                    for (Quotes quote in e.quotes!) {
+                      if (quote.price != null) {
+                        price += quote.price!;
+                      }
+                    }
                     return GestureDetector(
-                    onTap: () => context.push(AppRoutes.pendingPaymentRequestDetails,
-                        extra: e.id),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Container(
-                        width: double.infinity,
-                        height: 10.h,
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.circular(20),
+                      onTap: () => context.push(
+                          AppRoutes.pendingPaymentRequestDetails,
+                          extra: e.id),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Container(
+                          width: double.infinity,
+                          height: 10.h,
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: ListTile(
+                              subtitle: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  customText(
+                                      text: "Due: ₦${Helpers.formatBalance(price)}",
+                                      fontSize: 15,
+                                      textColor: AppColors.orange),
+                                  Container(
+                                    width: 37.w,
+                                    height: 3.h,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: AppColors.containerGrey),
+                                    child: Center(
+                                      child: customText(
+                                          text: "Pending payment request",
+                                          fontSize: 10,
+                                          textColor: AppColors.black),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              title: customText(
+                                  text: e.user!.username!,
+                                  fontSize: 16,
+                                  textColor: AppColors.black,
+                                  fontWeight: FontWeight.bold),
+                              leading: Container(
+                                width: 10.w,
+                                height: 10.h,
+                                decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.containerGrey),
+                              )),
                         ),
-                        child: ListTile(
-                            subtitle: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                customText(
-                                    text: "Due: N5,050",
-                                    fontSize: 15,
-                                    textColor: AppColors.orange),
-                                Container(
-                                  width: 37.w,
-                                  height: 3.h,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: AppColors.containerGrey),
-                                  child: Center(
-                                    child: customText(
-                                        text: "Pending payment request",
-                                        fontSize: 10,
-                                        textColor: AppColors.black),
-                                  ),
-                                )
-                              ],
-                            ),
-                            title: customText(
-                                text: e.user!.username!,
-                                fontSize: 16,
-                                textColor: AppColors.black,
-                                fontWeight: FontWeight.bold),
-                            leading: Container(
-                              width: 10.w,
-                              height: 10.h,
-                              decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColors.containerGrey),
-                            )),
                       ),
-                    ),
-                  );
+                    );
                   }),
-                  ..._bookingHistory2.map((e) {
-                    return GestureDetector(
+                ..._bookingHistory2.map((e) {
+                  int price = 0;
+                  for (Quotes quote in e.quotes!) {
+                    if (quote.price != null) {
+                      price += quote.price!;
+                    }
+                  }
+                  return GestureDetector(
                     onTap: () => context.push(AppRoutes.paymentRequestDetails,
                         extra: e.id),
                     child: Padding(
@@ -172,7 +184,7 @@ class _PaymentRequestState extends State<PaymentRequest> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 customText(
-                                    text: "Due: N5,050",
+                                    text: "Due: ₦${Helpers.formatBalance(price)}",
                                     fontSize: 15,
                                     textColor: AppColors.orange),
                                 Container(
@@ -205,7 +217,7 @@ class _PaymentRequestState extends State<PaymentRequest> {
                       ),
                     ),
                   );
-                  }),
+                }),
               ],
             )),
     );

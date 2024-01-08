@@ -27,7 +27,6 @@ class _PendingQuoteApprovalState extends State<PendingQuoteApproval> {
 
   int? totalPrice;
 
-  int price = 5050;
   double serviceFee = 0;
 
   @override
@@ -103,6 +102,12 @@ class _PendingQuoteApprovalState extends State<PendingQuoteApproval> {
                             ))
                       else
                         ..._bookingHistory.map((e) {
+                          int price = 0;
+                          for (Quotes quote in e.quotes!) {
+                            if (quote.price != null) {
+                              price += quote.price!;
+                            }
+                          }
                           var dateString = e.date;
                           var dateTime = DateTime.parse(dateString!);
                           var formattedDate =
@@ -110,20 +115,7 @@ class _PendingQuoteApprovalState extends State<PendingQuoteApproval> {
 
                           var formattedTime =
                               DateFormat('hh:mm a').format(dateTime);
-                          // List<String> quotesList = e.quotes.map((quote) {
-                          //   return "${quote.id}: $price";
-                          // }).toList();
-
-                          // quotesList.forEach((quoteString) {
-                          //   // Split the string to extract the price part
-                          //   List<String> parts = quoteString.split(":");
-                          //   if (parts.length == 2) {
-                          //     // Parse the price part and add it to totalPrice
-                          //     int prise = int.tryParse(parts[1].trim()) ??
-                          //         0; // Use 0 as the default if parsing fails
-                          //     price += prise;
-                          //   }
-                          // });
+                          
                           
                           return GestureDetector(
                             onTap: () {

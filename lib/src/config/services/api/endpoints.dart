@@ -32,5 +32,5 @@ class Endpoints {
   static const String walletWithdraw = 'wallet/withdraw';
   static const String paystack = "https://api.paystack.co/";
   static const String getBankList = "bank";
-
+  static const String contact = "user/contact-support";
 }

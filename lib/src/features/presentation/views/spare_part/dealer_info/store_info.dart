@@ -193,7 +193,7 @@ class _SpareStoreInfoState extends ConsumerState<SpareStoreInfo> {
           Container(
             padding: const EdgeInsets.all(20),
             width: double.infinity,
-            height: 25.h,
+            height: 29.h,
             decoration: const BoxDecoration(
                 color: AppColors.orange,
                 borderRadius: BorderRadius.only(

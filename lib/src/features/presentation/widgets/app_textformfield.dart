@@ -14,32 +14,37 @@ class CustomTextFormField extends StatefulWidget {
   final bool isPassword;
   final bool hasMaxline;
   final bool? isEnabled;
+  final bool? hasWidg;
   final bool? isDropdown;
   final bool? hasLabel;
   final String? Function(String?)? validator;
   final List<TextInputFormatter>? inputFormatters;
   final VoidCallback? onTap;
   final String? error;
+  final Widget? widg;
   final ValueChanged<String>? onChanged;
   final TextInputType keyboardType;
-  const CustomTextFormField(
-      {super.key,
-      this.isAddress = false,
-      this.label,
-      this.onTap,
-      this.hasMaxline = false,
-      this.inputFormatters,
-      this.onChanged,
-      this.hintText,
-      this.error,
-      this.prefixIcon,
-      this.keyboardType = TextInputType.text,
-      this.textEditingController,
-      this.isPassword = false,
-      this.validator,
-      this.isEnabled,
-      this.isDropdown,
-      this.hasLabel,});
+  const CustomTextFormField({
+    super.key,
+    this.isAddress = false,
+    this.label,
+    this.onTap,
+    this.hasMaxline = false,
+    this.inputFormatters,
+    this.onChanged,
+    this.hintText,
+    this.error,
+    this.widg,
+    this.prefixIcon,
+    this.keyboardType = TextInputType.text,
+    this.textEditingController,
+    this.isPassword = false,
+    this.hasWidg = false,
+    this.validator,
+    this.isEnabled,
+    this.isDropdown,
+    this.hasLabel,
+  });
 
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
@@ -53,10 +58,18 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        customText(
-            text: '${widget.label}',
-            fontSize: 14,
-            textColor: AppColors.primary),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            customText(
+              text: '${widget.label}',
+              fontSize: 14,
+              textColor: AppColors.primary,
+            ),
+            widget.hasWidg! ? 
+            widget.widg! : const SizedBox.shrink()
+          ],
+        ),
         heightSpace(1),
         TextFormField(
           enabled: widget.isEnabled,

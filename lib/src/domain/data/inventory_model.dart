@@ -3,6 +3,7 @@ class InventoryModel {
   String? name;
   int? price;
   int? finalPrice;
+  int? markup;
   String? imageUrl;
   String? description;
   int? discount;
@@ -24,6 +25,7 @@ class InventoryModel {
     this.specifications,
     this.dealer,
     // this.reviews,
+    this.markup,
     this.discount,
     this.isPublished,
     this.quantityInStock,
@@ -34,6 +36,7 @@ class InventoryModel {
     name = json['name'];
     price = json['price'];
     finalPrice = json['finalPrice'];
+    markup = json['markup'];
     imageUrl = json['imageUrl'];
     description = json['description'];
     slug = json['slug'];
@@ -53,6 +56,7 @@ class InventoryModel {
     data['name'] = name;
     data['price'] = price;
     data['finalPrice'] = finalPrice;
+    data['markup'] = markup;
     data['imageUrl'] = imageUrl;
     data['description'] = description;
     data['slug'] = slug;

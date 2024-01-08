@@ -6,6 +6,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/controller/Helpers.dart';
 import 'package:ngbuka/src/domain/data/inventory_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
@@ -117,7 +118,7 @@ class _ViewInventoryDetailsState extends State<ViewInventoryDetails> {
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(19.h),
+        preferredSize: Size.fromHeight(20.h),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -249,7 +250,7 @@ class _ViewInventoryDetailsState extends State<ViewInventoryDetails> {
                           ),
                           heightSpace(1),
                           customText(
-                            text: 'N${inventoryModel!.price!}',
+                            text: '₦${Helpers.formatBalance(inventoryModel!.finalPrice!)}',
                             fontSize: 14,
                             textColor: AppColors.black,
                             fontWeight: FontWeight.w600,
@@ -262,7 +263,7 @@ class _ViewInventoryDetailsState extends State<ViewInventoryDetails> {
                           ),
                           heightSpace(1),
                           customText(
-                            text: 'N${inventoryModel!.discount!}',
+                            text: '₦${Helpers.formatBalance(inventoryModel!.discount!)}',
                             fontSize: 14,
                             textColor: AppColors.black,
                             fontWeight: FontWeight.w600,

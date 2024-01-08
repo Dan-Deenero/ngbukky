@@ -66,6 +66,7 @@ class AppImages {
   static const String squareCircle= "assets/images/svgs/squareCircle.svg";
   static const String noInventory = "assets/images/svgs/noinventory.svg";
   static const String packageR= "assets/images/svgs/Package-r.svg";
+  static const String oders= "assets/images/svgs/oders.svg";
   static const String sparkPlug = "assets/images/pngs/sparkplug.png";
   static const String engineoil= "assets/images/pngs/engineoil.png";
   static const String bigsizeoil= "assets/images/pngs/bigsizeoil.png";

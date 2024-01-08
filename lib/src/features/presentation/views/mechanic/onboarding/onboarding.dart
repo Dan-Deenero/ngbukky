@@ -41,7 +41,7 @@ class OnboardingScreen extends HookWidget {
                   child: Container(
                     padding: EdgeInsets.all(4.h),
                     width: double.infinity,
-                    height: 45.h,
+                    height: 50.h,
                     decoration: const BoxDecoration(
                         color: AppColors.white,
                         borderRadius: BorderRadius.only(

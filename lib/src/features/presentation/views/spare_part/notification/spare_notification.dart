@@ -6,42 +6,17 @@ import 'package:intl/intl.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
 import 'package:ngbuka/src/domain/controller/helpers.dart';
-import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/data/notification_model.dart';
-import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
-class NewNotification extends StatefulWidget {
-  const NewNotification({super.key});
+class NewNotification extends HookWidget {
+  NewNotification({
+    Key? key,
+  }) : super(key: key ?? UniqueKey());
 
-  @override
-  State<NewNotification> createState() => _NewNotificationState();
-}
-
-class _NewNotificationState extends State<NewNotification> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
-  List<NotificationModel> _notificationHistory = [];
-  NotificationModel? notifyModel;
-  BookingModel? bookingModel;
-  QuotesModel? quoteModel;
-
-  bool isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _mechanicRepo.getAllNotifications().then(
-          (value) => setState(
-            () {
-              _notificationHistory = value;
-              isLoading = false;
-            },
-          ),
-        );
-    // log(_bookingHistory.toString());
-  }
 
   double calculateTextSize(BuildContext context, double percentage) {
     return MediaQuery.of(context).size.width * percentage;
@@ -49,7 +24,37 @@ class _NewNotificationState extends State<NewNotification> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading
+    final notificationHistory = useState<List<NotificationModel>>([]);
+    final notific = useState<NotificationModel?>(null);
+    final isLoading = useState<bool>(true);
+
+    getAllNotification() {
+      _mechanicRepo.getAllNotifications().then(
+        (value) {
+          notificationHistory.value = value;
+          isLoading.value = false;
+        },
+      );
+    }
+
+    getANotification(String id) {
+      _mechanicRepo.getOneNotification(id).then((value) {
+        notific.value = value;
+        isLoading.value = false;
+        Helpers.routeToRespectiveNotificationScreens(
+          notific.value,
+          context,
+        );
+      });
+    }
+
+    useEffect(() {
+      getAllNotification();
+
+      return null;
+    }, [notificationHistory.value.length]);
+
+    return isLoading.value
         ? const Center(
             child: CircularProgressIndicator(),
           )
@@ -58,7 +63,7 @@ class _NewNotificationState extends State<NewNotification> {
               padding: const EdgeInsets.all(12.0),
               child: Column(
                 children: [
-                  if (_notificationHistory.isEmpty)
+                  if (notificationHistory.value.isEmpty)
                     Center(
                       heightFactor: 3.0,
                       child: Column(
@@ -73,7 +78,7 @@ class _NewNotificationState extends State<NewNotification> {
                       ),
                     )
                   else
-                    ..._notificationHistory.map(
+                    ...notificationHistory.value.map(
                       (e) {
                         var dateString = e.createdAt!;
                         var dateTime = DateTime.parse(dateString);
@@ -84,24 +89,7 @@ class _NewNotificationState extends State<NewNotification> {
                         return Column(
                           children: [
                             GestureDetector(
-                              onTap: () {
-                                _mechanicRepo.getOneNotification(e.id).then(
-                                      (value) => setState(
-                                        () {
-                                          notifyModel = value;
-                                          bookingModel = notifyModel!.booking;
-                                          quoteModel =
-                                              notifyModel!.quoteRequest;
-                                          isLoading = false;
-                                          Helpers
-                                              .routeToRespectiveNotificationScreens(
-                                            notifyModel,
-                                            context,
-                                          );
-                                        },
-                                      ),
-                                    );
-                              },
+                              onTap: () => getANotification(e.id!),
                               child: Container(
                                 width: double.infinity,
                                 // height: 120,
@@ -223,35 +211,12 @@ class _NewNotificationState extends State<NewNotification> {
   }
 }
 
-class ReadNotification extends StatefulWidget {
-  const ReadNotification({super.key});
-
-  @override
-  State<ReadNotification> createState() => _ReadNotificationState();
-}
-
-class _ReadNotificationState extends State<ReadNotification> {
+class ReadNotification extends HookWidget {
   final MechanicRepo _mechanicRepo = MechanicRepo();
-  List<NotificationModel> _notificationHistory = [];
-  NotificationModel? notifyModel;
-  BookingModel? bookingModel;
-  QuotesModel? quoteModel;
 
-  bool isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _mechanicRepo.getAllSeenNotifications().then(
-          (value) => setState(
-            () {
-              _notificationHistory = value;
-              isLoading = false;
-            },
-          ),
-        );
-    // log(_bookingHistory.toString());
-  }
+  ReadNotification({
+    Key? key,
+  }) : super(key: key ?? UniqueKey());
 
   double calculateTextSize(BuildContext context, double percentage) {
     return MediaQuery.of(context).size.width * percentage;
@@ -259,7 +224,35 @@ class _ReadNotificationState extends State<ReadNotification> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading
+    final notificationHistory = useState<List<NotificationModel>>([]);
+    final notific = useState<NotificationModel?>(null);
+    final isLoading = useState<bool>(true);
+
+    getAllNotification() {
+      _mechanicRepo.getAllSeenNotifications().then(
+        (value) {
+          notificationHistory.value = value;
+          isLoading.value = false;
+        },
+      );
+    }
+
+    getANotification(String id) {
+      _mechanicRepo.getOneNotification(id).then((value) {
+        notific.value = value;
+        isLoading.value = false;
+        Helpers.routeToRespectiveNotificationScreens(
+          notific.value,
+          context,
+        );
+      });
+    }
+
+    useEffect(() {
+      getAllNotification();
+      return null;
+    }, [notificationHistory.value.length]);
+    return isLoading.value
         ? const Center(
             child: CircularProgressIndicator(),
           )
@@ -268,7 +261,7 @@ class _ReadNotificationState extends State<ReadNotification> {
               padding: const EdgeInsets.all(12.0),
               child: Column(
                 children: [
-                  if (_notificationHistory.isEmpty)
+                  if (notificationHistory.value.isEmpty)
                     Center(
                       heightFactor: 3.0,
                       child: Column(
@@ -283,7 +276,7 @@ class _ReadNotificationState extends State<ReadNotification> {
                       ),
                     )
                   else
-                    ..._notificationHistory.map(
+                    ...notificationHistory.value.map(
                       (e) {
                         var dateString = e.createdAt!;
                         var dateTime = DateTime.parse(dateString);
@@ -295,24 +288,7 @@ class _ReadNotificationState extends State<ReadNotification> {
                         return Column(
                           children: [
                             GestureDetector(
-                              onTap: () {
-                                _mechanicRepo.getOneNotification(e.id).then(
-                                      (value) => setState(
-                                        () {
-                                          notifyModel = value;
-                                          bookingModel = notifyModel!.booking;
-                                          quoteModel =
-                                              notifyModel!.quoteRequest;
-                                          isLoading = false;
-
-                                          Helpers.routeToRespectiveNotificationScreens(
-                                            notifyModel,
-                                            context,
-                                          );
-                                        },
-                                      ),
-                                    );
-                              },
+                              onTap: () => getANotification(e.id!),
                               child: Container(
                                 width: double.infinity,
                                 // height: 120,
@@ -554,7 +530,7 @@ class SpareNotification extends HookWidget {
             ),
           ),
         ),
-        body: const Column(
+        body: Column(
           children: [
             Expanded(
                 child: TabBarView(

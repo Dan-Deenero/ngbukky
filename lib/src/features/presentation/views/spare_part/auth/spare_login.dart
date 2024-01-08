@@ -72,7 +72,8 @@ class DealerLoginView extends HookWidget {
                     Padding(
                       padding: const EdgeInsets.only(right: 10),
                       child: GestureDetector(
-                        onTap: () => context.push(AppRoutes.dealerCreateAccount),
+                        onTap: () =>
+                            context.push(AppRoutes.dealerCreateAccount),
                         child: SvgPicture.asset(AppImages.createAccount),
                       ),
                     )
@@ -191,7 +192,10 @@ class SpareEmailLogin extends HookWidget {
       log(result.toString());
       if (context.mounted) {
         if (result.user != null) {
-          locator<LocalStorageService>().saveDataToDisk(AppKeys.dealerPassword, password.text);
+          locator<LocalStorageService>()
+              .saveDataToDisk(AppKeys.dealerPassword, password.text);
+          locator<LocalStorageService>()
+              .saveDataToDisk(AppKeys.userType, 'dealer');
 
           NotificationsManager.getFcmToken().then(
             (value) async {
@@ -233,6 +237,7 @@ class SpareEmailLogin extends HookWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomTextFormField(
+                      hasWidg: false,
                       textEditingController: email,
                       prefixIcon: Padding(
                         padding: const EdgeInsets.all(15.0),
@@ -246,6 +251,7 @@ class SpareEmailLogin extends HookWidget {
                     ),
                     heightSpace(2),
                     CustomTextFormField(
+                      hasWidg: false,
                       isPassword: true,
                       prefixIcon: Padding(
                         padding: const EdgeInsets.all(13.0),
@@ -286,7 +292,8 @@ class SpareEmailLogin extends HookWidget {
                     heightSpace(3),
                     Center(
                       child: GestureDetector(
-                        onTap: () => context.push(AppRoutes.spareForgotPassword),
+                        onTap: () =>
+                            context.push(AppRoutes.spareForgotPassword),
                         child: customText(
                             text: "Forgot Password",
                             fontSize: 15,
@@ -340,7 +347,11 @@ class SparePhoneNumberLogin extends HookWidget {
       LoginModel result = await _authRepo.loginEmail(data);
       if (context.mounted) {
         if (result.user != null) {
-          locator<LocalStorageService>().saveDataToDisk(AppKeys.dealerPassword, password.text);
+          locator<LocalStorageService>()
+              .saveDataToDisk(AppKeys.dealerPassword, password.text);
+          locator<LocalStorageService>()
+              .saveDataToDisk(AppKeys.userType, 'dealer');
+
           NotificationsManager.getFcmToken().then((value) async {
             final token = await SecureStorage.readSecureData('device-token');
             if (token != null || token != '') {

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -6,6 +8,8 @@ import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/domain/data/user_model.dart';
 import 'package:ngbuka/src/domain/repository/auth_repository.dart';
+import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/success_modal.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_phone_field.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -17,6 +21,7 @@ import '../../../../../core/shared/colors.dart';
 
 class ContactPage extends HookWidget {
   static final AuthRepo _authRepo = AuthRepo();
+  static final MechanicRepo _mechanicRepo = MechanicRepo();
   static final firstName = TextEditingController();
   static final lastName = TextEditingController();
   static final email = TextEditingController();
@@ -45,6 +50,40 @@ class ContactPage extends HookWidget {
         phone.text = updatedStr;
         email.text = value.email!;
       });
+    }
+
+    showSuccesModal() async {
+      await showDialog(
+        context: context,
+        builder: (context) => SuccessDialogue(
+          title: 'Email sent',
+          subtitle:
+              'You have successfully sent the Ngbuka team an email. Thank you',
+          action: () {
+            context.pop();
+          },
+        ),
+      );
+    }
+
+    contactUs() async {
+      var data = {
+        "email": email.text,
+        "name": "${firstName.text} ${lastName.text}",
+        "message": body.text
+      };
+
+      bool result = await _mechanicRepo.contactSupport(data);
+      log(result.toString());
+
+      if (result) {
+        if (context.mounted) {
+          context.pop();
+        }
+        showSuccesModal();
+        body.clear();
+        title.clear();
+      }
     }
 
     // updateInfo() async {
@@ -166,7 +205,8 @@ class ContactPage extends HookWidget {
                                 child: Opacity(
                                   opacity: 0.2,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       CustomTextFormField(
                                         validator: stringValidation,
@@ -225,8 +265,8 @@ class ContactPage extends HookWidget {
                                     width: MediaQuery.of(context).size.width *
                                         0.87,
                                     child: AppButton(
-                                      // isActive: isValidated.value,
-                                      onTap: () {},
+                                      isActive: isValidated.value,
+                                      onTap: contactUs,
                                       buttonText: "Save",
                                       isOrange: true,
                                       isSmall: true,

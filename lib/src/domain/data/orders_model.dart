@@ -3,7 +3,7 @@ class OrdersModel {
   int? quantity;
   int? subtotal;
   String? id;
-  int? price;
+  double? price;
   String? createdAt;
   Product? product;
   Order? order;

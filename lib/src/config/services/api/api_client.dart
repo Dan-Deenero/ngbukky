@@ -198,7 +198,15 @@ class ApiClient {
       log(e.response.toString());
       log(e.response!.statusCode.toString());
       if (e.response?.statusCode == 401) {
-        locator<GoRouter>().push(AppRoutes.login);
+        if(locator<LocalStorageService>().getDataFromDisk(AppKeys.userType) == 'mechanic'){
+          locator<GoRouter>().push(AppRoutes.login);
+          log(locator<LocalStorageService>().getDataFromDisk(AppKeys.userType));
+        }else if(locator<LocalStorageService>().getDataFromDisk(AppKeys.userType) == 'dealer'){
+          locator<GoRouter>().push(AppRoutes.dealerLogin);
+          log(locator<LocalStorageService>().getDataFromDisk(AppKeys.userType));
+
+
+        }
         // router.push(AppRoutes.login);
       }
       log(e.toString());

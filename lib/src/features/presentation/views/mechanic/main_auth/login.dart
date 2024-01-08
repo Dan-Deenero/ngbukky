@@ -71,8 +71,7 @@ class LoginView extends HookWidget {
                     Padding(
                       padding: const EdgeInsets.only(right: 10),
                       child: GestureDetector(
-                        onTap: () =>
-                            context.push(AppRoutes.createAccount),
+                        onTap: () => context.push(AppRoutes.createAccount),
                         child: SvgPicture.asset(AppImages.createAccount),
                       ),
                     )
@@ -191,7 +190,10 @@ class SpareEmailLogin extends HookWidget {
       log(result.toString());
       if (context.mounted) {
         if (result.user != null) {
-          locator<LocalStorageService>().saveDataToDisk(AppKeys.mechPassword, password.text);
+          locator<LocalStorageService>()
+              .saveDataToDisk(AppKeys.mechPassword, password.text);
+              locator<LocalStorageService>()
+              .saveDataToDisk(AppKeys.userType, 'mechanic');
           NotificationsManager.getFcmToken().then(
             (value) async {
               final token = await SecureStorage.readSecureData('device-token');
@@ -342,7 +344,10 @@ class SparePhoneNumberLogin extends HookWidget {
       LoginModel result = await _authRepo.loginEmail(data);
       if (context.mounted) {
         if (result.user != null) {
-          locator<LocalStorageService>().saveDataToDisk(AppKeys.mechPassword, password.text);
+          locator<LocalStorageService>()
+              .saveDataToDisk(AppKeys.mechPassword, password.text);
+          locator<LocalStorageService>()
+              .saveDataToDisk(AppKeys.userType, 'mechanic');
           NotificationsManager.getFcmToken().then((value) async {
             final token = await SecureStorage.readSecureData('device-token');
             if (token != null || token != '') {
@@ -364,6 +369,7 @@ class SparePhoneNumberLogin extends HookWidget {
           }
         }
       }
+      log(locator<LocalStorageService>().getDataFromDisk(AppKeys.userType));
     }
 
     return Form(

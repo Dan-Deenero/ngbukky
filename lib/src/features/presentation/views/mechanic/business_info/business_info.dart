@@ -36,6 +36,7 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
 
   List<String> carsList = [];
 
+        List<String> trueItemsString = [];
   @override
   Widget build(BuildContext context) {
     final loading = ref.watch(isLoading);
@@ -43,8 +44,8 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
 
     workingHours() {
       saveData() {
-        List<String> trueItemsString = [];
-
+        workingHourController.clear();
+        trueItemsString.clear();
         for (var item in workingHour) {
           if (item["isChecked"]) {
             if (item["isChecked"]) {
@@ -142,33 +143,39 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                                         },
                                         child: Container(
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: 18, vertical: 10),
+                                            horizontal: 10,
+                                            vertical: 10,
+                                          ),
                                           height: 50,
+                                          width: 37.w,
                                           decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(5),
                                               color: AppColors.white),
                                           child: Row(children: [
                                             Container(
-                                                width: 20,
-                                                height: 20,
-                                                decoration: BoxDecoration(
-                                                    color: AppColors.darkOrange,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5)),
-                                                child: const Padding(
-                                                  padding: EdgeInsets.all(1.0),
-                                                  child: Icon(Icons.check,
-                                                      color: AppColors.white,
-                                                      size: 15),
-                                                )),
+                                              width: 20,
+                                              height: 20,
+                                              decoration: BoxDecoration(
+                                                color: AppColors.darkOrange,
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                              ),
+                                              child: const Padding(
+                                                padding: EdgeInsets.all(1.0),
+                                                child: Icon(
+                                                  Icons.check,
+                                                  color: AppColors.white,
+                                                  size: 15,
+                                                ),
+                                              ),
+                                            ),
                                             widthSpace(2),
                                             customText(
                                                 text: e["day"],
-                                                fontSize: 12,
+                                                fontSize: 3.8.w,
                                                 textColor: AppColors.black)
-                                          ]),
+                                          ],),
                                         ),
                                       )
                                     : GestureDetector(
@@ -190,32 +197,39 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                                         },
                                         child: Container(
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: 18, vertical: 10),
+                                            horizontal: 10,
+                                            vertical: 10,
+                                          ),
                                           height: 50,
+                                          width: 37.w,
                                           decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(5),
                                               color: AppColors.white),
-                                          child: Row(children: [
-                                            Container(
-                                              width: 20,
-                                              height: 20,
-                                              decoration: BoxDecoration(
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                width: 20,
+                                                height: 20,
+                                                decoration: BoxDecoration(
                                                   border: Border.all(
-                                                      color: AppColors
-                                                          .containerGrey),
+                                                    color:
+                                                        AppColors.containerGrey,
+                                                  ),
                                                   borderRadius:
-                                                      BorderRadius.circular(5)),
-                                            ),
-                                            widthSpace(2),
-                                            customText(
-                                                text: e["day"],
-                                                fontSize: 12,
-                                                textColor: AppColors.black)
-                                          ]),
+                                                      BorderRadius.circular(5),
+                                                ),
+                                              ),
+                                              widthSpace(2),
+                                              customText(
+                                                  text: e["day"],
+                                                  fontSize: 3.8.w,
+                                                  textColor: AppColors.black)
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                SvgPicture.asset(AppImages.edit),
+                                SvgPicture.asset(AppImages.edit, width: 20.w,),
                                 GestureDetector(
                                   onTap: () async {
                                     final TimeOfDay? result =
@@ -441,18 +455,16 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
         list.clear();
       }
 
-      setState(() {      
+      setState(() {
         carsList = list;
       });
 
       if (list.isEmpty) {
         setState(() {
           carsList.clear();
-          
         });
       }
     }
-
 
     return Scaffold(
       backgroundColor: AppColors.scaffoldColor,
@@ -463,7 +475,7 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                 Container(
                   padding: const EdgeInsets.all(20),
                   width: double.infinity,
-                  height: 25.h,
+                  height: 29.h,
                   decoration: const BoxDecoration(
                       color: AppColors.orange,
                       borderRadius: BorderRadius.only(

@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/domain/data/account.dart';
 import 'package:ngbuka/src/domain/data/account_name_model.dart';
@@ -62,11 +61,11 @@ class _AddWalletPageState extends ConsumerState<AddWalletPage> {
     await showDialog(
       context: context,
       builder: (context) => SuccessDialogue(
-        title: 'Quote sent',
+        title: 'Account Saved',
         subtitle:
             'Your local account number and bank has been saved, you can go ahead and withdraw now',
         action: () {
-          context.go(AppRoutes.withdrawFunds);
+          context.pop();
         },
       ),
     );
@@ -345,6 +344,7 @@ class _AddWalletPageState extends ConsumerState<AddWalletPage> {
                               getAccountOwner();
                             }
                           },
+                          keyboardType: TextInputType.number,
                           validator: numericValidation,
                           textEditingController: accountNumber,
                           prefixIcon: Padding(
@@ -446,11 +446,11 @@ class _AddWalletPageState extends ConsumerState<AddWalletPage> {
           ),
           if (isFetchingAccountName)
             Container(
-                color:
-                    Colors.black.withOpacity(0.7), // Adjust opacity as needed
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                )),
+              color: Colors.black.withOpacity(0.7), // Adjust opacity as needed
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
         ],
       ),
     );

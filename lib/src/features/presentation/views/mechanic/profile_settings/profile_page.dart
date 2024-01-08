@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
@@ -17,53 +16,38 @@ import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
 import '../../../../../core/shared/colors.dart';
 
-Widget card(String title, String subtitle, String image, String route,
-        BuildContext context) =>
-    GestureDetector(
-      onTap: () {
-        context.push(route);
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        margin: const EdgeInsets.symmetric(vertical: 8),
-        width: double.infinity,
-        height: 10.h,
-        decoration: BoxDecoration(boxShadow: const [
-          BoxShadow(
-            color: Color.fromARGB(255, 194, 184, 184),
-
-            blurRadius: 1,
-
-            offset: Offset(1, 1), // Shadow position
+Widget card(
+  String title,
+  String subtitle,
+  String image,
+) =>
+    Card(
+      color: Colors.white,
+      surfaceTintColor: Colors.transparent,
+      child: ListTile(
+        leading: SvgPicture.asset(
+          image,
+          width: 25,
+          height: 25,
+        ),
+        trailing: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Icon(
+            Icons.arrow_forward_ios,
+            size: 20,
           ),
-        ], borderRadius: BorderRadius.circular(20), color: AppColors.white),
-        child: ListTile(
-          leading: SvgPicture.asset(
-            image,
-            width: 25,
-            height: 25,
-          ),
-          trailing: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Icon(
-              Icons.arrow_forward_ios,
-              size: 20,
-            ),
-          ),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Flexible(
-                child: customText(
-                    text: title,
-                    fontSize: 15,
-                    textColor: AppColors.black,
-                    fontWeight: FontWeight.bold),
-              ),
-              customText(
-                  text: subtitle, fontSize: 12, textColor: AppColors.textColor)
-            ],
-          ),
+        ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            customText(
+                text: title,
+                fontSize: 15,
+                textColor: AppColors.black,
+                fontWeight: FontWeight.bold),
+            customText(
+                text: subtitle, fontSize: 12, textColor: AppColors.textColor)
+          ],
         ),
       ),
     );
@@ -115,8 +99,8 @@ class ProfileSettings extends HookWidget {
 
       bool result = await _mechanicRepo.saveProfileImage(data);
 
-      if(result){
-        log('hello world');
+      if (result) {
+        profileImage.value = url;
       }
     }
 
@@ -175,12 +159,14 @@ class ProfileSettings extends HookWidget {
                         ),
                       ],
                     ),
-                    SvgPicture.asset(AppImages.notification)
+                    InkWell(
+                        onTap: () => context.push(AppRoutes.notification),
+                        child: SvgPicture.asset(AppImages.notification))
                   ],
                 ),
               ),
               Positioned(
-                top: 160,
+                top: 22.h,
                 left: 15,
                 child: Stack(
                   clipBehavior: Clip.none,
@@ -249,24 +235,45 @@ class ProfileSettings extends HookWidget {
                         )),
                       ),
                       heightSpace(2),
-                      card(
+                      GestureDetector(
+                        onTap: () =>
+                            context.push(AppRoutes.personalInfoSettings),
+                        child: card(
                           "Personal profile",
                           "Edit your personal information",
                           AppImages.nameIcon,
-                          AppRoutes.personalInfoSettings,
-                          context),
-                      card(
+                        ),
+                      ),
+                      heightSpace(2),
+                      GestureDetector(
+                        onTap: () =>
+                            context.push(AppRoutes.businessInfoSettings),
+                        child: card(
                           "Business profile",
                           "Edit your business information",
                           AppImages.box,
-                          AppRoutes.businessInfoSettings,
-                          context),
-                      card("Contact Ngbuka", "Contact Ngbuka customer care",
-                          AppImages.box, AppRoutes.contactPage, context),
-                      card("Wallet", "Manage your saved account number",
-                          AppImages.contact, AppRoutes.addWallet, context),
-                      heightSpace(10),
+                        ),
+                      ),
+                      heightSpace(2),
                       GestureDetector(
+                        onTap: () => context.push(AppRoutes.contactPage),
+                        child: card(
+                          "Contact Ngbuka",
+                          "Contact Ngbuka customer care",
+                          AppImages.box,
+                        ),
+                      ),
+                      heightSpace(2),
+                      GestureDetector(
+                        onTap: () => context.push(AppRoutes.addWallet),
+                        child: card(
+                          "Wallet",
+                          "Manage your saved account number",
+                          AppImages.contact,
+                        ),
+                      ),
+                      heightSpace(10),
+                      InkWell(
                         onTap: signOut,
                         child: Row(
                           children: [
