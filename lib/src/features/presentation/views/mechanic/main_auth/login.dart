@@ -22,6 +22,8 @@ import 'package:ngbuka/src/features/presentation/widgets/app_textformfield.dart'
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 import 'package:ngbuka/src/utils/helpers/validators.dart';
 
+import '../../../../../domain/data/otp_model.dart';
+
 class LoginView extends HookWidget {
   const LoginView({super.key});
 
@@ -189,31 +191,37 @@ class SpareEmailLogin extends HookWidget {
       LoginModel result = await _authRepo.loginEmail(data);
       log(result.toString());
       if (context.mounted) {
-        if (result.user != null) {
-          locator<LocalStorageService>()
-              .saveDataToDisk(AppKeys.mechPassword, password.text);
-              locator<LocalStorageService>()
-              .saveDataToDisk(AppKeys.userType, 'mechanic');
-          NotificationsManager.getFcmToken().then(
-            (value) async {
-              final token = await SecureStorage.readSecureData('device-token');
-              if (token != null || token != '') {
-                if (token != value) {
-                  final data = {
-                    'deviceToken': value,
-                  };
-                  _authRepo.updateDeviceToken(data);
+        if (result.user?.isEmailVerified == false) {
+          context.push(AppRoutes.verifyAccount,
+              extra: OTPModel(email: email.text, otpType: "createAccount"));
+        } else {
+          if (result.user != null) {
+            locator<LocalStorageService>()
+                .saveDataToDisk(AppKeys.mechPassword, password.text);
+            locator<LocalStorageService>()
+                .saveDataToDisk(AppKeys.userType, 'mechanic');
+            NotificationsManager.getFcmToken().then(
+              (value) async {
+                final token =
+                    await SecureStorage.readSecureData('device-token');
+                if (token != null || token != '') {
+                  if (token != value) {
+                    final data = {
+                      'deviceToken': value,
+                    };
+                    _authRepo.updateDeviceToken(data);
+                  }
                 }
-              }
-            },
-          );
-          NotificationsManager.init();
-          if (result.user?.mechanicType == null) {
-            context.go(AppRoutes.personalInfo);
-          } else if (result.user?.businessName == null) {
-            context.go(AppRoutes.businessInfo);
-          } else {
-            context.go(AppRoutes.bottomNav);
+              },
+            );
+            NotificationsManager.init();
+            if (result.user?.mechanicType == null) {
+              context.go(AppRoutes.personalInfo);
+            } else if (result.user?.businessName == null) {
+              context.go(AppRoutes.businessInfo);
+            } else {
+              context.go(AppRoutes.bottomNav);
+            }
           }
         }
       }

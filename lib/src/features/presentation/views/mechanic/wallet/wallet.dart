@@ -66,13 +66,11 @@ class Wallet extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final wallet = useState<WalletModel?>(null);
-    final isLoad = useState<bool>(true);
 
-    getWallet() {
-      mechanicRepo.getWallet().then(
+    Future<dynamic> getWallet() async{
+      await mechanicRepo.getWallet().then(
         (value) {
           wallet.value = value;
-          isLoad.value = false;
         },
       );
     }
@@ -171,23 +169,28 @@ class Wallet extends HookWidget {
 
     final transactionHistory = useState<List<TransactionModel>>([]);
     final isLoading = useState<bool>(true);
-    getTransaction() {
-      mechanicRepo.getAllTransaction('all').then(
+    Future<dynamic> getTransaction() async{
+      await mechanicRepo.getAllTransaction('all').then(
         (value) {
           transactionHistory.value = value;
-          isLoading.value = false;
         },
       );
     }
 
     useEffect(() {
-      getTransaction();
-      getWallet();
+      void refresh() async {
+        isLoading.value = true;
+        await getTransaction();
+        await getWallet();
+        isLoading.value = false;
+      }
+
+      refresh();
       return null;
-    }, [transactionHistory.value.length]);
+    }, [isLoading]);
 
     final tabIndex = useState<int>(0);
-    return isLoad.value
+    return isLoading.value
         ? const Center(
             child: CircularProgressIndicator(),
           )
@@ -431,7 +434,7 @@ class PaymentTab extends HookWidget {
           )
         : SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Column(
                 children: [
                   if (transactionHistory.value.isEmpty)
@@ -494,7 +497,7 @@ class WithdrawalTab extends HookWidget {
     final transactionHistory = useState<List<TransactionModel>>([]);
     final isLoading = useState<bool>(true);
     getTransaction() {
-      mechanicRepo.getAllTransaction('debit').then(
+      mechanicRepo.getAllTransaction('withdrawal').then(
         (value) {
           transactionHistory.value = value;
           isLoading.value = false;
@@ -524,7 +527,7 @@ class WithdrawalTab extends HookWidget {
                           SizedBox(
                             width: 130,
                             child: customText(
-                              text: 'No payments were made to you',
+                              text: 'You have not made any withdrawal',
                               fontSize: 15,
                               textColor: AppColors.textGrey.withOpacity(0.3),
                               textAlignment: TextAlign.center,

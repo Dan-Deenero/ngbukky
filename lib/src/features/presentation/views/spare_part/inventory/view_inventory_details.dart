@@ -171,7 +171,7 @@ class _ViewInventoryDetailsState extends State<ViewInventoryDetails> {
                       height: 250,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          fit: BoxFit.fill,
+                          fit: BoxFit.cover,
                           image: NetworkImage(inventoryModel!.imageUrl!),
                         ),
                       ),

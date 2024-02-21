@@ -93,7 +93,7 @@ class _InspectionBookingState extends State<InspectionBooking> {
         subtitle:
             'You can start heading to the client’s location immediately to offer your service.',
         action: () {
-          context.pop();
+          context.push(AppRoutes.bottomNav);
         },
       ),
     );
@@ -106,10 +106,7 @@ class _InspectionBookingState extends State<InspectionBooking> {
       bool result = await _mechanicRepo.acceptOrRejectBooking(body, widget.id);
       if (result) {
         if (context.mounted) {
-          context.pop();
           showSuccesModal();
-          context.go(AppRoutes.acceptedBooking);
-          return;
         }
       }
     }

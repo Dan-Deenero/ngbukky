@@ -230,7 +230,8 @@ class _AddWalletPageState extends ConsumerState<AddWalletPage> {
                                         ),
                                         child: ListTile(
                                           leading: SvgPicture.asset(
-                                              AppImages.accountDet),
+                                            AppImages.accountDet,
+                                          ),
                                           title: customText(
                                             text: bank.name!,
                                             fontSize: 16,

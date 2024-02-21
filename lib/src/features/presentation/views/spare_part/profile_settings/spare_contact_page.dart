@@ -242,7 +242,7 @@ class SpareContactPage extends HookWidget {
                                     child: AppButton(
                                       // isActive: isValidated.value,
                                       onTap: contactUs,
-                                      buttonText: "Save",
+                                      buttonText: "Send",
                                       isOrange: true,
                                       isSmall: true,
                                     ),

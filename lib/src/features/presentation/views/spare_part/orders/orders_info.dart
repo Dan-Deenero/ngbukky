@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
-import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
 import 'package:ngbuka/src/domain/data/orders_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
@@ -79,7 +77,7 @@ class _OrdersInfoState extends State<OrdersInfo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(19.h),
+        preferredSize: Size.fromHeight(20.h),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -263,19 +261,19 @@ class _OrdersInfoState extends State<OrdersInfo> {
                       ),
                     ),
                     heightSpace(3),
-                    if (ordersModel!.status == 'processed')
-                    SizedBox(
-                      width: 100.h,
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(AppImages.packageR),
-                          widthSpace(3),
-                          customText(text: 'Order packed and awaiting pick-up by agent', fontSize: 14, textColor: AppColors.black)
-                        ],
-                      ),
-                    )
-                    else
-                    const SizedBox.shrink(),
+                    // if (ordersModel!.status == 'processed')
+                    // SizedBox(
+                    //   width: 100.h,
+                    //   child: Row(
+                    //     children: [
+                    //       SvgPicture.asset(AppImages.packageR),
+                    //       widthSpace(3),
+                    //       customText(text: 'Order awaiting pick-up', fontSize: 14, textColor: AppColors.black)
+                    //     ],
+                    //   ),
+                    // )
+                    // else
+                    // const SizedBox.shrink(),
                     heightSpace(3),
                     if (ordersModel!.status == 'processed')
                     const SizedBox.shrink()

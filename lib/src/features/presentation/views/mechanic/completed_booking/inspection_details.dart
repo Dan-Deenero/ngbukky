@@ -71,7 +71,7 @@ class _CompletedInspectionDetailsState
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(22.h),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 70),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 7.h),
           child: Row(
               // crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -90,7 +90,7 @@ class _CompletedInspectionDetailsState
                   ],
                 ),
                 Container(
-                  height: 12.h,
+                  height: 10.h,
                   width: 10.w,
                   decoration: BoxDecoration(
                       border: Border.all(color: AppColors.black),

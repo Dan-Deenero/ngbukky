@@ -2,8 +2,8 @@ class InventoryModel {
   dynamic id;
   String? name;
   int? price;
-  int? finalPrice;
-  int? markup;
+  dynamic finalPrice;
+  dynamic markup;
   String? imageUrl;
   String? description;
   int? discount;

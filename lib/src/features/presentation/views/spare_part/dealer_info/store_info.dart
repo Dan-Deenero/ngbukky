@@ -320,31 +320,31 @@ class _SpareStoreInfoState extends ConsumerState<SpareStoreInfo> {
                     ),
                   ),
                   heightSpace(2),
-                  Padding(
-                    padding: const EdgeInsets.only(),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        GestureDetector(
-                          onTap: () {},
-                          child: Row(
-                            children: [
-                              customText(
-                                text: 'Use my present location',
-                                fontSize: 14,
-                                textColor: AppColors.orange,
-                                textAlignment: TextAlign.right,
-                              ),
-                              widthSpace(2),
-                              SvgPicture.asset(AppImages.googleText),
-                              widthSpace(1),
-                              SvgPicture.asset(AppImages.googleLocs),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.only(),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.end,
+                  //     children: [
+                  //       GestureDetector(
+                  //         onTap: () {},
+                  //         child: Row(
+                  //           children: [
+                  //             customText(
+                  //               text: 'Use my present location',
+                  //               fontSize: 14,
+                  //               textColor: AppColors.orange,
+                  //               textAlignment: TextAlign.right,
+                  //             ),
+                  //             widthSpace(2),
+                  //             SvgPicture.asset(AppImages.googleText),
+                  //             widthSpace(1),
+                  //             SvgPicture.asset(AppImages.googleLocs),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   heightSpace(2),
                   AbsorbPointer(
                     absorbing: true,

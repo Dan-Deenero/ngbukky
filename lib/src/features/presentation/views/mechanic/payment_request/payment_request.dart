@@ -84,49 +84,58 @@ class _PaymentRequestState extends State<PaymentRequest> {
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
-              children: [
-                if (_bookingHistory.isEmpty && _bookingHistory2.isEmpty)
-                  Center(
-                      heightFactor: 3.5,
-                      child: Column(
-                        children: [
-                          SvgPicture.asset(AppImages.bookingWarning),
-                          customText(
-                              text:
-                                  'You do not have any booking awaiting client approval',
-                              fontSize: 15,
-                              textColor: AppColors.black,
-                              textAlignment: TextAlign.center)
-                        ],
-                      ))
-                else
-                  ..._bookingHistory.map((e) {
-                    int price = 0;
-                    for (Quotes quote in e.quotes!) {
-                      if (quote.price != null) {
-                        price += quote.price!;
+                children: [
+                  if (_bookingHistory.isEmpty && _bookingHistory2.isEmpty)
+                    Center(
+                        heightFactor: 3.5,
+                        child: Column(
+                          children: [
+                            SvgPicture.asset(AppImages.bookingWarning),
+                            customText(
+                                text:
+                                    'You do not have any booking awaiting client approval',
+                                fontSize: 15,
+                                textColor: AppColors.black,
+                                textAlignment: TextAlign.center)
+                          ],
+                        ))
+                  else
+                    ..._bookingHistory.map((e) {
+                      int price = 0;
+                      for (Quotes quote in e.quotes!) {
+                        if (quote.price != null) {
+                          price += quote.price!;
+                        }
                       }
-                    }
-                    return GestureDetector(
-                      onTap: () => context.push(
-                          AppRoutes.pendingPaymentRequestDetails,
-                          extra: e.id),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Container(
-                          width: double.infinity,
-                          height: 10.h,
-                          decoration: BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: ListTile(
+                      var profile;
+
+                      if (e.user!.profileImageUrl == null) {
+                        profile =
+                            'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+                      } else {
+                        profile = e.user!.profileImageUrl!;
+                      }
+                      return GestureDetector(
+                        onTap: () => context.push(
+                            AppRoutes.pendingPaymentRequestDetails,
+                            extra: e.id),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Container(
+                            width: double.infinity,
+                            height: 10.h,
+                            decoration: BoxDecoration(
+                              color: AppColors.white,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: ListTile(
                               subtitle: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   customText(
-                                      text: "Due: ₦${Helpers.formatBalance(price)}",
+                                      text:
+                                          "Due: ₦${Helpers.formatBalance(price)}",
                                       fontSize: 15,
                                       textColor: AppColors.orange),
                                   Container(
@@ -155,71 +164,98 @@ class _PaymentRequestState extends State<PaymentRequest> {
                                 decoration: const BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: AppColors.containerGrey),
-                              )),
-                        ),
-                      ),
-                    );
-                  }),
-                ..._bookingHistory2.map((e) {
-                  int price = 0;
-                  for (Quotes quote in e.quotes!) {
-                    if (quote.price != null) {
-                      price += quote.price!;
-                    }
-                  }
-                  return GestureDetector(
-                    onTap: () => context.push(AppRoutes.paymentRequestDetails,
-                        extra: e.id),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Container(
-                        width: double.infinity,
-                        height: 10.h,
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: ListTile(
-                            subtitle: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                customText(
-                                    text: "Due: ₦${Helpers.formatBalance(price)}",
-                                    fontSize: 15,
-                                    textColor: AppColors.orange),
-                                Container(
-                                  width: 37.w,
-                                  height: 3.h,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: AppColors.containerGrey),
-                                  child: Center(
-                                    child: customText(
-                                        text: "payment request",
-                                        fontSize: 10,
-                                        textColor: AppColors.black),
-                                  ),
-                                )
-                              ],
+                                child: CircleAvatar(
+                                  backgroundColor: AppColors.backgroundGrey,
+                                  backgroundImage: NetworkImage(profile),
+                                  radius:
+                                      55, // Adjust the size of the circle as needed
+                                ),
+                              ),
                             ),
-                            title: customText(
-                                text: e.user!.username!,
-                                fontSize: 16,
-                                textColor: AppColors.black,
-                                fontWeight: FontWeight.bold),
-                            leading: Container(
-                              width: 10.w,
-                              height: 10.h,
-                              decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColors.containerGrey),
-                            )),
-                      ),
-                    ),
-                  );
-                }),
-              ],
-            )),
+                          ),
+                        ),
+                      );
+                    }),
+                  ..._bookingHistory2.map(
+                    (e) {
+                      int price = 0;
+                      for (Quotes quote in e.quotes!) {
+                        if (quote.price != null) {
+                          price += quote.price!;
+                        }
+                      }
+                      String profile;
+
+                      if (e.user!.profileImageUrl == null) {
+                        profile =
+                            'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+                      } else {
+                        profile = e.user!.profileImageUrl!;
+                      }
+                      return GestureDetector(
+                        onTap: () => context
+                            .push(AppRoutes.paymentRequestDetails, extra: e.id),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Container(
+                            width: double.infinity,
+                            height: 10.h,
+                            decoration: BoxDecoration(
+                              color: AppColors.white,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: ListTile(
+                              subtitle: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  customText(
+                                      text:
+                                          "Due: ₦${Helpers.formatBalance(price)}",
+                                      fontSize: 15,
+                                      textColor: AppColors.orange),
+                                  Container(
+                                    width: 37.w,
+                                    height: 3.h,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: AppColors.containerGrey),
+                                    child: Center(
+                                      child: customText(
+                                          text: "payment request",
+                                          fontSize: 10,
+                                          textColor: AppColors.black),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              title: customText(
+                                  text: e.user!.username!,
+                                  fontSize: 16,
+                                  textColor: AppColors.black,
+                                  fontWeight: FontWeight.bold),
+                              leading: Container(
+                                width: 10.w,
+                                height: 10.h,
+                                decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.containerGrey),
+                                child: CircleAvatar(
+                                  backgroundColor: AppColors.backgroundGrey,
+                                  backgroundImage: NetworkImage(profile),
+                                  radius:
+                                      55, // Adjust the size of the circle as needed
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
     );
   }
 }

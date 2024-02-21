@@ -630,7 +630,7 @@ class Quotes extends StatelessWidget {
             ),
             heightSpace(2),
             GestureDetector(
-              onTap: () => context.push(AppRoutes.sendQuotes),
+              onTap: () => context.push(AppRoutes.quotePaymentDecline),
               child: card(
                 "Declined Payment",
                 "Payment was declined by the client",

@@ -50,7 +50,7 @@ class _QuoteRejectedState extends State<QuoteRejected> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             GestureDetector(
-              onTap: () => context.go(AppRoutes.bookings),
+              onTap: () => context.pop(),
               child: Container(
                 height: 10.h,
                 width: 10.w,
@@ -116,6 +116,14 @@ class _QuoteRejectedState extends State<QuoteRejected> {
 
                           var formattedTime =
                               DateFormat('hh:mm a').format(dateTime);
+                          String profile;
+
+                          if (e.user!.profileImageUrl == null) {
+                            profile =
+                                'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+                          } else {
+                            profile = e.user!.profileImageUrl!;
+                          }
                           return GestureDetector(
                             onTap: () {
                               context.push(AppRoutes.quoteRejectedDetails,
@@ -130,64 +138,66 @@ class _QuoteRejectedState extends State<QuoteRejected> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: ListTile(
-                                  trailing: Column(children: [
-                                    customText(
-                                        text: "$price",
-                                        fontSize: 14,
-                                        textColor: AppColors.textGrey,
-                                        fontWeight: FontWeight.bold),
-                                    heightSpace(1),
-                                    Container(
-                                      width: 28.w,
-                                      height: 3.h,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: AppColors.red.withOpacity(.1)),
-                                      child: Center(
-                                        child: customText(
-                                            text: "Quote rejected",
-                                            fontSize: 10,
-                                            textColor: AppColors.red),
-                                      ),
-                                    )
-                                  ]),
-                                  subtitle: Row(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          SvgPicture.asset(AppImages.time),
-                                          customText(
-                                              text: formattedTime,
-                                              fontSize: 10,
-                                              textColor: AppColors.textGrey)
-                                        ],
-                                      ),
-                                      widthSpace(1),
-                                      Row(
-                                        children: [
-                                          SvgPicture.asset(
-                                              AppImages.calendarIcon),
-                                          customText(
-                                              text: formattedDate,
-                                              fontSize: 10,
-                                              textColor: AppColors.textGrey)
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                  title: customText(
-                                      text: e.user!.username!,
-                                      fontSize: 16,
-                                      textColor: AppColors.black,
+                                trailing: Column(children: [
+                                  customText(
+                                      text: "$price",
+                                      fontSize: 14,
+                                      textColor: AppColors.textGrey,
                                       fontWeight: FontWeight.bold),
-                                  leading: Container(
-                                    width: 10.w,
-                                    height: 10.h,
-                                    decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: AppColors.containerGrey),
-                                  )),
+                                  heightSpace(1),
+                                  Container(
+                                    width: 28.w,
+                                    height: 3.h,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: AppColors.red.withOpacity(.1)),
+                                    child: Center(
+                                      child: customText(
+                                          text: "Quote rejected",
+                                          fontSize: 10,
+                                          textColor: AppColors.red),
+                                    ),
+                                  )
+                                ]),
+                                subtitle: Row(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(AppImages.time),
+                                        customText(
+                                            text: formattedTime,
+                                            fontSize: 10,
+                                            textColor: AppColors.textGrey)
+                                      ],
+                                    ),
+                                    widthSpace(1),
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                            AppImages.calendarIcon),
+                                        customText(
+                                            text: formattedDate,
+                                            fontSize: 10,
+                                            textColor: AppColors.textGrey)
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                title: customText(
+                                    text: e.user!.username!,
+                                    fontSize: 16,
+                                    textColor: AppColors.black,
+                                    fontWeight: FontWeight.bold),
+                                leading: Container(
+                                  width: 8.w,
+                                  height: 8.h,
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: NetworkImage(profile)),
+                                      shape: BoxShape.circle,
+                                      color: AppColors.containerGrey),
+                                ),
+                              ),
                             ),
                           );
                         })

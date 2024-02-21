@@ -10,7 +10,7 @@ import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
 class InventoryTile extends StatelessWidget {
   final String? image;
-  final int? price;
+  final dynamic price;
   final String? name;
   final int? inStock;
   final dynamic id;
@@ -95,7 +95,7 @@ class InventoryTile extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             customText(
-                                text: '₦${Helpers.formatBalance(price!)}',
+                                text: '₦${Helpers.formatBalance(price!.toInt())}',
                                 fontSize: 14,
                                 textColor: AppColors.black,
                                 fontWeight: FontWeight.w600),

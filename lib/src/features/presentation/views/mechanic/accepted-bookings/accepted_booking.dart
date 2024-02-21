@@ -45,7 +45,7 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             GestureDetector(
-              onTap: () => context.go(AppRoutes.bottomNav),
+              onTap: () => context.pop(),
               child: Container(
                 height: 10.h,
                 width: 10.w,
@@ -104,6 +104,13 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
 
                           var formattedTime =
                               DateFormat('hh:mm a').format(dateTime);
+                          String profile;
+
+                          if(e.user!.profileImageUrl == null){
+                            profile = 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+                          }else{
+                            profile = e.user!.profileImageUrl!;
+                          }
                           return GestureDetector(
                             onTap: () {
                               context.push(AppRoutes.viewAcceptedBooking,
@@ -132,7 +139,7 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                                       child: Center(
                                         child: customText(
                                             text: "Accepted booking",
-                                            fontSize: 2.8.w,
+                                            fontSize: 2.7.w,
                                             fontWeight: FontWeight.bold,
                                             textColor: AppColors.green),
                                       ),
@@ -177,7 +184,7 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                                   child: CircleAvatar(
                                     backgroundColor: AppColors.backgroundGrey,
                                     backgroundImage:
-                                        NetworkImage(e.user!.profileImageUrl!),
+                                        NetworkImage(profile),
                                     radius:
                                         55, // Adjust the size of the circle as needed
                                   ),

@@ -153,24 +153,12 @@ class CreateAccount extends HookWidget {
                       hintText: "Re-enter password",
                     ),
                     heightSpace(4),
-                    const Text("Creating an account means you're okay with our",
-                        style: TextStyle(color: AppColors.orange)),
-                    Row(children: [
-                      const Text("Terms of service",
-                          style: TextStyle(color: AppColors.orange)),
-                      widthSpace(2),
-                      const Text(
-                        "Privacy Policy",
-                        style: TextStyle(color: AppColors.orange),
-                      ),
-                      widthSpace(1),
-                      const Text(
-                        "and our default",
-                        style: TextStyle(color: AppColors.orange),
-                      ),
-                    ]),
                     const Text(
-                      "Notification Settings",
+                      "Creating an account means you're okay with our",
+                      style: TextStyle(color: AppColors.orange),
+                    ),
+                    const Text(
+                      "Terms of service Privacy Policy and our default Notification Settings",
                       style: TextStyle(color: AppColors.orange),
                     ),
                     heightSpace(4),

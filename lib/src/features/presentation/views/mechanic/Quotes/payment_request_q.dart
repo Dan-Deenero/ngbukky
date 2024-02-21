@@ -57,7 +57,7 @@ class _QPaymentRequestState extends State<QPaymentRequest> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             GestureDetector(
-              onTap: () => context.go(AppRoutes.bottomNav),
+              onTap: () => context.pop(),
               child: Container(
                 height: 10.h,
                 width: 10.w,

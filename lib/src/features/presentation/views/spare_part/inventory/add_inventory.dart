@@ -9,11 +9,13 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/data/price_markup.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_textformfield.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
+import 'package:ngbuka/src/features/providers/work_hours.dart';
 import 'package:ngbuka/src/utils/helpers/validators.dart';
 
 class AddInventory extends HookWidget {
@@ -108,45 +110,28 @@ class AddInventory extends HookWidget {
       }
     }
 
-    showInfoModal() {
-      showDialog(
-        context: context,
-        builder: (context) => SimpleDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius:
-                BorderRadius.circular(20.0), // Adjust the radius as needed
-          ),
-          contentPadding: const EdgeInsets.all(16.0),
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                InkWell(
-                    onTap: () => context.pop(),
-                    child: SvgPicture.asset(AppImages.cancelModal))
-              ],
-            ),
-            customText(
-              text: 'About Markup',
-              fontSize: 24,
-              textColor: AppColors.black,
-              fontWeight: FontWeight.w600,
-              textAlignment: TextAlign.center,
-            ),
-            heightSpace(1),
-            customText(
-              text:
-                  'A 10% markup will be included in your product price for enhanced platform services. Appreciate your understanding!',
-              fontSize: 12,
-              textColor: AppColors.black,
-              textAlignment: TextAlign.center,
-            ),
-            heightSpace(4)
-          ],
-        ),
+    final markup = useState<List<PriceMarkup>>([]);
+    final isLoading = useState<bool>(true);
+
+    getMarkup() async{
+      await mechanicRepo.getPriceMarkups().then(
+        (value) {
+          markup.value = value;
+          isLoading.value = false;
+          log(markup.value.toString());
+        },
       );
     }
 
+    showInfoModal() {
+      getMarkup();
+      showDialog(
+        context: context,
+        builder: (context) => const MyModal()
+      );
+    }
+
+   
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(19.h),
@@ -198,7 +183,7 @@ class AddInventory extends HookWidget {
                 height: 250,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                      fit: BoxFit.fill,
+                      fit: BoxFit.cover,
                       image: NetworkImage(profileImage.value)),
                 ),
               ),
@@ -472,5 +457,80 @@ class AddInventory extends HookWidget {
         ),
       ),
     );
+  }
+}
+
+class MyModal extends HookWidget {
+ const MyModal({super.key});
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    final markup = useState<List<PriceMarkup>>([]);
+    final isLoading = useState<bool>(true);
+
+    getMarkup() async{
+      await mechanicRepo.getPriceMarkups().then(
+        (value) {
+          markup.value = value;
+          isLoading.value = false;
+          log(markup.value.toString());
+        },
+      );
+    }
+
+    useEffect(() {
+      getMarkup();
+      return null;
+    }, [markup.value.length]);
+    return SimpleDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius:
+                BorderRadius.circular(20.0), // Adjust the radius as needed
+          ),
+          contentPadding: const EdgeInsets.all(16.0),
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                InkWell(
+                    onTap: () => context.pop(),
+                    child: SvgPicture.asset(AppImages.cancelModal))
+              ],
+            ),
+            customText(
+              text: 'About Markup',
+              fontSize: 24,
+              textColor: AppColors.black,
+              fontWeight: FontWeight.w600,
+              textAlignment: TextAlign.center,
+            ),
+            heightSpace(1),
+            isLoading.value
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Column(
+                    children: [
+                      ...markup.value.map((e) {
+                        if (e.slug == 'product_price_markup') {
+                          final mks = e.value * 100;
+                          return customText(
+                            text:
+                                'A ${mks.toInt()}% markup will be included in your product price for enhanced platform services. Appreciate your understanding!',
+                            fontSize: 12,
+                            textColor: AppColors.black,
+                            textAlignment: TextAlign.center,
+                          );
+                        } else {
+                          return const SizedBox.shrink();
+                        }
+                      }),
+                    ],
+                  ),
+            heightSpace(4)
+          ],
+        );
   }
 }

@@ -90,7 +90,7 @@ class Helpers {
     }
   }
 
-  static String formatBalance(int balance) {
+  static String formatBalance(dynamic balance) {
     // Create a NumberFormat instance with the desired format
     final NumberFormat formatter = NumberFormat('#,###');
 

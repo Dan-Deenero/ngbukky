@@ -51,7 +51,7 @@ class _CompletedQuoteRequestState extends State<CompletedQuoteRequest> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             GestureDetector(
-              onTap: () => context.push(AppRoutes.bookings),
+              onTap: () => context.pop(),
               child: Container(
                 height: 10.h,
                 width: 10.w,
@@ -116,20 +116,22 @@ class _CompletedQuoteRequestState extends State<CompletedQuoteRequest> {
 
                           var formattedTime =
                               DateFormat('hh:mm a').format(dateTime);
+                          String profile;
+
+                          if(e.user!.profileImageUrl == null){
+                            profile = 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+                          }else{
+                            profile = e.user!.profileImageUrl!;
+                          }
                           return GestureDetector(
                             onTap: () {
                               context.push(
                                   AppRoutes.completedQuoteRequestDetails,
                                   extra: e.id);
                             },
-                            child: Container(
-                              margin: const EdgeInsets.only(bottom: 10),
-                              width: double.infinity,
-                              height: 10.h,
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
+                            child: Card(
+                              color: Colors.white,
+                              surfaceTintColor: Colors.transparent,
                               child: ListTile(
                                 trailing: Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -164,7 +166,7 @@ class _CompletedQuoteRequestState extends State<CompletedQuoteRequest> {
                                         SvgPicture.asset(AppImages.time),
                                         customText(
                                             text: formattedTime,
-                                            fontSize: 2.5.w,
+                                            fontSize: 2.4.w,
                                             textColor: AppColors.textGrey)
                                       ],
                                     ),
@@ -175,7 +177,7 @@ class _CompletedQuoteRequestState extends State<CompletedQuoteRequest> {
                                             AppImages.calendarIcon),
                                         customText(
                                             text: formattedDate,
-                                            fontSize: 2.5.w,
+                                            fontSize: 2.4.w,
                                             textColor: AppColors.textGrey)
                                       ],
                                     )
@@ -195,7 +197,7 @@ class _CompletedQuoteRequestState extends State<CompletedQuoteRequest> {
                                   child: CircleAvatar(
                                     backgroundColor: AppColors.backgroundGrey,
                                     backgroundImage:
-                                        NetworkImage(e.user!.profileImageUrl!),
+                                        NetworkImage(profile),
                                     radius:
                                         55, // Adjust the size of the circle as needed
                                   ),

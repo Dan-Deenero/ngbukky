@@ -50,7 +50,7 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             GestureDetector(
-              onTap: () => context.push(AppRoutes.bottomNav),
+              onTap: () => context.pop(),
               child: Container(
                 height: 10.h,
                 width: 10.w,
@@ -109,6 +109,14 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
 
                           var formattedTime =
                               DateFormat('hh:mm a').format(dateTime);
+                          String profile;
+
+                          if (e.user!.profileImageUrl == null) {
+                            profile =
+                                'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+                          } else {
+                            profile = e.user!.profileImageUrl!;
+                          }
                           return GestureDetector(
                             onTap: () {
                               context.push(AppRoutes.viewAcceptedQuote,
@@ -123,66 +131,66 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: ListTile(
-                                  trailing: Column(children: [
-                                    customText(
-                                      text: '',
-                                      fontSize: 14,
-                                      textColor: AppColors.textGrey,
-                                    ),
-                                    heightSpace(1),
-                                    Container(
-                                      width: 28.w,
-                                      height: 3.h,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color:
-                                              AppColors.green.withOpacity(.1)),
-                                      child: Center(
-                                        child: customText(
-                                            text: "Accepted quote",
-                                            fontSize: 10,
-                                            textColor: AppColors.green),
-                                      ),
-                                    )
-                                  ]),
-                                  subtitle: Row(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          SvgPicture.asset(AppImages.time),
-                                          customText(
-                                              text: formattedTime,
-                                              fontSize: 10,
-                                              textColor: AppColors.textGrey)
-                                        ],
-                                      ),
-                                      widthSpace(1),
-                                      Row(
-                                        children: [
-                                          SvgPicture.asset(
-                                              AppImages.calendarIcon),
-                                          customText(
-                                              text: formattedDate,
-                                              fontSize: 10,
-                                              textColor: AppColors.textGrey)
-                                        ],
-                                      )
-                                    ],
+                                trailing: Column(children: [
+                                  customText(
+                                    text: '',
+                                    fontSize: 14,
+                                    textColor: AppColors.textGrey,
                                   ),
-                                  title: customText(
-                                      text: e.user!.username!,
-                                      fontSize: 16,
-                                      textColor: AppColors.black,
-                                      fontWeight: FontWeight.bold),
-                                  leading: Container(
-                                    width: 8.w,
-                                    height: 8.h,
+                                  heightSpace(1),
+                                  Container(
+                                    width: 28.w,
+                                    height: 3.h,
                                     decoration: BoxDecoration(
-                                      image: DecorationImage(image: NetworkImage(e.user!.profileImageUrl!)),
-                                        shape: BoxShape.circle,
-                                        color: AppColors.containerGrey),
-                                  )),
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: AppColors.green.withOpacity(.1)),
+                                    child: Center(
+                                      child: customText(
+                                          text: "Accepted quote",
+                                          fontSize: 10,
+                                          textColor: AppColors.green),
+                                    ),
+                                  )
+                                ]),
+                                subtitle: Row(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(AppImages.time),
+                                        customText(
+                                            text: formattedTime,
+                                            fontSize: 10,
+                                            textColor: AppColors.textGrey)
+                                      ],
+                                    ),
+                                    widthSpace(1),
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                            AppImages.calendarIcon),
+                                        customText(
+                                            text: formattedDate,
+                                            fontSize: 10,
+                                            textColor: AppColors.textGrey)
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                title: customText(
+                                    text: e.user!.username!,
+                                    fontSize: 16,
+                                    textColor: AppColors.black,
+                                    fontWeight: FontWeight.bold),
+                                leading: Container(
+                                  width: 8.w,
+                                  height: 8.h,
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: NetworkImage(profile)),
+                                      shape: BoxShape.circle,
+                                      color: AppColors.containerGrey),
+                                ),
+                              ),
                             ),
                           );
                         })

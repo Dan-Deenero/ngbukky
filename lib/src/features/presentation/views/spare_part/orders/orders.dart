@@ -233,7 +233,7 @@ class New extends HookWidget {
                         return ListRect(
                           isOrders: true,
                           image: e.product!.imageUrl,
-                          price: e.product!.price! - e.product!.discount!,
+                          price: e.product!.finalPrice,
                           item: e.product!.name,
                           quantity: e.quantity,
                           ontap: () =>
@@ -322,7 +322,7 @@ class Awaiting extends HookWidget {
                         return ListRect(
                           isOrders: true,
                           image: e.product!.imageUrl,
-                          price: e.product!.price! - e.product!.discount!,
+                          price: e.product!.finalPrice,
                           item: e.product!.name,
                           quantity: e.quantity,
                           ontap: () =>
@@ -411,7 +411,7 @@ class Processed extends HookWidget {
                         return ListRect(
                           isOrders: true,
                           image: e.product!.imageUrl,
-                          price: e.product!.price! - e.product!.discount!,
+                          price: e.product!.finalPrice,
                           item: e.product!.name,
                           quantity: e.quantity,
                           ontap: () =>
@@ -500,7 +500,7 @@ class Completed extends HookWidget {
                         return ListRect(
                           isOrders: true,
                           image: e.product!.imageUrl,
-                          price: e.product!.price! - e.product!.discount!,
+                          price: e.product!.finalPrice,
                           item: e.product!.name,
                           quantity: e.quantity,
                           ontap: () =>

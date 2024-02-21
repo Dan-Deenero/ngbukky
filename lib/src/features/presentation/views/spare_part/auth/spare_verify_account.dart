@@ -33,7 +33,7 @@ class SpareVerifyAccount extends HookWidget {
         bool result = await _authRepo.verifyOTP(body);
         if (result) {
           if (context.mounted) {
-            context.push(AppRoutes.dealerLogin);
+            context.push(AppRoutes.spareSetup);
             return;
           }
         }

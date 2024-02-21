@@ -126,7 +126,7 @@ class Withdrawal extends HookWidget {
                           SizedBox(
                             width: 130,
                             child: customText(
-                              text: 'No payments were made to you',
+                              text: 'You have not made any withdrawal',
                               fontSize: 15,
                               textColor: AppColors.textGrey.withOpacity(0.3),
                               textAlignment: TextAlign.center,
@@ -262,50 +262,50 @@ class SpareWalletHistory extends HookWidget {
               ),
             ),
             heightSpace(3),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    width: 120,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.containerGrey),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        SvgPicture.asset(AppImages.sort),
-                        customText(
-                            text: "New to old",
-                            fontSize: 12,
-                            textColor: AppColors.black)
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    width: 120,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.containerGrey),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        SvgPicture.asset(AppImages.filter),
-                        customText(
-                            text: "All",
-                            fontSize: 12,
-                            textColor: AppColors.black)
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 15),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       Container(
+            //         padding: const EdgeInsets.all(8),
+            //         width: 120,
+            //         height: 40,
+            //         decoration: BoxDecoration(
+            //             border: Border.all(color: AppColors.containerGrey),
+            //             borderRadius: BorderRadius.circular(10)),
+            //         child: Row(
+            //           mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //           children: [
+            //             SvgPicture.asset(AppImages.sort),
+            //             customText(
+            //                 text: "New to old",
+            //                 fontSize: 12,
+            //                 textColor: AppColors.black)
+            //           ],
+            //         ),
+            //       ),
+            //       Container(
+            //         padding: const EdgeInsets.all(8),
+            //         width: 120,
+            //         height: 40,
+            //         decoration: BoxDecoration(
+            //             border: Border.all(color: AppColors.containerGrey),
+            //             borderRadius: BorderRadius.circular(10)),
+            //         child: Row(
+            //           mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //           children: [
+            //             SvgPicture.asset(AppImages.filter),
+            //             customText(
+            //                 text: "All",
+            //                 fontSize: 12,
+            //                 textColor: AppColors.black)
+            //           ],
+            //         ),
+            //       )
+            //     ],
+            //   ),
+            // ),
             heightSpace(2),
             Expanded(
               child: TabBarView(

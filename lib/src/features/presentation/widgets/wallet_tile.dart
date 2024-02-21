@@ -49,55 +49,46 @@ class WalletTile extends StatelessWidget {
     }
 
     return GestureDetector(
-      onTap: (){
-        if(isMechanic && isWithdrawal){
+      onTap: () {
+        if (isMechanic && isWithdrawal) {
           context.push(AppRoutes.withdrawalDetail, extra: id);
-        }else if(isMechanic && !isWithdrawal){
+        } else if (isMechanic && !isWithdrawal) {
           context.push(AppRoutes.historyDetail, extra: id);
-        }else if(!isMechanic && isWithdrawal){
+        } else if (!isMechanic && isWithdrawal) {
           context.push(AppRoutes.spareWithdrawalDetail, extra: id);
-        }else if(!isMechanic && !isWithdrawal){
+        } else if (!isMechanic && !isWithdrawal) {
           context.push(AppRoutes.spareHistoryDetail, extra: id);
         }
       },
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        width: double.infinity,
-        height: 13.h,
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Row(
-          children: [
-            isWithdrawal
-                ? Row(
-                    children: [
-                      isSuccess
-                          ? SvgPicture.asset(
-                              AppImages.withdrawal,
-                              width: 28,
-                            )
-                          : SvgPicture.asset(AppImages.unwithdrawal),
-                      widthSpace(4),
-                    ],
-                  )
-                : const SizedBox.shrink(),
-            Container(
-              width: isWithdrawal ? 70.w : 86.w,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: 50.w,
-                        child: Flexible(
+      child: Card(
+        color: Colors.white,
+        surfaceTintColor: Colors.transparent,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            children: [
+              if (isWithdrawal)
+                Row(
+                  children: [
+                    isSuccess
+                        ? SvgPicture.asset(
+                            AppImages.withdrawal,
+                            width: 28,
+                          )
+                        : SvgPicture.asset(AppImages.unwithdrawal),
+                    widthSpace(4),
+                  ],
+                ),
+              SizedBox(
+                width: isWithdrawal ? 100.w - 110 : 100.w - 60,
+                child: Column(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: 50.w,
                           child: customText(
                             text: isWithdrawal ? 'Withdrawal' : 'ID: $id',
                             fontSize: 14,
@@ -105,58 +96,61 @@ class WalletTile extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                      ),
-                      Row(
-                        children: [
-                          Row(
-                            children: [
-                              SvgPicture.asset(AppImages.time),
-                              customText(
-                                  text: '$time',
-                                  fontSize: 10,
-                                  textColor: AppColors.textGrey)
-                            ],
-                          ),
-                          widthSpace(1),
-                          Row(
-                            children: [
-                              SvgPicture.asset(AppImages.calendarIcon),
-                              customText(
-                                  text: '$date',
-                                  fontSize: 10,
-                                  textColor: AppColors.textGrey)
-                            ],
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      customText(
-                        text: '₦${Helpers.formatBalance(amount!)}',
-                        fontSize: 14,
-                        textColor: AppColors.black,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: bgcol),
-                        child: Center(
-                          child: customText(
-                              text: "$status", fontSize: 12, textColor: txtcol),
+                        customText(
+                          text: '₦${Helpers.formatBalance(amount!)}',
+                          fontSize: 14,
+                          textColor: AppColors.black,
+                          fontWeight: FontWeight.w600,
                         ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
+                      ],
+                    ),
+                    heightSpace(1.5),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Row(
+                              children: [
+                                SvgPicture.asset(AppImages.time),
+                                customText(
+                                    text: '$time',
+                                    fontSize: 10,
+                                    textColor: AppColors.textGrey)
+                              ],
+                            ),
+                            widthSpace(1),
+                            Row(
+                              children: [
+                                SvgPicture.asset(AppImages.calendarIcon),
+                                customText(
+                                    text: '$date',
+                                    fontSize: 10,
+                                    textColor: AppColors.textGrey)
+                              ],
+                            )
+                          ],
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: bgcol),
+                          child: Center(
+                            child: customText(
+                                text: "$status",
+                                fontSize: 12,
+                                textColor: txtcol),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

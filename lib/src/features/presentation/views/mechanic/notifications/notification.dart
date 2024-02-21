@@ -423,7 +423,7 @@ class Notification extends HookWidget {
       child: Scaffold(
         backgroundColor: AppColors.backgroundGrey,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(30.h),
+          preferredSize: Size.fromHeight(22.h),
           child: Padding(
             padding: const EdgeInsets.only(top: 40, left: 20, right: 20),
             child: Column(
@@ -482,52 +482,48 @@ class Notification extends HookWidget {
                     ],
                   ),
                 ),
-                heightSpace(2),
-                const Divider(),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     Container(
+                //       padding: const EdgeInsets.all(8),
+                //       width: 120,
+                //       height: 40,
+                //       decoration: BoxDecoration(
+                //           border: Border.all(color: AppColors.containerGrey),
+                //           borderRadius: BorderRadius.circular(10)),
+                //       child: Row(
+                //         mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //         children: [
+                //           SvgPicture.asset(AppImages.sort),
+                //           customText(
+                //               text: "New to old",
+                //               fontSize: 12,
+                //               textColor: AppColors.black)
+                //         ],
+                //       ),
+                //     ),
+                //     Container(
+                //       padding: const EdgeInsets.all(8),
+                //       width: 120,
+                //       height: 40,
+                //       decoration: BoxDecoration(
+                //           border: Border.all(color: AppColors.containerGrey),
+                //           borderRadius: BorderRadius.circular(10)),
+                //       child: Row(
+                //         mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //         children: [
+                //           SvgPicture.asset(AppImages.filter),
+                //           customText(
+                //               text: "All",
+                //               fontSize: 12,
+                //               textColor: AppColors.black)
+                //         ],
+                //       ),
+                //     ),
+                //   ],
+                // ),
                 heightSpace(1),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      width: 120,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.containerGrey),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          SvgPicture.asset(AppImages.sort),
-                          customText(
-                              text: "New to old",
-                              fontSize: 12,
-                              textColor: AppColors.black)
-                        ],
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      width: 120,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.containerGrey),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          SvgPicture.asset(AppImages.filter),
-                          customText(
-                              text: "All",
-                              fontSize: 12,
-                              textColor: AppColors.black)
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                heightSpace(1),
-                const Divider()
               ],
             ),
           ),

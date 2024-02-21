@@ -13,6 +13,7 @@ import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/data/inventory_model.dart';
 import 'package:ngbuka/src/domain/data/notification_model.dart';
 import 'package:ngbuka/src/domain/data/orders_model.dart';
+import 'package:ngbuka/src/domain/data/price_markup.dart';
 import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/data/services_model.dart';
 import 'package:ngbuka/src/domain/data/statistics_for_quote.dart';
@@ -30,8 +31,9 @@ class MechanicRepo {
         body: body, useToken: true);
     if (response.status == 200) {
       return true;
+    } else {
+      return false;
     }
-    return false;
   }
 
   Future<bool> acceptOrRejectQuote(Map<String, String> body, id) async {
@@ -357,7 +359,7 @@ class MechanicRepo {
   Future<bool> addInventory(Map<dynamic, dynamic> body) async {
     final response = await ApiClient.post(Endpoints.dealerSparePart,
         body: body, useToken: true);
-    if (response.status == 200) {
+    if (response.status == 200 || response.status == 201) {
       return true;
     } else {
       return false;
@@ -579,5 +581,18 @@ class MechanicRepo {
     } else {
       return false;
     }
+  }
+
+  Future<List<PriceMarkup>> getPriceMarkups() async {
+    final response =
+        await ApiClient.get(Endpoints.priceMarkups, useToken: true);
+    List<PriceMarkup> markup = [];
+    if (response.status == 200) {
+      for (var mup in response.entity) {
+        markup.add(PriceMarkup.fromJson(mup));
+      }
+      return markup;
+    }
+    return markup;
   }
 }

@@ -64,7 +64,7 @@ class ProcessOrder extends HookWidget {
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(19.h),
+        preferredSize: Size.fromHeight(21.h),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -81,7 +81,7 @@ class ProcessOrder extends HookWidget {
                   padding: const EdgeInsets.only(left: 7.0),
                   child: Center(
                     child: GestureDetector(
-                      onTap: () => context.pop(),
+                      onTap: () => context.push(AppRoutes.bottomNav),
                       child: const Icon(
                         Icons.arrow_back_ios,
                         color: AppColors.black,

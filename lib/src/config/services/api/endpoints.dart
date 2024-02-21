@@ -33,4 +33,5 @@ class Endpoints {
   static const String paystack = "https://api.paystack.co/";
   static const String getBankList = "bank";
   static const String contact = "user/contact-support";
+  static const String priceMarkups = "price-markups";
 }

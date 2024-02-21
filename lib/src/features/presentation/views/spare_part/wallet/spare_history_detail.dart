@@ -470,63 +470,63 @@ class _SpareHistoryDetailState extends State<SpareHistoryDetail> {
                         heightSpace(2),
                         const Divider(),
                         heightSpace(3),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  width: 3,
-                                  height: 7.h,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 1.0,
-                                          color: AppColors.textGrey),
-                                      borderRadius: BorderRadius.circular(20)),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      customText(
-                                        text: "Download",
-                                        fontSize: 15,
-                                        textColor: AppColors.orange,
-                                      ),
-                                      widthSpace(2),
-                                      SvgPicture.asset(AppImages.download)
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            widthSpace(4),
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  width: 30.w,
-                                  height: 7.h,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 1.0,
-                                          color: AppColors.textGrey),
-                                      borderRadius: BorderRadius.circular(20)),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      customText(
-                                        text: "Share",
-                                        fontSize: 15,
-                                        textColor: AppColors.orange,
-                                      ),
-                                      widthSpace(2),
-                                      SvgPicture.asset(AppImages.share)
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                        // Row(
+                        //   children: [
+                        //     Expanded(
+                        //       child: GestureDetector(
+                        //         onTap: () {},
+                        //         child: Container(
+                        //           width: 3,
+                        //           height: 7.h,
+                        //           decoration: BoxDecoration(
+                        //               border: Border.all(
+                        //                   width: 1.0,
+                        //                   color: AppColors.textGrey),
+                        //               borderRadius: BorderRadius.circular(20)),
+                        //           child: Row(
+                        //             mainAxisAlignment: MainAxisAlignment.center,
+                        //             children: [
+                        //               customText(
+                        //                 text: "Download",
+                        //                 fontSize: 15,
+                        //                 textColor: AppColors.orange,
+                        //               ),
+                        //               widthSpace(2),
+                        //               SvgPicture.asset(AppImages.download)
+                        //             ],
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //     widthSpace(4),
+                        //     Expanded(
+                        //       child: GestureDetector(
+                        //         onTap: () {},
+                        //         child: Container(
+                        //           width: 30.w,
+                        //           height: 7.h,
+                        //           decoration: BoxDecoration(
+                        //               border: Border.all(
+                        //                   width: 1.0,
+                        //                   color: AppColors.textGrey),
+                        //               borderRadius: BorderRadius.circular(20)),
+                        //           child: Row(
+                        //             mainAxisAlignment: MainAxisAlignment.center,
+                        //             children: [
+                        //               customText(
+                        //                 text: "Share",
+                        //                 fontSize: 15,
+                        //                 textColor: AppColors.orange,
+                        //               ),
+                        //               widthSpace(2),
+                        //               SvgPicture.asset(AppImages.share)
+                        //             ],
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
                       ],
                     ),
                   )

@@ -31,8 +31,7 @@ class WithdrawFunds extends HookWidget {
         context: context,
         builder: (context) => SuccessDialogue(
           title: 'Withdrawal Successful',
-          subtitle:
-              'You have successfully withdrawn 35,000 to your account.',
+          subtitle: 'You have successfully withdrawn ${amount.text} to your account.',
           action: () {
             context.go(AppRoutes.bottomNav);
           },
@@ -111,12 +110,14 @@ class WithdrawFunds extends HookWidget {
                 width: double.infinity,
                 height: 20.h,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    image: const DecorationImage(
-                        fit: BoxFit.cover,
-                        image: AssetImage(
-                          AppImages.walletbase,
-                        ))),
+                  borderRadius: BorderRadius.circular(20),
+                  image: const DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage(
+                      AppImages.walletbase,
+                    ),
+                  ),
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -131,7 +132,8 @@ class WithdrawFunds extends HookWidget {
                             child: CircularProgressIndicator(),
                           )
                         : customText(
-                            text: '₦${Helpers.formatBalance(wallet.value!.wallet!.balance!)}',
+                            text:
+                                '₦${Helpers.formatBalance(wallet.value!.wallet!.balance!)}',
                             fontSize: 32,
                             textColor: AppColors.white,
                             fontWeight: FontWeight.bold,

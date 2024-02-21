@@ -132,6 +132,7 @@ class SpareWallet extends HookWidget {
                       children: [
                         TextButton(
                             onPressed: () {
+                              context.pop();
                               context.push(AppRoutes.spareWithdrawFunds);
                             },
                             child: customText(
@@ -180,7 +181,7 @@ class SpareWallet extends HookWidget {
       getTransaction();
       getWallet();
       return null;
-    }, [transactionHistory.value.length, wallet.value]);
+    }, [transactionHistory.value.length]);
 
     final tabIndex = useState<int>(0);
     return isLoad.value
@@ -483,7 +484,7 @@ class WithdrawalTab extends HookWidget {
     final transactionHistory = useState<List<TransactionModel>>([]);
     final isLoading = useState<bool>(true);
     getTransaction() {
-      mechanicRepo.getAllTransaction('debit').then(
+      mechanicRepo.getAllTransaction('withdrawal').then(
         (value) {
           transactionHistory.value = value;
           isLoading.value = false;
@@ -513,7 +514,7 @@ class WithdrawalTab extends HookWidget {
                           SizedBox(
                             width: 130,
                             child: customText(
-                              text: 'No payments were made to you',
+                              text: 'You have not made any withdrawal',
                               fontSize: 15,
                               textColor: AppColors.textGrey.withOpacity(0.3),
                               textAlignment: TextAlign.center,

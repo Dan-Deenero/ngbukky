@@ -83,117 +83,130 @@ class _QPaymentDeclinedState extends State<QPaymentDeclined> {
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Column(
-                children: [
-                  if (_quoteHistory.isEmpty)
-                    Center(
-                        heightFactor: 3.5,
-                        child: Column(
-                          children: [
-                            SvgPicture.asset(AppImages.bookingWarning),
-                            customText(
-                                text: 'You do not have any declined payment',
-                                fontSize: 15,
-                                textColor: AppColors.black)
-                          ],
-                        ))
-                  else
-                    ..._quoteHistory.map((e) {
-                      int price = 0;
-                      for (Quotes quote in e.quotes!) {
-                        if (quote.price != null) {
-                          price += quote.price!;
-                        }
-                      }
-                      var dateString = e.createdAt;
-                      var dateTime = DateTime.parse(dateString!);
-                      var formattedDate =
-                          DateFormat('dd MMM yyyy').format(dateTime);
-
-                      var formattedTime =
-                          DateFormat('hh:mm a').format(dateTime);
-                      return GestureDetector(
-                        onTap: () =>
-                            context.push(AppRoutes.quotePaymentDeclineDetails),
-                        child: Container(
-                          width: double.infinity,
-                          height: 10.h,
-                          decoration: BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: ListTile(
-                            trailing: Column(children: [
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  children: [
+                    if (_quoteHistory.isEmpty)
+                      Center(
+                          heightFactor: 3.5,
+                          child: Column(
+                            children: [
+                              SvgPicture.asset(AppImages.bookingWarning),
                               customText(
-                                  text: "₦${Helpers.formatBalance(price)}",
-                                  fontSize: 14,
-                                  textColor: AppColors.textGrey,
-                                  fontWeight: FontWeight.bold),
-                              heightSpace(1),
-                              Container(
-                                width: 28.w,
-                                height: 3.h,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: AppColors.red.withOpacity(.3)),
-                                child: Center(
-                                  child: customText(
-                                      text: "Payment declined",
-                                      fontSize: 10,
-                                      textColor: AppColors.red),
-                                ),
-                              )
-                            ]),
-                            subtitle: Row(
-                              children: [
-                                Row(
+                                  text: 'You do not have any declined payment',
+                                  fontSize: 15,
+                                  textColor: AppColors.black)
+                            ],
+                          ))
+                    else
+                      ..._quoteHistory.map(
+                        (e) {
+                          int price = 0;
+                          for (Quotes quote in e.quotes!) {
+                            if (quote.price != null) {
+                              price += quote.price!;
+                            }
+                          }
+                          String profile;
+
+                          if (e.user!.profileImageUrl == null) {
+                            profile =
+                                'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+                          } else {
+                            profile = e.user!.profileImageUrl!;
+                          }
+                          var dateString = e.createdAt;
+                          var dateTime = DateTime.parse(dateString!);
+                          var formattedDate =
+                              DateFormat('dd MMM yyyy').format(dateTime);
+
+                          var formattedTime =
+                              DateFormat('hh:mm a').format(dateTime);
+                          return GestureDetector(
+                            onTap: () => context
+                                .push(AppRoutes.quotePaymentDeclineDetails, extra: e.id),
+                            child: Card(
+                              color: Colors.white,
+                              surfaceTintColor: Colors.transparent,
+                              child: ListTile(
+                                trailing: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    SvgPicture.asset(AppImages.time),
                                     customText(
-                                        text: formattedTime,
-                                        fontSize: 10,
-                                        textColor: AppColors.textGrey)
+                                        text:
+                                            "₦${Helpers.formatBalance(price)}",
+                                        fontSize: 14,
+                                        textColor: AppColors.textGrey,
+                                        fontWeight: FontWeight.bold),
+                                    heightSpace(1),
+                                    Container(
+                                      width: 28.w,
+                                      height: 3.h,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: AppColors.red.withOpacity(.3)),
+                                      child: Center(
+                                        child: customText(
+                                            text: "Payment declined",
+                                            fontSize: 10,
+                                            textColor: AppColors.red),
+                                      ),
+                                    ),
                                   ],
                                 ),
-                                widthSpace(2),
-                                Row(
+                                subtitle: Row(
                                   children: [
-                                    SvgPicture.asset(AppImages.calendarIcon),
-                                    customText(
-                                        text: formattedDate,
-                                        fontSize: 10,
-                                        textColor: AppColors.textGrey)
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(AppImages.time),
+                                        customText(
+                                            text: formattedTime,
+                                            fontSize: 2.4.w,
+                                            textColor: AppColors.textGrey)
+                                      ],
+                                    ),
+                                    widthSpace(.5),
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                            AppImages.calendarIcon),
+                                        customText(
+                                            text: formattedDate,
+                                            fontSize: 2.4.w,
+                                            textColor: AppColors.textGrey)
+                                      ],
+                                    )
                                   ],
-                                )
-                              ],
-                            ),
-                            title: customText(
-                                text: e.user!.username!,
-                                fontSize: 16,
-                                textColor: AppColors.black,
-                                fontWeight: FontWeight.bold),
-                            leading: Container(
-                              width: 10.w,
-                              height: 10.h,
-                              decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColors.containerGrey),
-                              child: CircleAvatar(
-                                backgroundColor: AppColors.backgroundGrey,
-                                backgroundImage:
-                                    NetworkImage(e.user!.profileImageUrl!),
-                                radius:
-                                    55, // Adjust the size of the circle as needed
+                                ),
+                                title: customText(
+                                  text: e.user!.username!,
+                                  fontSize: 16,
+                                  textColor: AppColors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                leading: Container(
+                                  width: 10.w,
+                                  height: 10.h,
+                                  decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: AppColors.containerGrey),
+                                  child: CircleAvatar(
+                                    backgroundColor: AppColors.backgroundGrey,
+                                    backgroundImage: NetworkImage(profile),
+                                    radius:
+                                        55, // Adjust the size of the circle as needed
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      );
-                    })
-                ],
+                          );
+                        },
+                      )
+                  ],
+                ),
               ),
-            )),
+            ),
     );
   }
 }

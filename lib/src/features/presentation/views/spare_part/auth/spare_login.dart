@@ -12,6 +12,7 @@ import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
 import 'package:ngbuka/src/core/storage/secure_storage.dart';
 import 'package:ngbuka/src/domain/data/login_model.dart';
+import 'package:ngbuka/src/domain/data/otp_model.dart';
 import 'package:ngbuka/src/domain/repository/auth_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_phone_field.dart';
@@ -191,30 +192,36 @@ class SpareEmailLogin extends HookWidget {
       LoginModel result = await _authRepo.loginEmail(data);
       log(result.toString());
       if (context.mounted) {
-        if (result.user != null) {
-          locator<LocalStorageService>()
-              .saveDataToDisk(AppKeys.dealerPassword, password.text);
-          locator<LocalStorageService>()
-              .saveDataToDisk(AppKeys.userType, 'dealer');
+        if (result.user?.isEmailVerified == false) {
+          context.push(AppRoutes.spareVerifyAccount,
+              extra: OTPModel(email: email.text, otpType: "createAccount"));
+        } else {
+          if (result.user != null) {
+            locator<LocalStorageService>()
+                .saveDataToDisk(AppKeys.dealerPassword, password.text);
+            locator<LocalStorageService>()
+                .saveDataToDisk(AppKeys.userType, 'dealer');
 
-          NotificationsManager.getFcmToken().then(
-            (value) async {
-              final token = await SecureStorage.readSecureData('device-token');
-              if (token != null || token != '') {
-                if (token != value) {
-                  final data = {
-                    'deviceToken': value,
-                  };
-                  _authRepo.updateDeviceToken(data);
+            NotificationsManager.getFcmToken().then(
+              (value) async {
+                final token =
+                    await SecureStorage.readSecureData('device-token');
+                if (token != null || token != '') {
+                  if (token != value) {
+                    final data = {
+                      'deviceToken': value,
+                    };
+                    _authRepo.updateDeviceToken(data);
+                  }
                 }
-              }
-            },
-          );
-          NotificationsManager.init();
-          if (result.user?.businessName == null) {
-            context.go(AppRoutes.spareSetup);
-          } else {
-            context.go(AppRoutes.spareBottomNav);
+              },
+            );
+            NotificationsManager.init();
+            if (result.user?.businessName == null) {
+              context.go(AppRoutes.spareSetup);
+            } else {
+              context.go(AppRoutes.spareBottomNav);
+            }
           }
         }
       }

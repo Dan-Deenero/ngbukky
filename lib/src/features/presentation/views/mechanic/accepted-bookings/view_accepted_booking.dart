@@ -98,7 +98,7 @@ class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
         child: Container(
           // padding: EdgeInsets.all(10.0),
           width: 700, // Set the desired width
-          height: 200,
+          height: 30.h,
           child: Dialog(
             shape: RoundedRectangleBorder(
               borderRadius:
@@ -121,12 +121,15 @@ class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
                   ],
                 ),
                 heightSpace(1),
-                customText(
-                    text:
-                        'Completed the car inspection and is ready to send a quote?',
-                    fontSize: 12,
-                    textColor: AppColors.black),
-                heightSpace(3),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: customText(
+                      text:
+                          'Completed the car inspection and is ready to send a quote?',
+                      fontSize: 12,
+                      textColor: AppColors.black),
+                ),
+                heightSpace(2),
                 Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,

@@ -45,7 +45,7 @@ Widget haveanaccount() {
       GestureDetector(
         onTap: () => router.push(AppRoutes.login),
         child: customText(
-            text: "Log me in", fontSize: 15, textColor: AppColors.orange),
+            text: "Log me in", fontSize: 15, textColor: AppColors.orange,),
       )
     ],
   );

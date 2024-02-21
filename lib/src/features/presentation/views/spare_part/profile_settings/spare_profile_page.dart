@@ -60,9 +60,10 @@ class SpareProfileSettings extends HookWidget {
     final lastname = useState<String?>('Otobo');
     final email = useState<String?>('dadaobo@gmail.com');
     final phone = useState<String?>('+234 701 111 0153');
+    final isLoading = useState<bool>(true);
 
-    getUserProfile() {
-      _mechanicRepo.getDealerProfile().then((value) {
+    Future<void> getUserProfile() async {
+      await _mechanicRepo.getDealerProfile().then((value) {
         firstname.value = value.firstname!;
         lastname.value = value.lastname!;
         email.value = value.email!;
@@ -80,150 +81,159 @@ class SpareProfileSettings extends HookWidget {
     }
 
     useEffect(() {
-      getUserProfile();
+      void refresh() async {
+        isLoading.value = true;
+        await getUserProfile();
+        isLoading.value = false;
+      }
+
+      refresh();
       return null;
     }, []);
-    return Scaffold(
-      backgroundColor: AppColors.backgroundGrey,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(27.h),
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          width: double.infinity,
-          height: 25.h,
-          decoration: const BoxDecoration(
-            color: AppColors.containerGrey,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(25),
-              bottomRight: Radius.circular(25),
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  heightSpace(7),
-                  customText(
-                      text: "Profile settings",
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                      textColor: AppColors.black),
-                  heightSpace(1),
-                  SizedBox(
-                    width: 250,
-                    child: customText(
-                        text: "View analytics and withdraw from your wallet",
-                        fontSize: 14,
-                        textColor: AppColors.black),
+    return isLoading.value
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : Scaffold(
+            backgroundColor: AppColors.backgroundGrey,
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(27.h),
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                width: double.infinity,
+                height: 25.h,
+                decoration: const BoxDecoration(
+                  color: AppColors.containerGrey,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(25),
+                    bottomRight: Radius.circular(25),
                   ),
-                ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        heightSpace(7),
+                        customText(
+                            text: "Profile settings",
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                            textColor: AppColors.black),
+                        heightSpace(1),
+                        SizedBox(
+                          width: 250,
+                          child: customText(
+                              text:
+                                  "View analytics and withdraw from your wallet",
+                              fontSize: 14,
+                              textColor: AppColors.black),
+                        ),
+                      ],
+                    ),
+                    InkWell(
+                      onTap: () => context.push(AppRoutes.notification),
+                      child: SvgPicture.asset(AppImages.notification),
+                    )
+                  ],
+                ),
               ),
-              InkWell(
-                onTap: () => context.push(AppRoutes.notification),
-                child: SvgPicture.asset(AppImages.notification),
-              )
-            ],
-          ),
-        ),
-      ),
-      body: Expanded(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                customText(
-                    text: "${firstname.value}, ${lastname.value}",
-                    fontSize: 26,
-                    textColor: AppColors.orange,
-                    fontWeight: FontWeight.w600),
-                heightSpace(2),
-                Row(
-                  children: [
-                    SvgPicture.asset(AppImages.emailIcon),
-                    widthSpace(2),
-                    bodyText("${email.value}")
-                  ],
-                ),
-                heightSpace(1),
-                Row(
-                  children: [
-                    SvgPicture.asset(AppImages.phone),
-                    widthSpace(2),
-                    bodyText("${phone.value}")
-                  ],
-                ),
-                heightSpace(3),
-                Container(
-                  width: double.infinity,
-                  height: 2.h,
-                  decoration: const BoxDecoration(
-                      border: Border(
-                    top: BorderSide(color: AppColors.borderGrey),
-                  )),
-                ),
-                heightSpace(2),
-                GestureDetector(
-                  onTap: () => context.push(AppRoutes.sparePersonalInfo),
-                  child: card(
-                    "Personal profile",
-                    "Edit your personal information",
-                    AppImages.nameIcon,
-                  ),
-                ),
-                heightSpace(2),
-                GestureDetector(
-                  onTap: () => context.push(AppRoutes.spareBusinessProfile),
-                  child: card(
-                    "Business profile",
-                    "Edit your business information",
-                    AppImages.box,
-                  ),
-                ),
-                heightSpace(2),
-                GestureDetector(
-                  onTap: () => context.push(AppRoutes.spareContactPage),
-                  child: card(
-                    "Contact Ngbuka",
-                    "Contact Ngbuka customer care",
-                    AppImages.box,
-                  ),
-                ),
-                heightSpace(2),
-                GestureDetector(
-                  onTap: () => context.push(AppRoutes.spareAddWallet),
-                  child: card(
-                    "Wallet",
-                    "Manage your saved account number",
-                    AppImages.contact,
-                  ),
-                ),
-                heightSpace(10),
-                InkWell(
-                  onTap: signOut,
-                  child: Row(
-                    children: [
-                      customText(
-                          text: 'Log out',
-                          fontSize: 17,
-                          textColor: AppColors.textGrey),
-                      widthSpace(2),
-                      SvgPicture.asset(
-                        AppImages.logoutIcon,
-                        width: 25,
-                      )
-                    ],
-                  ),
-                ),
-                heightSpace(4),
-              ],
             ),
-          ),
-        ),
-      ),
-    );
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    customText(
+                        text: "${firstname.value}, ${lastname.value}",
+                        fontSize: 26,
+                        textColor: AppColors.orange,
+                        fontWeight: FontWeight.w600),
+                    heightSpace(2),
+                    Row(
+                      children: [
+                        SvgPicture.asset(AppImages.emailIcon),
+                        widthSpace(2),
+                        bodyText("${email.value}")
+                      ],
+                    ),
+                    heightSpace(1),
+                    Row(
+                      children: [
+                        SvgPicture.asset(AppImages.phone),
+                        widthSpace(2),
+                        bodyText("${phone.value}")
+                      ],
+                    ),
+                    heightSpace(3),
+                    Container(
+                      width: double.infinity,
+                      height: 2.h,
+                      decoration: const BoxDecoration(
+                          border: Border(
+                        top: BorderSide(color: AppColors.borderGrey),
+                      )),
+                    ),
+                    heightSpace(2),
+                    GestureDetector(
+                      onTap: () => context.push(AppRoutes.sparePersonalInfo),
+                      child: card(
+                        "Personal profile",
+                        "Edit your personal information",
+                        AppImages.nameIcon,
+                      ),
+                    ),
+                    heightSpace(2),
+                    GestureDetector(
+                      onTap: () => context.push(AppRoutes.spareBusinessProfile),
+                      child: card(
+                        "Business profile",
+                        "Edit your business information",
+                        AppImages.box,
+                      ),
+                    ),
+                    heightSpace(2),
+                    GestureDetector(
+                      onTap: () => context.push(AppRoutes.spareContactPage),
+                      child: card(
+                        "Contact Ngbuka",
+                        "Contact Ngbuka customer care",
+                        AppImages.box,
+                      ),
+                    ),
+                    heightSpace(2),
+                    GestureDetector(
+                      onTap: () => context.push(AppRoutes.spareAddWallet),
+                      child: card(
+                        "Wallet",
+                        "Manage your saved account number",
+                        AppImages.contact,
+                      ),
+                    ),
+                    heightSpace(10),
+                    InkWell(
+                      onTap: signOut,
+                      child: Row(
+                        children: [
+                          customText(
+                              text: 'Log out',
+                              fontSize: 17,
+                              textColor: AppColors.textGrey),
+                          widthSpace(2),
+                          SvgPicture.asset(
+                            AppImages.logoutIcon,
+                            width: 25,
+                          )
+                        ],
+                      ),
+                    ),
+                    heightSpace(4),
+                  ],
+                ),
+              ),
+            ),
+          );
   }
 }

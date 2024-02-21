@@ -116,6 +116,8 @@ class _NewQuoteAlertState extends State<NewQuoteAlert> {
                                 return "${service.name}";
                               }).toList();
                               String serviceNames = names.join(', ');
+                              String profile;
+
 
                               return GestureDetector(
                                 onTap: () => context

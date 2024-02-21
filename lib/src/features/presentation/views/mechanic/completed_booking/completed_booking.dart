@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/controller/Helpers.dart';
 import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -77,119 +78,139 @@ class _CompletedBookingState extends State<CompletedBooking> {
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    children: [
-                      if (_bookingHistory.isEmpty)
-                        Center(
-                            heightFactor: 3.5,
-                            child: Column(
-                              children: [
-                                SvgPicture.asset(AppImages.bookingWarning),
-                                customText(
-                                    text:
-                                        'You have not gotten paid by any client yet',
-                                    fontSize: 15,
-                                    textColor: AppColors.black,
-                                    textAlignment: TextAlign.center)
-                              ],
-                            ))
-                      else
-                        ..._bookingHistory.map((e) {
-                          int price = 0;
-                          for (Quotes quote in e.quotes!) {
-                            if (quote.price != null) {
-                              price += quote.price!;
-                            }
-                          }
-                          var dateString = e.date;
-                          var dateTime = DateTime.parse(dateString!);
-                          var formattedDate =
-                              DateFormat('dd MMM yyyy').format(dateTime);
-                          var formattedTime =
-                              DateFormat('hh:mm a').format(dateTime);
-                          return GestureDetector(
-                            onTap: () {
-                              context.push(AppRoutes.completedBookingDetails,
-                                  extra: e.id);
-                            },
-                            child: Container(
-                              width: double.infinity,
-                              height: 10.h,
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: ListTile(
-                                  trailing: Column(children: [
-                                    customText(
-                                        text: "N$price",
-                                        fontSize: 14,
-                                        textColor: AppColors.textGrey,
-                                        fontWeight: FontWeight.bold),
-                                    heightSpace(1),
-                                    Container(
-                                      width: 19.w,
-                                      height: 3.h,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color:
-                                              AppColors.green.withOpacity(.3)),
-                                      child: Center(
-                                        child: customText(
-                                            text: "Completed",
-                                            fontSize: 12,
-                                            textColor: AppColors.green),
-                                      ),
-                                    )
-                                  ]),
-                                  subtitle: Row(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          SvgPicture.asset(AppImages.time),
-                                          customText(
-                                              text: formattedTime,
-                                              fontSize: 10,
-                                              textColor: AppColors.textGrey)
-                                        ],
-                                      ),
-                                      widthSpace(2),
-                                      Row(
-                                        children: [
-                                          SvgPicture.asset(
-                                              AppImages.calendarIcon),
-                                          customText(
-                                              text: formattedDate,
-                                              fontSize: 10,
-                                              textColor: AppColors.textGrey)
-                                        ],
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      children: [
+                        if (_bookingHistory.isEmpty)
+                          Center(
+                              heightFactor: 3.5,
+                              child: Column(
+                                children: [
+                                  SvgPicture.asset(AppImages.bookingWarning),
+                                  customText(
+                                      text:
+                                          'You have not gotten paid by any client yet',
+                                      fontSize: 15,
+                                      textColor: AppColors.black,
+                                      textAlignment: TextAlign.center)
+                                ],
+                              ))
+                        else
+                          ..._bookingHistory.map(
+                            (e) {
+                              int price = 0;
+                              for (Quotes quote in e.quotes!) {
+                                if (quote.price != null) {
+                                  price += quote.price!;
+                                }
+                              }
+                              var dateString = e.date;
+                              var dateTime = DateTime.parse(dateString!);
+                              var formattedDate =
+                                  DateFormat('dd MMM yyyy').format(dateTime);
+                              var formattedTime =
+                                  DateFormat('hh:mm a').format(dateTime);
+                              String profile;
+
+                              if (e.user!.profileImageUrl == null) {
+                                profile =
+                                    'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+                              } else {
+                                profile = e.user!.profileImageUrl!;
+                              }
+                              return GestureDetector(
+                                onTap: () {
+                                  context.push(
+                                      AppRoutes.completedBookingDetails,
+                                      extra: e.id);
+                                },
+                                child: Card(
+                                  color: Colors.white,
+                                  surfaceTintColor: Colors.transparent,
+                                  child: ListTile(
+                                    trailing: Column(children: [
+                                      customText(
+                                          text:
+                                              "₦${Helpers.formatBalance(price)}",
+                                          fontSize: 14,
+                                          textColor: AppColors.textGrey,
+                                          fontWeight: FontWeight.bold),
+                                      heightSpace(1),
+                                      Container(
+                                        width: 20.w,
+                                        height: 3.h,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color: AppColors.green
+                                                .withOpacity(.3)),
+                                        child: Center(
+                                          child: customText(
+                                              text: "Completed",
+                                              fontSize: 12,
+                                              textColor: AppColors.green),
+                                        ),
                                       )
-                                    ],
-                                  ),
-                                  title: customText(
+                                    ]),
+                                    subtitle: Row(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            SvgPicture.asset(AppImages.time),
+                                            customText(
+                                                text: formattedTime,
+                                                fontSize: 2.4.w,
+                                                textColor: AppColors.textGrey)
+                                          ],
+                                        ),
+                                        widthSpace(.5),
+                                        Row(
+                                          children: [
+                                            SvgPicture.asset(
+                                                AppImages.calendarIcon),
+                                            customText(
+                                                text: formattedDate,
+                                                fontSize: 2.4.w,
+                                                textColor: AppColors.textGrey)
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                    title: customText(
                                       text: e.user!.username!,
                                       fontSize: 16,
                                       textColor: AppColors.black,
-                                      fontWeight: FontWeight.bold),
-                                  leading: Container(
-                                    width: 10.w,
-                                    height: 10.h,
-                                    decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: AppColors.containerGrey),
-                                  )),
-                            ),
-                          );
-                        })
-                    ],
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    leading: Container(
+                                      width: 10.w,
+                                      height: 10.h,
+                                      decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: AppColors.containerGrey),
+                                      child: CircleAvatar(
+                                        backgroundColor:
+                                            AppColors.backgroundGrey,
+                                        backgroundImage: NetworkImage(
+                                          profile,
+                                        ),
+                                        radius:
+                                            55, // Adjust the size of the circle as needed
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            )),
+                ],
+              ),
+            ),
     );
   }
 }

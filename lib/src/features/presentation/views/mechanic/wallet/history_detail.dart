@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/controller/Helpers.dart';
 import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/data/transaction_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
@@ -26,8 +27,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
 
   TransactionModel? transactionModel;
   static final description = TextEditingController();
-    List<Services>? quote = [];
-
+  List<Services>? quote = [];
 
   bool isLoading = true;
 
@@ -234,7 +234,8 @@ class _HistoryDetailState extends State<HistoryDetail> {
                             : SvgPicture.asset(AppImages.unsuccessModal),
                         heightSpace(1.5),
                         customText(
-                            text: '${transactionModel!.amount}',
+                            text:
+                                '₦${Helpers.formatBalance(transactionModel!.amount)}',
                             fontSize: 24,
                             textColor: AppColors.green,
                             fontWeight: FontWeight.bold),
@@ -342,7 +343,6 @@ class _HistoryDetailState extends State<HistoryDetail> {
                         heightSpace(3),
                         ...quote!.map(
                           (qte) {
-                            
                             return Column(
                               children: [
                                 Row(
@@ -402,7 +402,8 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                     textColor: AppColors.black,
                                     fontWeight: FontWeight.w600),
                                 customText(
-                                    text: '${transactionModel!.amount! + 50.00}',
+                                    text:
+                                        '${transactionModel!.amount! + 50.00}',
                                     fontSize: 13,
                                     textColor: AppColors.black,
                                     fontWeight: FontWeight.w600)
@@ -413,63 +414,63 @@ class _HistoryDetailState extends State<HistoryDetail> {
                         heightSpace(3),
                         const Divider(),
                         heightSpace(3),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  width: 3,
-                                  height: 7.h,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 1.0,
-                                          color: AppColors.textGrey),
-                                      borderRadius: BorderRadius.circular(20)),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      customText(
-                                        text: "Download",
-                                        fontSize: 15,
-                                        textColor: AppColors.orange,
-                                      ),
-                                      widthSpace(2),
-                                      SvgPicture.asset(AppImages.download)
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            widthSpace(4),
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  width: 30.w,
-                                  height: 7.h,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 1.0,
-                                          color: AppColors.textGrey),
-                                      borderRadius: BorderRadius.circular(20)),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      customText(
-                                        text: "Share",
-                                        fontSize: 15,
-                                        textColor: AppColors.orange,
-                                      ),
-                                      widthSpace(2),
-                                      SvgPicture.asset(AppImages.share)
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                        // Row(
+                        //   children: [
+                        //     Expanded(
+                        //       child: GestureDetector(
+                        //         onTap: () {},
+                        //         child: Container(
+                        //           width: 3,
+                        //           height: 7.h,
+                        //           decoration: BoxDecoration(
+                        //               border: Border.all(
+                        //                   width: 1.0,
+                        //                   color: AppColors.textGrey),
+                        //               borderRadius: BorderRadius.circular(20)),
+                        //           child: Row(
+                        //             mainAxisAlignment: MainAxisAlignment.center,
+                        //             children: [
+                        //               customText(
+                        //                 text: "Download",
+                        //                 fontSize: 15,
+                        //                 textColor: AppColors.orange,
+                        //               ),
+                        //               widthSpace(2),
+                        //               SvgPicture.asset(AppImages.download)
+                        //             ],
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //     widthSpace(4),
+                        //     Expanded(
+                        //       child: GestureDetector(
+                        //         onTap: () {},
+                        //         child: Container(
+                        //           width: 30.w,
+                        //           height: 7.h,
+                        //           decoration: BoxDecoration(
+                        //               border: Border.all(
+                        //                   width: 1.0,
+                        //                   color: AppColors.textGrey),
+                        //               borderRadius: BorderRadius.circular(20)),
+                        //           child: Row(
+                        //             mainAxisAlignment: MainAxisAlignment.center,
+                        //             children: [
+                        //               customText(
+                        //                 text: "Share",
+                        //                 fontSize: 15,
+                        //                 textColor: AppColors.orange,
+                        //               ),
+                        //               widthSpace(2),
+                        //               SvgPicture.asset(AppImages.share)
+                        //             ],
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
                       ],
                     ),
                   )

@@ -32,8 +32,7 @@ class SpareWithdrawFunds extends HookWidget {
         context: context,
         builder: (context) => SuccessDialogue(
           title: 'Withdrawal Successful',
-          subtitle:
-              'You have successfully withdrawn 35,000 to your account.',
+          subtitle: 'You have successfully withdrawn ${amount.text} to your account.',
           action: () {
             context.go(AppRoutes.bottomNav);
           },
@@ -43,7 +42,6 @@ class SpareWithdrawFunds extends HookWidget {
 
     final wallet = useState<WalletModel?>(null);
     final isLoad = useState<bool>(true);
-
 
     getWallet() {
       _mechanicRepo.getWallet().then(
@@ -60,7 +58,8 @@ class SpareWithdrawFunds extends HookWidget {
         "password": password.text,
       };
 
-      bool result = await _mechanicRepo.withdrawFundsDealer(data, password.text);
+      bool result =
+          await _mechanicRepo.withdrawFundsDealer(data, password.text);
 
       if (result) {
         showSuccesModal();
@@ -113,12 +112,14 @@ class SpareWithdrawFunds extends HookWidget {
                 width: double.infinity,
                 height: 20.h,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    image: const DecorationImage(
-                        fit: BoxFit.cover,
-                        image: AssetImage(
-                          AppImages.walletbase,
-                        ))),
+                  borderRadius: BorderRadius.circular(20),
+                  image: const DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage(
+                      AppImages.walletbase,
+                    ),
+                  ),
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -128,12 +129,17 @@ class SpareWithdrawFunds extends HookWidget {
                       textColor: AppColors.white,
                     ),
                     heightSpace(2),
-                    customText(
-                      text: '₦${Helpers.formatBalance(wallet.value!.wallet!.balance!)}',
-                      fontSize: 32,
-                      textColor: AppColors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    isLoad.value
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : customText(
+                            text:
+                                '₦${Helpers.formatBalance(wallet.value!.wallet!.balance!)}',
+                            fontSize: 32,
+                            textColor: AppColors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                   ],
                 ),
               ),

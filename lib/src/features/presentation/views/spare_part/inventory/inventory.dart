@@ -12,6 +12,7 @@ import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 import 'package:ngbuka/src/features/presentation/widgets/dashboard_widget/inventory_tile.dart';
+
 class Inventory extends HookWidget {
   const Inventory({super.key});
 
@@ -216,7 +217,17 @@ class Inventory extends HookWidget {
               heightSpace(2),
               Expanded(
                 child: TabBarView(
-                  children: [All(searchQuery: searchQuery.value,), RunningOut(searchQuery: searchQuery.value,), StockOut(searchQuery: searchQuery.value,),],
+                  children: [
+                    All(
+                      searchQuery: searchQuery.value,
+                    ),
+                    RunningOut(
+                      searchQuery: searchQuery.value,
+                    ),
+                    StockOut(
+                      searchQuery: searchQuery.value,
+                    ),
+                  ],
                 ),
               )
             ],
@@ -237,7 +248,15 @@ class All extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final inventoryHistory = useState<List<InventoryModel>>([]);
+    final inventorySearch = useState<List<InventoryModel>>([]);
     final isLoading = useState<bool>(true);
+    final isSearching = useState<bool>(false);
+
+    if (searchQuery.isEmpty) {
+      isSearching.value = false;
+    } else {
+      isSearching.value = true;
+    }
 
     getInventory() {
       mechanicRepo.getAllInventory('all').then(
@@ -248,10 +267,111 @@ class All extends HookWidget {
       );
     }
 
-    searchInventory(){
+    searchInventory() {
       mechanicRepo.searchAnyInventory(searchQuery).then(
         (value) {
+          inventorySearch.value = value;
+          isLoading.value = false;
+        },
+      );
+    }
+
+    useEffect(() {
+      searchInventory();
+      getInventory();
+      return null;
+    }, [inventoryHistory.value.length]);
+    return isLoading.value
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : SingleChildScrollView(
+            child: Column(
+              children: [
+                if (inventoryHistory.value.isEmpty)
+                  Center(
+                    child: Column(
+                      children: [
+                        heightSpace(5),
+                        SvgPicture.asset(AppImages.noInventory),
+                        heightSpace(1),
+                        SizedBox(
+                          width: 400,
+                          child: customText(
+                            text: 'You haven’t added an item yet to your store',
+                            fontSize: 15,
+                            textColor: AppColors.textGrey.withOpacity(0.3),
+                            textAlignment: TextAlign.center,
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                else
+                  ...(isSearching.value
+                          ? inventorySearch.value
+                          : inventoryHistory.value)
+                      .map(
+                    (e) {
+                      return Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          children: [
+                            InventoryTile(
+                              name: e.name,
+                              price: e.finalPrice,
+                              length: '${e.specifications!.length}',
+                              image: e.imageUrl,
+                              inStock: e.quantityInStock,
+                              id: e.id,
+                            ),
+                            heightSpace(2),
+                          ],
+                        ),
+                      );
+                    },
+                  )
+              ],
+            ),
+          );
+  }
+}
+
+class RunningOut extends HookWidget {
+  static final MechanicRepo mechanicRepo = MechanicRepo();
+
+  final String searchQuery;
+  RunningOut({Key? key, required this.searchQuery})
+      : super(key: key ?? UniqueKey());
+
+  @override
+  Widget build(BuildContext context) {
+    final inventoryHistory = useState<List<InventoryModel>>([]);
+    final inventorySearch = useState<List<InventoryModel>>([]);
+
+    final isLoading = useState<bool>(true);
+    final isSearching = useState<bool>(false);
+
+    if (searchQuery.isEmpty) {
+      isSearching.value = false;
+    } else {
+      isSearching.value = true;
+    }
+
+    getInventory() {
+      mechanicRepo.getAllInventory('running-out').then(
+        (value) {
           inventoryHistory.value = value;
+          log(inventoryHistory.value.isEmpty.toString());
+          isLoading.value = false;
+        },
+      );
+    }
+
+    searchInventory() {
+      mechanicRepo.searchAnyInventory(searchQuery).then(
+        (value) {
+          inventorySearch.value = value;
           isLoading.value = false;
         },
       );
@@ -289,95 +409,10 @@ class All extends HookWidget {
                     ),
                   )
                 else
-                  ...inventoryHistory.value.map(
-                    (e) {
-                      return Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          children: [
-                            InventoryTile(
-                              name: e.name,
-                              price: e.finalPrice,
-                              length: '${e.specifications!.length}',
-                              image: e.imageUrl,
-                              inStock: e.quantityInStock,
-                              id: e.id,
-                            ),
-                            heightSpace(2),
-                          ],
-                        ),
-                      );
-                    },
-                  )
-              ],
-            ),
-          );
-  }
-}
-
-class RunningOut extends HookWidget {
-  static final MechanicRepo mechanicRepo = MechanicRepo();
-
-  final String searchQuery;
-  RunningOut({Key? key, required this.searchQuery}) : super(key: key ?? UniqueKey());
-
-  @override
-  Widget build(BuildContext context) {
-    final inventoryHistory = useState<List<InventoryModel>>([]);
-    final isLoading = useState<bool>(true);
-
-    getInventory() {
-      mechanicRepo.getAllInventory('running-out').then(
-        (value) {
-          inventoryHistory.value = value;
-          log(inventoryHistory.value.isEmpty.toString());
-          isLoading.value = false;
-        },
-      );
-    }
-
-    searchInventory(){
-      mechanicRepo.searchAnyInventory(searchQuery).then(
-        (value) {
-          inventoryHistory.value = value;
-          isLoading.value = false;
-        },
-      );
-    }
-
-    useEffect(() { 
-      getInventory();
-      searchInventory();
-      return null;
-    }, [inventoryHistory.value.length]);
-    return isLoading.value
-        ? const Center(
-            child: CircularProgressIndicator(),
-          )
-        : SingleChildScrollView(
-            child: Column(
-              children: [
-                if (inventoryHistory.value.isEmpty)
-                  Center(
-                    child: Column(
-                      children: [
-                        heightSpace(5),
-                        SvgPicture.asset(AppImages.noInventory),
-                        heightSpace(1),
-                        SizedBox(
-                          width: 400,
-                          child: customText(
-                            text: 'You haven’t added an item yet to your store',
-                            fontSize: 15,
-                            textColor: AppColors.textGrey.withOpacity(0.3),
-                            textAlignment: TextAlign.center,
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                else
-                  ...inventoryHistory.value.map(
+                  ...(isSearching.value
+                          ? inventorySearch.value
+                          : inventoryHistory.value)
+                      .map(
                     (e) {
                       return Padding(
                         padding: const EdgeInsets.all(12.0),
@@ -408,12 +443,22 @@ class StockOut extends HookWidget {
   final String searchQuery;
   static final MechanicRepo mechanicRepo = MechanicRepo();
 
-  StockOut({Key? key, required this.searchQuery}) : super(key: key ?? UniqueKey());
+  StockOut({Key? key, required this.searchQuery})
+      : super(key: key ?? UniqueKey());
 
   @override
   Widget build(BuildContext context) {
     final inventoryHistory = useState<List<InventoryModel>>([]);
+    final inventorySearch = useState<List<InventoryModel>>([]);
+
     final isLoading = useState<bool>(true);
+    final isSearching = useState<bool>(false);
+
+    if (searchQuery.isEmpty) {
+      isSearching.value = false;
+    } else {
+      isSearching.value = true;
+    }
 
     getInventory() {
       mechanicRepo.getAllInventory('out-of-stock').then(
@@ -424,10 +469,11 @@ class StockOut extends HookWidget {
         },
       );
     }
-    searchInventory(){
+
+    searchInventory() {
       mechanicRepo.searchAnyInventory(searchQuery).then(
         (value) {
-          inventoryHistory.value = value;
+          inventorySearch.value = value;
           isLoading.value = false;
         },
       );
@@ -465,9 +511,8 @@ class StockOut extends HookWidget {
                     ),
                   )
                 else
-                  ...inventoryHistory.value.map(
+                  ...(isSearching.value ? inventorySearch.value: inventoryHistory.value).map(
                     (e) {
-
                       int? size = 0;
                       // if(e.specifications!.length == null){
                       //   size = 0;

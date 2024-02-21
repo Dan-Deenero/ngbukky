@@ -64,19 +64,24 @@ class ProfileSettings extends HookWidget {
     final lastname = useState<String?>('Otobo');
     final email = useState<String?>('dadaobo@gmail.com');
     final phone = useState<String?>('+234 701 111 0153');
-    final photo = useState<File?>(
-        File('https://cdn-icons-png.flaticon.com/512/149/149071.png'));
+    final photo = useState<File?>(File(''));
     final profileImage = useState<String?>(AppImages.usericon);
     final ImagePicker picker = ImagePicker();
     final FirebaseStorage storage = FirebaseStorage.instance;
+    final isLoading = useState<bool>(true);
 
-    getUserProfile() {
-      _authRepo.getMechanicProfile().then((value) {
+    Future<void> getUserProfile() async {
+      await _authRepo.getMechanicProfile().then((value) {
         firstname.value = value.firstname!;
         lastname.value = value.lastname!;
         email.value = value.email!;
         phone.value = value.phoneNumber!;
-        profileImage.value = value.profileImageUrl!;
+        if (value.profileImageUrl == null) {
+          profileImage.value =
+              'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+        } else {
+          profileImage.value = value.profileImageUrl!;
+        }
       });
     }
 
@@ -114,188 +119,199 @@ class ProfileSettings extends HookWidget {
     }
 
     useEffect(() {
-      getUserProfile();
+      void refresh() async {
+        isLoading.value = true;
+        await getUserProfile();
+        isLoading.value = false;
+      }
+
+      refresh();
       return null;
     }, [profileImage.value]);
-    return Scaffold(
-      backgroundColor: AppColors.backgroundGrey,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(20),
-                width: double.infinity,
-                height: 27.h,
-                decoration: const BoxDecoration(
-                  color: AppColors.containerGrey,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(25),
-                    bottomRight: Radius.circular(25),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        heightSpace(7),
-                        customText(
-                            text: "Profile settings",
-                            fontSize: 24,
-                            fontWeight: FontWeight.w700,
-                            textColor: AppColors.black),
-                        heightSpace(1),
-                        SizedBox(
-                          width: 250,
-                          child: customText(
-                              text:
-                                  "View analytics and withdraw from your wallet",
-                              fontSize: 14,
-                              textColor: AppColors.black),
-                        ),
-                      ],
-                    ),
-                    InkWell(
-                        onTap: () => context.push(AppRoutes.notification),
-                        child: SvgPicture.asset(AppImages.notification))
-                  ],
-                ),
-              ),
-              Positioned(
-                top: 22.h,
-                left: 15,
-                child: Stack(
+    return isLoading.value
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : Scaffold(
+            backgroundColor: AppColors.backgroundGrey,
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    CircleAvatar(
-                      backgroundColor: AppColors.backgroundGrey,
-                      backgroundImage: NetworkImage(profileImage.value!),
-                      radius: 55, // Adjust the size of the circle as needed
-                    ),
-                    InkWell(
-                      onTap: updateProfilePicture,
-                      child: Container(
-                        width: 30,
-                        height: 30,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.add_a_photo,
-                          color: Colors.black,
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      width: double.infinity,
+                      height: 27.h,
+                      decoration: const BoxDecoration(
+                        color: AppColors.containerGrey,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(25),
+                          bottomRight: Radius.circular(25),
                         ),
                       ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              heightSpace(7),
+                              customText(
+                                  text: "Profile settings",
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w700,
+                                  textColor: AppColors.black),
+                              heightSpace(1),
+                              SizedBox(
+                                width: 250,
+                                child: customText(
+                                    text:
+                                        "View analytics and withdraw from your wallet",
+                                    fontSize: 14,
+                                    textColor: AppColors.black),
+                              ),
+                            ],
+                          ),
+                          InkWell(
+                              onTap: () => context.push(AppRoutes.notification),
+                              child: SvgPicture.asset(AppImages.notification))
+                        ],
+                      ),
                     ),
+                    Positioned(
+                      top: 22.h,
+                      left: 15,
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: AppColors.backgroundGrey,
+                            backgroundImage: NetworkImage(profileImage.value!),
+                            radius:
+                                55, // Adjust the size of the circle as needed
+                          ),
+                          InkWell(
+                            onTap: updateProfilePicture,
+                            child: Container(
+                              width: 30,
+                              height: 30,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.add_a_photo,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
                   ],
                 ),
-              )
-            ],
-          ),
-          heightSpace(10),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      customText(
-                          text: "${firstname.value}, ${lastname.value}",
-                          fontSize: 26,
-                          textColor: AppColors.orange,
-                          fontWeight: FontWeight.w600),
-                      heightSpace(2),
-                      Row(
-                        children: [
-                          SvgPicture.asset(AppImages.emailIcon),
-                          widthSpace(2),
-                          bodyText("${email.value}")
-                        ],
-                      ),
-                      heightSpace(1),
-                      Row(
-                        children: [
-                          SvgPicture.asset(AppImages.phone),
-                          widthSpace(2),
-                          bodyText("${phone.value}")
-                        ],
-                      ),
-                      heightSpace(3),
-                      Container(
-                        width: double.infinity,
-                        height: 2.h,
-                        decoration: const BoxDecoration(
-                            border: Border(
-                          top: BorderSide(color: AppColors.borderGrey),
-                        )),
-                      ),
-                      heightSpace(2),
-                      GestureDetector(
-                        onTap: () =>
-                            context.push(AppRoutes.personalInfoSettings),
-                        child: card(
-                          "Personal profile",
-                          "Edit your personal information",
-                          AppImages.nameIcon,
-                        ),
-                      ),
-                      heightSpace(2),
-                      GestureDetector(
-                        onTap: () =>
-                            context.push(AppRoutes.businessInfoSettings),
-                        child: card(
-                          "Business profile",
-                          "Edit your business information",
-                          AppImages.box,
-                        ),
-                      ),
-                      heightSpace(2),
-                      GestureDetector(
-                        onTap: () => context.push(AppRoutes.contactPage),
-                        child: card(
-                          "Contact Ngbuka",
-                          "Contact Ngbuka customer care",
-                          AppImages.box,
-                        ),
-                      ),
-                      heightSpace(2),
-                      GestureDetector(
-                        onTap: () => context.push(AppRoutes.addWallet),
-                        child: card(
-                          "Wallet",
-                          "Manage your saved account number",
-                          AppImages.contact,
-                        ),
-                      ),
-                      heightSpace(10),
-                      InkWell(
-                        onTap: signOut,
-                        child: Row(
+                heightSpace(10),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             customText(
-                                text: 'Log out',
-                                fontSize: 17,
-                                textColor: AppColors.textGrey),
-                            widthSpace(2),
-                            SvgPicture.asset(
-                              AppImages.logoutIcon,
-                              width: 25,
-                            )
-                          ],
-                        ),
-                      ),
-                      heightSpace(4),
-                    ]),
-              ),
+                                text: "${firstname.value}, ${lastname.value}",
+                                fontSize: 26,
+                                textColor: AppColors.orange,
+                                fontWeight: FontWeight.w600),
+                            heightSpace(2),
+                            Row(
+                              children: [
+                                SvgPicture.asset(AppImages.emailIcon),
+                                widthSpace(2),
+                                bodyText("${email.value}")
+                              ],
+                            ),
+                            heightSpace(1),
+                            Row(
+                              children: [
+                                SvgPicture.asset(AppImages.phone),
+                                widthSpace(2),
+                                bodyText("${phone.value}")
+                              ],
+                            ),
+                            heightSpace(3),
+                            Container(
+                              width: double.infinity,
+                              height: 2.h,
+                              decoration: const BoxDecoration(
+                                  border: Border(
+                                top: BorderSide(color: AppColors.borderGrey),
+                              )),
+                            ),
+                            heightSpace(2),
+                            GestureDetector(
+                              onTap: () =>
+                                  context.push(AppRoutes.personalInfoSettings),
+                              child: card(
+                                "Personal profile",
+                                "Edit your personal information",
+                                AppImages.nameIcon,
+                              ),
+                            ),
+                            heightSpace(2),
+                            GestureDetector(
+                              onTap: () =>
+                                  context.push(AppRoutes.businessInfoSettings),
+                              child: card(
+                                "Business profile",
+                                "Edit your business information",
+                                AppImages.box,
+                              ),
+                            ),
+                            heightSpace(2),
+                            GestureDetector(
+                              onTap: () => context.push(AppRoutes.contactPage),
+                              child: card(
+                                "Contact Ngbuka",
+                                "Contact Ngbuka customer care",
+                                AppImages.box,
+                              ),
+                            ),
+                            heightSpace(2),
+                            GestureDetector(
+                              onTap: () => context.push(AppRoutes.addWallet),
+                              child: card(
+                                "Wallet",
+                                "Manage your saved account number",
+                                AppImages.contact,
+                              ),
+                            ),
+                            heightSpace(10),
+                            InkWell(
+                              onTap: signOut,
+                              child: Row(
+                                children: [
+                                  customText(
+                                      text: 'Log out',
+                                      fontSize: 17,
+                                      textColor: AppColors.textGrey),
+                                  widthSpace(2),
+                                  SvgPicture.asset(
+                                    AppImages.logoutIcon,
+                                    width: 25,
+                                  )
+                                ],
+                              ),
+                            ),
+                            heightSpace(4),
+                          ]),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
   }
 }

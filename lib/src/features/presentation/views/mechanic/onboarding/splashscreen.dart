@@ -52,6 +52,7 @@ class _SplashscreenState extends State<Splashscreen> {
     if (firstInstall) {
       context.push(AppRoutes.onboarding);
     } else {
+      checkForLogin();
       context.push(AppRoutes.boarding1);
     }
   }
@@ -62,7 +63,7 @@ class _SplashscreenState extends State<Splashscreen> {
 
     Future.delayed(const Duration(seconds: 3), () {
       checkForOnBoarding();
-      checkForLogin();
+      
     });
     NotificationsManager.requestPermissions();
   }
