@@ -317,7 +317,7 @@ class _PQAInspectionDetailsState extends State<PQAInspectionDetails> {
                   heightSpace(2),
                 ],
               ),
-            )),
+            ),),
     );
   }
 }

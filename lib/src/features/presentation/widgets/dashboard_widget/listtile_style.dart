@@ -114,7 +114,7 @@ class ListRect extends StatelessWidget {
                       child: Image.network(
                         image!,
                         fit: BoxFit.cover,
-                      ),
+                      ),  
                     ),
                   ),
                   widthSpace(3),

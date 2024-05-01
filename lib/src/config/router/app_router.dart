@@ -3,7 +3,7 @@ import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/domain/data/otp_model.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/send_quote.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/business_info/business_info.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/business_info/business_info_settings.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/profile_settings/business_info_settings.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/business_info/business_location.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/main_auth/create_account.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/main_auth/forgot_pass_phone.dart';
@@ -61,7 +61,7 @@ import 'package:ngbuka/src/features/presentation/views/mechanic/onboarding/onboa
 import 'package:ngbuka/src/features/presentation/views/mechanic/onboarding/onboarding2.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/onboarding/splashscreen.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/personal_info/enterprise.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/personal_info/personal_info.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/profile_settings/personal_info.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/personal_info/setup.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/profile_settings/add_wallet_page.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/profile_settings/contact_page.dart';
@@ -99,82 +99,101 @@ import 'package:ngbuka/src/features/presentation/views/spare_part/wallet/spare_w
 GoRouter router() => GoRouter(
       routes: <GoRoute>[
         GoRoute(
-            path: AppRoutes.splashscreen,
-            name: AppRoutes.splashscreen,
-            builder: (_, state) => const Splashscreen()),
+          path: AppRoutes.splashscreen,
+          name: AppRoutes.splashscreen,
+          builder: (_, state) => const Splashscreen(),
+        ),
         GoRoute(
-            path: AppRoutes.onboarding,
-            name: AppRoutes.onboarding,
-            builder: (_, state) => const OnboardingScreen()),
+          path: AppRoutes.onboarding,
+          name: AppRoutes.onboarding,
+          builder: (_, state) => const OnboardingScreen(),
+        ),
         GoRoute(
-            path: AppRoutes.accountSelection,
-            name: AppRoutes.accountSelection,
-            builder: (_, state) => const AccountSelection()),
+          path: AppRoutes.accountSelection,
+          name: AppRoutes.accountSelection,
+          builder: (_, state) => const AccountSelection(),
+        ),
         GoRoute(
-            path: AppRoutes.createAccount,
-            name: AppRoutes.createAccount,
-            builder: (_, state) => const CreateAccount()),
+          path: AppRoutes.createAccount,
+          name: AppRoutes.createAccount,
+          builder: (_, state) => const CreateAccount(),
+        ),
         GoRoute(
-            path: AppRoutes.verifyAccount,
-            name: AppRoutes.verifyAccount,
-            builder: (_, state) =>
-                VerifyAccount(otpModel: state.extra as OTPModel)),
+          path: AppRoutes.verifyAccount,
+          name: AppRoutes.verifyAccount,
+          builder: (_, state) =>
+              VerifyAccount(otpModel: state.extra as OTPModel),
+        ),
         GoRoute(
-            path: AppRoutes.login,
-            name: AppRoutes.login,
-            builder: (_, state) => const LoginView()),
+          path: AppRoutes.login,
+          name: AppRoutes.login,
+          builder: (_, state) => const LoginView(),
+        ),
         GoRoute(
-            path: AppRoutes.forgotPassword,
-            name: AppRoutes.forgotPassword,
-            builder: (_, state) => const ForgotPassword()),
+          path: AppRoutes.forgotPassword,
+          name: AppRoutes.forgotPassword,
+          builder: (_, state) => const ForgotPassword(),
+        ),
         GoRoute(
-            path: AppRoutes.forgotPasswordPhone,
-            name: AppRoutes.forgotPasswordPhone,
-            builder: (_, state) => const ForgotPasswordPhone()),
+          path: AppRoutes.forgotPasswordPhone,
+          name: AppRoutes.forgotPasswordPhone,
+          builder: (_, state) => const ForgotPasswordPhone(),
+        ),
         GoRoute(
-            path: AppRoutes.newPassword,
-            name: AppRoutes.newPassword,
-            builder: (_, state) => const NewPassword()),
+          path: AppRoutes.newPassword,
+          name: AppRoutes.newPassword,
+          builder: (_, state) => const NewPassword(),
+        ),
         GoRoute(
-            path: AppRoutes.setup,
-            name: AppRoutes.setup,
-            builder: (_, state) => const SetupPage()),
+          path: AppRoutes.setup,
+          name: AppRoutes.setup,
+          builder: (_, state) => const SetupPage(),
+        ),
         GoRoute(
-            path: AppRoutes.personalInfo,
-            name: AppRoutes.personalInfo,
-            builder: (_, state) => const PersonalInfoPage()),
+          path: AppRoutes.personalInfo,
+          name: AppRoutes.personalInfo,
+          builder: (_, state) => const PersonalInfoPage(),
+        ),
         GoRoute(
-            path: AppRoutes.profileSettings,
-            name: AppRoutes.profileSettings,
-            builder: (_, state) => const ProfileSettings()),
+          path: AppRoutes.profileSettings,
+          name: AppRoutes.profileSettings,
+          builder: (_, state) => const ProfileSettings(),
+        ),
         GoRoute(
-            path: AppRoutes.personalInfoSettings,
-            name: AppRoutes.personalInfoSettings,
-            builder: (_, state) => const PersonalInfoSettings()),
+          path: AppRoutes.personalInfoSettings,
+          name: AppRoutes.personalInfoSettings,
+          builder: (_, state) => const PersonalInfoSettings(),
+        ),
         GoRoute(
-            path: AppRoutes.businessInfo,
-            name: AppRoutes.businessInfo,
-            builder: (_, state) => const BusinessInfoPage()),
+          path: AppRoutes.businessInfo,
+          name: AppRoutes.businessInfo,
+          builder: (_, state) => const BusinessInfoPage(),
+        ),
         GoRoute(
-            path: AppRoutes.businessInfoSettings,
-            name: AppRoutes.businessInfoSettings,
-            builder: (_, state) => const BusinessInfoSettings()),
+          path: AppRoutes.businessInfoSettings,
+          name: AppRoutes.businessInfoSettings,
+          builder: (_, state) => const BusinessInfoSettings(),
+        ),
         GoRoute(
-            path: AppRoutes.contactPage,
-            name: AppRoutes.contactPage,
-            builder: (_, state) => const ContactPage()),
+          path: AppRoutes.contactPage,
+          name: AppRoutes.contactPage,
+          builder: (_, state) => const ContactPage(),
+        ),
         GoRoute(
-            path: AppRoutes.bottomNav,
-            name: AppRoutes.bottomNav,
-            builder: (_, state) => const BottomNavigationBarView()),
+          path: AppRoutes.bottomNav,
+          name: AppRoutes.bottomNav,
+          builder: (_, state) => const BottomNavigationBarView(),
+        ),
         GoRoute(
-            path: AppRoutes.bookings,
-            name: AppRoutes.bookings,
-            builder: (_, state) => const Bookings()),
+          path: AppRoutes.bookings,
+          name: AppRoutes.bookings,
+          builder: (_, state) => const Bookings(),
+        ),
         GoRoute(
-            path: AppRoutes.businessLocation,
-            name: AppRoutes.businessLocation,
-            builder: (_, state) => const BusinessLocation()),
+          path: AppRoutes.businessLocation,
+          name: AppRoutes.businessLocation,
+          builder: (_, state) => const BusinessLocation(),
+        ),
         GoRoute(
             path: AppRoutes.inspectionBooking,
             name: AppRoutes.inspectionBooking,

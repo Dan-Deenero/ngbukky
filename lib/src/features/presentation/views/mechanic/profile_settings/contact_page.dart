@@ -163,132 +163,136 @@ class ContactPage extends HookWidget {
                     child: SingleChildScrollView(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(children: [
-                          heightSpace(4),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              customText(
+                        child: Column(
+                          children: [
+                            heightSpace(4),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                customText(
                                   text: "Send us an email ",
                                   fontSize: 18,
                                   textColor: AppColors.primary,
-                                  fontWeight: FontWeight.w800),
-                            ],
-                          ),
-                          heightSpace(3),
-                          CustomTextFormField(
-                            validator: stringValidation,
-                            textEditingController: title,
-                            prefixIcon: Padding(
-                              padding: const EdgeInsets.all(13.0),
-                              child: SvgPicture.asset(
-                                AppImages.nameIcon,
-                              ),
+                                  fontWeight: FontWeight.w800,
+                                 ),
+                              ],
                             ),
-                            label: "Title",
-                            hintText: "Enter Short title here",
-                          ),
-                          heightSpace(2),
-                          CustomTextFormField(
-                            validator: stringValidation,
-                            label: "Body",
-                            hasMaxline: true,
-                            textEditingController: body,
-                            hintText: 'Type fully what you want to tell us',
-                          ),
-                          heightSpace(4),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              AbsorbPointer(
-                                absorbing: true,
-                                child: Opacity(
-                                  opacity: 0.2,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      CustomTextFormField(
-                                        validator: stringValidation,
-                                        textEditingController: firstName,
-                                        prefixIcon: Padding(
-                                          padding: const EdgeInsets.all(13.0),
-                                          child: SvgPicture.asset(
-                                            AppImages.nameIcon,
-                                          ),
-                                        ),
-                                        label: "First name",
-                                        hintText: "John",
-                                      ),
-                                      heightSpace(2),
-                                      CustomTextFormField(
-                                        validator: stringValidation,
-                                        textEditingController: lastName,
-                                        prefixIcon: Padding(
-                                          padding: const EdgeInsets.all(13.0),
-                                          child: SvgPicture.asset(
-                                            AppImages.nameIcon,
-                                          ),
-                                        ),
-                                        label: "Last name",
-                                        hintText: "Doe",
-                                      ),
-                                      heightSpace(2),
-                                      customText(
-                                          text: "Phone number",
-                                          fontSize: 14,
-                                          textColor: AppColors.primary),
-                                      heightSpace(1),
-                                      CustomPhoneField(
-                                        controller: phone,
-                                      ),
-                                      heightSpace(2),
-                                      CustomTextFormField(
-                                        textEditingController: email,
-                                        prefixIcon: Padding(
-                                          padding: const EdgeInsets.all(13.0),
-                                          child: SvgPicture.asset(
-                                            AppImages.emailIcon,
-                                          ),
-                                        ),
-                                        label: "Personal email",
-                                        hintText: "johndoe@gmail.com",
-                                      ),
-                                    ],
-                                  ),
+                            heightSpace(3),
+                            CustomTextFormField(
+                              validator: stringValidation,
+                              textEditingController: title,
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.all(13.0),
+                                child: SvgPicture.asset(
+                                  AppImages.nameIcon,
                                 ),
                               ),
-                              heightSpace(5),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.87,
-                                    child: AppButton(
-                                      isActive: isValidated.value,
-                                      onTap: contactUs,
-                                      buttonText: "Save",
-                                      isOrange: true,
-                                      isSmall: true,
+                              label: "Title",
+                              hintText: "Enter Short title here",
+                            ),
+                            heightSpace(2),
+                            CustomTextFormField(
+                              validator: stringValidation,
+                              label: "Body",
+                              hasMaxline: true,
+                              textEditingController: body,
+                              hintText: 'Type fully what you want to tell us',
+                            ),
+                            heightSpace(4),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                AbsorbPointer(
+                                  absorbing: true,
+                                  child: Opacity(
+                                    opacity: 0.2,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        CustomTextFormField(
+                                          validator: stringValidation,
+                                          textEditingController: firstName,
+                                          prefixIcon: Padding(
+                                            padding: const EdgeInsets.all(13.0),
+                                            child: SvgPicture.asset(
+                                              AppImages.nameIcon,
+                                            ),
+                                          ),
+                                          label: "First name",
+                                          hintText: "John",
+                                        ),
+                                        heightSpace(2),
+                                        CustomTextFormField(
+                                          validator: stringValidation,
+                                          textEditingController: lastName,
+                                          prefixIcon: Padding(
+                                            padding: const EdgeInsets.all(13.0),
+                                            child: SvgPicture.asset(
+                                              AppImages.nameIcon,
+                                            ),
+                                          ),
+                                          label: "Last name",
+                                          hintText: "Doe",
+                                        ),
+                                        heightSpace(2),
+                                        customText(
+                                            text: "Phone number",
+                                            fontSize: 14,
+                                            textColor: AppColors.primary),
+                                        heightSpace(1),
+                                        CustomPhoneField(
+                                          controller: phone,
+                                        ),
+                                        heightSpace(2),
+                                        CustomTextFormField(
+                                          textEditingController: email,
+                                          prefixIcon: Padding(
+                                            padding: const EdgeInsets.all(13.0),
+                                            child: SvgPicture.asset(
+                                              AppImages.emailIcon,
+                                            ),
+                                          ),
+                                          label: "Personal email",
+                                          hintText: "johndoe@gmail.com",
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ],
-                              ),
-                              heightSpace(2),
-                              Row(
-                                children: [
-                                  SvgPicture.asset(AppImages.info),
-                                  widthSpace(2),
-                                  Flexible(
-                                    child: bodyText(
-                                        "You can always edit every information entered and saved later if you want"),
-                                  )
-                                ],
-                              ),
-                              heightSpace(3),
-                            ],
-                          )
-                        ]),
+                                ),
+                                heightSpace(5),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.87,
+                                      child: AppButton(
+                                        isActive: isValidated.value,
+                                        onTap: contactUs,
+                                        buttonText: "Save",
+                                        isOrange: true,
+                                        isSmall: true,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                heightSpace(2),
+                                Row(
+                                  children: [
+                                    SvgPicture.asset(AppImages.info),
+                                    widthSpace(2),
+                                    Flexible(
+                                      child: bodyText(
+                                        "You can always edit every information entered and saved later if you want",
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                heightSpace(3),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

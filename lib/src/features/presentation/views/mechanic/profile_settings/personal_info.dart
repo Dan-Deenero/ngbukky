@@ -15,8 +15,6 @@ import 'package:ngbuka/src/features/presentation/widgets/app_textformfield.dart'
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 import 'package:ngbuka/src/features/presentation/widgets/dropdown_search.dart';
 import 'package:ngbuka/src/utils/helpers/validators.dart';
-
-import '../../../../../config/keys/app_routes.dart';
 import '../../../../../core/shared/colors.dart';
 
 class PersonalInfoSettings extends HookWidget {
@@ -95,7 +93,7 @@ class PersonalInfoSettings extends HookWidget {
       bool result = await _authRepo.updateInfo(body);
       if (result) {
         if (context.mounted) {
-          context.push(AppRoutes.profileSettings);
+          context.pop();
         }
       }
     }

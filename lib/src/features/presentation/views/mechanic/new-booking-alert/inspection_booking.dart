@@ -84,30 +84,27 @@ class _InspectionBookingState extends State<InspectionBooking> {
   // void resendOTP() async {
   @override
   Widget build(BuildContext context) {
-
     showSuccesModal() async {
-    await showDialog(
-      context: context,
-      builder: (context) => SuccessDialogue(
-        title: 'Proceed to client location',
-        subtitle:
-            'You can start heading to the client’s location immediately to offer your service.',
-        action: () {
-          context.push(AppRoutes.bottomNav);
-        },
-      ),
-    );
-  }
-  
+      await showDialog(
+        context: context,
+        builder: (context) => SuccessDialogue(
+          title: 'Proceed to client location',
+          subtitle:
+              'You can start heading to the client’s location immediately to offer your service.',
+          action: () {
+            context.go(AppRoutes.bottomNav);
+          },
+        ),
+      );
+    }
+
     acceptBooking() async {
       var body = {
         "action": "accepted",
       };
       bool result = await _mechanicRepo.acceptOrRejectBooking(body, widget.id);
       if (result) {
-        if (context.mounted) {
-          showSuccesModal();
-        }
+        showSuccesModal();
       }
     }
 
@@ -118,7 +115,7 @@ class _InspectionBookingState extends State<InspectionBooking> {
       bool result = await _mechanicRepo.acceptOrRejectBooking(body, widget.id);
       if (result) {
         if (context.mounted) {
-          context.go(AppRoutes.rejectedBooking);
+          context.go(AppRoutes.bottomNav);
           return;
         }
       }
@@ -177,11 +174,13 @@ class _InspectionBookingState extends State<InspectionBooking> {
                         ),
                         widthSpace(3),
                         TextButton(
-                            onPressed: acceptBooking,
-                            child: customText(
-                                text: 'Yes',
-                                fontSize: 16,
-                                textColor: AppColors.darkOrange))
+                          onPressed: acceptBooking,
+                          child: customText(
+                            text: 'Yes',
+                            fontSize: 16,
+                            textColor: AppColors.darkOrange,
+                          ),
+                        ),
                       ],
                     ),
                   )

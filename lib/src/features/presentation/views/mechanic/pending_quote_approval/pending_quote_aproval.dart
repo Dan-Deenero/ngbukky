@@ -24,7 +24,6 @@ class _PendingQuoteApprovalState extends State<PendingQuoteApproval> {
   bool isLoading = true;
   List<Quotes>? quotes = [];
 
-
   int? totalPrice;
 
   double serviceFee = 0;
@@ -44,13 +43,13 @@ class _PendingQuoteApprovalState extends State<PendingQuoteApproval> {
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(20.h),
+        preferredSize: Size.fromHeight(21.h),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             GestureDetector(
-              onTap: () => context.go(AppRoutes.bottomNav),
+              onTap: () => context.pop(),
               child: Container(
                 height: 10.h,
                 width: 10.w,
@@ -115,48 +114,53 @@ class _PendingQuoteApprovalState extends State<PendingQuoteApproval> {
 
                           var formattedTime =
                               DateFormat('hh:mm a').format(dateTime);
-                          
-                          
+
+                          String profile;
+
+                          if(e.user!.profileImageUrl == null){
+                            profile = 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+                          }else{
+                            profile = e.user!.profileImageUrl!;
+                          }
+
                           return GestureDetector(
                             onTap: () {
                               context.push(
                                   AppRoutes.pendingQuoteApprovalDetails,
                                   extra: e.id);
                             },
-                            child: Container(
-                              margin: const EdgeInsets.only(bottom: 10),
-                              width: double.infinity,
-                              height: 10.h,
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
+                            child: Card(
+                              color: Colors.white,
+                              surfaceTintColor: Colors.transparent,
                               child: ListTile(
                                   trailing: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                    customText(
-                                        text: "₦$price",
-                                        fontSize: 14,
-                                        textColor: AppColors.textGrey,
-                                        fontWeight: FontWeight.bold),
-                                    heightSpace(1),
-                                    Container(
-                                      width: 28.w,
-                                      height: 3.h,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color:
-                                              AppColors.green.withOpacity(.1)),
-                                      child: Center(
-                                        child: customText(
-                                            text: "Unapproved quote",
-                                            fontSize: 10,
-                                            textColor: AppColors.green),
-                                      ),
-                                    )
-                                  ]),
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        customText(
+                                            text: "₦$price",
+                                            fontSize: 14,
+                                            textColor: AppColors.textGrey,
+                                            fontWeight: FontWeight.bold),
+                                        heightSpace(1),
+                                        Container(
+                                          width: 27.w,
+                                          height: 3.h,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              color: AppColors.green
+                                                  .withOpacity(.1)),
+                                          child: Center(
+                                            child: customText(
+                                              text: "Unapproved quote",
+                                              fontSize: 2.7.w,
+                                              textColor: AppColors.green,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        )
+                                      ]),
                                   subtitle: Row(
                                     children: [
                                       Row(
@@ -164,7 +168,7 @@ class _PendingQuoteApprovalState extends State<PendingQuoteApproval> {
                                           SvgPicture.asset(AppImages.time),
                                           customText(
                                               text: formattedTime,
-                                              fontSize: 10,
+                                              fontSize: 2.5.w,
                                               textColor: AppColors.textGrey)
                                         ],
                                       ),
@@ -175,7 +179,7 @@ class _PendingQuoteApprovalState extends State<PendingQuoteApproval> {
                                               AppImages.calendarIcon),
                                           customText(
                                               text: formattedDate,
-                                              fontSize: 10,
+                                              fontSize: 2.5.w,
                                               textColor: AppColors.textGrey)
                                         ],
                                       )
@@ -186,13 +190,20 @@ class _PendingQuoteApprovalState extends State<PendingQuoteApproval> {
                                       fontSize: 16,
                                       textColor: AppColors.black,
                                       fontWeight: FontWeight.bold),
-                                  leading: Container(
-                                    width: 10.w,
-                                    height: 10.h,
-                                    decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: AppColors.containerGrey),
-                                  )),
+                                 leading: Container(
+                                  width: 10.w,
+                                  height: 10.h,
+                                  decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: AppColors.containerGrey),
+                                  child: CircleAvatar(
+                                    backgroundColor: AppColors.backgroundGrey,
+                                    backgroundImage:
+                                        NetworkImage(profile),
+                                    radius:
+                                        55, // Adjust the size of the circle as needed
+                                  ),
+                                ),),
                             ),
                           );
                         })

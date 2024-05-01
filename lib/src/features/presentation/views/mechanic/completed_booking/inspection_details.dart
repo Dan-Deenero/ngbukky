@@ -73,42 +73,44 @@ class _CompletedInspectionDetailsState
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 7.h),
           child: Row(
-              // crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    customText(
-                        text: "Inspection details",
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        textColor: AppColors.black),
-                    // heightSpace(1),
-                    bodyText(
-                        "View all necessary information \nabout this booking ")
-                  ],
-                ),
-                Container(
-                  height: 10.h,
-                  width: 10.w,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.black),
-                      color: AppColors.white.withOpacity(.5),
-                      shape: BoxShape.circle),
-                  child: Padding(
-                    padding: const EdgeInsets.only(),
-                    child: Center(
-                        child: GestureDetector(
+            // crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  customText(
+                      text: "Inspection details",
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      textColor: AppColors.black),
+                  // heightSpace(1),
+                  bodyText(
+                      "View all necessary information \nabout this booking ")
+                ],
+              ),
+              Container(
+                height: 10.h,
+                width: 10.w,
+                decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.black),
+                    color: AppColors.white.withOpacity(.5),
+                    shape: BoxShape.circle),
+                child: Padding(
+                  padding: const EdgeInsets.only(),
+                  child: Center(
+                    child: GestureDetector(
                       onTap: () => context.pop(),
                       child: const Icon(
                         Icons.close,
                         color: AppColors.black,
                       ),
-                    )),
+                    ),
                   ),
                 ),
-              ]),
+              ),
+            ],
+          ),
         ),
       ),
       body: isLoading

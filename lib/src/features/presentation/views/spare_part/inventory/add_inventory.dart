@@ -34,7 +34,7 @@ class AddInventory extends HookWidget {
   static final price = TextEditingController();
   static final discount = TextEditingController();
   static final MechanicRepo mechanicRepo = MechanicRepo();
-  static final _formKey = GlobalKey<FormState>();
+  static final _addInventoryKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -203,8 +203,8 @@ class AddInventory extends HookWidget {
               heightSpace(2),
               Form(
                 onChanged: () =>
-                    isValidated.value = _formKey.currentState!.validate(),
-                key: _formKey,
+                    isValidated.value = _addInventoryKey.currentState!.validate(),
+                key: _addInventoryKey,
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(12),
@@ -296,6 +296,7 @@ class AddInventory extends HookWidget {
                                   children: [
                                     Expanded(
                                       child: CustomTextFormField(
+                                        validator: numericValidation,
                                         label: 'Weight',
                                         textEditingController: weight,
                                         keyboardType: TextInputType.number,

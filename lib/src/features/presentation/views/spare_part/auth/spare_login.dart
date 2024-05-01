@@ -193,7 +193,7 @@ class SpareEmailLogin extends HookWidget {
       log(result.toString());
       if (context.mounted) {
         if (result.user?.isEmailVerified == false) {
-          context.push(AppRoutes.spareVerifyAccount,
+          context.go(AppRoutes.spareVerifyAccount,
               extra: OTPModel(email: email.text, otpType: "createAccount"));
         } else {
           if (result.user != null) {

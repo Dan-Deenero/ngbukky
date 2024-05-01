@@ -124,46 +124,47 @@ class _RejectedQuoteState extends State<RejectedQuote> {
                               DateFormat('hh:mm a').format(dateTime);
                           String profile;
 
-                          if(e.user!.profileImageUrl == null){
-                            profile = 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
-                          }else{
+                          if (e.user!.profileImageUrl == null) {
+                            profile =
+                                'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+                          } else {
                             profile = e.user!.profileImageUrl!;
                           }
                           return GestureDetector(
                             onTap: () {
-                              context.push(AppRoutes.rejectedQuoteDetails,
-                                  extra: e.id);
+                              context.push(
+                                AppRoutes.rejectedQuoteDetails,
+                                extra: e.id,
+                              );
                             },
-                            child: Container(
-                              margin: const EdgeInsets.only(bottom: 10),
-                              width: double.infinity,
-                              height: 10.h,
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
+                            child: Card(
+                              color: Colors.white,
+                              surfaceTintColor: Colors.transparent,
                               child: ListTile(
-                                trailing: Column(children: [
-                                  customText(
-                                      text: "$price",
-                                      fontSize: 14,
-                                      textColor: AppColors.textGrey,
-                                      fontWeight: FontWeight.bold),
-                                  heightSpace(1),
-                                  Container(
-                                    width: 28.w,
-                                    height: 3.h,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: AppColors.red.withOpacity(.1)),
-                                    child: Center(
-                                      child: customText(
-                                          text: "Booking rejected",
-                                          fontSize: 10,
-                                          textColor: AppColors.red),
-                                    ),
-                                  )
-                                ]),
+                                trailing: Column(
+                                  children: [
+                                    customText(
+                                        text: "$price",
+                                        fontSize: 14,
+                                        textColor: AppColors.textGrey,
+                                        fontWeight: FontWeight.bold),
+                                    heightSpace(1),
+                                    Container(
+                                      width: 28.w,
+                                      height: 3.h,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: AppColors.red.withOpacity(.1)),
+                                      child: Center(
+                                        child: customText(
+                                            text: "Booking rejected",
+                                            fontSize: 10,
+                                            textColor: AppColors.red),
+                                      ),
+                                    )
+                                  ],
+                                ),
                                 subtitle: Row(
                                   children: [
                                     Row(
@@ -197,10 +198,12 @@ class _RejectedQuoteState extends State<RejectedQuote> {
                                   width: 8.w,
                                   height: 8.h,
                                   decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          image: NetworkImage(profile)),
-                                      shape: BoxShape.circle,
-                                      color: AppColors.containerGrey),
+                                    image: DecorationImage(
+                                      image: NetworkImage(profile),
+                                    ),
+                                    shape: BoxShape.circle,
+                                    color: AppColors.containerGrey,
+                                  ),
                                 ),
                               ),
                             ),

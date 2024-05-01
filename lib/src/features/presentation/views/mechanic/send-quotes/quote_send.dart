@@ -282,12 +282,13 @@ class _QuoteSendState extends State<QuoteSend> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             customText(
-                text: "Send Quote",
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                textColor: AppColors.black),
+              text: "Send Quote",
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              textColor: AppColors.black,
+            ),
             // heightSpace(1),
-            bodyText("Let the client know what it will cost")
+            bodyText("Let the client know what it will cost"),
           ],
         ),
         actions: [
@@ -303,7 +304,7 @@ class _QuoteSendState extends State<QuoteSend> {
               padding: const EdgeInsets.only(),
               child: Center(
                   child: GestureDetector(
-                onTap: () => context.push(AppRoutes.bottomNav),
+                onTap: () => context.go(AppRoutes.bottomNav),
                 child: const Icon(
                   Icons.close,
                   color: AppColors.black,
@@ -376,17 +377,21 @@ class _QuoteSendState extends State<QuoteSend> {
                                               backgroundColor: AppColors.orange
                                                   .withOpacity(0.1),
                                               shape: RoundedRectangleBorder(
-                                                  side: const BorderSide(
-                                                      width: 0.5,
-                                                      color: AppColors.orange),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20)),
+                                                side: const BorderSide(
+                                                  width: 0.5,
+                                                  color: AppColors.orange,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                  20,
+                                                ),
+                                              ),
                                               label: customText(
-                                                  text:
-                                                      '$e - ₦${selectedServices2[e]}',
-                                                  fontSize: 13,
-                                                  textColor: AppColors.orange),
+                                                text:
+                                                    '$e - ₦${selectedServices2[e]}',
+                                                fontSize: 13,
+                                                textColor: AppColors.orange,
+                                              ),
                                               deleteIcon: const Icon(
                                                 Icons.close,
                                                 color: AppColors.red,
@@ -696,7 +701,7 @@ class _QuoteSendState extends State<QuoteSend> {
         subtitle:
             'Your quote has been sent successfully to ${bookingModel!.user!.username!}',
         action: () {
-          context.go(AppRoutes.pendingQuoteApproval);
+          context.go(AppRoutes.bottomNav);
         },
       ),
     );

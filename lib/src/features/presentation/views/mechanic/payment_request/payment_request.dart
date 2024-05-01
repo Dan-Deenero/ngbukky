@@ -51,7 +51,7 @@ class _PaymentRequestState extends State<PaymentRequest> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             GestureDetector(
-              onTap: () => context.go(AppRoutes.bookings),
+              onTap: () => context.pop(),
               child: Container(
                 height: 10.h,
                 width: 10.w,
@@ -121,13 +121,9 @@ class _PaymentRequestState extends State<PaymentRequest> {
                             extra: e.id),
                         child: Padding(
                           padding: const EdgeInsets.all(10),
-                          child: Container(
-                            width: double.infinity,
-                            height: 10.h,
-                            decoration: BoxDecoration(
-                              color: AppColors.white,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
+                          child: Card(
+                            color: Colors.white,
+                            surfaceTintColor: Colors.transparent,
                             child: ListTile(
                               subtitle: Row(
                                 mainAxisAlignment:
@@ -197,13 +193,9 @@ class _PaymentRequestState extends State<PaymentRequest> {
                             .push(AppRoutes.paymentRequestDetails, extra: e.id),
                         child: Padding(
                           padding: const EdgeInsets.all(10),
-                          child: Container(
-                            width: double.infinity,
-                            height: 10.h,
-                            decoration: BoxDecoration(
-                              color: AppColors.white,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
+                          child: Card(
+                            color: Colors.white,
+                            surfaceTintColor: Colors.transparent,
                             child: ListTile(
                               subtitle: Row(
                                 mainAxisAlignment:
@@ -215,16 +207,18 @@ class _PaymentRequestState extends State<PaymentRequest> {
                                       fontSize: 15,
                                       textColor: AppColors.orange),
                                   Container(
-                                    width: 37.w,
+                                    width: 32.w,
                                     height: 3.h,
                                     decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: AppColors.containerGrey),
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: AppColors.containerGrey,
+                                    ),
                                     child: Center(
                                       child: customText(
-                                          text: "payment request",
-                                          fontSize: 10,
-                                          textColor: AppColors.black),
+                                        text: "payment request",
+                                        fontSize: 10,
+                                        textColor: AppColors.black,
+                                      ),
                                     ),
                                   )
                                 ],
@@ -238,8 +232,9 @@ class _PaymentRequestState extends State<PaymentRequest> {
                                 width: 10.w,
                                 height: 10.h,
                                 decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: AppColors.containerGrey),
+                                  shape: BoxShape.circle,
+                                  color: AppColors.containerGrey,
+                                ),
                                 child: CircleAvatar(
                                   backgroundColor: AppColors.backgroundGrey,
                                   backgroundImage: NetworkImage(profile),

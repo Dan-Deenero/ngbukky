@@ -74,7 +74,6 @@ class OnboardingScreen extends HookWidget {
                               context.push(AppRoutes.boarding1);
                             }),
                         heightSpace(3),
-                        haveanaccount()
                       ],
                     ),
                   ),

@@ -35,6 +35,7 @@ class PersonalInfoPage extends HookWidget {
     final isLoading = useState<bool>(true);
     final userModel = useState<UserModel?>(null);
     final isValidated = useState<bool>(false);
+    var selectedLanguages = useState<List<String>?>([]);
     getUserProfile() {
       _authRepo.getMechanicProfile().then((value) {
         isLoading.value = false;
@@ -45,19 +46,36 @@ class PersonalInfoPage extends HookWidget {
     }
 
     onChanged(List<String>? list) {
-      languages = list!;
-      log(languages.toString());
+      if (list!.contains('None')) {
+        list.clear();
+      }
+      selectedLanguages.value = list;
+
+      if (list.isEmpty) {
+        selectedLanguages.value!.clear();
+      } 
+      log(selectedLanguages.toString());
     }
 
     List<String> otherLang = otherLanguages.text.split(',');
 
     updateInfo() async {
+      List<String> otservces;
+
+      if (otherLanguages.text.isEmpty) {
+        otservces = [];
+      } else {
+        otservces = otherLang;
+      }
+      if(selectedLanguages.value!.isEmpty){
+        selectedLanguages.value = languages;
+      }
       var body = {
         "firstname": firstName.text,
         "lastname": lastName.text,
         "mechanicType": mechanicType.text,
         "about": description.text,
-        "languages": languages + otherLang,
+        "languages": selectedLanguages.value! + otservces,
       };
       bool result = await _authRepo.updateInfo(body);
       if (result) {
@@ -257,7 +275,7 @@ class PersonalInfoPage extends HookWidget {
                                   ),
                                 ),
                                 selectedItems: const [
-                                  'None',
+                                  'English',
                                   'Hausa',
                                   'Igbo',
                                   'Yoruba',

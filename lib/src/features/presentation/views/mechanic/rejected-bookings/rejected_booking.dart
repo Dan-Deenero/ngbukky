@@ -45,7 +45,7 @@ class _RejectedBookingState extends State<RejectedBooking> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             GestureDetector(
-              onTap: () => context.go(AppRoutes.bottomNav),
+              onTap: () => context.pop(),
               child: Container(
                 height: 10.h,
                 width: 10.w,
@@ -77,113 +77,118 @@ class _RejectedBookingState extends State<RejectedBooking> {
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Wrap(
-                    children: [
-                      if (_bookingHistory.isEmpty)
-                            Center(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Wrap(
+                      children: [
+                        if (_bookingHistory.isEmpty)
+                          Center(
                               heightFactor: 3.5,
-                                child: Column(
-                              children: [
-                                SvgPicture.asset(AppImages.bookingWarning),
-                                customText(
-                                    text:
-                                        'You have not rejected any booking',
-                                    fontSize: 15,
-                                    textColor: AppColors.black)
-                              ],
-                            ))
-                      else
-                      ..._bookingHistory.map((e) {
-                        var dateString = e.date;
-                        var dateTime = DateTime.parse(dateString!);
-                        var formattedDate =
-                            DateFormat('dd MMM yyyy').format(dateTime);
-
-                        var formattedTime =
-                            DateFormat('hh:mm a').format(dateTime);
-                        return GestureDetector(
-                          onTap: () {
-                            context.push(AppRoutes.viewRejectedBooking,
-                                extra: e.id);
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.only(bottom: 10),
-                            width: double.infinity,
-                            height: 10.h,
-                            decoration: BoxDecoration(
-                              color: AppColors.white,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: ListTile(
-                                trailing: Column(children: [
+                              child: Column(
+                                children: [
+                                  SvgPicture.asset(AppImages.bookingWarning),
                                   customText(
-                                      text: "",
-                                      fontSize: 14,
-                                      textColor: AppColors.textGrey,
-                                      fontWeight: FontWeight.bold),
-                                  heightSpace(1),
-                                  Container(
-                                    width: 28.w,
-                                    height: 3.h,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: AppColors.red
-                                            .withOpacity(.1)),
-                                    child: Center(
-                                      child: customText(
-                                          text: "Rejected booking",
-                                          fontSize: 10,
-                                          textColor: AppColors.red),
-                                    ),
-                                  )
-                                ]),
-                                subtitle: Row(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        SvgPicture.asset(AppImages.time),
-                                        customText(
-                                            text: formattedTime,
-                                            fontSize: 10,
-                                            textColor: AppColors.textGrey)
-                                      ],
-                                    ),
-                                    widthSpace(1),
-                                    Row(
-                                      children: [
-                                        SvgPicture.asset(
-                                            AppImages.calendarIcon),
-                                        customText(
-                                            text: formattedDate,
-                                            fontSize: 10,
-                                            textColor: AppColors.textGrey)
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                title: customText(
-                                    text: e.user!.username!,
-                                    fontSize: 16,
-                                    textColor: AppColors.black,
-                                    fontWeight: FontWeight.bold),
-                                leading: Container(
-                                  width: 10.w,
+                                      text: 'You have not rejected any booking',
+                                      fontSize: 15,
+                                      textColor: AppColors.black)
+                                ],
+                              ))
+                        else
+                          ..._bookingHistory.map(
+                            (e) {
+                              var dateString = e.date;
+                              var dateTime = DateTime.parse(dateString!);
+                              var formattedDate =
+                                  DateFormat('dd MMM yyyy').format(dateTime);
+
+                              var formattedTime =
+                                  DateFormat('hh:mm a').format(dateTime);
+                              return GestureDetector(
+                                onTap: () {
+                                  context.push(AppRoutes.viewRejectedBooking,
+                                      extra: e.id);
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.only(bottom: 10),
+                                  width: double.infinity,
                                   height: 10.h,
-                                  decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: AppColors.containerGrey),
-                                )),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: ListTile(
+                                    trailing: Column(children: [
+                                      customText(
+                                          text: "",
+                                          fontSize: 14,
+                                          textColor: AppColors.textGrey,
+                                          fontWeight: FontWeight.bold),
+                                      heightSpace(1),
+                                      Container(
+                                        width: 28.w,
+                                        height: 3.h,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color:
+                                                AppColors.red.withOpacity(.1)),
+                                        child: Center(
+                                          child: customText(
+                                              text: "Rejected booking",
+                                              fontSize: 10,
+                                              textColor: AppColors.red),
+                                        ),
+                                      )
+                                    ]),
+                                    subtitle: Row(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            SvgPicture.asset(AppImages.time),
+                                            customText(
+                                                text: formattedTime,
+                                                fontSize: 10,
+                                                textColor: AppColors.textGrey)
+                                          ],
+                                        ),
+                                        widthSpace(1),
+                                        Row(
+                                          children: [
+                                            SvgPicture.asset(
+                                                AppImages.calendarIcon),
+                                            customText(
+                                                text: formattedDate,
+                                                fontSize: 10,
+                                                textColor: AppColors.textGrey)
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                    title: customText(
+                                        text: e.user!.username!,
+                                        fontSize: 16,
+                                        textColor: AppColors.black,
+                                        fontWeight: FontWeight.bold),
+                                    leading: Container(
+                                      width: 10.w,
+                                      height: 10.h,
+                                      decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: AppColors.containerGrey,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      })
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            )),
+                ],
+              ),
+            ),
     );
   }
 }

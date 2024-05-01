@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/domain/data/account.dart';
 import 'package:ngbuka/src/domain/data/account_name_model.dart';
@@ -65,7 +64,7 @@ class _SpareAddWalletPageState extends ConsumerState<SpareAddWalletPage> {
         subtitle:
             'Your local account number and bank has been saved, you can go ahead and withdraw now',
         action: () {
-          context.go(AppRoutes.withdrawFunds);
+          context.pop();
         },
       ),
     );
@@ -78,6 +77,9 @@ class _SpareAddWalletPageState extends ConsumerState<SpareAddWalletPage> {
     log(result.toString());
 
     if (result) {
+      if (context.mounted) {
+        context.pop();
+      }
       showSuccesModal();
       password.clear();
       accountNumber.clear();
@@ -102,11 +104,13 @@ class _SpareAddWalletPageState extends ConsumerState<SpareAddWalletPage> {
       });
     } catch (e) {
       // Handle the exception here
-      setState(() {
-        acctName = 'Invalid account';
-        colos = AppColors.red;
-        isFetchingAccountName = false;
-      });
+      setState(
+        () {
+          acctName = 'Invalid account';
+          colos = AppColors.red;
+          isFetchingAccountName = false;
+        },
+      );
       // You can display an error message or handle it in any way suitable for your UI
     }
   }

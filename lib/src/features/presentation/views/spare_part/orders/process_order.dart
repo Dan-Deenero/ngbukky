@@ -24,25 +24,26 @@ class ProcessOrder extends HookWidget {
     final isLoading = useState(true);
 
     Color getColor(Set<MaterialState> states) {
+      Color initialColor = AppColors.white;
       const Set<MaterialState> interactiveStates = <MaterialState>{
         MaterialState.pressed,
         MaterialState.hovered,
         MaterialState.focused,
       };
       if (states.any(interactiveStates.contains)) {
-        return AppColors.checkBoxColor;
+        return initialColor = AppColors.checkBoxColor;
       }
-      return AppColors.checkBoxColor;
+      return initialColor;
     }
 
-     processOrder() async {
+    processOrder() async {
       var body = {
         "status": "processed",
       };
       bool result = await mechanicRepo.processOrder(body, id);
       if (result) {
         if (context.mounted) {
-          context.push(AppRoutes.ordersInfo, extra: id);
+          context.pop();
           return;
         }
       }
@@ -114,7 +115,7 @@ class ProcessOrder extends HookWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     customText(
-                      text: 'No of items ordered: 4',
+                      text: 'No of items ordered: ${ordersModel.value!.quantity}',
                       fontSize: 14,
                       textColor: AppColors.black,
                       fontWeight: FontWeight.w600,
@@ -216,8 +217,9 @@ class ProcessOrder extends HookWidget {
                       children: [
                         Checkbox(
                           checkColor: Colors.white,
-                          fillColor:
-                              MaterialStateProperty.resolveWith(getColor),
+                          activeColor: isChecked.value
+                              ? AppColors.checkBoxColor
+                              : Colors.white,
                           value: isChecked.value,
                           onChanged: (val) => isChecked.value = val!,
                         ),

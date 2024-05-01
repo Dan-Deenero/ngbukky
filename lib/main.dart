@@ -26,6 +26,7 @@ class Ngbuka extends StatelessWidget {
       child: FlutterSizer(
         builder: (context, orientation, screenType) {
           return MaterialApp.router(
+            restorationScopeId: "root",
             debugShowCheckedModeBanner: false,
             title: 'Ngbuka',
             theme: AppTheme.defaultTheme,

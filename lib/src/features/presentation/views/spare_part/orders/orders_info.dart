@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:ngbuka/src/config/keys/app_routes.dart';
+import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
 import 'package:ngbuka/src/domain/data/orders_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
@@ -54,7 +55,33 @@ class _OrdersInfoState extends State<OrdersInfo> {
     bool result = await _mechanicRepo.processOrder(body, widget.id);
     if (result) {
       if (context.mounted) {
-        context.push(AppRoutes.processOrder, extra: widget.id);
+        context.pop();
+        return;
+      }
+    }
+  }
+
+  confirmPickup() async {
+    var body = {
+      "": "",
+    };
+    bool result = await _mechanicRepo.confirmPickup(body, widget.id);
+    if (result) {
+      if (context.mounted) {
+        context.pop();
+        return;
+      }
+    }
+  }
+
+  completedOrderDelivery() async {
+    var body = {
+      "status": "en_route",
+    };
+    bool result = await _mechanicRepo.processOrder(body, widget.id);
+    if (result) {
+      if (context.mounted) {
+        context.pop();
         return;
       }
     }
@@ -233,88 +260,133 @@ class _OrdersInfoState extends State<OrdersInfo> {
                             textColor: AppColors.black,
                           ),
                           heightSpace(3),
-                          // customText(
-                          //   text: 'Pick-up Area',
-                          //   fontSize: 12,
-                          //   textColor: AppColors.textGrey,
-                          // ),
-                          // heightSpace(1),
-                          // customText(
-                          //   text: 'Ibeju-Lekki',
-                          //   fontSize: 14,
-                          //   textColor: AppColors.black,
-                          // ),
-                          // heightSpace(3),
-                          // customText(
-                          //   text: 'Pick-up Address',
-                          //   fontSize: 12,
-                          //   textColor: AppColors.textGrey,
-                          // ),
-                          // heightSpace(1),
-                          // customText(
-                          //   text:
-                          //       '14 Lekki-Ekpe Expressway, Ibeju-Lekki, Lagos',
-                          //   fontSize: 14,
-                          //   textColor: AppColors.black,
-                          // ),
+                          if (ordersModel!.order!.deliveryMethod ==
+                              "Out of state delivery")
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                customText(
+                                  text: 'Pick-up Area',
+                                  fontSize: 12,
+                                  textColor: AppColors.textGrey,
+                                ),
+                                heightSpace(1),
+                                customText(
+                                  text: 'Ibeju-Lekki',
+                                  fontSize: 14,
+                                  textColor: AppColors.black,
+                                ),
+                                heightSpace(3),
+                                customText(
+                                  text: 'Pick-up Address',
+                                  fontSize: 12,
+                                  textColor: AppColors.textGrey,
+                                ),
+                                heightSpace(1),
+                                customText(
+                                  text:
+                                      '14 Lekki-Ekpe Expressway, Ibeju-Lekki, Lagos',
+                                  fontSize: 14,
+                                  textColor: AppColors.black,
+                                ),
+                              ],
+                            )
+                          else
+                            const SizedBox.shrink(),
                         ],
                       ),
                     ),
                     heightSpace(3),
-                    // if (ordersModel!.status == 'processed')
-                    // SizedBox(
-                    //   width: 100.h,
-                    //   child: Row(
-                    //     children: [
-                    //       SvgPicture.asset(AppImages.packageR),
-                    //       widthSpace(3),
-                    //       customText(text: 'Order awaiting pick-up', fontSize: 14, textColor: AppColors.black)
-                    //     ],
-                    //   ),
-                    // )
-                    // else
-                    // const SizedBox.shrink(),
-                    heightSpace(3),
                     if (ordersModel!.status == 'processed')
-                    const SizedBox.shrink()
-                    else
-                    AppButton(
-                      onTap: confirmOrder,
-                      buttonText: ordersModel!.status == 'processed'
-                          ? 'Confirm pickup'
-                          : 'Accept order',
-                      hasIcon: false, 
-                      isOrange: true,
-                    ),
-                    heightSpace(3),
-                    if (ordersModel!.status == 'processed')
-                      const SizedBox.shrink()
-                    else
-                      GestureDetector(
-                        onTap: declineOrder,
-                        child: Container(
-                          width: double.infinity,
-                          height: 7.h,
-                          decoration: BoxDecoration(
-                            color: AppColors.backgroundGrey,
-                            borderRadius: BorderRadius.circular(30),
-                            border: Border.all(
-                                width: 1.0, color: AppColors.darkOrange),
-                          ),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                customText(
-                                  text: 'Decline order',
-                                  textColor: AppColors.darkOrange,
+                      SizedBox(
+                        width: 100.w,
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(AppImages.packageR),
+                            widthSpace(3),
+                            Flexible(
+                              child: customText(
+                                  text: ordersModel!.order!.deliveryMethod ==
+                                          "self pickup"
+                                      ? 'Order packed and awaiting pick-up by buyer'
+                                      : "Order packed and awaiting pick-up by agent",
                                   fontSize: 14,
-                                ),
-                              ],
+                                  textColor: AppColors.black,
+                                  fontWeight: FontWeight.w400),
                             ),
-                          ),
+                          ],
                         ),
                       )
+                    else
+                      const SizedBox.shrink(),
+                    heightSpace(3),
+                    if (ordersModel!.order!.deliveryMethod == "self pickup")
+                      Row(
+                        children: [
+                          SvgPicture.asset(AppImages.warning),
+                          widthSpace(2),
+                          Flexible(
+                            child: customText(
+                              text:
+                                  "Verify that the transaction ID of the buyer matches the order before confirming pick-up and releasing the package ordered.",
+                              fontSize: 11,
+                              textColor: AppColors.orange,
+                            ),
+                          ),
+                        ],
+                      )
+                    else
+                      const SizedBox.shrink(),
+                    heightSpace(3),
+                    if (ordersModel!.status == 'processed')
+                      AppButton(
+                        onTap: confirmPickup,
+                        buttonText:
+                            ordersModel!.order!.deliveryMethod == "self pickup"
+                                ? 'Confirm pickup by buyer'
+                                : 'Confirm pickup by agent',
+                        hasIcon: false,
+                        isOrange: true,
+                      )
+                    else if (ordersModel!.status == 'pending')
+                      Column(
+                        children: [
+                          AppButton(
+                            onTap: confirmOrder,
+                            buttonText: 'Accept order',
+                            hasIcon: false,
+                            isOrange: true,
+                          ),
+                          heightSpace(3),
+                          GestureDetector(
+                            onTap: declineOrder,
+                            child: Container(
+                              width: double.infinity,
+                              height: 7.h,
+                              decoration: BoxDecoration(
+                                color: AppColors.backgroundGrey,
+                                borderRadius: BorderRadius.circular(30),
+                                border: Border.all(
+                                    width: 1.0, color: AppColors.darkOrange),
+                              ),
+                              child: Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    customText(
+                                      text: 'Decline order',
+                                      textColor: AppColors.darkOrange,
+                                      fontSize: 14,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      )
+                    else
+                      const SizedBox.shrink()
                   ],
                 ),
               ),

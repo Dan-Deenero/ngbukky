@@ -120,50 +120,46 @@ class _QPaymentRequestState extends State<QPaymentRequest> {
                             extra: e.id),
                         child: Padding(
                           padding: const EdgeInsets.all(10),
-                          child: Container(
-                            width: double.infinity,
-                            height: 10.h,
-                            decoration: BoxDecoration(
-                              color: AppColors.white,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
+                          child: Card(
+                            color: Colors.white,
+                            surfaceTintColor: Colors.transparent,
                             child: ListTile(
-                                subtitle: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    customText(
-                                        text: 'Due: $price',
-                                        fontSize: 15,
-                                        textColor: AppColors.orange),
-                                    Container(
-                                      width: 37.w,
-                                      height: 3.h,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: AppColors.containerGrey),
-                                      child: Center(
-                                        child: customText(
-                                            text: "Pending payment request",
-                                            fontSize: 10,
-                                            textColor: AppColors.black),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                title: customText(
-                                    text: e.user!.username!,
-                                    fontSize: 16,
-                                    textColor: AppColors.black,
-                                    fontWeight: FontWeight.bold),
-                                leading: Container(
-                                  width: 10.w,
-                                  height: 10.h,
-                                  decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: AppColors.containerGrey),
-                                )),
+                              subtitle: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  customText(
+                                      text: 'Due: $price',
+                                      fontSize: 15,
+                                      textColor: AppColors.orange),
+                                  Container(
+                                    width: 37.w,
+                                    height: 3.h,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: AppColors.containerGrey),
+                                    child: Center(
+                                      child: customText(
+                                          text: "Pending payment request",
+                                          fontSize: 10,
+                                          textColor: AppColors.black),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              title: customText(
+                                  text: e.user!.username!,
+                                  fontSize: 16,
+                                  textColor: AppColors.black,
+                                  fontWeight: FontWeight.bold),
+                              leading: Container(
+                                width: 10.w,
+                                height: 10.h,
+                                decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.containerGrey),
+                              ),
+                            ),
                           ),
                         ),
                       );
@@ -173,7 +169,7 @@ class _QPaymentRequestState extends State<QPaymentRequest> {
                   int totalPrice = 0;
                   for (Quotes quote in e.quotes!) {
                     if (quote.price != null) {
-                      totalPrice += quote.price!; 
+                      totalPrice += quote.price!;
                     }
                   }
                   return GestureDetector(
@@ -182,13 +178,9 @@ class _QPaymentRequestState extends State<QPaymentRequest> {
                         extra: e.id),
                     child: Padding(
                       padding: const EdgeInsets.all(10),
-                      child: Container(
-                        width: double.infinity,
-                        height: 10.h,
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
+                      child: Card(
+                        color: Colors.white,
+                        surfaceTintColor: Colors.transparent,
                         child: ListTile(
                             subtitle: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -25,18 +25,22 @@ class OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.all(Radius.circular(10))),
+    return Card(
+      color: Colors.white,
+      surfaceTintColor: Colors.transparent,
       child: Row(
         children: [
           SizedBox(
-            height: 150,
-            width: 50.w - 20,
-            child: Image.network(
-              image!,
-              fit: BoxFit.fill,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
+              child: SizedBox(
+                width: 40.w,
+                height: 150,
+                child: Image.network(
+                  image!,
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
           ),
           Container(

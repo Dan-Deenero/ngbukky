@@ -124,13 +124,9 @@ class _PaymentDeclinedState extends State<PaymentDeclined> {
                             onTap: () => context.push(
                                 AppRoutes.paymentDeclinedDetails,
                                 extra: e.id),
-                            child: Container(
-                              width: double.infinity,
-                              height: 10.h,
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
+                            child: Card(
+                              color: Colors.white,
+                              surfaceTintColor: Colors.transparent,
                               child: ListTile(
                                 trailing: Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,

@@ -330,7 +330,21 @@ class All extends HookWidget {
                         ),
                       );
                     },
-                  )
+                  ),
+                if (isSearching.value == true && inventorySearch.value.isEmpty)
+                  Center(
+                    child: Column(
+                      children: [
+                        heightSpace(5),
+                        customText(
+                          text: 'No item match',
+                          fontSize: 15,
+                          textColor: AppColors.textGrey.withOpacity(0.7),
+                          textAlignment: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
           );
@@ -431,7 +445,21 @@ class RunningOut extends HookWidget {
                         ),
                       );
                     },
-                  )
+                  ),
+                if (isSearching.value == true && inventorySearch.value.isEmpty)
+                  Center(
+                    child: Column(
+                      children: [
+                        heightSpace(5),
+                        customText(
+                          text: 'No item match',
+                          fontSize: 15,
+                          textColor: AppColors.textGrey.withOpacity(0.7),
+                          textAlignment: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
           );
@@ -511,7 +539,10 @@ class StockOut extends HookWidget {
                     ),
                   )
                 else
-                  ...(isSearching.value ? inventorySearch.value: inventoryHistory.value).map(
+                  ...(isSearching.value
+                          ? inventorySearch.value
+                          : inventoryHistory.value)
+                      .map(
                     (e) {
                       int? size = 0;
                       // if(e.specifications!.length == null){
@@ -536,7 +567,21 @@ class StockOut extends HookWidget {
                         ),
                       );
                     },
-                  )
+                  ),
+                if (isSearching.value == true && inventorySearch.value.isEmpty)
+                  Center(
+                    child: Column(
+                      children: [
+                        heightSpace(5),
+                        customText(
+                          text: 'No item match',
+                          fontSize: 15,
+                          textColor: AppColors.textGrey.withOpacity(0.7),
+                          textAlignment: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
           );

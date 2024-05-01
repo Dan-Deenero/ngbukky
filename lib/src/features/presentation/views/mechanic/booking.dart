@@ -300,6 +300,8 @@ class InspectionBookings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    num total = (awaitingPayment ?? 0) + (approved ?? 0);
+
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -409,7 +411,7 @@ class InspectionBookings extends StatelessWidget {
               child: card(
                 "Payment request",
                 "I have requested for payment for this service",
-                "$awaitingPayment",
+                "$total",
                 "grey",
               ),
             ),
@@ -486,6 +488,8 @@ class Quotes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    num total = (awaitingPayment ?? 0) + (approved ?? 0);
+
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -594,7 +598,7 @@ class Quotes extends StatelessWidget {
               child: card(
                 "Payment requests",
                 "Your payment requests",
-                "$awaitingPayment",
+                "$total",
                 "grey",
               ),
             ),

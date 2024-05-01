@@ -116,136 +116,131 @@ class _NewQuoteAlertState extends State<NewQuoteAlert> {
                                 return "${service.name}";
                               }).toList();
                               String serviceNames = names.join(', ');
-                              String profile;
-
-
                               return GestureDetector(
-                                onTap: () => context
-                                    .push(AppRoutes.quoteRequest, extra: e.id),
-                                child: Container(
-                                  margin: const EdgeInsets.only(bottom: 10),
-                                  alignment: Alignment.center,
-                                  padding: const EdgeInsets.all(10),
-                                  width: double.infinity,
-                                  // height: 12.h,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            SvgPicture.asset(
-                                              AppImages.carIcon,
-                                              width: 30,
-                                            ),
-                                            widthSpace(2),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                customText(
-                                                    text: e.brand!,
-                                                    fontSize: 15,
-                                                    textColor: AppColors.black,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                                heightSpace(.5),
-                                                customText(
-                                                    text:
-                                                        '${e.model}, ${e.year}',
-                                                    fontSize: 13,
-                                                    textColor: AppColors.black,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                                heightSpace(1),
-                                                Row(
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                        AppImages.serviceIcon),
-                                                    widthSpace(1),
-                                                    SizedBox(
-                                                      width: 150,
-                                                      child: customText(
-                                                          text: serviceNames,
-                                                          fontSize: 10,
-                                                          textColor:
-                                                              AppColors.black),
-                                                    )
-                                                  ],
-                                                ),
-                                                heightSpace(1),
-                                                Row(
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        SvgPicture.asset(
-                                                          AppImages.time,
-                                                        ),
-                                                        customText(
-                                                          text: formattedTime,
-                                                          fontSize: 10,
-                                                          textColor: AppColors
-                                                              .textGrey,
-                                                        )
-                                                      ],
-                                                    ),
-                                                    widthSpace(2),
-                                                    Row(
-                                                      children: [
-                                                        SvgPicture.asset(
-                                                          AppImages
-                                                              .calendarIcon,
-                                                        ),
-                                                        customText(
-                                                          text: formattedDate,
-                                                          fontSize: 10,
-                                                          textColor: AppColors
-                                                              .textGrey,
-                                                        ),
-                                                      ],
-                                                    )
-                                                  ],
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                        Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+                                onTap: () => context.push(
+                                  AppRoutes.quoteRequest,
+                                  extra: e.id,
+                                ),
+                                child: Card(
+                                  color: Colors.white,
+                                  surfaceTintColor: Colors.transparent,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(6.0),
+                                    child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
                                             children: [
-                                              Container(
-                                                width: 60,
-                                                height: 20,
-                                                decoration: BoxDecoration(
-                                                    color: AppColors.green,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5)),
-                                                child: Center(
-                                                  child: customText(
-                                                    text: "New",
-                                                    fontSize: 10,
-                                                    textColor: AppColors.white,
+                                              SvgPicture.asset(
+                                                AppImages.carIcon,
+                                                width: 30,
+                                              ),
+                                              widthSpace(2),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  customText(
+                                                      text: e.brand!,
+                                                      fontSize: 15,
+                                                      textColor: AppColors.black,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                  heightSpace(.5),
+                                                  customText(
+                                                      text:
+                                                          '${e.model}, ${e.year}',
+                                                      fontSize: 13,
+                                                      textColor: AppColors.black,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                  heightSpace(1),
+                                                  Row(
+                                                    children: [
+                                                      SvgPicture.asset(
+                                                          AppImages.serviceIcon),
+                                                      widthSpace(1),
+                                                      SizedBox(
+                                                        width: 150,
+                                                        child: customText(
+                                                            text: serviceNames,
+                                                            fontSize: 10,
+                                                            textColor:
+                                                                AppColors.black),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  heightSpace(1),
+                                                  Row(
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          SvgPicture.asset(
+                                                            AppImages.time,
+                                                          ),
+                                                          customText(
+                                                            text: formattedTime,
+                                                            fontSize: 10,
+                                                            textColor: AppColors
+                                                                .textGrey,
+                                                          )
+                                                        ],
+                                                      ),
+                                                      widthSpace(2),
+                                                      Row(
+                                                        children: [
+                                                          SvgPicture.asset(
+                                                            AppImages
+                                                                .calendarIcon,
+                                                          ),
+                                                          customText(
+                                                            text: formattedDate,
+                                                            fontSize: 10,
+                                                            textColor: AppColors
+                                                                .textGrey,
+                                                          ),
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                          Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Container(
+                                                  width: 60,
+                                                  height: 20,
+                                                  decoration: BoxDecoration(
+                                                      color: AppColors.green,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5)),
+                                                  child: Center(
+                                                    child: customText(
+                                                      text: "New",
+                                                      fontSize: 10,
+                                                      textColor: AppColors.white,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              heightSpace(7),
-                                              customText(
-                                                  text: "Quote Request",
-                                                  fontSize: 12,
-                                                  textColor: AppColors.orange,
-                                                  fontWeight: FontWeight.w600),
-                                            ]),
-                                      ]),
+                                                heightSpace(7),
+                                                customText(
+                                                    text: "Quote Request",
+                                                    fontSize: 12,
+                                                    textColor: AppColors.orange,
+                                                    fontWeight: FontWeight.w600),
+                                              ]),
+                                        ]),
+                                  ),
                                 ),
                               );
                             }),

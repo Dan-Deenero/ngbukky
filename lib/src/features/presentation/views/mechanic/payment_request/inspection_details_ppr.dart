@@ -67,7 +67,7 @@ class _PPRInspectionDetailsState extends State<PPRInspectionDetails> {
         await _mechanicRepo.markInspectionAsCompleted(body, widget.id);
     if (result) {
       if (context.mounted) {
-        context.pop();
+        showCompletedModal();
         return;
       }
     }
@@ -77,16 +77,18 @@ class _PPRInspectionDetailsState extends State<PPRInspectionDetails> {
     showDialog(
       context: context,
       builder: (context) => SuccessDialogue(
-          title: 'Complete booking',
-          subtitle:
-              'Your have completed your booking and requested for payment from Kels2323',
-          action: () => context.go(AppRoutes.paymentRequest)),
+        title: 'Complete booking',
+        subtitle:
+            'Your have completed your booking and requested for payment from Kels2323',
+        action: () => context.go(
+          AppRoutes.bottomNav,
+        ),
+      ),
     );
   }
 
   completedBooking() {
     completeBooking();
-    showCompletedModal();
   }
 
   @override

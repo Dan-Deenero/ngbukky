@@ -36,7 +36,9 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
 
   List<String> carsList = [];
 
-        List<String> trueItemsString = [];
+  List<String> trueItemsString = [];
+  List<String> selectedCarsList = [];
+
   @override
   Widget build(BuildContext context) {
     final loading = ref.watch(isLoading);
@@ -152,30 +154,32 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                                               borderRadius:
                                                   BorderRadius.circular(5),
                                               color: AppColors.white),
-                                          child: Row(children: [
-                                            Container(
-                                              width: 20,
-                                              height: 20,
-                                              decoration: BoxDecoration(
-                                                color: AppColors.darkOrange,
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                              ),
-                                              child: const Padding(
-                                                padding: EdgeInsets.all(1.0),
-                                                child: Icon(
-                                                  Icons.check,
-                                                  color: AppColors.white,
-                                                  size: 15,
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                width: 20,
+                                                height: 20,
+                                                decoration: BoxDecoration(
+                                                  color: AppColors.darkOrange,
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                ),
+                                                child: const Padding(
+                                                  padding: EdgeInsets.all(1.0),
+                                                  child: Icon(
+                                                    Icons.check,
+                                                    color: AppColors.white,
+                                                    size: 15,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            widthSpace(2),
-                                            customText(
-                                                text: e["day"],
-                                                fontSize: 3.8.w,
-                                                textColor: AppColors.black)
-                                          ],),
+                                              widthSpace(2),
+                                              customText(
+                                                  text: e["day"],
+                                                  fontSize: 3.8.w,
+                                                  textColor: AppColors.black)
+                                            ],
+                                          ),
                                         ),
                                       )
                                     : GestureDetector(
@@ -229,7 +233,10 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                                           ),
                                         ),
                                       ),
-                                SvgPicture.asset(AppImages.edit, width: 20.w,),
+                                SvgPicture.asset(
+                                  AppImages.edit,
+                                  width: 20.w,
+                                ),
                                 GestureDetector(
                                   onTap: () async {
                                     final TimeOfDay? result =
@@ -451,9 +458,6 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
     }
 
     onChanged(list) {
-      if (list!.contains('None')) {
-        list.clear();
-      }
 
       setState(() {
         carsList = list;
@@ -552,7 +556,7 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                                       child: customText(
                                           text: "2",
                                           fontSize: 15,
-                                          textColor: AppColors.textGrey)),
+                                          textColor: AppColors.textGrey,),),
                                 ),
                               ],
                             )
@@ -616,7 +620,6 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                                 ),
                               ),
                               selectedItems: const [
-                                'None',
                                 'Toyota',
                                 'Honda',
                                 'Ford',
@@ -627,10 +630,10 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                                 'Mercedes-Benz',
                                 'Volkswagen',
                                 'Tesla',
-                                'Chevrolet'
-                                    'Others'
+                                'Chevrolet',
+                                'Others',
                               ],
-                              onChanged: onChanged,
+                              onChanged: onChanged
                             ),
                             heightSpace(2),
                             CustomTextFormField(

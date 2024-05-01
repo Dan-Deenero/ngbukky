@@ -104,7 +104,7 @@ class _QuoteRequestsState extends State<QuoteRequests> {
                       ),
                       heightSpace(1),
                       customText(
-                          text: 'Confirm that you want to accept this booking',
+                          text: 'Confirm that you want to accept this Quote request',
                           fontSize: 12,
                           textColor: AppColors.black),
                       heightSpace(3),

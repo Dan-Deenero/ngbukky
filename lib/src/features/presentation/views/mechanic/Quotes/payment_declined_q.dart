@@ -45,7 +45,7 @@ class _QPaymentDeclinedState extends State<QPaymentDeclined> {
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(20.h),
+        preferredSize: Size.fromHeight(21.h),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child:

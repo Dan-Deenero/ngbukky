@@ -70,7 +70,7 @@ class _PPRQInspectionDetailsState extends State<PPRQInspectionDetails> {
     showDialog(
       context: context,
       builder: (context) => SuccessDialogue(
-        title: 'Complete booking',
+        title: 'Complete Service',
         subtitle:
             'Your have completed your booking and requested for payment from ${quoteModel!.user!.username!}',
         action: () => context.go(AppRoutes.quotePaymentRequest),

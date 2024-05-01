@@ -78,6 +78,9 @@ class _AddWalletPageState extends ConsumerState<AddWalletPage> {
     log(result.toString());
 
     if (result) {
+      if (context.mounted) {
+        context.pop();
+      } 
       showSuccesModal();
       password.clear();
       accountNumber.clear();

@@ -74,7 +74,7 @@ class LoginView extends HookWidget {
                       padding: const EdgeInsets.only(right: 10),
                       child: GestureDetector(
                         onTap: () => context.push(AppRoutes.createAccount),
-                        child: SvgPicture.asset(AppImages.createAccount),
+                        child: SvgPicture.asset(AppImages.createAccount), 
                       ),
                     )
                   ],
@@ -192,7 +192,7 @@ class SpareEmailLogin extends HookWidget {
       log(result.toString());
       if (context.mounted) {
         if (result.user?.isEmailVerified == false) {
-          context.push(AppRoutes.verifyAccount,
+          context.go(AppRoutes.verifyAccount,
               extra: OTPModel(email: email.text, otpType: "createAccount"));
         } else {
           if (result.user != null) {

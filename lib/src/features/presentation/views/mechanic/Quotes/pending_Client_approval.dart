@@ -135,41 +135,38 @@ class _PendingClientApprovalState extends State<PendingClientApproval> {
                                       AppRoutes.pendingClientApprovalDetails,
                                       extra: e.id);
                                 },
-                                child: Container(
-                                  margin: const EdgeInsets.only(bottom: 10),
-                                  width: double.infinity,
-                                  height: 10.h,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
+                                child: Card(
+                                  color: Colors.white,
+                                  surfaceTintColor: Colors.transparent,
                                   child: ListTile(
                                     trailing: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          customText(
-                                              text: "$price",
-                                              fontSize: 14,
-                                              textColor: AppColors.textGrey,
-                                              fontWeight: FontWeight.bold),
-                                          heightSpace(1),
-                                          Container(
-                                            width: 28.w,
-                                            height: 3.h,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                color: AppColors.green
-                                                    .withOpacity(.1)),
-                                            child: Center(
-                                              child: customText(
-                                                  text: "Unapproved quote",
-                                                  fontSize: 10,
-                                                  textColor: AppColors.green),
-                                            ),
-                                          )
-                                        ]),
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        customText(
+                                            text: "$price",
+                                            fontSize: 14,
+                                            textColor: AppColors.textGrey,
+                                            fontWeight: FontWeight.bold),
+                                        heightSpace(1),
+                                        Container(
+                                          width: 28.w,
+                                          height: 3.h,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color:
+                                                AppColors.green.withOpacity(.1),
+                                          ),
+                                          child: Center(
+                                            child: customText(
+                                                text: "Unapproved quote",
+                                                fontSize: 10,
+                                                textColor: AppColors.green),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                     subtitle: Row(
                                       children: [
                                         Row(
@@ -177,7 +174,7 @@ class _PendingClientApprovalState extends State<PendingClientApproval> {
                                             SvgPicture.asset(AppImages.time),
                                             customText(
                                                 text: formattedTime,
-                                                fontSize: 10,
+                                                fontSize: 2.5.w,
                                                 textColor: AppColors.textGrey)
                                           ],
                                         ),
@@ -188,7 +185,7 @@ class _PendingClientApprovalState extends State<PendingClientApproval> {
                                                 AppImages.calendarIcon),
                                             customText(
                                                 text: formattedDate,
-                                                fontSize: 10,
+                                                fontSize: 2.5.w,
                                                 textColor: AppColors.textGrey)
                                           ],
                                         )

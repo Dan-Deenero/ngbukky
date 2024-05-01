@@ -26,11 +26,15 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
   @override
   void initState() {
     super.initState();
-    _mechanicRepo.getAllBooking('accepted').then((value) => setState(() {
-          _bookingHistory = value;
-          isLoading = false;
-          print(_bookingHistory);
-        }));
+    _mechanicRepo.getAllBooking('accepted').then(
+          (value) => setState(
+            () {
+              _bookingHistory = value;
+              isLoading = false;
+              print(_bookingHistory);
+            },
+          ),
+        );
     // log(_bookingHistory.toString());
   }
 
@@ -39,7 +43,7 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(20.h),
+        preferredSize: Size.fromHeight(21.h),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child:
@@ -106,9 +110,10 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                               DateFormat('hh:mm a').format(dateTime);
                           String profile;
 
-                          if(e.user!.profileImageUrl == null){
-                            profile = 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
-                          }else{
+                          if (e.user!.profileImageUrl == null) {
+                            profile =
+                                'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+                          } else {
                             profile = e.user!.profileImageUrl!;
                           }
                           return GestureDetector(
@@ -179,12 +184,12 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                                   width: 10.w,
                                   height: 10.h,
                                   decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: AppColors.containerGrey),
+                                    shape: BoxShape.circle,
+                                    color: AppColors.containerGrey,
+                                  ),
                                   child: CircleAvatar(
                                     backgroundColor: AppColors.backgroundGrey,
-                                    backgroundImage:
-                                        NetworkImage(profile),
+                                    backgroundImage: NetworkImage(profile),
                                     radius:
                                         55, // Adjust the size of the circle as needed
                                   ),

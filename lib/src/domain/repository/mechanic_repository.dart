@@ -421,6 +421,14 @@ class MechanicRepo {
     return false;
   }
 
+  Future<bool> confirmPickup(Map<String, String> body, id) async {
+    final response = await ApiClient.patch('${Endpoints.dealerOrders}/$id/confirm-pickup', body: body, useToken: true);
+    if (response.status == 200) {
+      return true;
+    }
+    return false;
+  }
+
   Future<List<TransactionModel>> getAllTransaction(String? type) async {
     final response = await ApiClient.get(
         '${Endpoints.transactions}?&type=$type',

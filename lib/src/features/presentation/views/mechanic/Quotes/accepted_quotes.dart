@@ -122,14 +122,9 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
                               context.push(AppRoutes.viewAcceptedQuote,
                                   extra: e.id);
                             },
-                            child: Container(
-                              margin: const EdgeInsets.only(bottom: 10),
-                              width: double.infinity,
-                              height: 10.h,
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
+                            child: Card(
+                              color: Colors.white,
+                              surfaceTintColor: Colors.transparent,
                               child: ListTile(
                                 trailing: Column(children: [
                                   customText(
@@ -147,7 +142,7 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
                                     child: Center(
                                       child: customText(
                                           text: "Accepted quote",
-                                          fontSize: 10,
+                                          fontSize: 2.7.w,
                                           textColor: AppColors.green),
                                     ),
                                   )
@@ -158,9 +153,10 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
                                       children: [
                                         SvgPicture.asset(AppImages.time),
                                         customText(
-                                            text: formattedTime,
-                                            fontSize: 10,
-                                            textColor: AppColors.textGrey)
+                                          text: formattedTime,
+                                          fontSize: 2.5.w,
+                                          textColor: AppColors.textGrey,
+                                        )
                                       ],
                                     ),
                                     widthSpace(1),
@@ -170,7 +166,7 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
                                             AppImages.calendarIcon),
                                         customText(
                                             text: formattedDate,
-                                            fontSize: 10,
+                                            fontSize: 2.5.w,
                                             textColor: AppColors.textGrey)
                                       ],
                                     )
@@ -184,11 +180,16 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
                                 leading: Container(
                                   width: 8.w,
                                   height: 8.h,
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          image: NetworkImage(profile)),
-                                      shape: BoxShape.circle,
-                                      color: AppColors.containerGrey),
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.containerGrey,
+                                  ),
+                                  child: CircleAvatar(
+                                    backgroundColor: AppColors.backgroundGrey,
+                                    backgroundImage: NetworkImage(profile),
+                                    radius:
+                                        55, // Adjust the size of the circle as needed
+                                  ),
                                 ),
                               ),
                             ),

@@ -53,7 +53,6 @@ class _SplashscreenState extends State<Splashscreen> {
       context.push(AppRoutes.onboarding);
     } else {
       checkForLogin();
-      context.push(AppRoutes.boarding1);
     }
   }
 
