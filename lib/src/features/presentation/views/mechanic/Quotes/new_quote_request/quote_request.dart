@@ -53,8 +53,7 @@ class _QuoteRequestsState extends State<QuoteRequests> {
     bool result = await _mechanicRepo.acceptOrRejectQuote(body, widget.id);
     if (result) {
       if (context.mounted) {
-        context.pop();
-        context.go(AppRoutes.acceptedQuotes);
+        context.go(AppRoutes.bottomNav);
         return;
       }
     }
@@ -78,13 +77,13 @@ class _QuoteRequestsState extends State<QuoteRequests> {
         context: context,
         builder: (context) => Center(
               child: Container(
-                // padding: EdgeInsets.all(10.0),
                 width: 700, // Set the desired width
-                height: 200,
+                height: 220,
                 child: Dialog(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
-                        16.0), // Adjust the radius as needed
+                      16.0,
+                    ), // Adjust the radius as needed
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -103,10 +102,13 @@ class _QuoteRequestsState extends State<QuoteRequests> {
                         ],
                       ),
                       heightSpace(1),
-                      customText(
-                          text: 'Confirm that you want to accept this Quote request',
-                          fontSize: 12,
-                          textColor: AppColors.black),
+                      Flexible(
+                        child: customText(
+                            text:
+                                'Confirm that you want to accept this Quote request',
+                            fontSize: 12,
+                            textColor: AppColors.black),
+                      ),
                       heightSpace(3),
                       Center(
                         child: Row(
@@ -126,11 +128,13 @@ class _QuoteRequestsState extends State<QuoteRequests> {
                             ),
                             widthSpace(3),
                             TextButton(
-                                onPressed: acceptQuoteRequest,
-                                child: customText(
-                                    text: 'Yes',
-                                    fontSize: 16,
-                                    textColor: AppColors.darkOrange))
+                              onPressed: acceptQuoteRequest,
+                              child: customText(
+                                text: 'Yes',
+                                fontSize: 16,
+                                textColor: AppColors.darkOrange,
+                              ),
+                            )
                           ],
                         ),
                       )
@@ -143,70 +147,73 @@ class _QuoteRequestsState extends State<QuoteRequests> {
 
   reject() {
     showDialog(
-        context: context,
-        builder: (context) => Center(
-              child: Container(
-                // padding: EdgeInsets.all(10.0),
-                width: 700, // Set the desired width
-                height: 200,
-                child: Dialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                        16.0), // Adjust the radius as needed
-                  ),
-                  child: Column(
+      context: context,
+      builder: (context) => Center(
+        child: Container(
+          // padding: EdgeInsets.all(10.0),
+          width: 700, // Set the desired width
+          height: 200,
+          child: Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(16.0), // Adjust the radius as needed
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    customText(
+                        text: 'Confirm rejection',
+                        fontSize: 20,
+                        textColor: AppColors.black,
+                        fontWeight: FontWeight.w500),
+                    InkWell(
+                        onTap: () => context.pop(),
+                        child: SvgPicture.asset(AppImages.cancelModal))
+                  ],
+                ),
+                heightSpace(1),
+                customText(
+                    text: 'Confirm that you want to reject this booking',
+                    fontSize: 12,
+                    textColor: AppColors.black),
+                heightSpace(3),
+                Center(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          customText(
-                              text: 'Confirm rejection',
-                              fontSize: 20,
-                              textColor: AppColors.black,
-                              fontWeight: FontWeight.w500),
-                          InkWell(
-                              onTap: () => context.pop(),
-                              child: SvgPicture.asset(AppImages.cancelModal))
-                        ],
+                      TextButton(
+                          onPressed: rejectQuoteRequest,
+                          child: customText(
+                              text: 'Yes',
+                              fontSize: 16,
+                              textColor: AppColors.darkOrange)),
+                      widthSpace(3),
+                      Container(
+                        width: 1,
+                        height: 40,
+                        color: AppColors.containerGrey,
                       ),
-                      heightSpace(1),
-                      customText(
-                          text: 'Confirm that you want to reject this booking',
-                          fontSize: 12,
-                          textColor: AppColors.black),
-                      heightSpace(3),
-                      Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            TextButton(
-                                onPressed: rejectQuoteRequest,
-                                child: customText(
-                                    text: 'Yes',
-                                    fontSize: 16,
-                                    textColor: AppColors.darkOrange)),
-                            widthSpace(3),
-                            Container(
-                              width: 1,
-                              height: 40,
-                              color: AppColors.containerGrey,
-                            ),
-                            widthSpace(3),
-                            TextButton(
-                                onPressed: () => context.pop(),
-                                child: customText(
-                                    text: 'No',
-                                    fontSize: 16,
-                                    textColor: AppColors.textGrey))
-                          ],
+                      widthSpace(3),
+                      TextButton(
+                        onPressed: () => context.pop(),
+                        child: customText(
+                          text: 'No',
+                          fontSize: 16,
+                          textColor: AppColors.textGrey,
                         ),
                       )
                     ],
                   ),
                 ),
-              ),
-            ));
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override

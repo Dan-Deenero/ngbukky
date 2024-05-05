@@ -14,7 +14,7 @@ import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
-import '../../../../config/services/storage_service.dart';
+import '../../../../../config/services/storage_service.dart';
 
 Widget card(String title, String subtitle, String number, String color) => Card(
       color: Colors.white,
@@ -85,6 +85,7 @@ Widget card(String title, String subtitle, String number, String color) => Card(
       ),
     );
 
+
 class Bookings extends HookWidget {
   static final MechanicRepo _mechanicRepo = MechanicRepo();
 
@@ -125,7 +126,6 @@ class Bookings extends HookWidget {
         awaitingPayment2.value = value.aWAITINGPAYMENT;
       });
       log(locator<LocalStorageService>().getDataFromDisk(AppKeys.userType));
-
     }
 
     getBookingStatisticsInfo() {
@@ -148,7 +148,9 @@ class Bookings extends HookWidget {
       getQuoteStatisticsInfo();
       getBookingStatisticsInfo();
       return null;
-    }, []);
+    }, [
+      pending.value,
+    ]);
     return DefaultTabController(
       length: 2,
       child: Scaffold(

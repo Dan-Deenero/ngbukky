@@ -150,7 +150,7 @@ class _PendingClientApprovalState extends State<PendingClientApproval> {
                                             fontWeight: FontWeight.bold),
                                         heightSpace(1),
                                         Container(
-                                          width: 28.w,
+                                          width: 22.w,
                                           height: 3.h,
                                           decoration: BoxDecoration(
                                             borderRadius:
@@ -160,7 +160,7 @@ class _PendingClientApprovalState extends State<PendingClientApproval> {
                                           ),
                                           child: Center(
                                             child: customText(
-                                                text: "Unapproved quote",
+                                                text: "Unapproved",
                                                 fontSize: 10,
                                                 textColor: AppColors.green),
                                           ),

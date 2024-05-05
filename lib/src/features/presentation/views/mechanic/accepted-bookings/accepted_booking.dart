@@ -157,9 +157,10 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                                       children: [
                                         SvgPicture.asset(AppImages.time),
                                         customText(
-                                            text: formattedTime,
-                                            fontSize: 2.5.w,
-                                            textColor: AppColors.textGrey)
+                                          text: formattedTime,
+                                          fontSize: 2.5.w,
+                                          textColor: AppColors.textGrey,
+                                        )
                                       ],
                                     ),
                                     widthSpace(.5),
@@ -168,9 +169,10 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                                         SvgPicture.asset(
                                             AppImages.calendarIcon),
                                         customText(
-                                            text: formattedDate,
-                                            fontSize: 2.5.w,
-                                            textColor: AppColors.textGrey)
+                                          text: formattedDate,
+                                          fontSize: 2.5.w,
+                                          textColor: AppColors.textGrey,
+                                        )
                                       ],
                                     )
                                   ],

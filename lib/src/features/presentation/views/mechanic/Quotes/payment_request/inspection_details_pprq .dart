@@ -62,7 +62,10 @@ class _PPRQInspectionDetailsState extends State<PPRQInspectionDetails> {
     bool result =
         await _mechanicRepo.markQuoteAsCompleted(body, widget.id);
     if (result) {
+      if(context.mounted){
         showCompletedModal();
+        return;
+      }
     }
   }
 
@@ -73,7 +76,7 @@ class _PPRQInspectionDetailsState extends State<PPRQInspectionDetails> {
         title: 'Complete Service',
         subtitle:
             'Your have completed your booking and requested for payment from ${quoteModel!.user!.username!}',
-        action: () => context.go(AppRoutes.quotePaymentRequest),
+        action: () => context.go(AppRoutes.bottomNav),
       ),
     );
   }

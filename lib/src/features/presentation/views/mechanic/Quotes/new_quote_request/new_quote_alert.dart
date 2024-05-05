@@ -125,7 +125,7 @@ class _NewQuoteAlertState extends State<NewQuoteAlert> {
                                   color: Colors.white,
                                   surfaceTintColor: Colors.transparent,
                                   child: Padding(
-                                    padding: const EdgeInsets.all(6.0),
+                                    padding: const EdgeInsets.all(8.0),
                                     child: Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,

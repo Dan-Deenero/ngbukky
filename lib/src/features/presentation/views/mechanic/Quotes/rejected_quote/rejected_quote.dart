@@ -213,7 +213,7 @@ class _RejectedQuoteState extends State<RejectedQuote> {
                   ),
                 ),
               ],
-            )),
+            ),),
     );
   }
 }

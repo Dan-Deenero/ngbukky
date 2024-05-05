@@ -68,10 +68,11 @@ class _PCAInspectionDetailsState extends State<PCAInspectionDetails> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             customText(
-                text: "Inspection details",
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                textColor: AppColors.black),
+              text: "Inspection details",
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              textColor: AppColors.black,
+            ),
             // heightSpace(1),
             bodyText("View all necessary information \nabout this booking ")
           ],

@@ -3,12 +3,10 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
 import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/success_modal.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
@@ -63,36 +61,6 @@ class _PRQInspectionDetailsState extends State<PRQInspectionDetails> {
             serviceFee = price * 0.01;
           },
         ));
-  }
-
-  completeBooking() async {
-    var body = {
-      "": "",
-    };
-    bool result = await _mechanicRepo.markQuoteAsCompleted(body, widget.id);
-    if (result) {
-      if (context.mounted) {
-        context.push(AppRoutes.acceptedBooking);
-        return;
-      }
-    }
-  }
-
-  showCompletedModal() {
-    showDialog(
-      context: context,
-      builder: (context) => SuccessDialogue(
-        title: 'Complete booking',
-        subtitle:
-            'Your have completed your booking and requested for payment from Kels2323',
-        action: () => context.go(AppRoutes.paymentRequest),
-      ),
-    );
-  }
-
-  completedBooking() {
-    completeBooking();
-    showCompletedModal();
   }
 
   reportClient() {

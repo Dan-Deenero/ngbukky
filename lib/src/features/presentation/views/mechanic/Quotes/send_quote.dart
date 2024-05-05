@@ -73,7 +73,7 @@ class _SendQuoteState extends ConsumerState<SendQuote> {
         subtitle:
             'Your quote of ${costOnly.text} has been sent successfully to ${quoteModel!.user!.username!}',
         action: () {
-          context.go(AppRoutes.pendingClientApproval);
+          context.go(AppRoutes.bottomNav);
         },
       ),
     );

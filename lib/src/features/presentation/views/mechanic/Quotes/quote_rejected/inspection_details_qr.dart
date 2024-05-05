@@ -10,18 +10,18 @@ import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
-class RQInspectionDetails extends StatefulWidget {
+class QRInspectionDetails extends StatefulWidget {
   final String id;
-  const RQInspectionDetails({
+  const QRInspectionDetails({
     super.key,
     required this.id,
   });
 
   @override
-  State<RQInspectionDetails> createState() => _RQInspectionDetailsState();
+  State<QRInspectionDetails> createState() => _QRInspectionDetailsState();
 }
 
-class _RQInspectionDetailsState extends State<RQInspectionDetails> {
+class _QRInspectionDetailsState extends State<QRInspectionDetails> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
 
   bool isLoading = true;
@@ -42,7 +42,6 @@ class _RQInspectionDetailsState extends State<RQInspectionDetails> {
 
   @override
   void initState() {
-    
     super.initState();
     _mechanicRepo.getoneQuote(widget.id).then((value) => setState(
           () {
@@ -54,6 +53,12 @@ class _RQInspectionDetailsState extends State<RQInspectionDetails> {
             formattedDate = DateFormat('E, d MMM y').format(dateTime);
 
             formattedTime = DateFormat('hh:mm a').format(dateTime);
+            for (Quotes quote in quotes!) {
+              if (quote.price != null) {
+                price += quote.price!;
+              }
+            }
+            serviceFee = price * 0.01;
           },
         ));
   }
@@ -77,8 +82,10 @@ class _RQInspectionDetailsState extends State<RQInspectionDetails> {
                 textColor: AppColors.black),
             // heightSpace(1),
             Flexible(
-                child: bodyText(
-                    "View all necessary information about this booking "))
+              child: bodyText(
+                "View all necessary information about this booking ",
+              ),
+            ),
           ],
         ),
         actions: [
@@ -122,7 +129,7 @@ class _RQInspectionDetailsState extends State<RQInspectionDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           customText(
-                              text: 'Booking rejected',
+                              text: 'Quote Rejected',
                               fontSize: 14,
                               textColor: AppColors.red,
                               fontWeight: FontWeight.w600),
@@ -211,71 +218,93 @@ class _RQInspectionDetailsState extends State<RQInspectionDetails> {
                       textColor: AppColors.orange,
                       fontWeight: FontWeight.bold),
                   heightSpace(3),
-                  ...quotes!.map((quote) {
-                    String serviceName = '';
-                    if (quote.requestedPersonalisedService != null) {
-                      serviceName = quote.requestedPersonalisedService!.name!;
-                    } else if (quote.requestedSystemService != null) {
-                      serviceName = quote.requestedSystemService!.name!;
-                    }
-                    return Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                SvgPicture.asset(AppImages.serviceIcon),
-                                widthSpace(2),
-                                customText(
-                                    text: serviceName,
-                                    fontSize: 13,
-                                    textColor: AppColors.black,
-                                    fontWeight: FontWeight.w600),
-                              ],
-                            ),
-                            customText(
-                                text: '${quote.price!}',
-                                fontSize: 13,
-                                textColor: AppColors.black)
-                          ],
-                        ),
-                        heightSpace(4),
-                      ],
-                    );
-                  },),
-                  heightSpace(1),
-                  const Divider(),
-                  customText(
-                      text: "Schedule",
-                      fontSize: 14,
-                      textColor: AppColors.orange,
-                      fontWeight: FontWeight.bold),
-                  heightSpace(1),
-                  ListTile(
-                    leading: SvgPicture.asset(AppImages.calendarIcon),
-                    title: customText(
-                        text: formattedDate,
-                        fontSize: 14,
-                        textColor: AppColors.black,
-                        fontWeight: FontWeight.bold),
-                    subtitle: customText(
-                        text: "Scheduled date",
-                        fontSize: 12,
-                        textColor: AppColors.textGrey),
+                  ...quotes!.map(
+                    (quote) {
+                      String serviceName = '';
+                      if (quote.requestedPersonalisedService != null) {
+                        serviceName = quote.requestedPersonalisedService!.name!;
+                      } else if (quote.requestedSystemService != null) {
+                        serviceName = quote.requestedSystemService!.name!;
+                      }
+                      return Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  SvgPicture.asset(AppImages.serviceIcon),
+                                  widthSpace(2),
+                                  customText(
+                                      text: serviceName,
+                                      fontSize: 13,
+                                      textColor: AppColors.black,
+                                      fontWeight: FontWeight.w600),
+                                ],
+                              ),
+                              customText(
+                                  text: '${quote.price!}',
+                                  fontSize: 13,
+                                  textColor: AppColors.black)
+                            ],
+                          ),
+                          heightSpace(4),
+                        ],
+                      );
+                    },
                   ),
                   heightSpace(1),
-                  ListTile(
-                    leading: SvgPicture.asset(AppImages.time),
-                    title: customText(
-                        text: formattedTime,
-                        fontSize: 14,
-                        textColor: AppColors.black,
-                        fontWeight: FontWeight.bold),
-                    subtitle: customText(
-                        text: "Scheduled time",
-                        fontSize: 12,
-                        textColor: AppColors.textGrey),
+                  const Divider(),
+                  Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          customText(
+                            text: 'Sub-total (₦)',
+                            fontSize: 13,
+                            textColor: AppColors.black,
+                          ),
+                          customText(
+                            text: '$price',
+                            fontSize: 13,
+                            textColor: AppColors.black,
+                          ),
+                        ],
+                      ),
+                      heightSpace(2),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          customText(
+                            text: 'Ngbuka Charge (1%)',
+                            fontSize: 13,
+                            textColor: AppColors.black,
+                          ),
+                          customText(
+                            text: '$serviceFee',
+                            fontSize: 13,
+                            textColor: AppColors.black,
+                          ),
+                        ],
+                      ),
+                      heightSpace(2),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          customText(
+                              text: 'Total',
+                              fontSize: 13,
+                              textColor: AppColors.black,
+                              fontWeight: FontWeight.w600),
+                          customText(
+                              text: '${price + serviceFee}',
+                              fontSize: 13,
+                              textColor: AppColors.black,
+                              fontWeight: FontWeight.w600)
+                        ],
+                      )
+                    ],
                   ),
                   heightSpace(2),
                 ],
