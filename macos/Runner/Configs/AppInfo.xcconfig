@@ -8,7 +8,7 @@
 PRODUCT_NAME = ngbuka
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.ngbuka
+PRODUCT_BUNDLE_IDENTIFIER = com.mechanic_spareparts.ngbuka
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2023 com.example. All rights reserved.

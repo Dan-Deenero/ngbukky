@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "640626752640",
+    "firebase_url": "https://ngbuka-app-default-rtdb.firebaseio.com",
+    "project_id": "ngbuka-app",
+    "storage_bucket": "ngbuka-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:640626752640:android:1c6a55c6a7f247bec3fa65",
+        "android_client_info": {
+          "package_name": "com.mechanic_spareparts.ngbuka"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "640626752640-p57to4brd46td8r8nprt2n38jm2b7ksa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzhEx8NFVfNZNOSr3RVkgDamyudVQcXiY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "640626752640-p57to4brd46td8r8nprt2n38jm2b7ksa.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "640626752640-h45hdg9pdvsjtgql5tmk844bu717qj9a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.olotusq.ngbuka"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:640626752640:android:ea0e70f27b31d15ac3fa65",
+        "android_client_info": {
+          "package_name": "com.olotusq.ngbuka"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "640626752640-p57to4brd46td8r8nprt2n38jm2b7ksa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzhEx8NFVfNZNOSr3RVkgDamyudVQcXiY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "640626752640-p57to4brd46td8r8nprt2n38jm2b7ksa.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "640626752640-h45hdg9pdvsjtgql5tmk844bu717qj9a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.olotusq.ngbuka"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
