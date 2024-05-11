@@ -187,7 +187,7 @@ GoRouter router() => GoRouter(
         GoRoute(
           path: AppRoutes.bookings,
           name: AppRoutes.bookings,
-          builder: (_, state) => const Bookings(),
+          builder: (_, state) => Bookings(),
         ),
         GoRoute(
           path: AppRoutes.businessLocation,

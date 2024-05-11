@@ -387,7 +387,7 @@ class _QuoteRequestsState extends State<QuoteRequests> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             customText(
-                                text: quoteModel!.description!,
+                                text: "${quoteModel!.description}",
                                 fontSize: 13,
                                 textColor: AppColors.black,
                                 fontWeight: FontWeight.w600),

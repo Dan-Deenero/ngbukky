@@ -12,6 +12,7 @@ class Endpoints {
   static const String mechanicProfileImage = "mechanic/profile/image";
   static const String getProfileMechanic = 'mechanic/profile';
   static const String getMechanicServices = 'services'; 
+  static const String getState = 'location/states';
   static const String getLocation = 'location/sub-domains';
   static const String updateBusiness = 'mechanic/business-profile';
   static const String getStatisticsInfo = 'mechanic/summary';

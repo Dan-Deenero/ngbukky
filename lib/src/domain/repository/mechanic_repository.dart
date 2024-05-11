@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ngbuka/src/config/keys/app_keys.dart';
 import 'package:ngbuka/src/config/services/api/api_client.dart';
 import 'package:ngbuka/src/config/services/api/endpoints.dart';
@@ -113,7 +114,20 @@ class MechanicRepo {
     return QuotesModel();
   }
 
-  Future<CityLGA> getState(String state) async {
+  Future<List<States>> getState() async {
+    String endpoint = Endpoints.getState;
+    final response = await ApiClient.get(endpoint, useToken: true);
+    List<States> state = [];
+    if (response.status == 200) {
+      for(var stateModel in response.entity){
+        state.add(States.fromJson(stateModel));
+      }
+      return state;
+    }
+    return state;
+  }
+
+  Future<CityLGA> getSubdomain(String state) async {
     String endpoint = "${Endpoints.getLocation}?slug=$state";
     final response = await ApiClient.get(endpoint, useToken: true);
     if (response.status == 200) {
@@ -422,7 +436,10 @@ class MechanicRepo {
   }
 
   Future<bool> confirmPickup(Map<String, String> body, id) async {
-    final response = await ApiClient.patch('${Endpoints.dealerOrders}/$id/confirm-pickup', body: body, useToken: true);
+    final response = await ApiClient.patch(
+        '${Endpoints.dealerOrders}/$id/confirm-pickup',
+        body: body,
+        useToken: true);
     if (response.status == 200) {
       return true;
     }
@@ -604,3 +621,5 @@ class MechanicRepo {
     return markup;
   }
 }
+
+final allProvider = Provider<MechanicRepo>((ref) => MechanicRepo());

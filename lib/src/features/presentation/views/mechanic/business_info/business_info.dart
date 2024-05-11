@@ -18,6 +18,7 @@ import 'package:ngbuka/src/features/presentation/widgets/dropdown_search.dart';
 import 'package:ngbuka/src/features/providers/work_hours.dart';
 import 'package:ngbuka/src/utils/extensions/index_of_map.dart';
 import 'package:ngbuka/src/utils/helpers/validators.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../../../core/shared/colors.dart';
 
@@ -350,8 +351,13 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
         builder: (BuildContext context) {
           return StatefulBuilder(builder: (context, StateSetter setState) {
             return Consumer(builder: (context, ref, _) {
+              final stateState = ref.watch(states);
               final cityState = ref.watch(city);
-              final lgaState = ref.watch(lga);
+              final townState = ref.watch(town);
+              final statee = stateState.map((state) => state.name!).toList();
+              final cityy = cityState.map((city) => city.name!).toList();
+              final towns = townState.map((town) => town.name!).toList();
+              final loading2 = ref.watch(isLoading2);
 
               return Form(
                 key: formKey,
@@ -383,35 +389,69 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                             }
                             return null;
                           },
-                          dropdownList: state,
+                          dropdownList: statee,
                           label: "State",
                           onChange: (val) async {
+                            ref.read(isLoading2.notifier).state = true;
                             stateController.text = val.toString();
-                            CityLGA result = await mechanicRepo
-                                .getState(val.toString().toLowerCase().trim());
+                            final selectedState = stateState.firstWhere(
+                              (state) => state.name == val.toString(),
+                              orElse: () =>
+                                  States(), // Default value if state is not found
+                            );
+                            final selectedSlug = selectedState.slug;
+                            CityLGA result = await mechanicRepo.getSubdomain(
+                                selectedSlug.toString().toLowerCase().trim());
                             ref.read(city.notifier).state =
-                                ["Select"] + result.data!.cities!;
-                            ref.read(lga.notifier).state =
-                                ["Select"] + result.data!.lgas!;
-                            setState(() {});
+                                result.data!.cities!;
+                            ref.read(town.notifier).state = result.data!.towns!;
+                            ref.read(isLoading2.notifier).state = false;
                           },
                         ),
                         heightSpace(1),
-                        Column(
+                        loading2
+                            ? Shimmer.fromColors(
+                                baseColor:
+                                    const Color.fromRGBO(0, 68, 192, 0.10),
+                                highlightColor:
+                                    const Color.fromARGB(255, 171, 181, 197),
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 300,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        const Color.fromARGB(24, 165, 186, 226),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                              )
+                            :Column(
                           children: [
                             AppDropdown(
                                 isValue: false,
                                 value: cityController.text,
-                                dropdownList: cityState,
+                                dropdownList: cityy,
                                 label: "City",
+                                validator: (val) {
+                                  if (val == "Select") {
+                                    return "Select a city";
+                                  }
+                                  return null;
+                                },
                                 onChange: (val) =>
                                     cityController.text = val.toString()),
                             heightSpace(1),
                             AppDropdown(
                                 isValue: false,
                                 value: lgaController.text,
-                                dropdownList: lgaState,
-                                label: "LGA",
+                                dropdownList: towns,
+                                validator: (val) {
+                                  if (val == "Select") {
+                                    return "Select a city";
+                                  }
+                                  return null;
+                                },
+                                label: "Town",
                                 onChange: (val) =>
                                     lgaController.text = val.toString()),
                             heightSpace(1),
@@ -458,7 +498,6 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
     }
 
     onChanged(list) {
-
       setState(() {
         carsList = list;
       });
@@ -553,10 +592,12 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                                       shape: BoxShape.circle,
                                       color: AppColors.white),
                                   child: Center(
-                                      child: customText(
-                                          text: "2",
-                                          fontSize: 15,
-                                          textColor: AppColors.textGrey,),),
+                                    child: customText(
+                                      text: "2",
+                                      fontSize: 15,
+                                      textColor: AppColors.textGrey,
+                                    ),
+                                  ),
                                 ),
                               ],
                             )
@@ -612,29 +653,28 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                                 textColor: AppColors.black),
                             heightSpace(1),
                             AppDropdDownSearch(
-                              hintText: "Select cars",
-                              prefixIcon: Padding(
-                                padding: const EdgeInsets.all(13.0),
-                                child: SvgPicture.asset(
-                                  AppImages.mechanicIcon,
+                                hintText: "Select cars",
+                                prefixIcon: Padding(
+                                  padding: const EdgeInsets.all(13.0),
+                                  child: SvgPicture.asset(
+                                    AppImages.mechanicIcon,
+                                  ),
                                 ),
-                              ),
-                              selectedItems: const [
-                                'Toyota',
-                                'Honda',
-                                'Ford',
-                                'BMW',
-                                'Audi',
-                                'Lexus',
-                                'Nissan',
-                                'Mercedes-Benz',
-                                'Volkswagen',
-                                'Tesla',
-                                'Chevrolet',
-                                'Others',
-                              ],
-                              onChanged: onChanged
-                            ),
+                                selectedItems: const [
+                                  'Toyota',
+                                  'Honda',
+                                  'Ford',
+                                  'BMW',
+                                  'Audi',
+                                  'Lexus',
+                                  'Nissan',
+                                  'Mercedes-Benz',
+                                  'Volkswagen',
+                                  'Tesla',
+                                  'Chevrolet',
+                                  'Others',
+                                ],
+                                onChanged: onChanged),
                             heightSpace(2),
                             CustomTextFormField(
                                 textEditingController: carsFamiliar,
@@ -771,10 +811,17 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
     });
   }
 
+  getStateList() {
+    mechanicRepo.getState().then((value) {
+      ref.read(states.notifier).state = value;
+    });
+  }
+
   @override
   initState() {
     super.initState();
     getMechanicServices();
+    getStateList();
   }
 
   updateBusinessProfile() async {

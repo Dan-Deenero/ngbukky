@@ -50,7 +50,6 @@ class NewNotification extends HookWidget {
 
     useEffect(() {
       getAllNotification();
-
       return null;
     }, [notificationHistory.value.length]);
 

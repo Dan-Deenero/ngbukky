@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AppColors {
+class   AppColors {
   static const Color primary = Color(0xff0D0D3D);
   static const Color boardingBlue = Color(0xffE0E1FF);
   static const Color scaffoldColor = Color(0xffF8F8FF);
@@ -23,6 +23,8 @@ class AppColors {
   static const green = Color(0xff2BAF29);
   static const lightgreen = Color(0xffECFFF1);
   static const textGrey = Color(0xFF64748B);
+  static const bottomNav = Color(0xFF585865);
+
   static OutlineInputBorder errorBorder = const OutlineInputBorder(
       borderSide: BorderSide(
         color: Colors.red,

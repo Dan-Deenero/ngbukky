@@ -18,8 +18,8 @@ class BottomNavigationBarView extends HookWidget {
   static final List<Widget> _widgetOptions = <Widget>[
     HomeView(),
     Bookings(),
-    Wallet(),
-    ProfileSettings(),
+    const Wallet(),
+    const ProfileSettings(),
   ];
   const BottomNavigationBarView({super.key});
 
@@ -38,44 +38,70 @@ class BottomNavigationBarView extends HookWidget {
         selectedItemColor: AppColors.black,
         showUnselectedLabels: true,
         unselectedItemColor: AppColors.black,
-        unselectedFontSize: 14,
+        type: BottomNavigationBarType.fixed,
+        unselectedLabelStyle: const TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.w400,
+            color: AppColors.bottomNav),
+        selectedLabelStyle: const TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w600,
+        ),
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: selectedIndex.value == 0
                 ? SvgPicture.asset(
                     AppImages.home,
+                    width: 30,
                     color: AppColors.orange,
                   )
-                : SvgPicture.asset(AppImages.home, color: AppColors.black),
+                : SvgPicture.asset(
+                    AppImages.home,
+                    color: AppColors.black,
+                    width: 30,
+                  ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: selectedIndex.value == 1
-                ? SvgPicture.asset(AppImages.wallet, color: AppColors.orange)
+                ? SvgPicture.asset(
+                    AppImages.orders,
+                    color: AppColors.orange,
+                    width: 30,
+                  )
                 : SvgPicture.asset(
                     AppImages.orders,
+                    width: 30,
                   ),
             label: 'Booking',
           ),
           BottomNavigationBarItem(
-              icon: selectedIndex.value == 2
-                  ? SvgPicture.asset(
-                      AppImages.wallet,
-                      color: AppColors.orange,
-                    )
-                  : SvgPicture.asset(
-                      AppImages.wallet,
-                      color: AppColors.black,
-                    ),
-              label: "Wallet"),
+            icon: selectedIndex.value == 2
+                ? SvgPicture.asset(
+                    AppImages.wallet,
+                    color: AppColors.orange,
+                    width: 30,
+                  )
+                : SvgPicture.asset(
+                    AppImages.wallet,
+                    color: AppColors.black,
+                    width: 30,
+                  ),
+            label: "Wallet",
+          ),
           BottomNavigationBarItem(
-              icon: selectedIndex.value == 3
-                  ? SvgPicture.asset(
-                      AppImages.profile,
-                      color: AppColors.orange,
-                    )
-                  : SvgPicture.asset(AppImages.profile),
-              label: "Profile"),
+            icon: selectedIndex.value == 3
+                ? SvgPicture.asset(
+                    AppImages.profile,
+                    color: AppColors.orange,
+                    width: 30,
+                  )
+                : SvgPicture.asset(
+                    AppImages.profile,
+                    width: 30,
+                  ),
+            label: "Profile",
+          ),
         ],
         currentIndex: selectedIndex.value,
         onTap: _onItemTapped,

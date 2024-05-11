@@ -15,6 +15,7 @@ import 'package:ngbuka/src/features/presentation/widgets/app_textformfield.dart'
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 import 'package:ngbuka/src/features/providers/work_hours.dart';
 import 'package:ngbuka/src/utils/helpers/validators.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../../../core/shared/colors.dart';
 
@@ -36,15 +37,16 @@ class _SpareStoreInfoState extends ConsumerState<SpareStoreInfo> {
 
   static final MechanicRepo _mechanicRepo = MechanicRepo();
 
-  getDealerProfile(){
-      _mechanicRepo.getDealerProfile().then((value) {
+  getDealerProfile() {
+    _mechanicRepo.getDealerProfile().then(
+      (value) {
         String phoneStr = value.phoneNumber.toString();
         String updatedStr = phoneStr.substring(3);
         phone.text = updatedStr;
         email.text = value.email!;
-      },);
-    }
-
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,6 @@ class _SpareStoreInfoState extends ConsumerState<SpareStoreInfo> {
 
     // ref.read(isLoading.notifier).state = false;
     // double size = MediaQuery.of(context).size.width;
-
 
     showLocation() {
       saveData() {
@@ -67,8 +68,13 @@ class _SpareStoreInfoState extends ConsumerState<SpareStoreInfo> {
         builder: (BuildContext context) {
           return StatefulBuilder(builder: (context, StateSetter setState) {
             return Consumer(builder: (context, ref, _) {
+              final stateState = ref.watch(states);
               final cityState = ref.watch(city);
-              final lgaState = ref.watch(lga);
+              final townState = ref.watch(town);
+              final statee = stateState.map((state) => state.name!).toList();
+              final cityy = cityState.map((city) => city.name!).toList();
+              final towns = townState.map((town) => town.name!).toList();
+              final loading2 = ref.watch(isLoading2);
 
               return Form(
                 key: formKey,
@@ -100,81 +106,105 @@ class _SpareStoreInfoState extends ConsumerState<SpareStoreInfo> {
                             }
                             return null;
                           },
-                          dropdownList: state,
+                          dropdownList: statee,
                           label: "State",
                           onChange: (val) async {
+                            ref.read(isLoading2.notifier).state = true;
                             stateController.text = val.toString();
-                            CityLGA result = await mechanicRepo
-                                .getState(val.toString().toLowerCase().trim());
+                            final selectedState = stateState.firstWhere(
+                              (state) => state.name == val.toString(),
+                              orElse: () =>
+                                  States(), // Default value if state is not found
+                            );
+
+                            final selectedSlug = selectedState.slug;
+                            CityLGA result = await mechanicRepo.getSubdomain(
+                                selectedSlug.toString().toLowerCase().trim());
                             ref.read(city.notifier).state =
-                                ["Select"] + result.data!.cities!;
-                            ref.read(lga.notifier).state =
-                                ["Select"] + result.data!.lgas!;
-                            setState(() {});
+                                result.data!.cities!;
+                            ref.read(town.notifier).state = result.data!.towns!;
+                            ref.read(isLoading2.notifier).state = false;
                           },
                         ),
                         heightSpace(1),
-                        Column(
-                          children: [
-                            AppDropdown(
-                                isValue: false,
-                                value: cityController.text,
-                                validator: (val) {
-                                  if (val == "select") {
-                                    return "Select a city";
-                                  }
-                                  return null;
-                                },
-                                dropdownList: cityState,
-                                label: "City",
-                                onChange: (val) =>
-                                    cityController.text = val.toString()),
-                            heightSpace(1),
-                            AppDropdown(
-                                isValue: false,
-                                value: lgaController.text,
-                                validator: (val) {
-                                  if (val == "select") {
-                                    return "Select a lga";
-                                  }
-                                  return null;
-                                },
-                                dropdownList: lgaState,
-                                label: "LGA",
-                                onChange: (val) =>
-                                    lgaController.text = val.toString()),
-                            heightSpace(1),
-                            SizedBox(
-                              height: 400,
-                              child: ListView(
-                                keyboardDismissBehavior:
-                                    ScrollViewKeyboardDismissBehavior.onDrag,
-                                children: [
-                                  CustomTextFormField(
-                                    validator: stringValidation,
-                                    textEditingController: address,
-                                    label: "Street",
-                                    prefixIcon: Padding(
-                                      padding: const EdgeInsets.all(13.0),
-                                      child: SvgPicture.asset(
-                                        AppImages.locationIcon,
-                                      ),
-                                    ),
-                                    hintText:
-                                        "Type in your business street address",
+                        loading2
+                            ? Shimmer.fromColors(
+                                baseColor:
+                                    const Color.fromRGBO(0, 68, 192, 0.10),
+                                highlightColor:
+                                    const Color.fromARGB(255, 171, 181, 197),
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 300,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        const Color.fromARGB(24, 165, 186, 226),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                  heightSpace(2),
-                                  AppButton(
-                                      // isActive: isActive.value,
-                                      buttonText: "Save",
-                                      isOrange: true,
-                                      onTap: saveData),
-                                  heightSpace(2),
+                                ),
+                              )
+                            : Column(
+                                children: [
+                                  AppDropdown(
+                                      isValue: false,
+                                      value: cityController.text,
+                                      validator: (val) {
+                                        if (val == "Select") {
+                                          return "Select a city";
+                                        }
+                                        return null;
+                                      },
+                                      dropdownList: cityy,
+                                      label: "City",
+                                      onChange: (val) =>
+                                          cityController.text = val.toString()),
+                                  heightSpace(1),
+                                  AppDropdown(
+                                      isValue: false,
+                                      value: lgaController.text,
+                                      validator: (val) {
+                                        if (val == "Select") {
+                                          return "Select a lga";
+                                        }
+                                        return null;
+                                      },
+                                      dropdownList: towns,
+                                      label: "Town",
+                                      onChange: (val) =>
+                                          lgaController.text = val.toString()),
+                                  heightSpace(1),
+                                  SizedBox(
+                                    height: 400,
+                                    child: ListView(
+                                      keyboardDismissBehavior:
+                                          ScrollViewKeyboardDismissBehavior
+                                              .onDrag,
+                                      children: [
+                                        CustomTextFormField(
+                                          validator: stringValidation,
+                                          textEditingController: address,
+                                          label: "Street",
+                                          prefixIcon: Padding(
+                                            padding: const EdgeInsets.all(13.0),
+                                            child: SvgPicture.asset(
+                                              AppImages.locationIcon,
+                                            ),
+                                          ),
+                                          hintText:
+                                              "Type in your business street address",
+                                        ),
+                                        heightSpace(2),
+                                        AppButton(
+                                            // isActive: isActive.value,
+                                            buttonText: "Save",
+                                            isOrange: true,
+                                            onTap: saveData),
+                                        heightSpace(2),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                   ),
@@ -441,14 +471,20 @@ class _SpareStoreInfoState extends ConsumerState<SpareStoreInfo> {
     );
   }
 
+  getStateList() {
+    mechanicRepo.getState().then((value) {
+      ref.read(states.notifier).state = value;
+    });
+  }
+
   @override
   initState() {
     super.initState();
     getDealerProfile();
+    getStateList();
   }
 
   updateDealerProfile() async {
-
     var data = {
       "businessName": storeName.text,
       "state": stateController.text,
@@ -458,13 +494,10 @@ class _SpareStoreInfoState extends ConsumerState<SpareStoreInfo> {
     };
 
     bool result = await _mechanicRepo.updateDealerProfile(data, 1);
-    if(result){
+    if (result) {
       if (context.mounted) {
         context.push(AppRoutes.spareBusinessInfo);
       }
     }
-
   }
-
-  
 }

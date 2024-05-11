@@ -67,7 +67,7 @@ class Wallet extends HookWidget {
   Widget build(BuildContext context) {
     final wallet = useState<WalletModel?>(null);
 
-    Future<dynamic> getWallet() async{
+    Future<dynamic> getWallet() async {
       await mechanicRepo.getWallet().then(
         (value) {
           wallet.value = value;
@@ -169,7 +169,7 @@ class Wallet extends HookWidget {
 
     final transactionHistory = useState<List<TransactionModel>>([]);
     final isLoading = useState<bool>(true);
-    Future<dynamic> getTransaction() async{
+    Future<dynamic> getTransaction() async {
       await mechanicRepo.getAllTransaction('all').then(
         (value) {
           transactionHistory.value = value;
@@ -190,41 +190,41 @@ class Wallet extends HookWidget {
     }, [isLoading]);
 
     final tabIndex = useState<int>(0);
-    return isLoading.value
-        ? const Center(
-            child: CircularProgressIndicator(),
-          )
-        : DefaultTabController(
-            length: 2,
-            child: Scaffold(
-              backgroundColor: AppColors.backgroundGrey,
-              appBar: AppBar(
-                toolbarHeight: 120,
-                backgroundColor: AppColors.backgroundGrey,
-                elevation: 0,
-                automaticallyImplyLeading: false,
-                title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    customText(
-                        text: "Wallet",
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        textColor: AppColors.black),
-                    // heightSpace(1),
-                    bodyText("View analytics and withdraw from your wallet")
-                  ],
-                ),
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 10.0),
-                    child: InkWell(
-                        onTap: () => context.push(AppRoutes.notification),
-                        child: SvgPicture.asset(AppImages.notification)),
-                  )
-                ],
-              ),
-              body: Column(
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundGrey,
+        appBar: AppBar(
+          toolbarHeight: 120,
+          backgroundColor: AppColors.backgroundGrey,
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              customText(
+                  text: "Wallet",
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  textColor: AppColors.black),
+              // heightSpace(1),
+              bodyText("View analytics and withdraw from your wallet")
+            ],
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: InkWell(
+                  onTap: () => context.push(AppRoutes.notification),
+                  child: SvgPicture.asset(AppImages.notification)),
+            )
+          ],
+        ),
+        body: isLoading.value
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
@@ -275,19 +275,22 @@ class Wallet extends HookWidget {
                               transactionBox(
                                 "Total Earnings",
                                 "This year",
-                                Helpers.formatBalance(wallet.value!.analytics!.totalEarnedForTheYear!),
+                                Helpers.formatBalance(wallet
+                                    .value!.analytics!.totalEarnedForTheYear!),
                               ),
                               verticalDivide(),
                               transactionBox(
                                 "Earned",
                                 "This month",
-                                Helpers.formatBalance(wallet.value!.analytics!.totalEarnedForTheMonth!),
+                                Helpers.formatBalance(wallet
+                                    .value!.analytics!.totalEarnedForTheMonth!),
                               ),
                               verticalDivide(),
                               transactionBox(
                                 "Withdrawn",
                                 "This month",
-                                Helpers.formatBalance(wallet.value!.analytics!.totalWithdrawnThisMonth!),
+                                Helpers.formatBalance(wallet.value!.analytics!
+                                    .totalWithdrawnThisMonth!),
                               )
                             ],
                           ),
@@ -393,8 +396,8 @@ class Wallet extends HookWidget {
                   ),
                 ],
               ),
-            ),
-          );
+      ),
+    );
   }
 
   Padding verticalDivide() {

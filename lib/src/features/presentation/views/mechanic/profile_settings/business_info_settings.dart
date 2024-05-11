@@ -19,6 +19,7 @@ import 'package:ngbuka/src/features/presentation/widgets/dropdown_search.dart';
 import 'package:ngbuka/src/features/providers/work_hours.dart';
 import 'package:ngbuka/src/utils/extensions/index_of_map.dart';
 import 'package:ngbuka/src/utils/helpers/validators.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../../../core/shared/colors.dart';
 
@@ -79,7 +80,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
       cac.text = value.cacNumber!;
       address.text = value.address!;
       cityController.text = value.city!;
-      lgaController.text = value.lga!;
+      lgaController.text = value.town!;
       stateController.text = value.state!;
       carsList = value.cars!;
       log(carsList.toString());
@@ -441,8 +442,13 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
         builder: (BuildContext context) {
           return StatefulBuilder(builder: (context, StateSetter setState) {
             return Consumer(builder: (context, ref, _) {
+              final stateState = ref.watch(states);
               final cityState = ref.watch(city);
-              final lgaState = ref.watch(lga);
+              final townState = ref.watch(town);
+              final statee = stateState.map((state) => state.name!).toList();
+              final cityy = cityState.map((city) => city.name!).toList();
+              final towns = townState.map((town) => town.name!).toList();
+              final loading2 = ref.watch(isLoading2);
 
               return Form(
                 key: formKey,
@@ -474,32 +480,54 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                             }
                             return null;
                           },
-                          dropdownList: state,
+                          dropdownList: statee,
                           label: "State",
                           onChange: (val) async {
+                            ref.read(isLoading2.notifier).state = true;
                             stateController.text = val.toString();
-                            CityLGA result = await mechanicRepo
-                                .getState(val.toString().toLowerCase().trim());
+                            final selectedState = stateState.firstWhere(
+                              (state) => state.name == val.toString(),
+                              orElse: () =>
+                                  States(), // Default value if state is not found
+                            );
+                            final selectedSlug = selectedState.slug;
+                            CityLGA result = await mechanicRepo.getSubdomain(
+                                selectedSlug.toString().toLowerCase().trim());
                             ref.read(city.notifier).state =
-                                ["Select"] + result.data!.cities!;
-                            ref.read(lga.notifier).state =
-                                ["Select"] + result.data!.lgas!;
-                            setState(() {});
+                                result.data!.cities!;
+                            ref.read(town.notifier).state = result.data!.towns!;
+                            ref.read(isLoading2.notifier).state = false;
                           },
                         ),
                         heightSpace(1),
-                        Column(
+                        loading2
+                            ? Shimmer.fromColors(
+                                baseColor:
+                                    const Color.fromRGBO(0, 68, 192, 0.10),
+                                highlightColor:
+                                    const Color.fromARGB(255, 171, 181, 197),
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 300,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        const Color.fromARGB(24, 165, 186, 226),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                              )
+                            :Column(
                           children: [
                             AppDropdown(
                                 isValue: false,
                                 value: cityController.text,
                                 validator: (val) {
-                                  if (val == "select") {
+                                  if (val == "Select") {
                                     return "Select a city";
                                   }
                                   return null;
                                 },
-                                dropdownList: cityState,
+                                dropdownList: cityy,
                                 label: "City",
                                 onChange: (val) =>
                                     cityController.text = val.toString()),
@@ -508,13 +536,13 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                 isValue: false,
                                 value: lgaController.text,
                                 validator: (val) {
-                                  if (val == "select") {
+                                  if (val == "Select") {
                                     return "Select a lga";
                                   }
                                   return null;
                                 },
-                                dropdownList: lgaState,
-                                label: "LGA",
+                                dropdownList: towns,
+                                label: "Town",
                                 onChange: (val) =>
                                     lgaController.text = val.toString()),
                             heightSpace(1),
@@ -832,11 +860,18 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
     });
   }
 
+  getStateList() {
+    mechanicRepo.getState().then((value) {
+      ref.read(states.notifier).state = value;
+    });
+  }
+
   @override
   initState() {
     super.initState();
     getMechanicServices();
     getBusinessProfile();
+    getStateList();
   }
 
   updateBusinessProfile() async {

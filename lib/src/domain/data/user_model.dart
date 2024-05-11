@@ -15,7 +15,7 @@ class UserModel {
   String? businessName;
   String? cacNumber;
   String? address;
-  String? lga;
+  String? town;
   String? city;
   String? state;
   String? longitude;
@@ -47,7 +47,7 @@ class UserModel {
       this.businessName,
       this.cacNumber,
       this.address,
-      this.lga,
+      this.town,
       this.city,
       this.state,
       this.longitude,
@@ -79,7 +79,7 @@ class UserModel {
     businessName = json['businessName'];
     cacNumber = json['cacNumber'];
     address = json['address'];
-    lga = json['lga'];
+    town = json['town'];
     city = json['city'];
     state = json['state'];
     longitude = json['longitude'];
@@ -124,7 +124,7 @@ class UserModel {
     data['businessName'] = businessName;
     data['cacNumber'] = cacNumber;
     data['address'] = address;
-    data['lga'] = lga;
+    data['town'] = town;
     data['cars'] = cars;
     data['city'] = city;
     data['state'] = state;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ngbuka/src/domain/data/city_lga.dart';
 import 'package:ngbuka/src/domain/data/services_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 
@@ -9,11 +10,13 @@ final businessName = TextEditingController();
 final businessPhone = TextEditingController();
 final cac = TextEditingController();
 final carsFamiliar = TextEditingController();
-final city = StateProvider<List<String>>((ref) => ["Select"]);
+final city = StateProvider<List<Cities>>((ref) => []);
+final town = StateProvider<List<Towns>>((ref) => []);
+final states = StateProvider<List<States>>((ref) => []);
 final cityController = TextEditingController();
 final endTime = StateProvider<TimeOfDay>((ref) => TimeOfDay.now());
 final isLoading = StateProvider<bool>((ref) => true);
-final lga = StateProvider<List<String>>((ref) => ["Select"]);
+final isLoading2 = StateProvider<bool>((ref) => true);
 final lgaController = TextEditingController();
 final listofServices = TextEditingController();
 final locationofBusiness = TextEditingController();

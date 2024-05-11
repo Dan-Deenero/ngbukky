@@ -1,20 +1,14 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ngbuka/src/config/keys/app_keys.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
-import 'package:ngbuka/src/config/locator/app_locator.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
-
-import '../../../../../config/services/storage_service.dart';
 
 Widget card(String title, String subtitle, String number, String color) => Card(
       color: Colors.white,
@@ -85,11 +79,10 @@ Widget card(String title, String subtitle, String number, String color) => Card(
       ),
     );
 
-
 class Bookings extends HookWidget {
   static final MechanicRepo _mechanicRepo = MechanicRepo();
 
-  const Bookings({super.key});
+    Bookings({Key? key}) : super(key: key ?? UniqueKey());
 
   @override
   Widget build(BuildContext context) {
@@ -112,9 +105,10 @@ class Bookings extends HookWidget {
     final approved2 = useState<int?>(0);
     final disapproved2 = useState<int?>(0);
     final awaitingPayment2 = useState<int?>(0);
+    final isLoading = useState<bool>(true);
 
-    getQuoteStatisticsInfo() {
-      _mechanicRepo.getQuoteStatisticsInfo().then((value) {
+    Future<dynamic> getStatisticsInfo() async {
+      await _mechanicRepo.getQuoteStatisticsInfo().then((value) {
         pending2.value = value.pENDING;
         declined2.value = value.dECLINED;
         completed2.value = value.cOMPLETED;
@@ -125,11 +119,8 @@ class Bookings extends HookWidget {
         disapproved2.value = value.dISAPPROVED;
         awaitingPayment2.value = value.aWAITINGPAYMENT;
       });
-      log(locator<LocalStorageService>().getDataFromDisk(AppKeys.userType));
-    }
 
-    getBookingStatisticsInfo() {
-      _mechanicRepo.getBookingStatisticsInfo().then((value) {
+      await _mechanicRepo.getBookingStatisticsInfo().then((value) {
         pending.value = value.pENDING;
         declined.value = value.dECLINED;
         completed.value = value.cOMPLETED;
@@ -145,12 +136,16 @@ class Bookings extends HookWidget {
 
     final tabIndex = useState<int>(0);
     useEffect(() {
-      getQuoteStatisticsInfo();
-      getBookingStatisticsInfo();
+      // Function to fetch both quote and booking statistics
+      void refresh() async {
+        isLoading.value = true;
+        await getStatisticsInfo();
+        isLoading.value = false;
+      }
+
+      refresh();
       return null;
-    }, [
-      pending.value,
-    ]);
+    }, [isLoading]);
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -170,113 +165,131 @@ class Bookings extends HookWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       customText(
-                          text: "Bookings",
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          textColor: AppColors.black),
-                      bodyText("View your bookings and Quotes "),
+                        text: "Bookings",
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        textColor: AppColors.black,
+                      ),
+                      bodyText(
+                        "View your bookings and Quotes",
+                      ),
                     ],
                   ),
                   GestureDetector(
                     onTap: () => context.push(AppRoutes.notification),
                     child: SvgPicture.asset(AppImages.notification),
-                  )
+                  ),
                 ],
               ),
             ]),
           ),
         ),
-        body: Column(
-          children: [
-            heightSpace(1),
-            Container(
-              height: 2.h,
-              decoration: const BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: AppColors.borderGrey),
+        body: RefreshIndicator(
+          onRefresh: () async {
+            isLoading.value = true;
+            await getStatisticsInfo();
+            isLoading.value = false;
+          },
+          child: isLoading.value
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Column(
+                  children: [
+                    heightSpace(1),
+                    Container(
+                      height: 2.h,
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          top: BorderSide(color: AppColors.borderGrey),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      height: 40,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: AppColors.borderGrey,
+                          borderRadius: BorderRadius.circular(5)),
+                      child: TabBar(
+                        labelPadding: EdgeInsets.zero,
+                        unselectedLabelColor: AppColors.primary,
+                        labelColor: AppColors.primary,
+                        indicator: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        onTap: (value) {
+                          tabIndex.value = value;
+                        },
+                        tabs: [
+                          Container(
+                            width: 400,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: tabIndex.value == 0
+                                  ? AppColors.white
+                                  : AppColors.borderGrey,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: const Tab(
+                              text: "Inspection booking",
+                            ),
+                          ),
+                          Container(
+                            width: 400,
+                            height: 40,
+                            decoration: BoxDecoration(
+                                color: tabIndex.value == 1
+                                    ? AppColors.white
+                                    : AppColors.borderGrey,
+                                borderRadius: BorderRadius.circular(5)),
+                            child: const Tab(
+                              text: "Quotes",
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: TabBarView(
+                        children: [
+                          InspectionBookings(
+                            canceled: canceled.value,
+                            pending: pending.value,
+                            declined: declined.value,
+                            completed: completed.value,
+                            accepted: accepted.value,
+                            rejected: rejected.value,
+                            bargaining: bargaining.value,
+                            approved: approved.value,
+                            disapproved: disapproved.value,
+                            awaitingPayment: awaitingPayment.value,
+                          ),
+                          Quotes(
+                            pending: pending2.value,
+                            declined: declined2.value,
+                            completed: completed2.value,
+                            accepted: accepted2.value,
+                            rejected: rejected2.value,
+                            bargaining: bargaining2.value,
+                            approved: approved2.value,
+                            disapproved: disapproved2.value,
+                            awaitingPayment: awaitingPayment2.value,
+                          )
+                        ],
+                      ),
+                    )
+                  ],
                 ),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              height: 40,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: AppColors.borderGrey,
-                  borderRadius: BorderRadius.circular(5)),
-              child: TabBar(
-                labelPadding: EdgeInsets.zero,
-                unselectedLabelColor: AppColors.primary,
-                labelColor: AppColors.primary,
-                indicator: const BoxDecoration(),
-                onTap: (value) {
-                  tabIndex.value = value;
-                },
-                tabs: [
-                  Container(
-                    width: 400,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        color: tabIndex.value == 0
-                            ? AppColors.white
-                            : AppColors.borderGrey,
-                        borderRadius: BorderRadius.circular(5)),
-                    child: const Tab(
-                      text: "Inspection booking",
-                    ),
-                  ),
-                  Container(
-                    width: 400,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        color: tabIndex.value == 1
-                            ? AppColors.white
-                            : AppColors.borderGrey,
-                        borderRadius: BorderRadius.circular(5)),
-                    child: const Tab(
-                      text: "Quotes",
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  InspectionBookings(
-                    canceled: canceled.value,
-                    pending: pending.value,
-                    declined: declined.value,
-                    completed: completed.value,
-                    accepted: accepted.value,
-                    rejected: rejected.value,
-                    bargaining: bargaining.value,
-                    approved: approved.value,
-                    disapproved: disapproved.value,
-                    awaitingPayment: awaitingPayment.value,
-                  ),
-                  Quotes(
-                    pending: pending2.value,
-                    declined: declined2.value,
-                    completed: completed2.value,
-                    accepted: accepted2.value,
-                    rejected: rejected2.value,
-                    bargaining: bargaining2.value,
-                    approved: approved2.value,
-                    disapproved: disapproved2.value,
-                    awaitingPayment: awaitingPayment2.value,
-                  )
-                ],
-              ),
-            )
-          ],
         ),
       ),
     );
   }
 }
 
-class InspectionBookings extends StatelessWidget {
+class InspectionBookings extends HookWidget {
   final int? canceled;
   final int? pending;
   final int? declined;
@@ -303,7 +316,6 @@ class InspectionBookings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     num total = (awaitingPayment ?? 0) + (approved ?? 0);
-
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),

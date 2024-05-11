@@ -11,16 +11,16 @@ class AppDropdown extends StatefulWidget {
   final Widget? prefixIcon;
   final String? value;
   final bool isValue;
-  const AppDropdown(
-      {super.key,
-      this.validator,
-      this.prefixIcon,
-      required this.dropdownList,
-      required this.label,
-      this.value,
-      this.onChange,
-      required this.isValue,}
-  );
+  const AppDropdown({
+    super.key,
+    this.validator,
+    this.prefixIcon,
+    required this.dropdownList,
+    required this.label,
+    this.value,
+    this.onChange,
+    required this.isValue,
+  });
 
   @override
   State<AppDropdown> createState() => _AppDropdownState();
@@ -52,13 +52,18 @@ class _AppDropdownState extends State<AppDropdown> {
                   focusedBorder: AppColors.normalBorder,
                   focusedErrorBorder: AppColors.normalBorder),
               items: widget.dropdownList!
-                  .map((text) => DropdownMenuItem(
+                  .map(
+                    (text) => DropdownMenuItem(
                       value: text,
                       child: Text(
                         text.toString(),
                         style: const TextStyle(
-                            color: AppColors.textColor, fontSize: 14),
-                      )))
+                          color: AppColors.textColor,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  )
                   .toList(),
               onChanged: widget.onChange),
         ),

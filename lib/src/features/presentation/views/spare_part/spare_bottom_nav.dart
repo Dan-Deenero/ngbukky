@@ -70,6 +70,15 @@ class BottomNavBarView extends HookWidget {
               unselectedItemColor: AppColors.black,
               unselectedFontSize: 14,
               selectedFontSize: 14,
+              type: BottomNavigationBarType.fixed,
+              unselectedLabelStyle: const TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.bottomNav),
+              selectedLabelStyle: const TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+              ),
               items: <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
                   icon: selectedIndex.value == 0
@@ -90,12 +99,12 @@ class BottomNavBarView extends HookWidget {
                       ? SvgPicture.asset(
                           AppImages.packageR,
                           color: AppColors.orange,
-                          width: 25,
+                          width: 30,
                         )
                       : SvgPicture.asset(
                           AppImages.packageR,
                           color: AppColors.black,
-                          width: 25,
+                          width: 30,
                         ),
                   label: 'Orders',
                 ),
@@ -115,7 +124,7 @@ class BottomNavBarView extends HookWidget {
                 BottomNavigationBarItem(
                     icon: selectedIndex.value == 3
                         ? SvgPicture.asset(
-                            AppImages.profile,
+                            AppImages.wallet,
                             color: AppColors.orange,
                             width: 30,
                           )

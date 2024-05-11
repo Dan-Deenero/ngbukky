@@ -114,11 +114,7 @@ class HomeView extends HookWidget {
       refresh();
       return null;
     }, [isLoading]);
-    return isLoading.value
-        ? const Center(
-            child: CircularProgressIndicator(),
-          )
-        : DefaultTabController(
+    return  DefaultTabController(
             length: 2,
             child: Scaffold(
               appBar: PreferredSize(
