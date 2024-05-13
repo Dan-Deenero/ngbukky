@@ -77,11 +77,11 @@ class _SparePersonalInfoState extends ConsumerState<SparePersonalInfo> {
               final cityState = ref.watch(city);  
               final townState = ref.watch(town);
               final statee =
-                  ["Select"] + stateState.map((state) => state.name!).toList();
+                  [stateController.text.isEmpty ? "Select" : stateController.text.toLowerCase()] + stateState.map((state) => state.name!).toList();
               final cityy =
-                  ["Select"] + cityState.map((city) => city.name!).toList();
+                  [cityController.text.isEmpty ? "Select" : cityController.text.toLowerCase()] + cityState.map((city) => city.name!).toList();
               final towns =
-                  ["Select"] + townState.map((town) => town.name!).toList();
+                  [lgaController.text.isEmpty ? "Select" : lgaController.text.toLowerCase()] + townState.map((town) => town.name!).toList();
 
               final loading2 = ref.watch(isLoading2);
 

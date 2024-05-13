@@ -142,7 +142,6 @@ class Bookings extends HookWidget {
         await getStatisticsInfo();
         isLoading.value = false;
       }
-
       refresh();
       return null;
     }, [isLoading]);

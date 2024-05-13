@@ -113,7 +113,7 @@ class HomeView extends HookWidget {
 
       refresh();
       return null;
-    }, [isLoading]);
+    }, [isLoading, quoteHistory.value.length, bookingHistory.value.length]);
     return  DefaultTabController(
             length: 2,
             child: Scaffold(

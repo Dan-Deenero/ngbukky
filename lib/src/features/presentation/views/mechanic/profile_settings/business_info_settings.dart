@@ -102,7 +102,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
         for (var item in workingHour) {
           if (item["isChecked"]) {
             var itemString =
-                "day: ${item["day"]}, from: ${item["from"]}AM, to: ${item["to"]}PM";
+                "day: ${item["day"]}, from: ${item["from"]}, to: ${item["to"]}";
             trueItemsString.add(itemString);
           }
         }
@@ -445,9 +445,12 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
               final stateState = ref.watch(states);
               final cityState = ref.watch(city);
               final townState = ref.watch(town);
-              final statee = stateState.map((state) => state.name!).toList();
-              final cityy = cityState.map((city) => city.name!).toList();
-              final towns = townState.map((town) => town.name!).toList();
+              final statee =
+                  [stateController.text.isEmpty ? "Select" : stateController.text.toLowerCase()] + stateState.map((state) => state.name!).toList();
+              final cityy =
+                  [cityController.text.isEmpty ? "Select" : cityController.text.toLowerCase()] + cityState.map((city) => city.name!).toList();
+              final towns =
+                  [lgaController.text.isEmpty ? "Select" : lgaController.text.toLowerCase()] + townState.map((town) => town.name!).toList();
               final loading2 = ref.watch(isLoading2);
 
               return Form(
@@ -872,6 +875,9 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
     getMechanicServices();
     getBusinessProfile();
     getStateList();
+    log(stateController.text);
+    log(cityController.text);
+    log(lgaController.text);
   }
 
   updateBusinessProfile() async {
@@ -920,7 +926,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
       "businessName": businessName.text,
       "cacNumber": cac.text,
       "state": stateController.text,
-      "lga": lgaController.text,
+      "town": lgaController.text,
       "city": cityController.text,
       "address": address.text,
       "longitude": "-122.33221",

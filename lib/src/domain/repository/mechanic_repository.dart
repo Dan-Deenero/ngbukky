@@ -119,7 +119,7 @@ class MechanicRepo {
     final response = await ApiClient.get(endpoint, useToken: true);
     List<States> state = [];
     if (response.status == 200) {
-      for(var stateModel in response.entity){
+      for(var stateModel in response.entity['data']){
         state.add(States.fromJson(stateModel));
       }
       return state;
@@ -473,6 +473,7 @@ class MechanicRepo {
   Future<DashboardModel> getDealerDahsboardInfo() async {
     final response =
         await ApiClient.get(Endpoints.dealerDashboard, useToken: true);
+        log(Endpoints.dealerDashboard);
     if (response.status == 200) {
       return DashboardModel.fromJson(response.entity);
     }

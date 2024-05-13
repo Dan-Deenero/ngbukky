@@ -31,7 +31,7 @@ class NotificationsManager {
   static AndroidInitializationSettings initializationSettingsAndroid =
       const AndroidInitializationSettings('ngbuka_logo');
 
-  static  DarwinInitializationSettings initializationSettingsIOS =
+  static DarwinInitializationSettings initializationSettingsIOS =
       const DarwinInitializationSettings(
     requestAlertPermission: true,
     requestBadgePermission: true,

@@ -58,11 +58,13 @@ class BottomNavBarView extends HookWidget {
       getInventory();
       return null;
     }, []);
-    return isLoading.value
+    return 
+    isLoading.value
         ? const Center(
             child: CircularProgressIndicator(),
           )
-        : Scaffold(
+        : 
+        Scaffold(
             body: _widgetOptions.elementAt(selectedIndex.value),
             bottomNavigationBar: BottomNavigationBar(
               selectedItemColor: AppColors.black,

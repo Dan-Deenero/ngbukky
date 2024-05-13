@@ -354,9 +354,9 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
               final stateState = ref.watch(states);
               final cityState = ref.watch(city);
               final townState = ref.watch(town);
-              final statee = stateState.map((state) => state.name!).toList();
-              final cityy = cityState.map((city) => city.name!).toList();
-              final towns = townState.map((town) => town.name!).toList();
+              final statee = ["Select"] + stateState.map((state) => state.name!).toList();
+              final cityy = ["Select"] + cityState.map((city) => city.name!).toList();
+              final towns = ["Select"] + townState.map((town) => town.name!).toList();
               final loading2 = ref.watch(isLoading2);
 
               return Form(
@@ -857,7 +857,7 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
       "businessName": businessName.text,
       "cacNumber": cac.text,
       "state": stateController.text,
-      "lga": lgaController.text,
+      "town": lgaController.text,
       "city": cityController.text,
       "address": address.text,
       "longitude": "-122.33221",

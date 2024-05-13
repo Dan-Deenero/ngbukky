@@ -31,7 +31,6 @@ class _SpareStoreInfoState extends ConsumerState<SpareStoreInfo> {
   static final email = TextEditingController();
 
   // static final AuthRepo _authRepo = AuthRepo();
-  final storeName = TextEditingController();
   final address = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
@@ -71,9 +70,9 @@ class _SpareStoreInfoState extends ConsumerState<SpareStoreInfo> {
               final stateState = ref.watch(states);
               final cityState = ref.watch(city);
               final townState = ref.watch(town);
-              final statee = stateState.map((state) => state.name!).toList();
-              final cityy = cityState.map((city) => city.name!).toList();
-              final towns = townState.map((town) => town.name!).toList();
+              final statee = ["Select"] + stateState.map((state) => state.name!).toList();
+              final cityy = ["Select"] + cityState.map((city) => city.name!).toList();
+              final towns = ["Select"] + townState.map((town) => town.name!).toList();
               final loading2 = ref.watch(isLoading2);
 
               return Form(
@@ -418,7 +417,7 @@ class _SpareStoreInfoState extends ConsumerState<SpareStoreInfo> {
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.6,
                             child: AppButton(
-                              onTap: updateDealerProfile,
+                              onTap: () => context.push(AppRoutes.spareBusinessInfo),
                               buttonText: "Save",
                               isOrange: true,
                               isSmall: true,
@@ -488,7 +487,7 @@ class _SpareStoreInfoState extends ConsumerState<SpareStoreInfo> {
     var data = {
       "businessName": storeName.text,
       "state": stateController.text,
-      "lga": lgaController.text,
+      "town": lgaController.text,
       "city": cityController.text,
       "address": address.text,
     };

@@ -13,6 +13,7 @@ final carsFamiliar = TextEditingController();
 final city = StateProvider<List<Cities>>((ref) => []);
 final town = StateProvider<List<Towns>>((ref) => []);
 final states = StateProvider<List<States>>((ref) => []);
+final storeName = TextEditingController();
 final cityController = TextEditingController();
 final endTime = StateProvider<TimeOfDay>((ref) => TimeOfDay.now());
 final isLoading = StateProvider<bool>((ref) => true);
@@ -66,13 +67,48 @@ List<String> state = [
 final stateController = TextEditingController();
 final stateWorkingHours = StateProvider<List<Map<String, dynamic>>>((ref) {
   return [
-    {"isChecked": false, "day": "Monday", "from": "9AM", "to": "9PM", },
-    {"isChecked": false,  "day": "Tuesday", "from": "9AM", "to": "9PM", },
-    {"isChecked": false, "day": "Wednesday", "from": "9AM", "to": "9PM",},
-    {"isChecked": false, "day": "Thursday", "from": "9AM", "to": "9PM",},
-    {"isChecked": false, "day": "Friday", "from": "9AM", "to": "9PM",},
-    {"isChecked": false, "day": "Saturday", "from": "9AM", "to": "9PM", },
-    {"isChecked": false, "day": "Sunday", "from": "9AM", "to": "9PM", }
+    {
+      "isChecked": false,
+      "day": "Monday",
+      "from": "9AM",
+      "to": "9PM",
+    },
+    {
+      "isChecked": false,
+      "day": "Tuesday",
+      "from": "9AM",
+      "to": "9PM",
+    },
+    {
+      "isChecked": false,
+      "day": "Wednesday",
+      "from": "9AM",
+      "to": "9PM",
+    },
+    {
+      "isChecked": false,
+      "day": "Thursday",
+      "from": "9AM",
+      "to": "9PM",
+    },
+    {
+      "isChecked": false,
+      "day": "Friday",
+      "from": "9AM",
+      "to": "9PM",
+    },
+    {
+      "isChecked": false,
+      "day": "Saturday",
+      "from": "9AM",
+      "to": "9PM",
+    },
+    {
+      "isChecked": false,
+      "day": "Sunday",
+      "from": "9AM",
+      "to": "9PM",
+    }
   ];
 });
 final workingHourController = TextEditingController();
