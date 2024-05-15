@@ -145,7 +145,7 @@ class LoginView extends HookWidget {
               heightSpace(4),
               const Expanded(
                 child: TabBarView(
-                  children: [SpareEmailLogin(), SparePhoneNumberLogin()],
+                  children: [EmailLogin(), PhoneNumberLogin()],
                 ),
               ),
             ],
@@ -156,13 +156,13 @@ class LoginView extends HookWidget {
   }
 }
 
-class SpareEmailLogin extends HookWidget {
+class EmailLogin extends HookWidget {
   static final email = TextEditingController();
   static final password = TextEditingController();
   static final AuthRepo _authRepo = AuthRepo();
-  static final formKey = GlobalKey<FormState>();
+  static final emailFormKey = GlobalKey<FormState>();
 
-  const SpareEmailLogin({
+  const EmailLogin({
     super.key,
   });
 
@@ -228,10 +228,10 @@ class SpareEmailLogin extends HookWidget {
     }
 
     return Form(
-      key: formKey,
+      key: emailFormKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       onChanged: () {
-        isActive.value = formKey.currentState!.validate();
+        isActive.value = emailFormKey.currentState!.validate();
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -316,14 +316,13 @@ class SpareEmailLogin extends HookWidget {
     );
   }
 }
-
-class SparePhoneNumberLogin extends HookWidget {
+class PhoneNumberLogin extends HookWidget {
   static final phone = TextEditingController();
   static final password = TextEditingController();
   static final AuthRepo _authRepo = AuthRepo();
-  static final formKey = GlobalKey<FormState>();
+  static final phoneFormKey = GlobalKey<FormState>();
 
-  const SparePhoneNumberLogin({
+  const PhoneNumberLogin({
     super.key,
   });
 
@@ -381,10 +380,10 @@ class SparePhoneNumberLogin extends HookWidget {
     }
 
     return Form(
-      key: formKey,
+      key: phoneFormKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       onChanged: () {
-        isActive.value = formKey.currentState!.validate();
+        isActive.value = phoneFormKey.currentState!.validate();
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

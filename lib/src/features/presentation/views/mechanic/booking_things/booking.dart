@@ -82,7 +82,7 @@ Widget card(String title, String subtitle, String number, String color) => Card(
 class Bookings extends HookWidget {
   static final MechanicRepo _mechanicRepo = MechanicRepo();
 
-    Bookings({Key? key}) : super(key: key ?? UniqueKey());
+  Bookings({Key? key}) : super(key: key ?? UniqueKey());
 
   @override
   Widget build(BuildContext context) {
@@ -142,6 +142,7 @@ class Bookings extends HookWidget {
         await getStatisticsInfo();
         isLoading.value = false;
       }
+
       refresh();
       return null;
     }, [isLoading]);
@@ -209,8 +210,9 @@ class Bookings extends HookWidget {
                       height: 40,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                          color: AppColors.borderGrey,
-                          borderRadius: BorderRadius.circular(5)),
+                        color: AppColors.borderGrey,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
                       child: TabBar(
                         labelPadding: EdgeInsets.zero,
                         unselectedLabelColor: AppColors.primary,
@@ -252,7 +254,8 @@ class Bookings extends HookWidget {
                       ),
                     ),
                     Expanded(
-                      child: TabBarView(
+                      child: IndexedStack(
+                          index: tabIndex.value,
                         children: [
                           InspectionBookings(
                             canceled: canceled.value,

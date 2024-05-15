@@ -104,6 +104,12 @@ class UserModel {
         otherServices!.add(Services.fromJson(v));
       });
     }
+    if (json['availability'] != null) {
+      availability = <Availability>[];
+      json['availability'].forEach((v) {
+        availability!.add(Availability.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {

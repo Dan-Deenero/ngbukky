@@ -161,7 +161,7 @@ class SpareEmailLogin extends HookWidget {
   static final email = TextEditingController();
   static final password = TextEditingController();
   static final AuthRepo _authRepo = AuthRepo();
-  static final formKey = GlobalKey<FormState>();
+  static final spareEmailFormKey = GlobalKey<FormState>();
 
   const SpareEmailLogin({
     super.key,
@@ -228,10 +228,10 @@ class SpareEmailLogin extends HookWidget {
     }
 
     return Form(
-      key: formKey,
+      key: spareEmailFormKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       onChanged: () {
-        isActive.value = formKey.currentState!.validate();
+        isActive.value = spareEmailFormKey.currentState!.validate();
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -323,7 +323,7 @@ class SparePhoneNumberLogin extends HookWidget {
   static final phone = TextEditingController();
   static final password = TextEditingController();
   static final AuthRepo _authRepo = AuthRepo();
-  static final formKey = GlobalKey<FormState>();
+  static final sparePhoneFormKey = GlobalKey<FormState>();
 
   const SparePhoneNumberLogin({
     super.key,
@@ -381,10 +381,10 @@ class SparePhoneNumberLogin extends HookWidget {
     }
 
     return Form(
-      key: formKey,
+      key: sparePhoneFormKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       onChanged: () {
-        isActive.value = formKey.currentState!.validate();
+        isActive.value = sparePhoneFormKey.currentState!.validate();
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

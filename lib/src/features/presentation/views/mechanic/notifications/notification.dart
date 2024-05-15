@@ -91,32 +91,9 @@ class NewNotification extends HookWidget {
                               onTap: () {
                                 getANotification(e.id!);
                               },
-                              child: Container(
-                                width: double.infinity,
-                                // height: 120,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 4, vertical: 20),
-                                decoration: BoxDecoration(
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: AppColors.containerGrey,
-                                      offset: Offset(
-                                        5.0,
-                                        5.0,
-                                      ),
-                                      blurRadius: 10.0,
-                                      spreadRadius: 2.0,
-                                    ), //BoxShadow
-                                    BoxShadow(
-                                      color: Colors.white,
-                                      offset: Offset(0.0, 0.0),
-                                      blurRadius: 0.0,
-                                      spreadRadius: 0.0,
-                                    ), //BoxShadow
-                                  ],
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: AppColors.white,
-                                ),
+                              child: Card(
+                                color: AppColors.white,
+                                surfaceTintColor: Colors.transparent,
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,

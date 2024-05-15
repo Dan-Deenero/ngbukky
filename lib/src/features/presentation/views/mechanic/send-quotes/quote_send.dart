@@ -324,9 +324,10 @@ class _QuoteSendState extends State<QuoteSend> {
                 children: [
                   heightSpace(2),
                   customText(
-                      text: "Select from your services",
-                      fontSize: 14,
-                      textColor: AppColors.black),
+                    text: "Select from your services",
+                    fontSize: 14,
+                    textColor: AppColors.black,
+                  ),
                   heightSpace(1),
                   Container(
                     padding: const EdgeInsets.symmetric(

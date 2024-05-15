@@ -375,9 +375,10 @@ class SpareWallet extends HookWidget {
                       ),
                     ),
                     heightSpace(2),
-                    const Expanded(
-                      child: TabBarView(
-                        children: [PaymentTab(), WithdrawalTab()],
+                    Expanded(
+                      child: IndexedStack(
+                        index: tabIndex.value,
+                        children: const [PaymentTab(), WithdrawalTab()],
                       ),
                     ),
                   ],

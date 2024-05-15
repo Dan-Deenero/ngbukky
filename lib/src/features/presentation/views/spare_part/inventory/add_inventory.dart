@@ -92,7 +92,7 @@ class AddInventory extends HookWidget {
           "width": '${width.text}mm',
           "length": '${length.text}mm',
           "height": '${height.text}mm',
-          "weight": '${weight.text}kg',
+          "weight": 'weight.text',
           "volume": '${volume.text}l',
           "countryOfProducton": country.text,
           "modelNumber": modelNumber.text

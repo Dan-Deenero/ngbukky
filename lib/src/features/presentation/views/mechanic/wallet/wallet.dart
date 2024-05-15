@@ -220,28 +220,36 @@ class Wallet extends HookWidget {
             )
           ],
         ),
-        body: isLoading.value
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Column(
+        body: RefreshIndicator(
+          onRefresh: () async {
+            isLoading.value = true;
+            await getTransaction();
+            await getWallet();
+            isLoading.value = false;
+          },
+          child: isLoading.value
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
                           padding: const EdgeInsets.symmetric(vertical: 5),
                           width: double.infinity,
                           height: 20.h,
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              image: const DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: AssetImage(
-                                    AppImages.walletbase,
-                                  ))),
+                            borderRadius: BorderRadius.circular(20),
+                            image: const DecorationImage(
+                              fit: BoxFit.cover,
+                              image: AssetImage(
+                                AppImages.walletbase,
+                              ),
+                            ),
+                          ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -260,7 +268,8 @@ class Wallet extends HookWidget {
                               heightSpace(1),
                               GestureDetector(
                                 onTap: accept,
-                                child: SvgPicture.asset(AppImages.welcomeImage),
+                                child:
+                                    SvgPicture.asset(AppImages.welcomeImage),
                               ),
                               // heightSpace(2),
                             ],
@@ -275,15 +284,15 @@ class Wallet extends HookWidget {
                               transactionBox(
                                 "Total Earnings",
                                 "This year",
-                                Helpers.formatBalance(wallet
-                                    .value!.analytics!.totalEarnedForTheYear!),
+                                Helpers.formatBalance(wallet.value!.analytics!
+                                    .totalEarnedForTheYear!),
                               ),
                               verticalDivide(),
                               transactionBox(
                                 "Earned",
                                 "This month",
-                                Helpers.formatBalance(wallet
-                                    .value!.analytics!.totalEarnedForTheMonth!),
+                                Helpers.formatBalance(wallet.value!.analytics!
+                                    .totalEarnedForTheMonth!),
                               ),
                               verticalDivide(),
                               transactionBox(
@@ -317,7 +326,8 @@ class Wallet extends HookWidget {
                                     Icon(
                                       Icons.arrow_forward,
                                       size: 20,
-                                      color: AppColors.primary.withOpacity(0.1),
+                                      color:
+                                          AppColors.primary.withOpacity(0.1),
                                     )
                                   ],
                                 ),
@@ -341,61 +351,59 @@ class Wallet extends HookWidget {
                               )
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-                  heightSpace(3),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 15),
-                    height: 40,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        color: AppColors.borderGrey,
-                        borderRadius: BorderRadius.circular(5)),
-                    child: TabBar(
-                      labelPadding: EdgeInsets.zero,
-                      unselectedLabelColor: AppColors.primary,
-                      labelColor: AppColors.primary,
-                      indicator: const BoxDecoration(),
-                      onTap: (value) {
-                        tabIndex.value = value;
-                      },
-                      tabs: [
+                        heightSpace(3),
                         Container(
-                          width: 200,
                           height: 40,
+                          width: double.infinity,
                           decoration: BoxDecoration(
-                              color: tabIndex.value == 0
-                                  ? AppColors.white
-                                  : AppColors.borderGrey,
+                              color: AppColors.borderGrey,
                               borderRadius: BorderRadius.circular(5)),
-                          child: const Tab(
-                            text: "Payment",
+                          child: TabBar(
+                            labelPadding: EdgeInsets.zero,
+                            unselectedLabelColor: AppColors.primary,
+                            labelColor: AppColors.primary,
+                            indicator: const BoxDecoration(),
+                            onTap: (value) {
+                              tabIndex.value = value;
+                            },
+                            tabs: [
+                              Container(
+                                width: 200,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    color: tabIndex.value == 0
+                                        ? AppColors.white
+                                        : AppColors.borderGrey,
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: const Tab(
+                                  text: "Payment",
+                                ),
+                              ),
+                              Container(
+                                width: 400,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    color: tabIndex.value == 1
+                                        ? AppColors.white
+                                        : AppColors.borderGrey,
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: const Tab(
+                                  text: "Withdrawal",
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        Container(
-                          width: 400,
-                          height: 40,
-                          decoration: BoxDecoration(
-                              color: tabIndex.value == 1
-                                  ? AppColors.white
-                                  : AppColors.borderGrey,
-                              borderRadius: BorderRadius.circular(5)),
-                          child: const Tab(
-                            text: "Withdrawal",
-                          ),
+                        heightSpace(2),
+                        IndexedStack(
+                          index: tabIndex.value,
+                          children: const [PaymentTab(), WithdrawalTab()],
                         ),
                       ],
                     ),
-                  ),
-                  heightSpace(2),
-                  const Expanded(
-                    child: TabBarView(
-                      children: [PaymentTab(), WithdrawalTab()],
-                    ),
-                  ),
-                ],
+                ),
               ),
+        ),
       ),
     );
   }
@@ -435,59 +443,57 @@ class PaymentTab extends HookWidget {
         ? const Center(
             child: CircularProgressIndicator(),
           )
-        : SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                children: [
-                  if (transactionHistory.value.isEmpty)
-                    Center(
-                      child: Column(
-                        children: [
-                          SvgPicture.asset(AppImages.nopaymenticon),
-                          heightSpace(1),
-                          SizedBox(
-                            width: 130,
-                            child: customText(
-                              text: 'No payments were made to you',
-                              fontSize: 15,
-                              textColor: AppColors.textGrey.withOpacity(0.3),
-                              textAlignment: TextAlign.center,
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  else
-                    ...transactionHistory.value.map(
-                      (e) {
-                        var dateString = e.createdAt;
-                        var dateTime = DateTime.parse(dateString!);
-                        var formattedDate =
-                            DateFormat('dd MMM yyyy').format(dateTime);
-
-                        var formattedTime =
-                            DateFormat('hh:mm a').format(dateTime);
-                        return Column(
-                          children: [
-                            WalletTile(
-                              id: e.id,
-                              isWithdrawal: false,
-                              isMechanic: true,
-                              date: formattedDate,
-                              amount: e.amount,
-                              status: e.status,
-                              time: formattedTime,
-                            ),
-                            heightSpace(2)
-                          ],
-                        );
-                      },
-                    )
-                ],
-              ),
-            ),
-          );
+        : Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Column(
+            children: [
+              if (transactionHistory.value.isEmpty)
+                Center(
+                  child: Column(
+                    children: [
+                      SvgPicture.asset(AppImages.nopaymenticon),
+                      heightSpace(1),
+                      SizedBox(
+                        width: 130,
+                        child: customText(
+                          text: 'No payments were made to you',
+                          fontSize: 15,
+                          textColor: AppColors.textGrey.withOpacity(0.3),
+                          textAlignment: TextAlign.center,
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              else
+                ...transactionHistory.value.map(
+                  (e) {
+                    var dateString = e.createdAt;
+                    var dateTime = DateTime.parse(dateString!);
+                    var formattedDate =
+                        DateFormat('dd MMM yyyy').format(dateTime);
+        
+                    var formattedTime =
+                        DateFormat('hh:mm a').format(dateTime);
+                    return Column(
+                      children: [
+                        WalletTile(
+                          id: e.id,
+                          isWithdrawal: false,
+                          isMechanic: true,
+                          date: formattedDate,
+                          amount: e.amount,
+                          status: e.status,
+                          time: formattedTime,
+                        ),
+                        heightSpace(2)
+                      ],
+                    );
+                  },
+                )
+            ],
+          ),
+        );
   }
 }
 
@@ -516,58 +522,56 @@ class WithdrawalTab extends HookWidget {
         ? const Center(
             child: CircularProgressIndicator(),
           )
-        : SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Column(
-                children: [
-                  if (transactionHistory.value.isEmpty)
-                    Center(
-                      child: Column(
-                        children: [
-                          SvgPicture.asset(AppImages.nopaymenticon),
-                          heightSpace(1),
-                          SizedBox(
-                            width: 130,
-                            child: customText(
-                              text: 'You have not made any withdrawal',
-                              fontSize: 15,
-                              textColor: AppColors.textGrey.withOpacity(0.3),
-                              textAlignment: TextAlign.center,
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  else
-                    ...transactionHistory.value.map(
-                      (e) {
-                        var dateString = e.createdAt;
-                        var dateTime = DateTime.parse(dateString!);
-                        var formattedDate =
-                            DateFormat('dd MMM yyyy').format(dateTime);
-
-                        var formattedTime =
-                            DateFormat('hh:mm a').format(dateTime);
-                        return Column(
-                          children: [
-                            WalletTile(
-                              id: e.id,
-                              isWithdrawal: true,
-                              isMechanic: true,
-                              date: formattedDate,
-                              amount: e.amount,
-                              status: e.status,
-                              time: formattedTime,
-                            ),
-                            heightSpace(2)
-                          ],
-                        );
-                      },
-                    )
-                ],
-              ),
-            ),
-          );
+        : Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Column(
+            children: [
+              if (transactionHistory.value.isEmpty)
+                Center(
+                  child: Column(
+                    children: [
+                      SvgPicture.asset(AppImages.nopaymenticon),
+                      heightSpace(1),
+                      SizedBox(
+                        width: 130,
+                        child: customText(
+                          text: 'You have not made any withdrawal',
+                          fontSize: 15,
+                          textColor: AppColors.textGrey.withOpacity(0.3),
+                          textAlignment: TextAlign.center,
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              else
+                ...transactionHistory.value.map(
+                  (e) {
+                    var dateString = e.createdAt;
+                    var dateTime = DateTime.parse(dateString!);
+                    var formattedDate =
+                        DateFormat('dd MMM yyyy').format(dateTime);
+        
+                    var formattedTime =
+                        DateFormat('hh:mm a').format(dateTime);
+                    return Column(
+                      children: [
+                        WalletTile(
+                          id: e.id,
+                          isWithdrawal: true,
+                          isMechanic: true,
+                          date: formattedDate,
+                          amount: e.amount,
+                          status: e.status,
+                          time: formattedTime,
+                        ),
+                        heightSpace(2)
+                      ],
+                    );
+                  },
+                )
+            ],
+          ),
+        );
   }
 }
