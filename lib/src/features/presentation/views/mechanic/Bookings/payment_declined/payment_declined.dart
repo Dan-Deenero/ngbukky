@@ -6,19 +6,20 @@ import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
-class AcceptedBooking extends StatefulWidget {
-  const AcceptedBooking({super.key});
+class PaymentDeclined extends StatefulWidget {
+  const PaymentDeclined({super.key});
 
   @override
-  State<AcceptedBooking> createState() => _AcceptedBookingState();
+  State<PaymentDeclined> createState() => _PaymentDeclinedState();
 }
 
-class _AcceptedBookingState extends State<AcceptedBooking> {
+class _PaymentDeclinedState extends State<PaymentDeclined> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
   List<BookingModel> _bookingHistory = [];
   bool isLoading = true;
@@ -26,12 +27,11 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
   @override
   void initState() {
     super.initState();
-    _mechanicRepo.getAllBooking('accepted').then(
+    _mechanicRepo.getAllBooking('declined').then(
           (value) => setState(
             () {
               _bookingHistory = value;
               isLoading = false;
-              print(_bookingHistory);
             },
           ),
         );
@@ -43,7 +43,7 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(21.h),
+        preferredSize: Size.fromHeight(20.h),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child:
@@ -68,39 +68,43 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
               ),
             ),
             customText(
-                text: "Accepted bookings",
+                text: "Payment declined",
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 textColor: AppColors.black),
             heightSpace(1),
-            bodyText("Send quote or reject booking")
+            bodyText("View all payments declined by clients")
           ]),
         ),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Wrap(
-                    children: [
-                      if (_bookingHistory.isEmpty)
-                        Center(
-                            heightFactor: 3.5,
-                            child: Column(
-                              children: [
-                                SvgPicture.asset(AppImages.bookingWarning),
-                                customText(
-                                    text:
-                                        'You have not accepted any booking yet',
-                                    fontSize: 15,
-                                    textColor: AppColors.black)
-                              ],
-                            ))
-                      else
-                        ..._bookingHistory.map((e) {
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Column(
+                  children: [
+                    if (_bookingHistory.isEmpty)
+                      Center(
+                          heightFactor: 3.5,
+                          child: Column(
+                            children: [
+                              SvgPicture.asset(AppImages.bookingWarning),
+                              customText(
+                                  text: 'You do not have any declined payment',
+                                  fontSize: 15,
+                                  textColor: AppColors.black)
+                            ],
+                          ))
+                    else
+                      ..._bookingHistory.map(
+                        (e) {
+                          int price = 0;
+                          for (Quotes quote in e.quotes!) {
+                            if (quote.price != null) {
+                              price += quote.price!;
+                            }
+                          }
                           var dateString = e.date;
                           var dateTime = DateTime.parse(dateString!);
                           var formattedDate =
@@ -117,79 +121,76 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                             profile = e.user!.profileImageUrl!;
                           }
                           return GestureDetector(
-                            onTap: () {
-                              context.push(AppRoutes.viewAcceptedBooking,
-                                  extra: e.id);
-                            },
+                            onTap: () => context.push(
+                                AppRoutes.bookingMiddleman,
+                                extra: {e.id, e.status}),
                             child: Card(
                               color: Colors.white,
                               surfaceTintColor: Colors.transparent,
                               child: ListTile(
                                 trailing: Column(
-                                  children: [
-                                    customText(
-                                        text: "",
-                                        fontSize: 14,
-                                        textColor: AppColors.textGrey,
-                                        fontWeight: FontWeight.bold),
-                                    heightSpace(1),
-                                    Container(
-                                      width: 26.w,
-                                      height: 3.h,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color:
-                                              AppColors.green.withOpacity(.1)),
-                                      child: Center(
-                                        child: customText(
-                                            text: "Accepted booking",
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      customText(
+                                          text:
+                                              "₦${Helpers.formatBalance(price)}",
+                                          fontSize: 14,
+                                          textColor: AppColors.textGrey,
+                                          fontWeight: FontWeight.bold),
+                                      heightSpace(1),
+                                      Container(
+                                        width: 25.w,
+                                        height: 3.h,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color:
+                                                AppColors.red.withOpacity(.2)),
+                                        child: Center(
+                                          child: customText(
+                                            text: "Payment declined",
                                             fontSize: 2.5.w,
-                                            fontWeight: FontWeight.bold,
-                                            textColor: AppColors.green),
-                                      ),
-                                    )
-                                  ],
-                                ),
+                                            textColor: AppColors.red,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      )
+                                    ]),
                                 subtitle: Row(
                                   children: [
                                     Row(
                                       children: [
                                         SvgPicture.asset(AppImages.time),
                                         customText(
-                                          text: formattedTime,
-                                          fontSize: 2.5.w,
-                                          textColor: AppColors.textGrey,
-                                        )
+                                            text: formattedTime,
+                                            fontSize: 2.5.w,
+                                            textColor: AppColors.textGrey)
                                       ],
                                     ),
-                                    widthSpace(.5),
+                                    widthSpace(1),
                                     Row(
                                       children: [
                                         SvgPicture.asset(
                                             AppImages.calendarIcon),
                                         customText(
-                                          text: formattedDate,
-                                          fontSize: 2.5.w,
-                                          textColor: AppColors.textGrey,
-                                        )
+                                            text: formattedDate,
+                                            fontSize: 2.5.w,
+                                            textColor: AppColors.textGrey)
                                       ],
                                     )
                                   ],
                                 ),
                                 title: customText(
-                                  text: e.user!.username!,
-                                  fontSize: 16,
-                                  textColor: AppColors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                    text: e.user!.username!,
+                                    fontSize: 16,
+                                    textColor: AppColors.black,
+                                    fontWeight: FontWeight.bold),
                                 leading: Container(
                                   width: 10.w,
                                   height: 10.h,
                                   decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: AppColors.containerGrey,
-                                  ),
+                                      shape: BoxShape.circle,
+                                      color: AppColors.containerGrey),
                                   child: CircleAvatar(
                                     backgroundColor: AppColors.backgroundGrey,
                                     backgroundImage: NetworkImage(profile),
@@ -200,12 +201,12 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                               ),
                             ),
                           );
-                        })
-                    ],
-                  ),
+                        },
+                      )
+                  ],
                 ),
-              ],
-            )),
+              ),
+            ),
     );
   }
 }

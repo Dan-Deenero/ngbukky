@@ -117,10 +117,8 @@ class _NewQuoteAlertState extends State<NewQuoteAlert> {
                               }).toList();
                               String serviceNames = names.join(', ');
                               return GestureDetector(
-                                onTap: () => context.push(
-                                  AppRoutes.quoteRequest,
-                                  extra: e.id,
-                                ),
+                                onTap: () => context.push(AppRoutes.quoteMiddlemen,
+                                        extra: {e.id, e.status}),
                                 child: Card(
                                   color: Colors.white,
                                   surfaceTintColor: Colors.transparent,

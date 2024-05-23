@@ -124,9 +124,8 @@ class _QPaymentRequestState extends State<QPaymentRequest> {
                           profile = e.user!.profileImageUrl!;
                         }
                         return GestureDetector(
-                          onTap: () => context.push(
-                              AppRoutes.pendingQuotePaymentRequestDetails,
-                              extra: e.id),
+                          onTap: () => context.push(AppRoutes.quoteMiddlemen,
+                                        extra: {e.id, e.status}),
                           child: Padding(
                             padding: const EdgeInsets.all(10),
                             child: Card(

@@ -6,19 +6,20 @@ import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
-class RejectedBooking extends StatefulWidget {
-  const RejectedBooking({super.key});
+class CompletedBooking extends StatefulWidget {
+  const CompletedBooking({super.key});
 
   @override
-  State<RejectedBooking> createState() => _RejectedBookingState();
+  State<CompletedBooking> createState() => _CompletedBookingState();
 }
 
-class _RejectedBookingState extends State<RejectedBooking> {
+class _CompletedBookingState extends State<CompletedBooking> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
   List<BookingModel> _bookingHistory = [];
   bool isLoading = true;
@@ -26,7 +27,7 @@ class _RejectedBookingState extends State<RejectedBooking> {
   @override
   void initState() {
     super.initState();
-    _mechanicRepo.getAllBooking('rejected').then((value) => setState(() {
+    _mechanicRepo.getAllBooking('completed').then((value) => setState(() {
           _bookingHistory = value;
           isLoading = false;
           print(_bookingHistory);
@@ -64,12 +65,12 @@ class _RejectedBookingState extends State<RejectedBooking> {
               ),
             ),
             customText(
-                text: "Rejected bookings",
+                text: "Completed bookings",
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 textColor: AppColors.black),
             heightSpace(1),
-            bodyText("View all the bookings you rejected")
+            bodyText("Bookings you have gotten payment for")
           ]),
         ),
       ),
@@ -79,8 +80,8 @@ class _RejectedBookingState extends State<RejectedBooking> {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Wrap(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
                       children: [
                         if (_bookingHistory.isEmpty)
                           Center(
@@ -89,19 +90,26 @@ class _RejectedBookingState extends State<RejectedBooking> {
                                 children: [
                                   SvgPicture.asset(AppImages.bookingWarning),
                                   customText(
-                                      text: 'You have not rejected any booking',
+                                      text:
+                                          'You have not gotten paid by any client yet',
                                       fontSize: 15,
-                                      textColor: AppColors.black)
+                                      textColor: AppColors.black,
+                                      textAlignment: TextAlign.center)
                                 ],
                               ))
                         else
                           ..._bookingHistory.map(
                             (e) {
+                              int price = 0;
+                              for (Quotes quote in e.quotes!) {
+                                if (quote.price != null) {
+                                  price += quote.price!;
+                                }
+                              }
                               var dateString = e.date;
                               var dateTime = DateTime.parse(dateString!);
                               var formattedDate =
                                   DateFormat('dd MMM yyyy').format(dateTime);
-
                               var formattedTime =
                                   DateFormat('hh:mm a').format(dateTime);
                               String profile;
@@ -114,38 +122,34 @@ class _RejectedBookingState extends State<RejectedBooking> {
                               }
                               return GestureDetector(
                                 onTap: () {
-                                  context.push(AppRoutes.viewRejectedBooking,
-                                      extra: e.id);
+                                  context.push(AppRoutes.bookingMiddleman,
+                                        extra: {e.id, e.status});
                                 },
-                                child: Container(
-                                  margin: const EdgeInsets.only(bottom: 10),
-                                  width: double.infinity,
-                                  height: 10.h,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
+                                child: Card(
+                                  color: Colors.white,
+                                  surfaceTintColor: Colors.transparent,
                                   child: ListTile(
                                     trailing: Column(children: [
                                       customText(
-                                          text: "",
+                                          text:
+                                              "₦${Helpers.formatBalance(price)}",
                                           fontSize: 14,
                                           textColor: AppColors.textGrey,
                                           fontWeight: FontWeight.bold),
                                       heightSpace(1),
                                       Container(
-                                        width: 27.w,
+                                        width: 20.w,
                                         height: 3.h,
                                         decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(10),
-                                            color:
-                                                AppColors.red.withOpacity(.2)),
+                                            color: AppColors.green
+                                                .withOpacity(.2)),
                                         child: Center(
                                           child: customText(
-                                            text: "Rejected booking",
-                                            fontSize: 2.5.w,
-                                            textColor: AppColors.red,
+                                            text: "Completed",
+                                            fontSize: 2.6.w,
+                                            textColor: AppColors.green,
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
@@ -157,40 +161,44 @@ class _RejectedBookingState extends State<RejectedBooking> {
                                           children: [
                                             SvgPicture.asset(AppImages.time),
                                             customText(
-                                                text: formattedTime,
-                                                fontSize: 2.5.w,
-                                                textColor: AppColors.textGrey)
+                                              text: formattedTime,
+                                              fontSize: 2.5.w,
+                                              textColor: AppColors.textGrey,
+                                            )
                                           ],
                                         ),
-                                        widthSpace(1),
+                                        widthSpace(.5),
                                         Row(
                                           children: [
                                             SvgPicture.asset(
                                                 AppImages.calendarIcon),
                                             customText(
-                                                text: formattedDate,
-                                                fontSize: 2.5.w,
-                                                textColor: AppColors.textGrey)
+                                              text: formattedDate,
+                                              fontSize: 2.5.w,
+                                              textColor: AppColors.textGrey,
+                                            )
                                           ],
                                         )
                                       ],
                                     ),
                                     title: customText(
-                                        text: e.user!.username!,
-                                        fontSize: 16,
-                                        textColor: AppColors.black,
-                                        fontWeight: FontWeight.bold),
+                                      text: e.user!.username!,
+                                      fontSize: 16,
+                                      textColor: AppColors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                     leading: Container(
                                       width: 10.w,
                                       height: 10.h,
                                       decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: AppColors.containerGrey,
-                                      ),
+                                          shape: BoxShape.circle,
+                                          color: AppColors.containerGrey),
                                       child: CircleAvatar(
                                         backgroundColor:
                                             AppColors.backgroundGrey,
-                                        backgroundImage: NetworkImage(profile),
+                                        backgroundImage: NetworkImage(
+                                          profile,
+                                        ),
                                         radius:
                                             55, // Adjust the size of the circle as needed
                                       ),
@@ -199,7 +207,7 @@ class _RejectedBookingState extends State<RejectedBooking> {
                                 ),
                               );
                             },
-                          ),
+                          )
                       ],
                     ),
                   ),

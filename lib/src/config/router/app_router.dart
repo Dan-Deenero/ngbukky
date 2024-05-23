@@ -1,7 +1,27 @@
 import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/domain/data/otp_model.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/accepted-bookings/accepted_booking.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/accepted-bookings/view_accepted_booking.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/booking-rejected/booking_rejected.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/booking-rejected/inspection_details_br.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/completed_booking/completed_booking.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/completed_booking/inspection_details.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/new-booking-alert/inspection_booking.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/new-booking-alert/new_booking_alerts.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/payment_declined/inspection_details_pd.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/payment_declined/payment_declined.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/payment_request/inspection_details_ppr.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/payment_request/inspection_details_pr.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/payment_request/payment_request.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/pending_quote_approval/Inspection_details_pqa.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/pending_quote_approval/pending_quote_aproval.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/rejected-bookings/rejected_booking.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/rejected-bookings/view_rejected_booking.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/send-quotes/quote_send.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/send_quote.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/booking_things/booking_middleman.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/booking_things/quote_middleman.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/business_info/business_info.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/profile_settings/business_info_settings.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/business_info/business_location.dart';
@@ -17,7 +37,7 @@ import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/completed
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/completed_quote/inspection_details_cqr.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/pending_client_approval/inspection_details_pca.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/payment_declined/inspection_details_pdq.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/payment_request/inspection_details_pprq%20.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/payment_request/inspection_details_pprq.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/payment_request/inspection_details_prq.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/quote_rejected/inspection_details_qr.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/rejected_quote/inspection_detalis_rq.dart';
@@ -29,26 +49,8 @@ import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/quote_rej
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/new_quote_request/quote_request.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/rejected_quote/rejected_quote.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/accepted_quote/view_accepted_quotes.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/accepted-bookings/accepted_booking.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/accepted-bookings/view_accepted_booking.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/booking-rejected/booking_rejected.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/booking-rejected/inspection_details_br.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/booking_things/booking.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/bottom_nav.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/completed_booking/completed_booking.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/completed_booking/inspection_details.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/new-booking-alert/inspection_booking.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/new-booking-alert/new_booking_alerts.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/payment_declined/inspection_details_pd.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/payment_declined/payment_declined.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/payment_request/inspection_details_ppr.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/payment_request/inspection_details_pr.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/payment_request/payment_request.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/pending_quote_approval/Inspection_details_pqa.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/pending_quote_approval/pending_quote_aproval.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/send-quotes/quote_send.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/rejected-bookings/rejected_booking.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/rejected-bookings/view_rejected_booking.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/history_detail.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/local_account_setup.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/wallet_history.dart';
@@ -188,6 +190,22 @@ GoRouter router() => GoRouter(
           path: AppRoutes.bookings,
           name: AppRoutes.bookings,
           builder: (_, state) => Bookings(),
+        ),
+        GoRoute(
+          path: AppRoutes.quoteMiddlemen,
+          name: AppRoutes.quoteMiddlemen,
+          builder: (_, state) => QuoteMiddleman(
+            id: state.extra as String,
+            status: state.extra as String,
+          ),
+        ),
+        GoRoute(
+          path: AppRoutes.bookingMiddleman,
+          name: AppRoutes.bookingMiddleman,
+          builder: (_, state) => BookingMiddleman(
+            id: state.extra as String,
+            status: state.extra as String,
+          ),
         ),
         GoRoute(
           path: AppRoutes.businessLocation,

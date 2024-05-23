@@ -121,8 +121,8 @@ class _BookingAlertState extends State<BookingAlert> {
                                     DateFormat('hh:mm a').format(dateTime);
                                 return GestureDetector(
                                   onTap: () {
-                                    context.push(AppRoutes.inspectionBooking,
-                                        extra: e.id);
+                                    context.push(AppRoutes.bookingMiddleman,
+                                        extra: {e.id, e.status});
                                   },
                                   child: Column(
                                     crossAxisAlignment:

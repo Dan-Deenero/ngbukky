@@ -125,9 +125,8 @@ class _CompletedQuoteRequestState extends State<CompletedQuoteRequest> {
                           }
                           return GestureDetector(
                             onTap: () {
-                              context.push(
-                                  AppRoutes.completedQuoteRequestDetails,
-                                  extra: e.id);
+                              context.push(AppRoutes.quoteMiddlemen,
+                                        extra: {e.id, e.status});
                             },
                             child: Card(
                               color: Colors.white,

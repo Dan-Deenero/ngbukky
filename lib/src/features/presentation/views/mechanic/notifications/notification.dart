@@ -105,7 +105,6 @@ class NewNotification extends HookWidget {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                getANotification(e.id!);
                                 Helpers.routeToRespectiveNotificationScreens(
                                   notific.value,
                                   context,

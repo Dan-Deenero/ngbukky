@@ -132,9 +132,8 @@ class _PendingClientApprovalState extends State<PendingClientApproval> {
                               }
                               return GestureDetector(
                                 onTap: () {
-                                  context.push(
-                                      AppRoutes.pendingClientApprovalDetails,
-                                      extra: e.id);
+                                  context.push(AppRoutes.quoteMiddlemen,
+                                        extra: {e.id, e.status});
                                 },
                                 child: Card(
                                   color: Colors.white,
