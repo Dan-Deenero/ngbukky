@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -144,7 +145,7 @@ class _PendingClientApprovalState extends State<PendingClientApproval> {
                                           CrossAxisAlignment.end,
                                       children: [
                                         customText(
-                                            text: "$price",
+                                            text: "₦${Helpers.formatBalance(price)}",
                                             fontSize: 14,
                                             textColor: AppColors.textGrey,
                                             fontWeight: FontWeight.bold),

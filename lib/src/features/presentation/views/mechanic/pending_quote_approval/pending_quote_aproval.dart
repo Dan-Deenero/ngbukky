@@ -144,7 +144,7 @@ class _PendingQuoteApprovalState extends State<PendingQuoteApproval> {
                                             fontWeight: FontWeight.bold),
                                         heightSpace(1),
                                         Container(
-                                          width: 27.w,
+                                          width: 25.w,
                                           height: 3.h,
                                           decoration: BoxDecoration(
                                               borderRadius:
@@ -153,8 +153,8 @@ class _PendingQuoteApprovalState extends State<PendingQuoteApproval> {
                                                   .withOpacity(.1)),
                                           child: Center(
                                             child: customText(
-                                              text: "Unapproved quote",
-                                              fontSize: 2.7.w,
+                                              text: "Unapproved",
+                                              fontSize: 2.6.w,
                                               textColor: AppColors.green,
                                               fontWeight: FontWeight.bold,
                                             ),

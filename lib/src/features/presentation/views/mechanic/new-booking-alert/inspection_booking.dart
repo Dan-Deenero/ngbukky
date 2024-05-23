@@ -174,7 +174,10 @@ class _InspectionBookingState extends State<InspectionBooking> {
                         ),
                         widthSpace(3),
                         TextButton(
-                          onPressed: acceptBooking,
+                          onPressed: () {
+                            context.pop();
+                            acceptBooking();
+                          },
                           child: customText(
                             text: 'Yes',
                             fontSize: 16,

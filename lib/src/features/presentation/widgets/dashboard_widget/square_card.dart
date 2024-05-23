@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/controller/Helpers.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 

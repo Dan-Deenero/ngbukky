@@ -72,5 +72,8 @@ class AppImages {
   static const String bigsizeoil= "assets/images/pngs/bigsizeoil.png";
   static const String largesparkplug = "assets/images/pngs/plugs.png";
   static const String noImage = "assets/images/pngs/noimage.png";
+  static const String showFunds = "assets/images/svgs/show_funds.svg";
+  static const String hideFunds = "assets/images/svgs/hide_funds.svg";
+  static const String hiddenBalance = "assets/images/svgs/hide_balance.svg";
   
 }

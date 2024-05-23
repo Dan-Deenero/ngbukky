@@ -41,12 +41,28 @@ class NewNotification extends HookWidget {
       _mechanicRepo.getOneNotification(id).then((value) {
         notific.value = value;
         isLoading.value = false;
-        Helpers.routeToRespectiveNotificationScreens(
-          notific.value,
-          context,
-        );
       });
     }
+
+    // Future<void> getANotification(String id) async {
+    //   isLoading.value = true;
+    //   final notification = await _mechanicRepo.getOneNotification(id);
+    //   notific.value = notification;
+
+    //   // Assuming the API or repo method marks the notification as seen
+    //   // Alternatively, you can have an endpoint to explicitly mark as seen
+
+    //   isLoading.value = false;
+    //   Helpers.routeToRespectiveNotificationScreens(notification, context);
+
+    //   // Update the local state to reflect the notification has been seen
+    //   notificationHistory.value = notificationHistory.value.map((n) {
+    //     if (n.id == id) {
+    //       return n.copyWith(viewedAt: DateTime.now().toIso8601String());
+    //     }
+    //     return n;
+    //   }).toList();
+    // }
 
     useEffect(() {
       getAllNotification();
@@ -90,90 +106,99 @@ class NewNotification extends HookWidget {
                             GestureDetector(
                               onTap: () {
                                 getANotification(e.id!);
+                                Helpers.routeToRespectiveNotificationScreens(
+                                  notific.value,
+                                  context,
+                                );
                               },
                               child: Card(
                                 color: AppColors.white,
                                 surfaceTintColor: Colors.transparent,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: SvgPicture.asset(
-                                        AppImages.notification,
-                                        width: 30,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 8, horizontal: 4),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.center,
+                                        child: SvgPicture.asset(
+                                          AppImages.notification,
+                                          width: 30,
+                                        ),
                                       ),
-                                    ),
-                                    widthSpace(2),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            customText(
-                                              text: e.title!,
-                                              fontSize: calculateTextSize(
-                                                  context, 0.035),
-                                              textColor: AppColors.black,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                            SizedBox(
-                                              width: calculateTextSize(
-                                                  context, 0.45),
-                                              child: customText(
-                                                  text: e.body!,
-                                                  fontSize: calculateTextSize(
-                                                      context, 0.03),
-                                                  textColor:
-                                                      AppColors.textGrey),
-                                            ),
-                                          ],
-                                        ),
-                                        Column(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                        AppImages.time),
-                                                    customText(
-                                                        text: formattedTime,
-                                                        fontSize:
-                                                            calculateTextSize(
-                                                                context, 0.025),
-                                                        textColor:
-                                                            AppColors.textGrey)
-                                                  ],
-                                                ),
-                                                widthSpace(.5),
-                                                Row(
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                        AppImages.calendarIcon),
-                                                    customText(
-                                                        text: formattedDate,
-                                                        fontSize:
-                                                            calculateTextSize(
-                                                                context, 0.025),
-                                                        textColor:
-                                                            AppColors.textGrey)
-                                                  ],
-                                                )
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    // widthSpace(2),
-                                  ],
+                                      widthSpace(2),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              customText(
+                                                text: e.title!,
+                                                fontSize: calculateTextSize(
+                                                    context, 0.032),
+                                                textColor: AppColors.black,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                              SizedBox(
+                                                width: calculateTextSize(
+                                                    context, 0.40),
+                                                child: customText(
+                                                    text: e.body!,
+                                                    fontSize: calculateTextSize(
+                                                        context, 0.03),
+                                                    textColor:
+                                                        AppColors.textGrey),
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      SvgPicture.asset(
+                                                          AppImages.time),
+                                                      customText(
+                                                          text: formattedTime,
+                                                          fontSize:
+                                                              calculateTextSize(
+                                                                  context,
+                                                                  0.025),
+                                                          textColor: AppColors
+                                                              .textGrey)
+                                                    ],
+                                                  ),
+                                                  widthSpace(.5),
+                                                  Row(
+                                                    children: [
+                                                      SvgPicture.asset(AppImages
+                                                          .calendarIcon),
+                                                      customText(
+                                                          text: formattedDate,
+                                                          fontSize:
+                                                              calculateTextSize(
+                                                                  context,
+                                                                  0.025),
+                                                          textColor: AppColors
+                                                              .textGrey)
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      // widthSpace(2),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -219,10 +244,6 @@ class ReadNotification extends HookWidget {
       _mechanicRepo.getOneNotification(id).then((value) {
         notific.value = value;
         isLoading.value = false;
-        Helpers.routeToRespectiveNotificationScreens(
-          notific.value,
-          context,
-        );
       });
     }
 
@@ -266,113 +287,103 @@ class ReadNotification extends HookWidget {
                         return Column(
                           children: [
                             GestureDetector(
-                              onTap: () => getANotification(e.id!),
-                              child: Container(
-                                width: double.infinity,
-                                // height: 120,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 4, vertical: 20),
-                                decoration: BoxDecoration(
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: AppColors.containerGrey,
-                                      offset: Offset(
-                                        5.0,
-                                        5.0,
-                                      ),
-                                      blurRadius: 10.0,
-                                      spreadRadius: 2.0,
-                                    ), //BoxShadow
-                                    BoxShadow(
-                                      color: Colors.white,
-                                      offset: Offset(0.0, 0.0),
-                                      blurRadius: 0.0,
-                                      spreadRadius: 0.0,
-                                    ), //BoxShadow
-                                  ],
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: AppColors.white,
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: SvgPicture.asset(
-                                        AppImages.notification,
-                                        width: 30,
-                                      ),
-                                    ),
-                                    widthSpace(2),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            customText(
-                                              text: e.title!,
-                                              fontSize: calculateTextSize(
-                                                  context, 0.035),
-                                              textColor: AppColors.black,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                            SizedBox(
-                                              width: calculateTextSize(
-                                                  context, 0.45),
-                                              child: customText(
-                                                  text: e.body!,
-                                                  fontSize: calculateTextSize(
-                                                      context, 0.03),
-                                                  textColor:
-                                                      AppColors.textGrey),
-                                            ),
-                                          ],
+                              onTap: () {
+                                getANotification(e.id!);
+                                Helpers.routeToRespectiveNotificationScreens(
+                                  notific.value,
+                                  context,
+                                );
+                              },
+                              child: Card(
+                                color: AppColors.white,
+                                surfaceTintColor: Colors.transparent,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 8, horizontal: 4),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.center,
+                                        child: SvgPicture.asset(
+                                          AppImages.notification,
+                                          width: 30,
                                         ),
-                                        Column(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                        AppImages.time),
-                                                    customText(
-                                                        text: formattedTime,
-                                                        fontSize:
-                                                            calculateTextSize(
-                                                                context, 0.025),
-                                                        textColor:
-                                                            AppColors.textGrey)
-                                                  ],
-                                                ),
-                                                widthSpace(.5),
-                                                Row(
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                        AppImages.calendarIcon),
-                                                    customText(
-                                                        text: formattedDate,
-                                                        fontSize:
-                                                            calculateTextSize(
-                                                                context, 0.025),
-                                                        textColor:
-                                                            AppColors.textGrey)
-                                                  ],
-                                                )
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    // widthSpace(2),
-                                  ],
+                                      ),
+                                      widthSpace(2),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              customText(
+                                                text: e.title!,
+                                                fontSize: calculateTextSize(
+                                                    context, 0.032),
+                                                textColor: AppColors.black,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                              SizedBox(
+                                                width: calculateTextSize(
+                                                    context, 0.40),
+                                                child: customText(
+                                                    text: e.body!,
+                                                    fontSize: calculateTextSize(
+                                                        context, 0.03),
+                                                    textColor:
+                                                        AppColors.textGrey),
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      SvgPicture.asset(
+                                                          AppImages.time),
+                                                      customText(
+                                                          text: formattedTime,
+                                                          fontSize:
+                                                              calculateTextSize(
+                                                                  context,
+                                                                  0.025),
+                                                          textColor: AppColors
+                                                              .textGrey)
+                                                    ],
+                                                  ),
+                                                  widthSpace(.5),
+                                                  Row(
+                                                    children: [
+                                                      SvgPicture.asset(AppImages
+                                                          .calendarIcon),
+                                                      customText(
+                                                          text: formattedDate,
+                                                          fontSize:
+                                                              calculateTextSize(
+                                                                  context,
+                                                                  0.025),
+                                                          textColor: AppColors
+                                                              .textGrey)
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      // widthSpace(2),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),

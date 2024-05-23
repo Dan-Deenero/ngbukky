@@ -61,7 +61,7 @@ class Payments extends HookWidget {
                             status: e.status,
                             time: formattedTime,
                           ),
-                          heightSpace(2)
+                          heightSpace(1)
                         ],
                       );
                     },

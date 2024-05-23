@@ -191,9 +191,9 @@ class Bookings extends HookWidget {
             isLoading.value = false;
           },
           child: isLoading.value
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
+              ?  const Center(
+              child: SingleChildScrollView(),
+            )
               : Column(
                   children: [
                     heightSpace(1),

@@ -15,6 +15,7 @@ import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_textformfield.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
+import 'package:ngbuka/src/features/presentation/widgets/weight_field.dart';
 import 'package:ngbuka/src/features/providers/work_hours.dart';
 import 'package:ngbuka/src/utils/helpers/validators.dart';
 
@@ -79,7 +80,18 @@ class AddInventory extends HookWidget {
       discount.clear();
     }
 
+    final selectedUnit = useState<String>('kg');
+    final convertedWeight = useState<String>('');
+
+
     addInventory() async {
+
+      final weighty = double.parse(weight.text);
+      if (selectedUnit.value == 'g') {
+        convertedWeight.value = (weighty / 1000).toString();
+      } else {
+        convertedWeight.value = weighty.toString();
+      }
       var data = {
         "name": productName.text,
         "price": price.text,
@@ -89,11 +101,11 @@ class AddInventory extends HookWidget {
         "discount": discount.text,
         "specifications": {
           "color": color.text,
-          "width": '${width.text}mm',
-          "length": '${length.text}mm',
-          "height": '${height.text}mm',
-          "weight": 'weight.text',
-          "volume": '${volume.text}l',
+          "width": width.text,
+          "length": length.text,
+          "height": height.text,
+          "weight": convertedWeight.value,
+          "volume": volume.text,
           "countryOfProducton": country.text,
           "modelNumber": modelNumber.text
         }
@@ -113,7 +125,7 @@ class AddInventory extends HookWidget {
     final markup = useState<List<PriceMarkup>>([]);
     final isLoading = useState<bool>(true);
 
-    getMarkup() async{
+    getMarkup() async {
       await mechanicRepo.getPriceMarkups().then(
         (value) {
           markup.value = value;
@@ -125,13 +137,9 @@ class AddInventory extends HookWidget {
 
     showInfoModal() {
       getMarkup();
-      showDialog(
-        context: context,
-        builder: (context) => const MyModal()
-      );
+      showDialog(context: context, builder: (context) => const MyModal());
     }
 
-   
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(19.h),
@@ -202,8 +210,8 @@ class AddInventory extends HookWidget {
               ),
               heightSpace(2),
               Form(
-                onChanged: () =>
-                    isValidated.value = _addInventoryKey.currentState!.validate(),
+                onChanged: () => isValidated.value =
+                    _addInventoryKey.currentState!.validate(),
                 key: _addInventoryKey,
                 child: Container(
                   width: double.infinity,
@@ -296,15 +304,6 @@ class AddInventory extends HookWidget {
                                   children: [
                                     Expanded(
                                       child: CustomTextFormField(
-                                        validator: numericValidation,
-                                        label: 'Weight',
-                                        textEditingController: weight,
-                                        keyboardType: TextInputType.number,
-                                      ),
-                                    ),
-                                    widthSpace(3),
-                                    Expanded(
-                                      child: CustomTextFormField(
                                         label: 'Volume (V)',
                                         textEditingController: volume,
                                         keyboardType: TextInputType.number,
@@ -318,6 +317,27 @@ class AddInventory extends HookWidget {
                                       ),
                                     ),
                                   ],
+                                ),
+                                heightSpace(2),
+                                WeightField(
+                                  validator: numericValidation,
+                                  label: 'Weight (e.g., 1 kg, 500g etc)',
+                                  textEditingController: weight,
+                                  keyboardType: TextInputType.number,
+                                  dropdown: DropdownButton<String>(
+                                    value: selectedUnit.value,
+                                    onChanged: (String? newValue) {
+                                      selectedUnit.value = newValue!;
+                                    },
+                                    items: <String>['kg', 'g']
+                                        .map<DropdownMenuItem<String>>(
+                                            (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                  ),
                                 ),
                                 heightSpace(2),
                                 CustomTextFormField(
@@ -462,16 +482,14 @@ class AddInventory extends HookWidget {
 }
 
 class MyModal extends HookWidget {
- const MyModal({super.key});
-
-
+  const MyModal({super.key});
 
   @override
   Widget build(BuildContext context) {
     final markup = useState<List<PriceMarkup>>([]);
     final isLoading = useState<bool>(true);
 
-    getMarkup() async{
+    getMarkup() async {
       await mechanicRepo.getPriceMarkups().then(
         (value) {
           markup.value = value;
@@ -486,52 +504,52 @@ class MyModal extends HookWidget {
       return null;
     }, [markup.value.length]);
     return SimpleDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius:
-                BorderRadius.circular(20.0), // Adjust the radius as needed
-          ),
-          contentPadding: const EdgeInsets.all(16.0),
+      shape: RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.circular(20.0), // Adjust the radius as needed
+      ),
+      contentPadding: const EdgeInsets.all(16.0),
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                InkWell(
-                    onTap: () => context.pop(),
-                    child: SvgPicture.asset(AppImages.cancelModal))
-              ],
-            ),
-            customText(
-              text: 'About Markup',
-              fontSize: 24,
-              textColor: AppColors.black,
-              fontWeight: FontWeight.w600,
-              textAlignment: TextAlign.center,
-            ),
-            heightSpace(1),
-            isLoading.value
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : Column(
-                    children: [
-                      ...markup.value.map((e) {
-                        if (e.slug == 'product_price_markup') {
-                          final mks = e.value * 100;
-                          return customText(
-                            text:
-                                'A ${mks.toInt()}% markup will be included in your product price for enhanced platform services. Appreciate your understanding!',
-                            fontSize: 12,
-                            textColor: AppColors.black,
-                            textAlignment: TextAlign.center,
-                          );
-                        } else {
-                          return const SizedBox.shrink();
-                        }
-                      }),
-                    ],
-                  ),
-            heightSpace(4)
+            InkWell(
+                onTap: () => context.pop(),
+                child: SvgPicture.asset(AppImages.cancelModal))
           ],
-        );
+        ),
+        customText(
+          text: 'About Markup',
+          fontSize: 24,
+          textColor: AppColors.black,
+          fontWeight: FontWeight.w600,
+          textAlignment: TextAlign.center,
+        ),
+        heightSpace(1),
+        isLoading.value
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Column(
+                children: [
+                  ...markup.value.map((e) {
+                    if (e.slug == 'product_price_markup') {
+                      final mks = e.value * 100;
+                      return customText(
+                        text:
+                            'A ${mks.toInt()}% markup will be included in your product price for enhanced platform services. Appreciate your understanding!',
+                        fontSize: 12,
+                        textColor: AppColors.black,
+                        textAlignment: TextAlign.center,
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  }),
+                ],
+              ),
+        heightSpace(4)
+      ],
+    );
   }
 }

@@ -3,7 +3,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/controller/Helpers.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';

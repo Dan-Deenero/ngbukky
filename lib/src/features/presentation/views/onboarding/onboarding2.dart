@@ -167,7 +167,7 @@ class Boarding2 extends StatelessWidget {
                           widthSpace(1),
                           GestureDetector(
                               onTap: () {
-                                context.push(AppRoutes.login);
+                                context.push(AppRoutes.boarding2);
                               },
                               child: customText(
                                   text: 'Get started',

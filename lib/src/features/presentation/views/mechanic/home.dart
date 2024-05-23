@@ -165,9 +165,9 @@ class HomeView extends HookWidget {
             isLoading.value = false;
           },
           child: isLoading.value
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
+              ?  const Center(
+              child: SingleChildScrollView(),
+            )
               : Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 16),
@@ -888,7 +888,7 @@ class WithdrawalTab extends HookWidget {
                       SizedBox(
                         width: 130,
                         child: customText(
-                          text: 'No payments were made to you',
+                          text: 'you have not made any withdrawal',
                           fontSize: 15,
                           textColor: AppColors.textGrey.withOpacity(0.3),
                           textAlignment: TextAlign.center,

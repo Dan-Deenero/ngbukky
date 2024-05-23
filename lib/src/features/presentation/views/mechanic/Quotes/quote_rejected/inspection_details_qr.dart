@@ -47,6 +47,7 @@ class _QRInspectionDetailsState extends State<QRInspectionDetails> {
           () {
             quoteModel = value;
             quote = quoteModel!.services!;
+            quotes = quoteModel!.quotes;
             isLoading = false;
             dateString = quoteModel!.createdAt!;
             dateTime = DateTime.parse(dateString);
@@ -56,9 +57,9 @@ class _QRInspectionDetailsState extends State<QRInspectionDetails> {
             for (Quotes quote in quotes!) {
               if (quote.price != null) {
                 price += quote.price!;
+                serviceFee += quote.commission!;
               }
             }
-            serviceFee = price * 0.01;
           },
         ));
   }
@@ -81,10 +82,8 @@ class _QRInspectionDetailsState extends State<QRInspectionDetails> {
                 fontWeight: FontWeight.bold,
                 textColor: AppColors.black),
             // heightSpace(1),
-            Flexible(
-              child: bodyText(
-                "View all necessary information about this booking ",
-              ),
+            bodyText(
+              "View all necessary information about \nthis booking ",
             ),
           ],
         ),
@@ -218,14 +217,11 @@ class _QRInspectionDetailsState extends State<QRInspectionDetails> {
                       textColor: AppColors.orange,
                       fontWeight: FontWeight.bold),
                   heightSpace(3),
-                  ...quotes!.map(
+                  ...quote!.map(
                     (quote) {
                       String serviceName = '';
-                      if (quote.requestedPersonalisedService != null) {
-                        serviceName = quote.requestedPersonalisedService!.name!;
-                      } else if (quote.requestedSystemService != null) {
-                        serviceName = quote.requestedSystemService!.name!;
-                      }
+                        serviceName = quote.name!;
+                      
                       return Column(
                         children: [
                           Row(
@@ -242,10 +238,10 @@ class _QRInspectionDetailsState extends State<QRInspectionDetails> {
                                       fontWeight: FontWeight.w600),
                                 ],
                               ),
-                              customText(
-                                  text: '${quote.price!}',
-                                  fontSize: 13,
-                                  textColor: AppColors.black)
+                              // customText(
+                              //     text: '${quote.price!}',
+                              //     fontSize: 13,
+                              //     textColor: AppColors.black)
                             ],
                           ),
                           heightSpace(4),

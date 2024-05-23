@@ -128,7 +128,8 @@ class _SparePersonalInfoState extends ConsumerState<SparePersonalInfo> {
                               orElse: () =>
                                   States(), // Default value if state is not found
                             );
-
+                            cityController.clear();
+                            lgaController.clear();
                             final selectedSlug = selectedState.slug;
                             CityLGA result = await mechanicRepo.getSubdomain(
                                 selectedSlug.toString().toLowerCase().trim());

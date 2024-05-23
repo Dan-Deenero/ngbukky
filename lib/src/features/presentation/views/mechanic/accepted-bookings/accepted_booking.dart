@@ -134,7 +134,7 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                                         fontWeight: FontWeight.bold),
                                     heightSpace(1),
                                     Container(
-                                      width: 27.w,
+                                      width: 26.w,
                                       height: 3.h,
                                       decoration: BoxDecoration(
                                           borderRadius:
@@ -144,7 +144,7 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                                       child: Center(
                                         child: customText(
                                             text: "Accepted booking",
-                                            fontSize: 2.7.w,
+                                            fontSize: 2.5.w,
                                             fontWeight: FontWeight.bold,
                                             textColor: AppColors.green),
                                       ),
@@ -178,10 +178,11 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                                   ],
                                 ),
                                 title: customText(
-                                    text: e.user!.username!,
-                                    fontSize: 16,
-                                    textColor: AppColors.black,
-                                    fontWeight: FontWeight.bold),
+                                  text: e.user!.username!,
+                                  fontSize: 16,
+                                  textColor: AppColors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
                                 leading: Container(
                                   width: 10.w,
                                   height: 10.h,

@@ -52,7 +52,9 @@ class NotificationModel {
         json['booking'] != null ? BookingModel.fromJson(json['booking']) : null;
     order = json['order'];
     ban = json['ban'];
-    quoteRequest = json['quoteRequest'] != null ? QuotesModel.fromJson(json['quoteRequest']) : null;
+    quoteRequest = json['quoteRequest'] != null
+        ? QuotesModel.fromJson(json['quoteRequest'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -80,6 +82,42 @@ class NotificationModel {
     }
     return data;
   }
+
+  NotificationModel copyWith({
+    String? id,
+    String? notifiableId,
+    String? notifiableType,
+    String? title,
+    String? body,
+    String? viewedAt,
+    String? createdAt,
+    String? updatedAt,
+    String? deletedAt,
+    String? priority,
+    User? user,
+    BookingModel? booking,
+    OrdersModel? order,
+    String? ban,
+    QuotesModel? quoteRequest,
+  }) {
+    return NotificationModel(
+      id: id ?? this.id,
+      notifiableId: notifiableId ?? this.notifiableId,
+      notifiableType: notifiableType ?? this.notifiableType,
+      title: title ?? this.title,
+      body: body ?? this.body,
+      viewedAt: viewedAt ?? this.viewedAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      priority: priority ?? this.priority,
+      user: user ?? this.user,
+      booking: booking ?? this.booking,
+      order: order ?? this.order,
+      ban: ban ?? this.ban,
+      quoteRequest: quoteRequest ?? this.quoteRequest,
+    );
+  }
 }
 
 class User {
@@ -96,7 +134,7 @@ class User {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = id;
     data['firstname'] = firstname;
     data['lastname'] = lastname;

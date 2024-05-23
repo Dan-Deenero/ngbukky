@@ -21,7 +21,7 @@ class Endpoints {
   static const String getAllBooking = 'mechanic/bookings';
   static const String getAllQuotes = 'mechanic/quote-requests';
   static const String addPersonalizedService = '/mechanic/services/personal';
-  static const String getAllNotifications = 'notifications/';
+  static const String getAllNotifications = 'notifications';
   static const String updateDealerStoreProfile = 'dealer/store-profile';
   static const String getDealerProfile = 'dealer/profile';
   static const String dealerSparePart = 'dealer/spare-parts';

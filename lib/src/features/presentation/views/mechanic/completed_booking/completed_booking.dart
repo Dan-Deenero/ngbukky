@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/controller/Helpers.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/inspection_booking_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -145,12 +145,14 @@ class _CompletedBookingState extends State<CompletedBooking> {
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             color: AppColors.green
-                                                .withOpacity(.3)),
+                                                .withOpacity(.2)),
                                         child: Center(
                                           child: customText(
-                                              text: "Completed",
-                                              fontSize: 12,
-                                              textColor: AppColors.green),
+                                            text: "Completed",
+                                            fontSize: 2.6.w,
+                                            textColor: AppColors.green,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
                                       )
                                     ]),
@@ -160,9 +162,10 @@ class _CompletedBookingState extends State<CompletedBooking> {
                                           children: [
                                             SvgPicture.asset(AppImages.time),
                                             customText(
-                                                text: formattedTime,
-                                                fontSize: 2.4.w,
-                                                textColor: AppColors.textGrey)
+                                              text: formattedTime,
+                                              fontSize: 2.5.w,
+                                              textColor: AppColors.textGrey,
+                                            )
                                           ],
                                         ),
                                         widthSpace(.5),
@@ -171,9 +174,10 @@ class _CompletedBookingState extends State<CompletedBooking> {
                                             SvgPicture.asset(
                                                 AppImages.calendarIcon),
                                             customText(
-                                                text: formattedDate,
-                                                fontSize: 2.4.w,
-                                                textColor: AppColors.textGrey)
+                                              text: formattedDate,
+                                              fontSize: 2.5.w,
+                                              textColor: AppColors.textGrey,
+                                            )
                                           ],
                                         )
                                       ],

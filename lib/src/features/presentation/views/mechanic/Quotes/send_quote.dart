@@ -61,11 +61,12 @@ class _SendQuoteState extends ConsumerState<SendQuote> {
     log(result.toString());
 
     if (result) {
+      costOnly.clear();
       showSuccesModal();
     }
   }
-
-  showSuccesModal() async {
+showSuccesModal()
+   async {
     await showDialog(
       context: context,
       builder: (context) => SuccessDialogue(

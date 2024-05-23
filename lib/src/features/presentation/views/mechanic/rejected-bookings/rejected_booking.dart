@@ -104,6 +104,14 @@ class _RejectedBookingState extends State<RejectedBooking> {
 
                               var formattedTime =
                                   DateFormat('hh:mm a').format(dateTime);
+                              String profile;
+
+                              if (e.user!.profileImageUrl == null) {
+                                profile =
+                                    'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+                              } else {
+                                profile = e.user!.profileImageUrl!;
+                              }
                               return GestureDetector(
                                 onTap: () {
                                   context.push(AppRoutes.viewRejectedBooking,
@@ -126,18 +134,20 @@ class _RejectedBookingState extends State<RejectedBooking> {
                                           fontWeight: FontWeight.bold),
                                       heightSpace(1),
                                       Container(
-                                        width: 28.w,
+                                        width: 27.w,
                                         height: 3.h,
                                         decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             color:
-                                                AppColors.red.withOpacity(.1)),
+                                                AppColors.red.withOpacity(.2)),
                                         child: Center(
                                           child: customText(
-                                              text: "Rejected booking",
-                                              fontSize: 10,
-                                              textColor: AppColors.red),
+                                            text: "Rejected booking",
+                                            fontSize: 2.5.w,
+                                            textColor: AppColors.red,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
                                       )
                                     ]),
@@ -148,7 +158,7 @@ class _RejectedBookingState extends State<RejectedBooking> {
                                             SvgPicture.asset(AppImages.time),
                                             customText(
                                                 text: formattedTime,
-                                                fontSize: 10,
+                                                fontSize: 2.5.w,
                                                 textColor: AppColors.textGrey)
                                           ],
                                         ),
@@ -159,7 +169,7 @@ class _RejectedBookingState extends State<RejectedBooking> {
                                                 AppImages.calendarIcon),
                                             customText(
                                                 text: formattedDate,
-                                                fontSize: 10,
+                                                fontSize: 2.5.w,
                                                 textColor: AppColors.textGrey)
                                           ],
                                         )
@@ -176,6 +186,13 @@ class _RejectedBookingState extends State<RejectedBooking> {
                                       decoration: const BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: AppColors.containerGrey,
+                                      ),
+                                      child: CircleAvatar(
+                                        backgroundColor:
+                                            AppColors.backgroundGrey,
+                                        backgroundImage: NetworkImage(profile),
+                                        radius:
+                                            55, // Adjust the size of the circle as needed
                                       ),
                                     ),
                                   ),

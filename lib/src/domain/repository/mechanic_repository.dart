@@ -239,7 +239,7 @@ class MechanicRepo {
 
   Future<List<NotificationModel>> getAllNotifications() async {
     final response = await ApiClient.get(
-        '${Endpoints.getAllNotifications}?type=unseen',
+        '${Endpoints.getAllNotifications}/?type=unseen',
         useToken: true);
     List<NotificationModel> notification = [];
     if (response.status == 200) {
@@ -253,7 +253,7 @@ class MechanicRepo {
 
   Future<List<NotificationModel>> getAllSeenNotifications() async {
     final response = await ApiClient.get(
-        '${Endpoints.getAllNotifications}?type=seen',
+        '${Endpoints.getAllNotifications}/?type=seen',
         useToken: true);
     List<NotificationModel> notification = [];
     if (response.status == 200) {
@@ -448,7 +448,7 @@ class MechanicRepo {
 
   Future<List<TransactionModel>> getAllTransaction(String? type) async {
     final response = await ApiClient.get(
-        '${Endpoints.transactions}?&type=$type',
+        '${Endpoints.transactions}/?&type=$type',
         useToken: true);
     List<TransactionModel> transaction = [];
     if (response.status == 200) {

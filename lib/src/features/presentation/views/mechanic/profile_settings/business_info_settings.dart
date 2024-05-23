@@ -87,6 +87,8 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
       ref.read(availability.notifier).state = value.availability!;
       updateStateWithBackendData(ref.watch(availability));
       ref.read(isLoading.notifier).state = false;
+      ref.read(isFromBackend.notifier).state = true;
+      addAvailables();
     });
   }
 
@@ -98,6 +100,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
       final to = item.to;
       workingHoursList.add('$day: $from - $to');
     }
+    log(workingHoursList.toString());
   }
 
   void updateStateWithBackendData(List<Availability> backendData) {
@@ -125,29 +128,29 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
   @override
   Widget build(BuildContext context) {
     final loading = ref.watch(isLoading);
+    final isBackend = ref.watch(isFromBackend);
     final workingHour = ref.watch(stateWorkingHours);
-
-    addAvailables();
-    log(workingHoursList.toString());
+    log(trueItemsString.toString());
     double size = MediaQuery.of(context).size.width;
 
     workingHours() {
       saveData() {
         workingHourController.clear();
         trueItemsString.clear();
+        ref.read(isFromBackend.notifier).state = false;
         for (var item in workingHour) {
           if (item["isChecked"]) {
             var itemString = "${item["day"]}: ${item["from"]} - ${item["to"]}";
-            trueItemsString.add(itemString);
             setState(() {
-              workingHoursList.clear();
-              workingHoursList = trueItemsString;
+              trueItemsString.add(itemString);
             });
+          } else {
+            trueItemsString
+                .removeWhere((element) => element.contains(item["day"]));
           }
         }
-        log(trueItemsString.toString());
-        log(workingHoursList.toString());
-        context.pop(workingHoursList);
+
+        context.pop(trueItemsString);
       }
 
       showModalBottomSheet<void>(
@@ -216,11 +219,11 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                               stateNotifier.state =
                                                   updatedState;
 
-                                              log(ref
-                                                  .read(stateWorkingHours
-                                                      .notifier)
-                                                  .state[index]["isChecked"]
-                                                  .toString());
+                                              // log(ref
+                                              //     .read(stateWorkingHours
+                                              //         .notifier)
+                                              //     .state[index]["isChecked"]
+                                              //     .toString());
                                             },
                                             child: Container(
                                               padding:
@@ -281,11 +284,11 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
 
                                               stateNotifier.state =
                                                   updatedState;
-                                              log(ref
-                                                  .read(stateWorkingHours
-                                                      .notifier)
-                                                  .state[index]["isChecked"]
-                                                  .toString());
+                                              // log(ref
+                                              //     .read(stateWorkingHours
+                                              //         .notifier)
+                                              //     .state[index]["isChecked"]
+                                              //     .toString());
                                               setState(() {});
                                             },
                                             child: Container(
@@ -544,6 +547,8 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                               orElse: () =>
                                   States(), // Default value if state is not found
                             );
+                            cityController.clear();
+                            lgaController.clear();
                             final selectedSlug = selectedState.slug;
                             CityLGA result = await mechanicRepo.getSubdomain(
                                 selectedSlug.toString().toLowerCase().trim());
@@ -820,7 +825,8 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                             AppDropdDownSearch(
                               listOfSelectedItems: serviceNames,
                               onChanged: (val) {
-                                selectedServiceList = val!;
+                                selectedServiceList =  val!;
+                                serviceNames += selectedServiceList;
                                 log(val.toString());
                                 return null;
                               },
@@ -905,7 +911,9 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                             Wrap(
                                               spacing: 2,
                                               direction: Axis.vertical,
-                                              children: workingHoursList
+                                              children: (isBackend
+                                                      ? workingHoursList
+                                                      : trueItemsString)
                                                   .map((e) => Chip(
                                                         backgroundColor:
                                                             AppColors
@@ -1009,7 +1017,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
     final servicesState = ref.watch(services);
     final workingHour = ref.watch(stateWorkingHours);
 
-    for (String serviceName in selectedServiceList) {
+    for (String serviceName in serviceNames) {
       for (SystemServices service in servicesState!.systemServices ?? []) {
         if (service.name == serviceName) {
           log(service.name.toString());

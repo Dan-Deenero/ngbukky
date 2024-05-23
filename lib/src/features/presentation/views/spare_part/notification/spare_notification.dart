@@ -41,10 +41,7 @@ class NewNotification extends HookWidget {
       _mechanicRepo.getOneNotification(id).then((value) {
         notific.value = value;
         isLoading.value = false;
-        Helpers.routeToRespectiveNotificationScreens(
-          notific.value,
-          context,
-        );
+        
       });
     }
 
@@ -241,10 +238,7 @@ class ReadNotification extends HookWidget {
       _mechanicRepo.getOneNotification(id).then((value) {
         notific.value = value;
         isLoading.value = false;
-        Helpers.routeToRespectiveNotificationScreens(
-          notific.value,
-          context,
-        );
+        
       });
     }
 

@@ -139,18 +139,20 @@ class _PaymentDeclinedState extends State<PaymentDeclined> {
                                           fontWeight: FontWeight.bold),
                                       heightSpace(1),
                                       Container(
-                                        width: 26.w,
+                                        width: 25.w,
                                         height: 3.h,
                                         decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             color:
-                                                AppColors.red.withOpacity(.3)),
+                                                AppColors.red.withOpacity(.2)),
                                         child: Center(
                                           child: customText(
-                                              text: "Payment declined",
-                                              fontSize: 10,
-                                              textColor: AppColors.red),
+                                            text: "Payment declined",
+                                            fontSize: 2.5.w,
+                                            textColor: AppColors.red,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
                                       )
                                     ]),
@@ -161,7 +163,7 @@ class _PaymentDeclinedState extends State<PaymentDeclined> {
                                         SvgPicture.asset(AppImages.time),
                                         customText(
                                             text: formattedTime,
-                                            fontSize: 10,
+                                            fontSize: 2.5.w,
                                             textColor: AppColors.textGrey)
                                       ],
                                     ),
@@ -172,7 +174,7 @@ class _PaymentDeclinedState extends State<PaymentDeclined> {
                                             AppImages.calendarIcon),
                                         customText(
                                             text: formattedDate,
-                                            fontSize: 10,
+                                            fontSize: 2.5.w,
                                             textColor: AppColors.textGrey)
                                       ],
                                     )
@@ -191,8 +193,7 @@ class _PaymentDeclinedState extends State<PaymentDeclined> {
                                       color: AppColors.containerGrey),
                                   child: CircleAvatar(
                                     backgroundColor: AppColors.backgroundGrey,
-                                    backgroundImage:
-                                        NetworkImage(profile),
+                                    backgroundImage: NetworkImage(profile),
                                     radius:
                                         55, // Adjust the size of the circle as needed
                                   ),

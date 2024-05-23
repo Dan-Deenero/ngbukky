@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/controller/Helpers.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/get_account.dart';
 import 'package:ngbuka/src/domain/data/transaction_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
@@ -118,7 +118,8 @@ class _WithdrawalDetailState extends State<WithdrawalDetail> {
             body: SingleChildScrollView(
               child: Column(
                 children: [
-                  const Divider(
+                  Divider(
+                    color: Colors.grey.withOpacity(0.1),
                     height: 0,
                   ),
                   Container(
@@ -171,7 +172,7 @@ class _WithdrawalDetailState extends State<WithdrawalDetail> {
                                 )
                               : SvgPicture.asset(AppImages.unwithdrawal),
                           title: customText(
-                              text: '123-000',
+                              text: '${transactionModel!.reference}',
                               fontSize: 14,
                               textColor: AppColors.black,
                               fontWeight: FontWeight.bold),

@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/controller/Helpers.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -143,7 +143,7 @@ class _CompletedQuoteRequestState extends State<CompletedQuoteRequest> {
                                     ),
                                     heightSpace(1),
                                     Container(
-                                      width: 28.w,
+                                      width: 27.w,
                                       height: 3.h,
                                       decoration: BoxDecoration(
                                           borderRadius:

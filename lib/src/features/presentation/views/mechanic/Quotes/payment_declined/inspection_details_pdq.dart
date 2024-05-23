@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/controller/Helpers.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/success_modal.dart';
@@ -219,7 +219,7 @@ class _PDQInspectionDetailsState extends State<PDQInspectionDetails> {
                           customText(
                               text: 'Quote not approved by client',
                               fontSize: 14,
-                              textColor: AppColors.green,
+                              textColor: AppColors.red,
                               fontWeight: FontWeight.w600),
                           customText(
                               text: 'Booking status',
@@ -277,7 +277,7 @@ class _PDQInspectionDetailsState extends State<PDQInspectionDetails> {
                   ListTile(
                     leading: SvgPicture.asset(AppImages.calendarIcon),
                     title: customText(
-                        text: "${quoteModel!.model!}, $quoteModel!.year!}",
+                        text: "${quoteModel!.model!}, ${quoteModel!.year!}",
                         fontSize: 14,
                         textColor: AppColors.black,
                         fontWeight: FontWeight.bold),

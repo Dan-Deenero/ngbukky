@@ -77,54 +77,62 @@ class _BookingRejectedState extends State<BookingRejected> {
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Wrap(
-                    children: [
-                      if (_bookingHistory.isEmpty)
-                        Center(
-                            heightFactor: 3.5,
-                            child: Column(
-                              children: [
-                                SvgPicture.asset(AppImages.bookingWarning),
-                                customText(
-                                    text:
-                                        'You do not have any rejected booking',
-                                    fontSize: 15,
-                                    textColor: AppColors.black,
-                                    textAlignment: TextAlign.center)
-                              ],
-                            ))
-                      else
-                        ..._bookingHistory.map((e) {
-                          int price = 0;
-                          for (Quotes quote in e.quotes!) {
-                            if (quote.price != null) {
-                              price += quote.price!;
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Wrap(
+                      children: [
+                        if (_bookingHistory.isEmpty)
+                          Center(
+                              heightFactor: 3.5,
+                              child: Column(
+                                children: [
+                                  SvgPicture.asset(AppImages.bookingWarning),
+                                  customText(
+                                      text:
+                                          'You do not have any rejected booking',
+                                      fontSize: 15,
+                                      textColor: AppColors.black,
+                                      textAlignment: TextAlign.center)
+                                ],
+                              ))
+                        else
+                          ..._bookingHistory.map((e) {
+                            int price = 0;
+                            for (Quotes quote in e.quotes!) {
+                              if (quote.price != null) {
+                                price += quote.price!;
+                              }
                             }
-                          }
-                          var dateString = e.date;
-                          var dateTime = DateTime.parse(dateString!);
-                          var formattedDate =
-                              DateFormat('dd MMM yyyy').format(dateTime);
+                            var dateString = e.date;
+                            var dateTime = DateTime.parse(dateString!);
+                            var formattedDate =
+                                DateFormat('dd MMM yyyy').format(dateTime);
 
-                          var formattedTime =
-                              DateFormat('hh:mm a').format(dateTime);
-                          return GestureDetector(
-                            onTap: () {
-                              context.push(AppRoutes.bookingRejectedDetails,
-                                  extra: e.id);
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.only(bottom: 10),
-                              width: double.infinity,
-                              height: 10.h,
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: ListTile(
+                            var formattedTime =
+                                DateFormat('hh:mm a').format(dateTime);
+                            String profile;
+
+                            if (e.user!.profileImageUrl == null) {
+                              profile =
+                                  'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+                            } else {
+                              profile = e.user!.profileImageUrl!;
+                            }
+                            return GestureDetector(
+                              onTap: () {
+                                context.push(AppRoutes.bookingRejectedDetails,
+                                    extra: e.id);
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.only(bottom: 10),
+                                width: double.infinity,
+                                height: 10.h,
+                                decoration: BoxDecoration(
+                                  color: AppColors.white,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: ListTile(
                                   trailing: Column(children: [
                                     customText(
                                         text: "₦ $price",
@@ -133,19 +141,21 @@ class _BookingRejectedState extends State<BookingRejected> {
                                         fontWeight: FontWeight.bold),
                                     heightSpace(1),
                                     Container(
-                                      width: 28.w,
-                                      height: 3.h,
+                                      width: 25.w,
+                                      height: 2.5.h,
                                       decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10),
-                                          color: AppColors.red.withOpacity(.1)),
+                                          color: AppColors.red.withOpacity(.2)),
                                       child: Center(
                                         child: customText(
-                                            text: "Accepted booking",
-                                            fontSize: 10,
-                                            textColor: AppColors.red),
+                                          text: "Booking Rejected",
+                                          fontSize: 2.5.w,
+                                          textColor: AppColors.red,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                    )
+                                    ),
                                   ]),
                                   subtitle: Row(
                                     children: [
@@ -153,9 +163,10 @@ class _BookingRejectedState extends State<BookingRejected> {
                                         children: [
                                           SvgPicture.asset(AppImages.time),
                                           customText(
-                                              text: formattedTime,
-                                              fontSize: 10,
-                                              textColor: AppColors.textGrey)
+                                            text: formattedTime,
+                                            fontSize: 2.5.w,
+                                            textColor: AppColors.textGrey,
+                                          )
                                         ],
                                       ),
                                       widthSpace(1),
@@ -164,9 +175,10 @@ class _BookingRejectedState extends State<BookingRejected> {
                                           SvgPicture.asset(
                                               AppImages.calendarIcon),
                                           customText(
-                                              text: formattedDate,
-                                              fontSize: 10,
-                                              textColor: AppColors.textGrey)
+                                            text: formattedDate,
+                                            fontSize: 2.5.w,
+                                            textColor: AppColors.textGrey,
+                                          )
                                         ],
                                       )
                                     ],
@@ -180,17 +192,26 @@ class _BookingRejectedState extends State<BookingRejected> {
                                     width: 10.w,
                                     height: 10.h,
                                     decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: AppColors.containerGrey),
-                                  )),
-                            ),
-                          );
-                        })
-                    ],
+                                      shape: BoxShape.circle,
+                                      color: AppColors.containerGrey,
+                                    ),
+                                    child: CircleAvatar(
+                                      backgroundColor: AppColors.backgroundGrey,
+                                      backgroundImage: NetworkImage(profile),
+                                      radius:
+                                          55, // Adjust the size of the circle as needed
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          })
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            )),
+                ],
+              ),
+            ),
     );
   }
 }

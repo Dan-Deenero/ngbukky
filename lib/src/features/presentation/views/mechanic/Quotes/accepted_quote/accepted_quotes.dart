@@ -134,7 +134,7 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
                                   ),
                                   heightSpace(1),
                                   Container(
-                                    width: 28.w,
+                                    width: 26.w,
                                     height: 3.h,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),

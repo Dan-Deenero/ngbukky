@@ -6,7 +6,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/controller/Helpers.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/inventory_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
@@ -49,31 +49,31 @@ class _ViewInventoryDetailsState extends State<ViewInventoryDetails> {
               inventoryModel = value;
               log(inventoryModel!.toJson().toString());
               if(inventoryModel!.specifications!.length == ''){
-                length = '0mm';
+                length = '0';
               }else{
                 length = inventoryModel!.specifications!.length;
               }
 
               if(inventoryModel!.specifications!.width == ''){
-                width = '0mm';
+                width = '0';
               }else{
                 width = inventoryModel!.specifications!.width;
               }
 
               if(inventoryModel!.specifications!.height == ''){
-                height = '0mm';
+                height = '0';
               }else{
                 height = inventoryModel!.specifications!.height;
               }
 
               if(inventoryModel!.specifications!.weight == ''){
-                weight = '0kg';
+                weight = '0';
               }else{
                 weight = inventoryModel!.specifications!.weight;
               }
 
               if(inventoryModel!.specifications!.volume == ''){
-                volume = '0l';
+                volume = '0';
               }else{
                 volume = inventoryModel!.specifications!.volume;
               }
@@ -231,7 +231,7 @@ class _ViewInventoryDetailsState extends State<ViewInventoryDetails> {
                           heightSpace(3),
                           rowDetails(
                               'Weight',
-                              '$weight',
+                              weight,
                               'Product Size (L x W x H x V)',
                               '$length x $width x $height x $volume',
                               sw),

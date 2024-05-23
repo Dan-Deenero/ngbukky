@@ -31,7 +31,6 @@ class _SpareStoreInfoState extends ConsumerState<SpareStoreInfo> {
   static final email = TextEditingController();
 
   // static final AuthRepo _authRepo = AuthRepo();
-  final address = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   static final MechanicRepo _mechanicRepo = MechanicRepo();

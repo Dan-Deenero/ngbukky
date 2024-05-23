@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -5,10 +7,13 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:ngbuka/src/config/keys/app_keys.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
+import 'package:ngbuka/src/config/locator/app_locator.dart';
+import 'package:ngbuka/src/config/services/storage_service.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/controller/Helpers.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/transaction_model.dart';
 import 'package:ngbuka/src/domain/data/wallet_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
@@ -67,6 +72,10 @@ class Wallet extends HookWidget {
   Widget build(BuildContext context) {
     final wallet = useState<WalletModel?>(null);
 
+    final showBalance = useState<bool>(
+        locator<LocalStorageService>()
+            .getDataFromDisk(AppKeys.showBalanceForVendor) ?? true);
+
     Future<dynamic> getWallet() async {
       await mechanicRepo.getWallet().then(
         (value) {
@@ -79,7 +88,7 @@ class Wallet extends HookWidget {
       showDialog(
         context: context,
         builder: (context) => Center(
-          child: Container(
+          child: SizedBox(
             width: 700, // Set the desired width
             height: 200,
             child: Dialog(
@@ -173,6 +182,7 @@ class Wallet extends HookWidget {
       await mechanicRepo.getAllTransaction('all').then(
         (value) {
           transactionHistory.value = value;
+          log(showBalance.toString());
         },
       );
     }
@@ -220,190 +230,223 @@ class Wallet extends HookWidget {
             )
           ],
         ),
-        body: RefreshIndicator(
-          onRefresh: () async {
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: AppColors.white,
+          mini: true,
+          onPressed: () async {
             isLoading.value = true;
             await getTransaction();
             await getWallet();
             isLoading.value = false;
           },
-          child: isLoading.value
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : SingleChildScrollView(
+          child: const Icon(Icons.refresh),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
+        body: isLoading.value
+            ? const Center(
+              child: SingleChildScrollView(),
+            )
+            : SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          width: double.infinity,
-                          height: 20.h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            image: const DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage(
-                                AppImages.walletbase,
-                              ),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 8,
+                        ),
+                        width: double.infinity,
+                        height: 22.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          image: const DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AssetImage(
+                              AppImages.walletbase,
                             ),
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              customText(
-                                text: "Total Balance",
-                                fontSize: 15,
-                                textColor: AppColors.white,
-                              ),
-                              customText(
-                                text:
-                                    '₦${Helpers.formatBalance(wallet.value!.wallet!.balance!)}',
-                                fontSize: 32,
-                                textColor: AppColors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              heightSpace(1),
-                              GestureDetector(
-                                onTap: accept,
-                                child:
-                                    SvgPicture.asset(AppImages.welcomeImage),
-                              ),
-                              // heightSpace(2),
-                            ],
-                          ),
                         ),
-                        heightSpace(2),
-                        SizedBox(
-                          height: 14.h,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              transactionBox(
-                                "Total Earnings",
-                                "This year",
-                                Helpers.formatBalance(wallet.value!.analytics!
-                                    .totalEarnedForTheYear!),
-                              ),
-                              verticalDivide(),
-                              transactionBox(
-                                "Earned",
-                                "This month",
-                                Helpers.formatBalance(wallet.value!.analytics!
-                                    .totalEarnedForTheMonth!),
-                              ),
-                              verticalDivide(),
-                              transactionBox(
-                                "Withdrawn",
-                                "This month",
-                                Helpers.formatBalance(wallet.value!.analytics!
-                                    .totalWithdrawnThisMonth!),
-                              )
-                            ],
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    locator<LocalStorageService>()
+                                        .saveDataToDisk(
+                                      AppKeys.showBalanceForVendor,
+                                      showBalance.value,
+                                    );
+                                    showBalance.value = !showBalance.value;
+                                  },
+                                  child: showBalance.value
+                                      ? SvgPicture.asset(AppImages.hideFunds)
+                                      : SvgPicture.asset(AppImages.showFunds),
+                                ),
+                              ],
+                            ),
                             customText(
-                                text: "History",
-                                fontSize: 15,
-                                textColor: AppColors.black,
-                                fontWeight: FontWeight.bold),
-                            if (transactionHistory.value.isEmpty)
-                              IgnorePointer(
-                                ignoring: true,
-                                child: Row(
-                                  children: [
-                                    customText(
-                                      text: "See all",
-                                      fontSize: 15,
-                                      textColor:
-                                          AppColors.primary.withOpacity(0.1),
+                              text: "Total Balance",
+                              fontSize: 12,
+                              textColor: AppColors.white,
+                            ),
+                            showBalance.value
+                                ? SizedBox(
+                                    height: 6.h,
+                                    child: customText(
+                                      text:
+                                          '₦${Helpers.formatBalance(wallet.value!.wallet!.balance!)}',
+                                      fontSize: 32,
+                                      textColor: AppColors.white,
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                    Icon(
-                                      Icons.arrow_forward,
-                                      size: 20,
-                                      color:
-                                          AppColors.primary.withOpacity(0.1),
-                                    )
-                                  ],
-                                ),
-                              )
-                            else
-                              GestureDetector(
-                                onTap: () =>
-                                    context.push(AppRoutes.walletHistory),
-                                child: Row(
-                                  children: [
-                                    customText(
-                                        text: "See all",
-                                        fontSize: 15,
-                                        textColor: AppColors.primary),
-                                    const Icon(
-                                      Icons.arrow_forward,
-                                      size: 20,
-                                    )
-                                  ],
-                                ),
-                              )
+                                  )
+                                : SizedBox(
+                                    height: 6.h,
+                                    child: SvgPicture.asset(
+                                      AppImages.hiddenBalance,
+                                    ),
+                                  ),
+                            heightSpace(1),
+                            GestureDetector(
+                              onTap: accept,
+                              child: SvgPicture.asset(AppImages.welcomeImage),
+                            ),
+                            // heightSpace(2),
                           ],
                         ),
-                        heightSpace(3),
-                        Container(
-                          height: 40,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              color: AppColors.borderGrey,
-                              borderRadius: BorderRadius.circular(5)),
-                          child: TabBar(
-                            labelPadding: EdgeInsets.zero,
-                            unselectedLabelColor: AppColors.primary,
-                            labelColor: AppColors.primary,
-                            indicator: const BoxDecoration(),
-                            onTap: (value) {
-                              tabIndex.value = value;
-                            },
-                            tabs: [
-                              Container(
-                                width: 200,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                    color: tabIndex.value == 0
-                                        ? AppColors.white
-                                        : AppColors.borderGrey,
-                                    borderRadius: BorderRadius.circular(5)),
-                                child: const Tab(
-                                  text: "Payment",
-                                ),
-                              ),
-                              Container(
-                                width: 400,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                    color: tabIndex.value == 1
-                                        ? AppColors.white
-                                        : AppColors.borderGrey,
-                                    borderRadius: BorderRadius.circular(5)),
-                                child: const Tab(
-                                  text: "Withdrawal",
-                                ),
-                              ),
-                            ],
-                          ),
+                      ),
+                      heightSpace(2),
+                      SizedBox(
+                        height: 14.h,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            transactionBox(
+                              "Total Earnings",
+                              "This year",
+                              Helpers.formatBalance(wallet
+                                  .value!.analytics!.totalEarnedForTheYear!),
+                            ),
+                            verticalDivide(),
+                            transactionBox(
+                              "Earned",
+                              "This month",
+                              Helpers.formatBalance(wallet
+                                  .value!.analytics!.totalEarnedForTheMonth!),
+                            ),
+                            verticalDivide(),
+                            transactionBox(
+                              "Withdrawn",
+                              "This month",
+                              Helpers.formatBalance(wallet
+                                  .value!.analytics!.totalWithdrawnThisMonth!),
+                            )
+                          ],
                         ),
-                        heightSpace(2),
-                        IndexedStack(
-                          index: tabIndex.value,
-                          children: const [PaymentTab(), WithdrawalTab()],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          customText(
+                              text: "History",
+                              fontSize: 15,
+                              textColor: AppColors.black,
+                              fontWeight: FontWeight.bold),
+                          if (transactionHistory.value.isEmpty)
+                            IgnorePointer(
+                              ignoring: true,
+                              child: Row(
+                                children: [
+                                  customText(
+                                    text: "See all",
+                                    fontSize: 15,
+                                    textColor:
+                                        AppColors.primary.withOpacity(0.1),
+                                  ),
+                                  Icon(
+                                    Icons.arrow_forward,
+                                    size: 20,
+                                    color: AppColors.primary.withOpacity(0.1),
+                                  )
+                                ],
+                              ),
+                            )
+                          else
+                            GestureDetector(
+                              onTap: () =>
+                                  context.push(AppRoutes.walletHistory),
+                              child: Row(
+                                children: [
+                                  customText(
+                                      text: "See all",
+                                      fontSize: 15,
+                                      textColor: AppColors.primary),
+                                  const Icon(
+                                    Icons.arrow_forward,
+                                    size: 20,
+                                  )
+                                ],
+                              ),
+                            )
+                        ],
+                      ),
+                      heightSpace(3),
+                      Container(
+                        height: 40,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            color: AppColors.borderGrey,
+                            borderRadius: BorderRadius.circular(5)),
+                        child: TabBar(
+                          labelPadding: EdgeInsets.zero,
+                          unselectedLabelColor: AppColors.primary,
+                          labelColor: AppColors.primary,
+                          indicator: const BoxDecoration(),
+                          onTap: (value) {
+                            tabIndex.value = value;
+                          },
+                          tabs: [
+                            Container(
+                              width: 200,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  color: tabIndex.value == 0
+                                      ? AppColors.white
+                                      : AppColors.borderGrey,
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: const Tab(
+                                text: "Payment",
+                              ),
+                            ),
+                            Container(
+                              width: 400,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  color: tabIndex.value == 1
+                                      ? AppColors.white
+                                      : AppColors.borderGrey,
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: const Tab(
+                                text: "Withdrawal",
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      heightSpace(2),
+                      IndexedStack(
+                        index: tabIndex.value,
+                        children: const [PaymentTab(), WithdrawalTab()],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-        ),
       ),
     );
   }
@@ -443,9 +486,7 @@ class PaymentTab extends HookWidget {
         ? const Center(
             child: CircularProgressIndicator(),
           )
-        : Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Column(
+        : Column(
             children: [
               if (transactionHistory.value.isEmpty)
                 Center(
@@ -472,9 +513,8 @@ class PaymentTab extends HookWidget {
                     var dateTime = DateTime.parse(dateString!);
                     var formattedDate =
                         DateFormat('dd MMM yyyy').format(dateTime);
-        
-                    var formattedTime =
-                        DateFormat('hh:mm a').format(dateTime);
+
+                    var formattedTime = DateFormat('hh:mm a').format(dateTime);
                     return Column(
                       children: [
                         WalletTile(
@@ -486,14 +526,13 @@ class PaymentTab extends HookWidget {
                           status: e.status,
                           time: formattedTime,
                         ),
-                        heightSpace(2)
+                        heightSpace(1)
                       ],
                     );
                   },
                 )
             ],
-          ),
-        );
+          );
   }
 }
 
@@ -522,9 +561,7 @@ class WithdrawalTab extends HookWidget {
         ? const Center(
             child: CircularProgressIndicator(),
           )
-        : Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
+        : Column(
             children: [
               if (transactionHistory.value.isEmpty)
                 Center(
@@ -551,9 +588,8 @@ class WithdrawalTab extends HookWidget {
                     var dateTime = DateTime.parse(dateString!);
                     var formattedDate =
                         DateFormat('dd MMM yyyy').format(dateTime);
-        
-                    var formattedTime =
-                        DateFormat('hh:mm a').format(dateTime);
+
+                    var formattedTime = DateFormat('hh:mm a').format(dateTime);
                     return Column(
                       children: [
                         WalletTile(
@@ -571,7 +607,6 @@ class WithdrawalTab extends HookWidget {
                   },
                 )
             ],
-          ),
-        );
+          );
   }
 }

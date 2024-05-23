@@ -53,7 +53,7 @@ class _QuoteRequestsState extends State<QuoteRequests> {
     bool result = await _mechanicRepo.acceptOrRejectQuote(body, widget.id);
     if (result) {
       if (context.mounted) {
-        context.go(AppRoutes.bottomNav);
+        context.go(AppRoutes.sendQuotes, extra: quoteModel!.id );
         return;
       }
     }

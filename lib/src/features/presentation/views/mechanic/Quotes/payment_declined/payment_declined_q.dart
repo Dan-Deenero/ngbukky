@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/controller/Helpers.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -123,8 +123,9 @@ class _QPaymentDeclinedState extends State<QPaymentDeclined> {
                           var formattedTime =
                               DateFormat('hh:mm a').format(dateTime);
                           return GestureDetector(
-                            onTap: () => context
-                                .push(AppRoutes.quotePaymentDeclineDetails, extra: e.id),
+                            onTap: () => context.push(
+                                AppRoutes.quotePaymentDeclineDetails,
+                                extra: e.id),
                             child: Card(
                               color: Colors.white,
                               surfaceTintColor: Colors.transparent,
@@ -145,12 +146,14 @@ class _QPaymentDeclinedState extends State<QPaymentDeclined> {
                                       decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10),
-                                          color: AppColors.red.withOpacity(.3)),
+                                          color: AppColors.red.withOpacity(.2)),
                                       child: Center(
                                         child: customText(
-                                            text: "Payment declined",
-                                            fontSize: 10,
-                                            textColor: AppColors.red),
+                                          text: "Payment declined",
+                                          fontSize: 10,
+                                          textColor: AppColors.red,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ),
                                   ],

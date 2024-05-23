@@ -140,20 +140,24 @@ class Quotes {
   String? id;
   int? price;
   String? message;
+  int? commission;
   Services? requestedSystemService;
   OtherServices? requestedPersonalisedService;
 
-  Quotes(
-      {this.id,
-      this.price,
-      this.message,
-      this.requestedSystemService,
-      this.requestedPersonalisedService});
+  Quotes({
+    this.id,
+    this.price,
+    this.message,
+    this.commission,
+    this.requestedSystemService,
+    this.requestedPersonalisedService,
+  });
 
   Quotes.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     price = json['price'];
     message = json['message'];
+    commission = json['commission'];
     requestedSystemService = json['requestedSystemService'] != null
         ? Services.fromJson(json['requestedSystemService'])
         : null;
@@ -167,6 +171,7 @@ class Quotes {
     data['id'] = id;
     data['price'] = price;
     data['message'] = message;
+    data['commission'] = commission;
     if (requestedSystemService != null) {
       data['requestedSystemService'] = requestedSystemService!.toJson();
     }

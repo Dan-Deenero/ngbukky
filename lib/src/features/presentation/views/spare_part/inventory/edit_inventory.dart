@@ -13,6 +13,7 @@ import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_textformfield.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
+import 'package:ngbuka/src/features/presentation/widgets/weight_field.dart';
 import 'package:ngbuka/src/utils/helpers/validators.dart';
 
 class EditInventory extends HookWidget {
@@ -90,6 +91,10 @@ class EditInventory extends HookWidget {
       );
     }
 
+    final selectedUnit = useState<String>('kg');
+    final convertedWeight = useState<String>('');
+
+
     Future<void> updateProfilePicture() async {
       // Select image
       final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -107,6 +112,13 @@ class EditInventory extends HookWidget {
     }
 
     updateInventory() async {
+      final weighty = double.parse(weight.text);
+      if (selectedUnit.value == 'g') {
+        convertedWeight.value = (weighty / 1000).toString();
+      } else {
+        convertedWeight.value = weighty.toString();
+      }
+      
       var data = {
         "name": productName.text,
         "price": price.text,
@@ -119,7 +131,7 @@ class EditInventory extends HookWidget {
           "width": width.text,
           "length": length.text,
           "height": height.text,
-          "weight": weight.text,
+          "weight": convertedWeight.value,
           "volume": volume.text,
           "countryOfProducton": country.text,
           "modelNumber": modelNumber.text
@@ -133,7 +145,7 @@ class EditInventory extends HookWidget {
 
       if (result) {
         if (context.mounted) {
-          context.pop();
+          context.pop(result);
         }
       }
     }
@@ -315,15 +327,6 @@ class EditInventory extends HookWidget {
                                         children: [
                                           Expanded(
                                             child: CustomTextFormField(
-                                              label: 'Weight',
-                                              textEditingController: weight,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                            ),
-                                          ),
-                                          widthSpace(3),
-                                          Expanded(
-                                            child: CustomTextFormField(
                                               label: 'Volume (V)',
                                               textEditingController: volume,
                                               keyboardType:
@@ -338,6 +341,27 @@ class EditInventory extends HookWidget {
                                             ),
                                           ),
                                         ],
+                                      ),
+                                      heightSpace(2),
+                                      WeightField(
+                                        validator: numericValidation,
+                                        label: 'Weight (e.g., 1 kg, 500g etc)',
+                                        textEditingController: weight,
+                                        keyboardType: TextInputType.number,
+                                        dropdown: DropdownButton<String>(
+                                          value: selectedUnit.value,
+                                          onChanged: (String? newValue) {
+                                            selectedUnit.value = newValue!;
+                                          },
+                                          items: <String>['kg', 'g']
+                                              .map<DropdownMenuItem<String>>(
+                                                  (String value) {
+                                            return DropdownMenuItem<String>(
+                                              value: value,
+                                              child: Text(value),
+                                            );
+                                          }).toList(),
+                                        ),
                                       ),
                                       heightSpace(2),
                                       CustomTextFormField(

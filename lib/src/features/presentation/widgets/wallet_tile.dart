@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/controller/Helpers.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
@@ -39,11 +39,11 @@ class WalletTile extends StatelessWidget {
     if (status == 'failed' ||
         status == 'Unsuccessful' ||
         status == 'Refunded') {
-      bgcol = AppColors.red.withOpacity(.3);
+      bgcol = AppColors.red.withOpacity(.2);
       txtcol = AppColors.red;
       isSuccess = false;
     } else {
-      bgcol = AppColors.green.withOpacity(.3);
+      bgcol = AppColors.green.withOpacity(.2);
       txtcol = AppColors.green;
       isSuccess = true;
     }
@@ -141,7 +141,8 @@ class WalletTile extends StatelessWidget {
                             child: customText(
                                 text: "$status",
                                 fontSize: 12,
-                                textColor: txtcol),
+                                textColor: txtcol,
+                                fontWeight: FontWeight.w600),
                           ),
                         )
                       ],

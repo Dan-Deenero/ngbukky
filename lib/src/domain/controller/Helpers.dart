@@ -3,10 +3,16 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/domain/data/notification_model.dart';
-
 class Helpers {
   static routeToRespectiveNotificationScreens(
       NotificationModel? data, BuildContext context) {
+    // MechanicRepo mechanicRepo = MechanicRepo();
+    // NotificationModel notific = NotificationModel();
+    // getANotification(String id) async {
+    //   final result = await mechanicRepo.getOneNotification(id);
+    //   notific = result;
+    // }
+
     switch (data!.notifiableType) {
       case "booking":
         switch (data.booking!.status) {
@@ -97,7 +103,6 @@ class Helpers {
     // Format the balance using the NumberFormat instance
     return formatter.format(balance);
   }
-
 
   static onItemTapped(
     int index,
