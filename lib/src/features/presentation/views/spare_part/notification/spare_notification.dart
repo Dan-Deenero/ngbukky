@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/notification_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -41,7 +42,6 @@ class NewNotification extends HookWidget {
       _mechanicRepo.getOneNotification(id).then((value) {
         notific.value = value;
         isLoading.value = false;
-        
       });
     }
 
@@ -86,7 +86,15 @@ class NewNotification extends HookWidget {
                         return Column(
                           children: [
                             GestureDetector(
-                              onTap: () => getANotification(e.id!),
+                              onTap: () {
+                                getANotification(e.id!);
+                                if (notific.value!.notifiableType == "order") {
+                                  context.push(
+                                    AppRoutes.ordersInfo,
+                                    extra: notific.value!.order!.id,
+                                  );
+                                }
+                              },
                               child: Container(
                                 width: double.infinity,
                                 // height: 120,
@@ -238,7 +246,6 @@ class ReadNotification extends HookWidget {
       _mechanicRepo.getOneNotification(id).then((value) {
         notific.value = value;
         isLoading.value = false;
-        
       });
     }
 
@@ -282,7 +289,15 @@ class ReadNotification extends HookWidget {
                         return Column(
                           children: [
                             GestureDetector(
-                              onTap: () => getANotification(e.id!),
+                              onTap: () {
+                                getANotification(e.id!);
+                                if (notific.value!.notifiableType == "order") {
+                                  context.push(
+                                    AppRoutes.ordersInfo,
+                                    extra: notific.value!.order!.id,
+                                  );
+                                }
+                              },
                               child: Container(
                                 width: double.infinity,
                                 // height: 120,
@@ -359,26 +374,33 @@ class ReadNotification extends HookWidget {
                                                     SvgPicture.asset(
                                                         AppImages.time),
                                                     customText(
-                                                        text: formattedTime,
-                                                        fontSize:
-                                                            calculateTextSize(
-                                                                context, 0.025),
-                                                        textColor:
-                                                            AppColors.textGrey)
+                                                      text: formattedTime,
+                                                      fontSize:
+                                                          calculateTextSize(
+                                                        context,
+                                                        0.025,
+                                                      ),
+                                                      textColor:
+                                                          AppColors.textGrey,
+                                                    )
                                                   ],
                                                 ),
                                                 widthSpace(.5),
                                                 Row(
                                                   children: [
                                                     SvgPicture.asset(
-                                                        AppImages.calendarIcon),
+                                                      AppImages.calendarIcon,
+                                                    ),
                                                     customText(
-                                                        text: formattedDate,
-                                                        fontSize:
-                                                            calculateTextSize(
-                                                                context, 0.025),
-                                                        textColor:
-                                                            AppColors.textGrey)
+                                                      text: formattedDate,
+                                                      fontSize:
+                                                          calculateTextSize(
+                                                        context,
+                                                        0.025,
+                                                      ),
+                                                      textColor:
+                                                          AppColors.textGrey,
+                                                    )
                                                   ],
                                                 )
                                               ],

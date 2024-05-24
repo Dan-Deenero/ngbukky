@@ -21,7 +21,7 @@ class QuoteMiddleman extends StatefulWidget {
 class _QuoteMiddlemanState extends State<QuoteMiddleman> {
   @override
   Widget build(BuildContext context) {
-    if(widget.status == 'booking'){
+    if(widget.status == 'pending'){
           return QuoteRequests(id: widget.id,);
         }else if(widget.status == 'accepted'){
           return ViewAcceptedQuote(id: widget.id,);

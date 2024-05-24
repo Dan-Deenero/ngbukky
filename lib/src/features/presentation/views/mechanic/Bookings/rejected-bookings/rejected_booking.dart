@@ -114,8 +114,13 @@ class _RejectedBookingState extends State<RejectedBooking> {
                               }
                               return GestureDetector(
                                 onTap: () {
-                                  context.push(AppRoutes.bookingMiddleman,
-                                      extra: {e.id, e.status});
+                                  context.push(
+                                    AppRoutes.bookingMiddleman,
+                                    extra: {
+                                      'id': e.id,
+                                      'status': e.status,
+                                    },
+                                  );
                                 },
                                 child: Container(
                                   margin: const EdgeInsets.only(bottom: 10),

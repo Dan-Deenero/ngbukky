@@ -132,8 +132,13 @@ class _PendingClientApprovalState extends State<PendingClientApproval> {
                               }
                               return GestureDetector(
                                 onTap: () {
-                                  context.push(AppRoutes.quoteMiddlemen,
-                                        extra: {e.id, e.status});
+                                  context.push(
+                                    AppRoutes.quoteMiddlemen,
+                                    extra: {
+                                      'id': e.id,
+                                      'status': e.status,
+                                    },
+                                  );
                                 },
                                 child: Card(
                                   color: Colors.white,
@@ -144,7 +149,8 @@ class _PendingClientApprovalState extends State<PendingClientApproval> {
                                           CrossAxisAlignment.end,
                                       children: [
                                         customText(
-                                            text: "₦${Helpers.formatBalance(price)}",
+                                            text:
+                                                "₦${Helpers.formatBalance(price)}",
                                             fontSize: 14,
                                             textColor: AppColors.textGrey,
                                             fontWeight: FontWeight.bold),

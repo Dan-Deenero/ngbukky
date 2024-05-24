@@ -119,8 +119,10 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
                           }
                           return GestureDetector(
                             onTap: () {
-                              context.push(AppRoutes.quoteMiddlemen,
-                                        extra: {e.id, e.status});
+                              context.push(
+                                      AppRoutes.quoteMiddlemen,
+                                      extra: {'id': e.id, 'status': e.status,},
+                                    );
                             },
                             child: Card(
                               color: Colors.white,

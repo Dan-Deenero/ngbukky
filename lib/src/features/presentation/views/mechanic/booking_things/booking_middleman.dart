@@ -20,9 +20,11 @@ class BookingMiddleman extends StatefulWidget {
 }
 
 class _BookingMiddlemanState extends State<BookingMiddleman> {
+
   @override
   Widget build(BuildContext context) {
-        if(widget.status == 'booking'){
+
+        if(widget.status == 'pending'){
           return InspectionBooking(id: widget.id,);
         }else if(widget.status == 'accepted'){
           return ViewAcceptedBooking(id: widget.id,);
@@ -51,8 +53,10 @@ class DefaultWidget extends StatelessWidget {
   const DefaultWidget({super.key, });
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Unknown status'),
+    return const Scaffold(
+      body: Center(
+        child: Text('Unknown status'),
+      ),
     );
   }
 }

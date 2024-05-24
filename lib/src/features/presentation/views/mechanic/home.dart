@@ -165,9 +165,9 @@ class HomeView extends HookWidget {
             isLoading.value = false;
           },
           child: isLoading.value
-              ?  const Center(
-              child: SingleChildScrollView(),
-            )
+              ? const Center(
+                  child: SingleChildScrollView(),
+                )
               : Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 16),
@@ -312,8 +312,12 @@ class HomeView extends HookWidget {
                                 children: [
                                   GestureDetector(
                                     onTap: () => context.push(
-                                        AppRoutes.inspectionBooking,
-                                        extra: e.id),
+                                      AppRoutes.bookingMiddleman,
+                                      extra: {
+                                        'id': e.id,
+                                        'status': e.status,
+                                      },
+                                    ),
                                     child: Card(
                                       color: AppColors.white,
                                       surfaceTintColor: Colors.transparent,
@@ -499,8 +503,13 @@ class HomeView extends HookWidget {
                               String serviceNames = names.join(', ');
 
                               return GestureDetector(
-                                onTap: () => context
-                                    .push(AppRoutes.quoteRequest, extra: e.id),
+                                onTap: () => context.push(
+                                  AppRoutes.quoteMiddlemen,
+                                  extra: {
+                                    'id': e.id,
+                                    'status': e.status,
+                                  },
+                                ),
                                 child: Container(
                                   margin: const EdgeInsets.only(bottom: 10),
                                   alignment: Alignment.center,

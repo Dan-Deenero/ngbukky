@@ -124,8 +124,13 @@ class _QPaymentRequestState extends State<QPaymentRequest> {
                           profile = e.user!.profileImageUrl!;
                         }
                         return GestureDetector(
-                          onTap: () => context.push(AppRoutes.quoteMiddlemen,
-                                        extra: {e.id, e.status}),
+                          onTap: () => context.push(
+                            AppRoutes.quoteMiddlemen,
+                            extra: {
+                              'id': e.id,
+                              'status': e.status,
+                            },
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.all(10),
                             child: Card(
@@ -137,7 +142,8 @@ class _QPaymentRequestState extends State<QPaymentRequest> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     customText(
-                                        text: 'Due: ₦${Helpers.formatBalance(price)}',
+                                        text:
+                                            'Due: ₦${Helpers.formatBalance(price)}',
                                         fontSize: 15,
                                         textColor: AppColors.orange),
                                     Container(
@@ -210,7 +216,8 @@ class _QPaymentRequestState extends State<QPaymentRequest> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 customText(
-                                    text: 'Due: ₦${Helpers.formatBalance(totalPrice)}',
+                                    text:
+                                        'Due: ₦${Helpers.formatBalance(totalPrice)}',
                                     fontSize: 15,
                                     textColor: AppColors.orange),
                                 Container(

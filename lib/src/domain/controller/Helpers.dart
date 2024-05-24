@@ -8,10 +8,10 @@ class Helpers {
       NotificationModel? data, BuildContext context) {
     switch (data!.notifiableType) {
       case "booking":
-        context.push(AppRoutes.bookingMiddleman, extra: data.notifiableId);
+        context.push(AppRoutes.notificationToBooking, extra: data.id);
         break;
       case "quote request":
-        context.push(AppRoutes.quoteMiddlemen, extra: data.notifiableId);
+        context.push(AppRoutes.notificationToQuote, extra: data.id);
       case "order":
         context.push(AppRoutes.ordersInfo, extra: data.order!.id);
       case "sparepart":

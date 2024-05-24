@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/notification_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -25,7 +26,6 @@ class NewNotification extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final notificationHistory = useState<List<NotificationModel>>([]);
-    final notific = useState<NotificationModel?>(null);
     final isLoading = useState<bool>(true);
 
     getAllNotification() {
@@ -37,12 +37,6 @@ class NewNotification extends HookWidget {
       );
     }
 
-    getANotification(String id) {
-      _mechanicRepo.getOneNotification(id).then((value) {
-        notific.value = value;
-        isLoading.value = false;
-      });
-    }
 
     // Future<void> getANotification(String id) async {
     //   isLoading.value = true;
@@ -105,10 +99,17 @@ class NewNotification extends HookWidget {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                Helpers.routeToRespectiveNotificationScreens(
-                                  notific.value,
-                                  context,
-                                );
+                                if (e.notifiableType == "booking") {
+                                  context.push(
+                                    AppRoutes.notificationToBooking,
+                                    extra: e.id,
+                                  );
+                                }else {
+                                  context.push(
+                                    AppRoutes.notificationToQuote,
+                                    extra: e.id,
+                                  );
+                                }
                               },
                               child: Card(
                                 color: AppColors.white,
@@ -227,7 +228,6 @@ class ReadNotification extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final notificationHistory = useState<List<NotificationModel>>([]);
-    final notific = useState<NotificationModel?>(null);
     final isLoading = useState<bool>(true);
 
     getAllNotification() {
@@ -237,13 +237,6 @@ class ReadNotification extends HookWidget {
           isLoading.value = false;
         },
       );
-    }
-
-    getANotification(String id) {
-      _mechanicRepo.getOneNotification(id).then((value) {
-        notific.value = value;
-        isLoading.value = false;
-      });
     }
 
     useEffect(() {
@@ -287,11 +280,17 @@ class ReadNotification extends HookWidget {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                getANotification(e.id!);
-                                Helpers.routeToRespectiveNotificationScreens(
-                                  notific.value,
-                                  context,
-                                );
+                                if (e.notifiableType == "booking") {
+                                  context.push(
+                                    AppRoutes.notificationToBooking,
+                                    extra: e.id,
+                                  );
+                                }else {
+                                  context.push(
+                                    AppRoutes.notificationToQuote,
+                                    extra: e.id,
+                                  );
+                                }
                               },
                               child: Card(
                                 color: AppColors.white,
@@ -468,47 +467,6 @@ class Notification extends HookWidget {
                     ],
                   ),
                 ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     Container(
-                //       padding: const EdgeInsets.all(8),
-                //       width: 120,
-                //       height: 40,
-                //       decoration: BoxDecoration(
-                //           border: Border.all(color: AppColors.containerGrey),
-                //           borderRadius: BorderRadius.circular(10)),
-                //       child: Row(
-                //         mainAxisAlignment: MainAxisAlignment.spaceAround,
-                //         children: [
-                //           SvgPicture.asset(AppImages.sort),
-                //           customText(
-                //               text: "New to old",
-                //               fontSize: 12,
-                //               textColor: AppColors.black)
-                //         ],
-                //       ),
-                //     ),
-                //     Container(
-                //       padding: const EdgeInsets.all(8),
-                //       width: 120,
-                //       height: 40,
-                //       decoration: BoxDecoration(
-                //           border: Border.all(color: AppColors.containerGrey),
-                //           borderRadius: BorderRadius.circular(10)),
-                //       child: Row(
-                //         mainAxisAlignment: MainAxisAlignment.spaceAround,
-                //         children: [
-                //           SvgPicture.asset(AppImages.filter),
-                //           customText(
-                //               text: "All",
-                //               fontSize: 12,
-                //               textColor: AppColors.black)
-                //         ],
-                //       ),
-                //     ),
-                //   ],
-                // ),
                 heightSpace(1),
               ],
             ),

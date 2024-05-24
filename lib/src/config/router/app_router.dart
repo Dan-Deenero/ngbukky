@@ -21,6 +21,8 @@ import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/rejecte
 import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/send-quotes/quote_send.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/send_quote.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/booking_things/booking_middleman.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/booking_things/notification_to_booking.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/booking_things/notification_to_quote.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/booking_things/quote_middleman.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/business_info/business_info.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/profile_settings/business_info_settings.dart';
@@ -192,19 +194,38 @@ GoRouter router() => GoRouter(
           builder: (_, state) => Bookings(),
         ),
         GoRoute(
-          path: AppRoutes.quoteMiddlemen,
-          name: AppRoutes.quoteMiddlemen,
-          builder: (_, state) => QuoteMiddleman(
-            id: state.extra as String,
-            status: state.extra as String,
-          ),
-        ),
+            path: AppRoutes.quoteMiddlemen,
+            name: AppRoutes.quoteMiddlemen,
+            builder: (context, state) {
+              final data = state.extra! as Map<String, dynamic>;
+              return QuoteMiddleman(
+                id: data['id'],
+                status: data['status'],
+              );
+            }),
         GoRoute(
           path: AppRoutes.bookingMiddleman,
           name: AppRoutes.bookingMiddleman,
-          builder: (_, state) => BookingMiddleman(
+          builder: (context, state) {
+            final data = state.extra! as Map<String, dynamic>;
+            return BookingMiddleman(
+              id: data['id'],
+              status: data['status'],
+            );
+          },
+        ),
+        GoRoute(
+          path: AppRoutes.notificationToBooking,
+          name: AppRoutes.notificationToBooking,
+          builder: (_, state) => NotificationToBooking(
             id: state.extra as String,
-            status: state.extra as String,
+          ),
+        ),
+        GoRoute(
+          path: AppRoutes.notificationToQuote,
+          name: AppRoutes.notificationToQuote,
+          builder: (_, state) => NotificationToQuote(
+            id: state.extra as String,
           ),
         ),
         GoRoute(
@@ -219,11 +240,12 @@ GoRouter router() => GoRouter(
                   id: state.extra as String,
                 )),
         GoRoute(
-            path: AppRoutes.viewAcceptedBooking,
-            name: AppRoutes.viewAcceptedBooking,
-            builder: (_, state) => ViewAcceptedBooking(
-                  id: state.extra as String,
-                )),
+          path: AppRoutes.viewAcceptedBooking,
+          name: AppRoutes.viewAcceptedBooking,
+          builder: (_, state) => ViewAcceptedBooking(
+            id: state.extra as String,
+          ),
+        ),
         GoRoute(
             path: AppRoutes.viewRejectedBooking,
             name: AppRoutes.viewRejectedBooking,
