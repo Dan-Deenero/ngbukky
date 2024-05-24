@@ -217,7 +217,7 @@ class SpareWallet extends HookWidget {
             Padding(
               padding: const EdgeInsets.only(right: 10.0),
               child: InkWell(
-                  onTap: () => context.push(AppRoutes.notification),
+                  onTap: () => context.push(AppRoutes.spareNotification),
                   child: SvgPicture.asset(AppImages.notification)),
             )
           ],

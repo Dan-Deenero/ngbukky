@@ -67,6 +67,13 @@ class AppRoutes {
   static const String quoteRejected = '/quote-rejected';
   static const String quoteRejectedDetails = '/quote-rejected-details';
 
+
+  static const String quoteMiddlemen = '/quote-middleman';
+  static const String bookingMiddleman = '/booking-middleman';
+  static const String notificationToBooking = '/notification_to_booking';
+  static const String notificationToQuote = '/notification_to_quote';
+  static const String notificationToOrders = '/notification_to_orders';
+
   // Dealer
   static const String dealerCreateAccount = '/dealer-create-account';
   static const String dealerLogin = '/dealer-login';

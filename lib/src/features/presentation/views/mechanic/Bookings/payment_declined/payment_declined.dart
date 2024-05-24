@@ -122,8 +122,9 @@ class _PaymentDeclinedState extends State<PaymentDeclined> {
                           }
                           return GestureDetector(
                             onTap: () => context.push(
-                                AppRoutes.paymentDeclinedDetails,
-                                extra: e.id),
+                                      AppRoutes.bookingMiddleman,
+                                      extra: {'id': e.id, 'status': e.status,},
+                                    ),
                             child: Card(
                               color: Colors.white,
                               surfaceTintColor: Colors.transparent,

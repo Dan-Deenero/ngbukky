@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/notification_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -25,7 +26,6 @@ class NewNotification extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final notificationHistory = useState<List<NotificationModel>>([]);
-    final notific = useState<NotificationModel?>(null);
     final isLoading = useState<bool>(true);
 
     getAllNotification() {
@@ -37,37 +37,10 @@ class NewNotification extends HookWidget {
       );
     }
 
-    getANotification(String id) {
-      _mechanicRepo.getOneNotification(id).then((value) {
-        notific.value = value;
-        isLoading.value = false;
-      });
-    }
-
-    // Future<void> getANotification(String id) async {
-    //   isLoading.value = true;
-    //   final notification = await _mechanicRepo.getOneNotification(id);
-    //   notific.value = notification;
-
-    //   // Assuming the API or repo method marks the notification as seen
-    //   // Alternatively, you can have an endpoint to explicitly mark as seen
-
-    //   isLoading.value = false;
-    //   Helpers.routeToRespectiveNotificationScreens(notification, context);
-
-    //   // Update the local state to reflect the notification has been seen
-    //   notificationHistory.value = notificationHistory.value.map((n) {
-    //     if (n.id == id) {
-    //       return n.copyWith(viewedAt: DateTime.now().toIso8601String());
-    //     }
-    //     return n;
-    //   }).toList();
-    // }
-
     useEffect(() {
       getAllNotification();
       return null;
-    }, [notificationHistory.value.length]);
+    }, []);
 
     return isLoading.value
         ? const Center(
@@ -105,11 +78,17 @@ class NewNotification extends HookWidget {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                getANotification(e.id!);
-                                Helpers.routeToRespectiveNotificationScreens(
-                                  notific.value,
-                                  context,
-                                );
+                                if (e.notifiableType == "booking") {
+                                  context.push(
+                                    AppRoutes.notificationToBooking,
+                                    extra: e.id,
+                                  );
+                                } else {
+                                  context.push(
+                                    AppRoutes.notificationToQuote,
+                                    extra: e.id,
+                                  );
+                                }
                               },
                               child: Card(
                                 color: AppColors.white,
@@ -149,11 +128,11 @@ class NewNotification extends HookWidget {
                                                 width: calculateTextSize(
                                                     context, 0.40),
                                                 child: customText(
-                                                    text: e.body!,
-                                                    fontSize: calculateTextSize(
-                                                        context, 0.03),
-                                                    textColor:
-                                                        AppColors.textGrey),
+                                                  text: e.body!,
+                                                  fontSize: calculateTextSize(
+                                                      context, 0.03),
+                                                  textColor: AppColors.textGrey,
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -166,13 +145,13 @@ class NewNotification extends HookWidget {
                                                       SvgPicture.asset(
                                                           AppImages.time),
                                                       customText(
-                                                          text: formattedTime,
-                                                          fontSize:
-                                                              calculateTextSize(
-                                                                  context,
-                                                                  0.025),
-                                                          textColor: AppColors
-                                                              .textGrey)
+                                                        text: formattedTime,
+                                                        fontSize:
+                                                            calculateTextSize(
+                                                                context, 0.025),
+                                                        textColor:
+                                                            AppColors.textGrey,
+                                                      )
                                                     ],
                                                   ),
                                                   widthSpace(.5),
@@ -228,7 +207,6 @@ class ReadNotification extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final notificationHistory = useState<List<NotificationModel>>([]);
-    final notific = useState<NotificationModel?>(null);
     final isLoading = useState<bool>(true);
 
     getAllNotification() {
@@ -238,13 +216,6 @@ class ReadNotification extends HookWidget {
           isLoading.value = false;
         },
       );
-    }
-
-    getANotification(String id) {
-      _mechanicRepo.getOneNotification(id).then((value) {
-        notific.value = value;
-        isLoading.value = false;
-      });
     }
 
     useEffect(() {
@@ -288,11 +259,17 @@ class ReadNotification extends HookWidget {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                getANotification(e.id!);
-                                Helpers.routeToRespectiveNotificationScreens(
-                                  notific.value,
-                                  context,
-                                );
+                                if (e.notifiableType == "booking") {
+                                  context.push(
+                                    AppRoutes.notificationToBooking,
+                                    extra: e.id,
+                                  );
+                                } else {
+                                  context.push(
+                                    AppRoutes.notificationToQuote,
+                                    extra: e.id,
+                                  );
+                                }
                               },
                               child: Card(
                                 color: AppColors.white,
@@ -400,11 +377,36 @@ class ReadNotification extends HookWidget {
 }
 
 class Notification extends HookWidget {
-  const Notification({super.key});
+  Notification({
+    Key? key,
+  }) : super(key: key ?? UniqueKey());
+  final MechanicRepo _mechanicRepo = MechanicRepo();
 
   @override
   Widget build(BuildContext context) {
+    final notificationHistory = useState<List<NotificationModel>>([]);
+    final isLoading = useState<bool>(true);
     final tabIndex = useState<int>(0);
+
+    Future<dynamic> getAllNotification() async {
+      await _mechanicRepo.getEveryNotifications().then(
+        (value) {
+          notificationHistory.value = value;
+        },
+      );
+    }
+
+    useEffect(() {
+      void refresh() async {
+        isLoading.value = true;
+        await getAllNotification();
+        isLoading.value = false;
+      }
+
+      refresh();
+      return null;
+    }, [isLoading]);
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -469,59 +471,38 @@ class Notification extends HookWidget {
                     ],
                   ),
                 ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     Container(
-                //       padding: const EdgeInsets.all(8),
-                //       width: 120,
-                //       height: 40,
-                //       decoration: BoxDecoration(
-                //           border: Border.all(color: AppColors.containerGrey),
-                //           borderRadius: BorderRadius.circular(10)),
-                //       child: Row(
-                //         mainAxisAlignment: MainAxisAlignment.spaceAround,
-                //         children: [
-                //           SvgPicture.asset(AppImages.sort),
-                //           customText(
-                //               text: "New to old",
-                //               fontSize: 12,
-                //               textColor: AppColors.black)
-                //         ],
-                //       ),
-                //     ),
-                //     Container(
-                //       padding: const EdgeInsets.all(8),
-                //       width: 120,
-                //       height: 40,
-                //       decoration: BoxDecoration(
-                //           border: Border.all(color: AppColors.containerGrey),
-                //           borderRadius: BorderRadius.circular(10)),
-                //       child: Row(
-                //         mainAxisAlignment: MainAxisAlignment.spaceAround,
-                //         children: [
-                //           SvgPicture.asset(AppImages.filter),
-                //           customText(
-                //               text: "All",
-                //               fontSize: 12,
-                //               textColor: AppColors.black)
-                //         ],
-                //       ),
-                //     ),
-                //   ],
-                // ),
                 heightSpace(1),
               ],
             ),
           ),
         ),
-        body: Column(
-          children: [
-            Expanded(
-                child: TabBarView(
-                    children: [NewNotification(), ReadNotification()]))
-          ],
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: AppColors.white,
+          mini: true,
+          onPressed: () async {
+            isLoading.value = true;
+            await getAllNotification();
+            isLoading.value = false;
+          },
+          child: const Icon(Icons.refresh),
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
+        body: isLoading.value
+            ? const Center(
+                child: SingleChildScrollView(),
+              )
+            : Column(
+                children: [
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        NewNotification(),
+                        ReadNotification(),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }

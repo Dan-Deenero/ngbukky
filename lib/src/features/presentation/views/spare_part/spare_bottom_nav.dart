@@ -58,13 +58,11 @@ class BottomNavBarView extends HookWidget {
       getInventory();
       return null;
     }, []);
-    return 
-    isLoading.value
+    return isLoading.value
         ? const Center(
             child: CircularProgressIndicator(),
           )
-        : 
-        Scaffold(
+        : Scaffold(
             body: _widgetOptions.elementAt(selectedIndex.value),
             bottomNavigationBar: BottomNavigationBar(
               selectedItemColor: AppColors.black,
@@ -101,12 +99,12 @@ class BottomNavBarView extends HookWidget {
                       ? SvgPicture.asset(
                           AppImages.packageR,
                           color: AppColors.orange,
-                          width: 30,
+                          width: 28,
                         )
                       : SvgPicture.asset(
                           AppImages.packageR,
-                          color: AppColors.black,
-                          width: 30,
+                          color: const Color.fromRGBO(0, 0, 0, 1),
+                          width: 28,
                         ),
                   label: 'Orders',
                 ),
@@ -132,6 +130,7 @@ class BottomNavBarView extends HookWidget {
                           )
                         : SvgPicture.asset(
                             AppImages.wallet,
+                            color: AppColors.black,
                             width: 30,
                           ),
                     label: "Wallet"),
@@ -144,6 +143,7 @@ class BottomNavBarView extends HookWidget {
                           )
                         : SvgPicture.asset(
                             AppImages.profile,
+                            color: AppColors.black,
                             width: 30,
                           ),
                     label: "Profile"),

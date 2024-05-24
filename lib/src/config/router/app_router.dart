@@ -1,7 +1,29 @@
 import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/domain/data/otp_model.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/accepted-bookings/accepted_booking.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/accepted-bookings/view_accepted_booking.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/booking-rejected/booking_rejected.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/booking-rejected/inspection_details_br.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/completed_booking/completed_booking.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/completed_booking/inspection_details.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/new-booking-alert/inspection_booking.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/new-booking-alert/new_booking_alerts.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/payment_declined/inspection_details_pd.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/payment_declined/payment_declined.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/payment_request/inspection_details_ppr.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/payment_request/inspection_details_pr.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/payment_request/payment_request.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/pending_quote_approval/Inspection_details_pqa.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/pending_quote_approval/pending_quote_aproval.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/rejected-bookings/rejected_booking.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/rejected-bookings/view_rejected_booking.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Bookings/send-quotes/quote_send.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/send_quote.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/booking_things/booking_middleman.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/booking_things/notification_to_booking.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/booking_things/notification_to_quote.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/booking_things/quote_middleman.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/business_info/business_info.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/profile_settings/business_info_settings.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/business_info/business_location.dart';
@@ -17,7 +39,7 @@ import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/completed
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/completed_quote/inspection_details_cqr.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/pending_client_approval/inspection_details_pca.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/payment_declined/inspection_details_pdq.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/payment_request/inspection_details_pprq%20.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/payment_request/inspection_details_pprq.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/payment_request/inspection_details_prq.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/quote_rejected/inspection_details_qr.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/rejected_quote/inspection_detalis_rq.dart';
@@ -29,26 +51,8 @@ import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/quote_rej
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/new_quote_request/quote_request.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/rejected_quote/rejected_quote.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/accepted_quote/view_accepted_quotes.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/accepted-bookings/accepted_booking.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/accepted-bookings/view_accepted_booking.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/booking-rejected/booking_rejected.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/booking-rejected/inspection_details_br.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/booking_things/booking.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/bottom_nav.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/completed_booking/completed_booking.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/completed_booking/inspection_details.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/new-booking-alert/inspection_booking.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/new-booking-alert/new_booking_alerts.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/payment_declined/inspection_details_pd.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/payment_declined/payment_declined.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/payment_request/inspection_details_ppr.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/payment_request/inspection_details_pr.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/payment_request/payment_request.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/pending_quote_approval/Inspection_details_pqa.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/pending_quote_approval/pending_quote_aproval.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/send-quotes/quote_send.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/rejected-bookings/rejected_booking.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/rejected-bookings/view_rejected_booking.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/history_detail.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/local_account_setup.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/wallet/wallet_history.dart';
@@ -77,6 +81,7 @@ import 'package:ngbuka/src/features/presentation/views/spare_part/inventory/add_
 import 'package:ngbuka/src/features/presentation/views/spare_part/inventory/edit_inventory.dart';
 import 'package:ngbuka/src/features/presentation/views/spare_part/inventory/inventory.dart';
 import 'package:ngbuka/src/features/presentation/views/spare_part/inventory/view_inventory_details.dart';
+import 'package:ngbuka/src/features/presentation/views/spare_part/notification/notification_to_orders.dart';
 import 'package:ngbuka/src/features/presentation/views/spare_part/notification/spare_notification.dart';
 import 'package:ngbuka/src/features/presentation/views/spare_part/orders/orders.dart';
 import 'package:ngbuka/src/features/presentation/views/spare_part/orders/orders_info.dart';
@@ -190,6 +195,48 @@ GoRouter router() => GoRouter(
           builder: (_, state) => Bookings(),
         ),
         GoRoute(
+            path: AppRoutes.quoteMiddlemen,
+            name: AppRoutes.quoteMiddlemen,
+            builder: (context, state) {
+              final data = state.extra! as Map<String, dynamic>;
+              return QuoteMiddleman(
+                id: data['id'],
+                status: data['status'],
+              );
+            }),
+        GoRoute(
+          path: AppRoutes.bookingMiddleman,
+          name: AppRoutes.bookingMiddleman,
+          builder: (context, state) {
+            final data = state.extra! as Map<String, dynamic>;
+            return BookingMiddleman(
+              id: data['id'],
+              status: data['status'],
+            );
+          },
+        ),
+        GoRoute(
+          path: AppRoutes.notificationToBooking,
+          name: AppRoutes.notificationToBooking,
+          builder: (_, state) => NotificationToBooking(
+            id: state.extra as String,
+          ),
+        ),
+        GoRoute(
+          path: AppRoutes.notificationToQuote,
+          name: AppRoutes.notificationToQuote,
+          builder: (_, state) => NotificationToQuote(
+            id: state.extra as String,
+          ),
+        ),
+        GoRoute(
+          path: AppRoutes.notificationToOrders,
+          name: AppRoutes.notificationToOrders,
+          builder: (_, state) => NotificationToOrders(
+            id: state.extra as String,
+          ),
+        ),
+        GoRoute(
           path: AppRoutes.businessLocation,
           name: AppRoutes.businessLocation,
           builder: (_, state) => const BusinessLocation(),
@@ -201,11 +248,12 @@ GoRouter router() => GoRouter(
                   id: state.extra as String,
                 )),
         GoRoute(
-            path: AppRoutes.viewAcceptedBooking,
-            name: AppRoutes.viewAcceptedBooking,
-            builder: (_, state) => ViewAcceptedBooking(
-                  id: state.extra as String,
-                )),
+          path: AppRoutes.viewAcceptedBooking,
+          name: AppRoutes.viewAcceptedBooking,
+          builder: (_, state) => ViewAcceptedBooking(
+            id: state.extra as String,
+          ),
+        ),
         GoRoute(
             path: AppRoutes.viewRejectedBooking,
             name: AppRoutes.viewRejectedBooking,
@@ -289,7 +337,7 @@ GoRouter router() => GoRouter(
         GoRoute(
           path: AppRoutes.notification,
           name: AppRoutes.notification,
-          builder: (_, state) => const Notification(),
+          builder: (_, state) => Notification(),
         ),
         GoRoute(
             path: AppRoutes.newBookingNotification,
@@ -600,7 +648,7 @@ GoRouter router() => GoRouter(
         GoRoute(
           path: AppRoutes.spareNotification,
           name: AppRoutes.spareNotification,
-          builder: (_, state) => const SpareNotification(),
+          builder: (_, state) => SpareNotification(),
         ),
       ],
     );

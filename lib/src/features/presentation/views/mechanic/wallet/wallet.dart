@@ -481,7 +481,7 @@ class PaymentTab extends HookWidget {
     useEffect(() {
       getTransaction();
       return null;
-    }, [transactionHistory.value.length]);
+    }, []);
     return isLoading.value
         ? const Center(
             child: CircularProgressIndicator(),
@@ -556,7 +556,7 @@ class WithdrawalTab extends HookWidget {
     useEffect(() {
       getTransaction();
       return null;
-    }, [transactionHistory.value.length]);
+    }, []);
     return isLoading.value
         ? const Center(
             child: CircularProgressIndicator(),

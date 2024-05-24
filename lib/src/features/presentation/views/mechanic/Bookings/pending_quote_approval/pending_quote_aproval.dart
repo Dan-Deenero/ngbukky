@@ -126,8 +126,9 @@ class _PendingQuoteApprovalState extends State<PendingQuoteApproval> {
                           return GestureDetector(
                             onTap: () {
                               context.push(
-                                  AppRoutes.pendingQuoteApprovalDetails,
-                                  extra: e.id);
+                                      AppRoutes.bookingMiddleman,
+                                      extra: {'id': e.id, 'status': e.status,},
+                                    );
                             },
                             child: Card(
                               color: Colors.white,

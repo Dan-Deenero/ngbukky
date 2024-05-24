@@ -236,6 +236,19 @@ class MechanicRepo {
     }
     return false;
   }
+  Future<List<NotificationModel>> getEveryNotifications() async {
+    final response = await ApiClient.get(
+        Endpoints.getAllNotifications,
+        useToken: true);
+    List<NotificationModel> notification = [];
+    if (response.status == 200) {
+      for (var notificationModel in response.entity['rows']) {
+        notification.add(NotificationModel.fromJson(notificationModel));
+      }
+      return notification;
+    }
+    return notification;
+  }
 
   Future<List<NotificationModel>> getAllNotifications() async {
     final response = await ApiClient.get(

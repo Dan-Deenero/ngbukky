@@ -103,7 +103,7 @@ showSuccesModal()
                     fontWeight: FontWeight.bold,
                     textColor: AppColors.black),
                 GestureDetector(
-                  onTap: () => context.pop(),
+                  onTap: () => context.go(AppRoutes.bottomNav),
                   child: Container(
                     height: 10.h,
                     width: 10.w,

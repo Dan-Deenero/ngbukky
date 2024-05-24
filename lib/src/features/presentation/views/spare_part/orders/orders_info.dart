@@ -261,7 +261,9 @@ class _OrdersInfoState extends State<OrdersInfo> {
                           ),
                           heightSpace(3),
                           if (ordersModel!.order!.deliveryMethod ==
-                              "Out of state delivery")
+                                  "out of state" ||
+                              ordersModel!.order!.deliveryMethod ==
+                                  "Same state")
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -272,7 +274,7 @@ class _OrdersInfoState extends State<OrdersInfo> {
                                 ),
                                 heightSpace(1),
                                 customText(
-                                  text: 'Ibeju-Lekki',
+                                  text: '${ordersModel!.order!.state}, ${ordersModel!.order!.city}, ${ordersModel!.order!.town}',
                                   fontSize: 14,
                                   textColor: AppColors.black,
                                 ),
@@ -284,8 +286,7 @@ class _OrdersInfoState extends State<OrdersInfo> {
                                 ),
                                 heightSpace(1),
                                 customText(
-                                  text:
-                                      '14 Lekki-Ekpe Expressway, Ibeju-Lekki, Lagos',
+                                  text: ordersModel!.order!.address!,
                                   fontSize: 14,
                                   textColor: AppColors.black,
                                 ),
@@ -306,13 +307,54 @@ class _OrdersInfoState extends State<OrdersInfo> {
                             widthSpace(3),
                             Flexible(
                               child: customText(
-                                  text: ordersModel!.order!.deliveryMethod ==
-                                          "self pickup"
-                                      ? 'Order packed and awaiting pick-up by buyer'
-                                      : "Order packed and awaiting pick-up by agent",
-                                  fontSize: 14,
-                                  textColor: AppColors.black,
-                                  fontWeight: FontWeight.w400),
+                                text: ordersModel!.order!.deliveryMethod ==
+                                        "self pickup"
+                                    ? 'Order packed and awaiting pick-up by buyer'
+                                    : "Order packed and awaiting pick-up by agent",
+                                fontSize: 14,
+                                textColor: AppColors.black,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    else if (ordersModel!.status == 'en_route')
+                      SizedBox(
+                        width: 100.w,
+                        child: Row(
+                          children: [
+                            ordersModel!.order!.deliveryMethod == "out of state"
+                                ? SvgPicture.asset(AppImages.outOfstate)
+                                : SvgPicture.asset(AppImages.insideState),
+                            widthSpace(3),
+                            Flexible(
+                              child: customText(
+                                text:
+                                    "Order has been shipped and is enroute to its destination",
+                                fontSize: 14,
+                                textColor: AppColors.black,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                      else if(ordersModel!.status == 'en_route')
+                       SizedBox(
+                        width: 100.w,
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(AppImages.delivered),
+                            widthSpace(3),
+                            Flexible(
+                              child: customText(
+                                text:
+                                    "Order has been delivered",
+                                fontSize: 14,
+                                textColor: AppColors.black,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                           ],
                         ),

@@ -13,13 +13,12 @@ import 'package:ngbuka/src/domain/data/user_model.dart';
 import 'package:ngbuka/src/domain/repository/auth_repository.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/dialogue.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/success_modal.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_textformfield.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 import 'package:ngbuka/src/utils/helpers/validators.dart';
-
-import '../success_modal.dart';
 
 class MultiSelect extends StatefulWidget {
   final List<String> items;

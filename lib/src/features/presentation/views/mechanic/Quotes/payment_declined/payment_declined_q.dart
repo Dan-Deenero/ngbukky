@@ -124,8 +124,12 @@ class _QPaymentDeclinedState extends State<QPaymentDeclined> {
                               DateFormat('hh:mm a').format(dateTime);
                           return GestureDetector(
                             onTap: () => context.push(
-                                AppRoutes.quotePaymentDeclineDetails,
-                                extra: e.id),
+                              AppRoutes.quoteMiddlemen,
+                              extra: {
+                                'id': e.id,
+                                'status': e.status,
+                              },
+                            ),
                             child: Card(
                               color: Colors.white,
                               surfaceTintColor: Colors.transparent,

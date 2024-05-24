@@ -50,7 +50,7 @@ class NotificationModel {
     user = json['user'] != null ? User.fromJson(json['user']) : null;
     booking =
         json['booking'] != null ? BookingModel.fromJson(json['booking']) : null;
-    order = json['order'];
+    order = json['order'] != null ? OrdersModel.fromJson(json['order']) : null;
     ban = json['ban'];
     quoteRequest = json['quoteRequest'] != null
         ? QuotesModel.fromJson(json['quoteRequest'])

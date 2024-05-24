@@ -118,16 +118,21 @@ class _CompletedQuoteRequestState extends State<CompletedQuoteRequest> {
                               DateFormat('hh:mm a').format(dateTime);
                           String profile;
 
-                          if(e.user!.profileImageUrl == null){
-                            profile = 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
-                          }else{
+                          if (e.user!.profileImageUrl == null) {
+                            profile =
+                                'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+                          } else {
                             profile = e.user!.profileImageUrl!;
                           }
                           return GestureDetector(
                             onTap: () {
                               context.push(
-                                  AppRoutes.completedQuoteRequestDetails,
-                                  extra: e.id);
+                                AppRoutes.quoteMiddlemen,
+                                extra: {
+                                  'id': e.id,
+                                  'status': e.status,
+                                },
+                              );
                             },
                             child: Card(
                               color: Colors.white,
@@ -196,8 +201,7 @@ class _CompletedQuoteRequestState extends State<CompletedQuoteRequest> {
                                       color: AppColors.containerGrey),
                                   child: CircleAvatar(
                                     backgroundColor: AppColors.backgroundGrey,
-                                    backgroundImage:
-                                        NetworkImage(profile),
+                                    backgroundImage: NetworkImage(profile),
                                     radius:
                                         55, // Adjust the size of the circle as needed
                                   ),

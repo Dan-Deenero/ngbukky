@@ -129,8 +129,11 @@ class _RejectedQuoteState extends State<RejectedQuote> {
                             return GestureDetector(
                               onTap: () {
                                 context.push(
-                                  AppRoutes.rejectedQuoteDetails,
-                                  extra: e.id,
+                                  AppRoutes.quoteMiddlemen,
+                                  extra: {
+                                    'id': e.id,
+                                    'status': e.status,
+                                  },
                                 );
                               },
                               child: Card(

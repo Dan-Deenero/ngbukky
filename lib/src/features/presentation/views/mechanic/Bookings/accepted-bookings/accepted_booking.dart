@@ -118,8 +118,10 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                           }
                           return GestureDetector(
                             onTap: () {
-                              context.push(AppRoutes.viewAcceptedBooking,
-                                  extra: e.id);
+                              context.push(
+                                      AppRoutes.bookingMiddleman,
+                                      extra: {'id': e.id, 'status': e.status,},
+                                    );
                             },
                             child: Card(
                               color: Colors.white,
@@ -205,7 +207,7 @@ class _AcceptedBookingState extends State<AcceptedBooking> {
                   ),
                 ),
               ],
-            )),
+            ),),
     );
   }
 }

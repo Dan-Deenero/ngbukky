@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -31,7 +33,6 @@ class _BookingAlertState extends State<BookingAlert> {
             () {
               _bookingHistory = value;
               isLoading = false;
-              print(_bookingHistory);
             },
           ),
         );
@@ -121,8 +122,14 @@ class _BookingAlertState extends State<BookingAlert> {
                                     DateFormat('hh:mm a').format(dateTime);
                                 return GestureDetector(
                                   onTap: () {
-                                    context.push(AppRoutes.inspectionBooking,
-                                        extra: e.id);
+                                    log(e.id!);
+                                    context.push(
+                                      AppRoutes.bookingMiddleman,
+                                      extra: {
+                                        'id': e.id,
+                                        'status': e.status,
+                                      },
+                                    );
                                   },
                                   child: Column(
                                     crossAxisAlignment:
@@ -136,30 +143,26 @@ class _BookingAlertState extends State<BookingAlert> {
                                               AppImages.carIcon),
                                           title: Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceBetween,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               customText(
                                                   text: e.brand!,
                                                   fontSize: 14,
                                                   textColor: AppColors.black,
-                                                  fontWeight:
-                                                      FontWeight.bold),
+                                                  fontWeight: FontWeight.bold),
                                               Container(
                                                 width: 60,
                                                 height: 20,
                                                 decoration: BoxDecoration(
                                                   color: AppColors.green,
                                                   borderRadius:
-                                                      BorderRadius.circular(
-                                                          5),
+                                                      BorderRadius.circular(5),
                                                 ),
                                                 child: Center(
                                                   child: customText(
                                                     text: "New",
                                                     fontSize: 10,
-                                                    textColor:
-                                                        AppColors.white,
+                                                    textColor: AppColors.white,
                                                   ),
                                                 ),
                                               ),
@@ -171,8 +174,7 @@ class _BookingAlertState extends State<BookingAlert> {
                                             children: [
                                               heightSpace(.5),
                                               customText(
-                                                  text:
-                                                      '${e.model}, ${e.year}',
+                                                  text: '${e.model}, ${e.year}',
                                                   fontSize: 12,
                                                   textColor: AppColors.black),
                                               heightSpace(.5),
@@ -188,12 +190,10 @@ class _BookingAlertState extends State<BookingAlert> {
                                                           SvgPicture.asset(
                                                               AppImages.time),
                                                           customText(
-                                                            text:
-                                                                formattedTime,
+                                                            text: formattedTime,
                                                             fontSize: 10,
-                                                            textColor:
-                                                                AppColors
-                                                                    .textGrey,
+                                                            textColor: AppColors
+                                                                .textGrey,
                                                           )
                                                         ],
                                                       ),
@@ -204,12 +204,10 @@ class _BookingAlertState extends State<BookingAlert> {
                                                               AppImages
                                                                   .calendarIcon),
                                                           customText(
-                                                            text:
-                                                                formattedDate,
+                                                            text: formattedDate,
                                                             fontSize: 10,
-                                                            textColor:
-                                                                AppColors
-                                                                    .textGrey,
+                                                            textColor: AppColors
+                                                                .textGrey,
                                                           )
                                                         ],
                                                       )

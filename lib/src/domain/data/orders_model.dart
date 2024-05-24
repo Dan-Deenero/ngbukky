@@ -3,7 +3,7 @@ class OrdersModel {
   int? quantity;
   int? subtotal;
   String? id;
-  double? price;
+  int? price;
   String? createdAt;
   Product? product;
   Order? order;
@@ -31,7 +31,7 @@ class OrdersModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['status'] = status;
     data['quantity'] = quantity;
     data['id'] = id;
@@ -86,7 +86,7 @@ class Product {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['name'] = name;
     data['description'] = description;
@@ -122,7 +122,7 @@ class Specifications {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['color'] = color;
     data['width'] = width;
     data['placement'] = placement;
@@ -135,7 +135,7 @@ class Order {
   String? deliveryMethod;
   String? address;
   String? city;
-  String? lga;
+  String? town;
   String? state;
   User? user;
 
@@ -144,7 +144,7 @@ class Order {
     this.deliveryMethod,
     this.address,
     this.city,
-    this.lga,
+    this.town,
     this.state,
     this.user,
   });
@@ -154,18 +154,18 @@ class Order {
     deliveryMethod = json['deliveryMethod'];
     address = json['address'];
     city = json['city'];
-    lga = json['lga'];
+    town = json['town'];
     state = json['state'];
     user = json['user'] != null ? User.fromJson(json['user']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['id'] = this.id;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
     data['deliveryMethod'] = deliveryMethod;
     data['address'] = address;
     data['city'] = city;
-    data['lga'] = lga;
+    data['town'] = town;
     data['state'] = state;
     if (user != null) {
       data['user'] = user!.toJson();
@@ -192,7 +192,7 @@ class User {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['username'] = username;
     data['deviceToken'] = deviceToken;

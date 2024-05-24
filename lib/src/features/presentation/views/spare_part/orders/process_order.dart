@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
 import 'package:ngbuka/src/domain/data/orders_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
@@ -82,7 +81,7 @@ class ProcessOrder extends HookWidget {
                   padding: const EdgeInsets.only(left: 7.0),
                   child: Center(
                     child: GestureDetector(
-                      onTap: () => context.push(AppRoutes.bottomNav),
+                      onTap: () => context.pop(),
                       child: const Icon(
                         Icons.arrow_back_ios,
                         color: AppColors.black,
@@ -194,13 +193,13 @@ class ProcessOrder extends HookWidget {
                             ),
                             widthSpace(8),
                             RichText(
-                              text: const TextSpan(
+                              text: TextSpan(
                                 text: 'In stock: ',
-                                style: TextStyle(color: AppColors.textGrey),
+                                style: const TextStyle(color: AppColors.textGrey),
                                 children: [
                                   TextSpan(
-                                    text: '10',
-                                    style: TextStyle(
+                                    text: '${ordersModel.value!.product!.quantityInStock}',
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: AppColors.black,
                                       fontSize: 12,
