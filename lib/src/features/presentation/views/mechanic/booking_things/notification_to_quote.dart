@@ -35,17 +35,26 @@ class _NotificationToQuoteState extends State<NotificationToQuote> {
   @override
   void initState() {
     super.initState();
-    _mechanicRepo.getOneNotification(widget.id).then(
-          (value) => setState(
-            () {
-              notifyModel = value;
-              isLoading = false;
-              quoteModel = notifyModel!.quoteRequest;
-              id = quoteModel!.id;
-              status = quoteModel!.status;
-            },
-          ),
-        );
+    _mechanicRepo.getOneNotification(widget.id).then((value) {
+      setState(() {
+        notifyModel = value;
+      });
+      return _mechanicRepo.getoneQuote(notifyModel!.notifiableId);
+    }).then((value) {
+      setState(() {
+        quoteModel = value;
+        isLoading = false;
+        id = quoteModel!.id;
+        status = quoteModel!.status;
+      });
+    }).catchError((error) {
+      // Handle any errors here
+      setState(() {
+        isLoading = false;
+        // Optionally handle the error state
+      });
+      print(error);
+    });
   }
 
   @override

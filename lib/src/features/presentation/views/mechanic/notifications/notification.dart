@@ -37,31 +37,10 @@ class NewNotification extends HookWidget {
       );
     }
 
-
-    // Future<void> getANotification(String id) async {
-    //   isLoading.value = true;
-    //   final notification = await _mechanicRepo.getOneNotification(id);
-    //   notific.value = notification;
-
-    //   // Assuming the API or repo method marks the notification as seen
-    //   // Alternatively, you can have an endpoint to explicitly mark as seen
-
-    //   isLoading.value = false;
-    //   Helpers.routeToRespectiveNotificationScreens(notification, context);
-
-    //   // Update the local state to reflect the notification has been seen
-    //   notificationHistory.value = notificationHistory.value.map((n) {
-    //     if (n.id == id) {
-    //       return n.copyWith(viewedAt: DateTime.now().toIso8601String());
-    //     }
-    //     return n;
-    //   }).toList();
-    // }
-
     useEffect(() {
       getAllNotification();
       return null;
-    }, [notificationHistory.value.length]);
+    }, []);
 
     return isLoading.value
         ? const Center(
@@ -104,7 +83,7 @@ class NewNotification extends HookWidget {
                                     AppRoutes.notificationToBooking,
                                     extra: e.id,
                                   );
-                                }else {
+                                } else {
                                   context.push(
                                     AppRoutes.notificationToQuote,
                                     extra: e.id,
@@ -149,11 +128,11 @@ class NewNotification extends HookWidget {
                                                 width: calculateTextSize(
                                                     context, 0.40),
                                                 child: customText(
-                                                    text: e.body!,
-                                                    fontSize: calculateTextSize(
-                                                        context, 0.03),
-                                                    textColor:
-                                                        AppColors.textGrey),
+                                                  text: e.body!,
+                                                  fontSize: calculateTextSize(
+                                                      context, 0.03),
+                                                  textColor: AppColors.textGrey,
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -166,13 +145,13 @@ class NewNotification extends HookWidget {
                                                       SvgPicture.asset(
                                                           AppImages.time),
                                                       customText(
-                                                          text: formattedTime,
-                                                          fontSize:
-                                                              calculateTextSize(
-                                                                  context,
-                                                                  0.025),
-                                                          textColor: AppColors
-                                                              .textGrey)
+                                                        text: formattedTime,
+                                                        fontSize:
+                                                            calculateTextSize(
+                                                                context, 0.025),
+                                                        textColor:
+                                                            AppColors.textGrey,
+                                                      )
                                                     ],
                                                   ),
                                                   widthSpace(.5),
@@ -285,7 +264,7 @@ class ReadNotification extends HookWidget {
                                     AppRoutes.notificationToBooking,
                                     extra: e.id,
                                   );
-                                }else {
+                                } else {
                                   context.push(
                                     AppRoutes.notificationToQuote,
                                     extra: e.id,
@@ -398,11 +377,36 @@ class ReadNotification extends HookWidget {
 }
 
 class Notification extends HookWidget {
-  const Notification({super.key});
+  Notification({
+    Key? key,
+  }) : super(key: key ?? UniqueKey());
+  final MechanicRepo _mechanicRepo = MechanicRepo();
 
   @override
   Widget build(BuildContext context) {
+    final notificationHistory = useState<List<NotificationModel>>([]);
+    final isLoading = useState<bool>(true);
     final tabIndex = useState<int>(0);
+
+    Future<dynamic> getAllNotification() async {
+      await _mechanicRepo.getEveryNotifications().then(
+        (value) {
+          notificationHistory.value = value;
+        },
+      );
+    }
+
+    useEffect(() {
+      void refresh() async {
+        isLoading.value = true;
+        await getAllNotification();
+        isLoading.value = false;
+      }
+
+      refresh();
+      return null;
+    }, [isLoading]);
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -472,13 +476,33 @@ class Notification extends HookWidget {
             ),
           ),
         ),
-        body: Column(
-          children: [
-            Expanded(
-                child: TabBarView(
-                    children: [NewNotification(), ReadNotification()]))
-          ],
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: AppColors.white,
+          mini: true,
+          onPressed: () async {
+            isLoading.value = true;
+            await getAllNotification();
+            isLoading.value = false;
+          },
+          child: const Icon(Icons.refresh),
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
+        body: isLoading.value
+            ? const Center(
+                child: SingleChildScrollView(),
+              )
+            : Column(
+                children: [
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        NewNotification(),
+                        ReadNotification(),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }

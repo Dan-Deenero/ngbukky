@@ -35,59 +35,74 @@ class _NotificationToBookingState extends State<NotificationToBooking> {
   @override
   void initState() {
     super.initState();
-    _mechanicRepo.getOneNotification(widget.id).then(
-          (value) => setState(
-            () {
-              notifyModel = value;
-              isLoading = false;
-              bookingModel = notifyModel!.booking;
-              id = bookingModel!.id;
-              status = bookingModel!.status;
-            },
-          ),
-        );
+    _mechanicRepo.getOneNotification(widget.id).then((value) {
+      setState(() {
+        notifyModel = value;
+      });
+      return _mechanicRepo.getoneBooking(notifyModel!.notifiableId);
+    }).then((value) {
+      setState(() {
+        bookingModel = value;
+        isLoading = false;
+        id = bookingModel!.id;
+        status = bookingModel!.status;
+      });
+    }).catchError((error) {
+      // Handle any errors here
+      setState(() {
+        isLoading = false;
+        // Optionally handle the error state
+      });
+      print(error);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (status == 'pending') {
-      return InspectionBooking(
-        id: id!,
-      );
-    } else if (status == 'accepted') {
-      return ViewAcceptedBooking(
-        id: id,
-      );
-    } else if (status == 'bargaining') {
-      return PQAInspectionDetails(
-        id: id!,
-      );
-    } else if (status == 'approved') {
-      return PPRInspectionDetails(
-        id: id!,
-      );
-    } else if (status == 'rejected') {
-      return ViewRejectedBooking(
-        id: id!,
-      );
-    } else if (status == 'declined') {
-      return PDInspectionDetails(
-        id: id!,
-      );
-    } else if (status == 'completed') {
-      return CompletedInspectionDetails(
-        id: id!,
-      );
-    } else if (status == 'disapproved') {
-      return BRInspectionDetails(
-        id: id!,
-      );
-    } else if (status == 'awaiting payment') {
-      return PRInspectionDetails(
-        id: id!,
+    if (isLoading) {
+      return const Scaffold(
+        body: SingleChildScrollView(),
       );
     } else {
-      return const DefaultWidget();
+      if (status == 'pending') {
+        return InspectionBooking(
+          id: id!,
+        );
+      } else if (status == 'accepted') {
+        return ViewAcceptedBooking(
+          id: id,
+        );
+      } else if (status == 'bargaining') {
+        return PQAInspectionDetails(
+          id: id!,
+        );
+      } else if (status == 'approved') {
+        return PPRInspectionDetails(
+          id: id!,
+        );
+      } else if (status == 'rejected') {
+        return ViewRejectedBooking(
+          id: id!,
+        );
+      } else if (status == 'declined') {
+        return PDInspectionDetails(
+          id: id!,
+        );
+      } else if (status == 'completed') {
+        return CompletedInspectionDetails(
+          id: id!,
+        );
+      } else if (status == 'disapproved') {
+        return BRInspectionDetails(
+          id: id!,
+        );
+      } else if (status == 'awaiting payment') {
+        return PRInspectionDetails(
+          id: id!,
+        );
+      } else {
+        return const DefaultWidget();
+      }
     }
   }
 }

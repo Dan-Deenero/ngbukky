@@ -72,6 +72,7 @@ class AppRoutes {
   static const String bookingMiddleman = '/booking-middleman';
   static const String notificationToBooking = '/notification_to_booking';
   static const String notificationToQuote = '/notification_to_quote';
+  static const String notificationToOrders = '/notification_to_orders';
 
   // Dealer
   static const String dealerCreateAccount = '/dealer-create-account';

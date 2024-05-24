@@ -444,7 +444,7 @@ class Completed extends HookWidget {
     final isLoading = useState<bool>(true);
 
     getOrders() {
-      mechanicRepo.getAllOrder('picked_up').then(
+      mechanicRepo.getAllOrder('completed').then(
         (value) {
           ordersHistory.value = value;
           isLoading.value = false;

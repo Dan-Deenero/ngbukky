@@ -2,19 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
-import 'package:ngbuka/src/domain/data/notification_model.dart';
+
 class Helpers {
   static routeToRespectiveNotificationScreens(
-      NotificationModel? data, BuildContext context) {
-    switch (data!.notifiableType) {
-      case "booking":
-        context.push(AppRoutes.notificationToBooking, extra: data.id);
+      String? status, String? id, BuildContext context) {
+    switch (status) {
+      case "pending":
+        context.push(AppRoutes.ordersInfo, extra: id);
         break;
-      case "quote request":
-        context.push(AppRoutes.notificationToQuote, extra: data.id);
-      case "order":
-        context.push(AppRoutes.ordersInfo, extra: data.order!.id);
-      case "sparepart":
+      case "awaiting processing":
+        context.push(AppRoutes.processOrder, extra: id);
+        break;
+      case "processed":
+        context.push(AppRoutes.ordersInfo, extra: id);
+        break;
+      case "picked_up":
+        context.push(AppRoutes.ordersInfo, extra: id);
+        break;
+      case "en_route":
+        context.push(AppRoutes.ordersInfo, extra: id);
+        break;
+      case "completed":
+        context.push(AppRoutes.ordersInfo, extra: id);
+        break;
+      case "returned":
+        context.push(AppRoutes.ordersInfo, extra: id);
+        break;
+      case "declined":
+        context.push(AppRoutes.ordersInfo, extra: id);
+        break;
     }
   }
 

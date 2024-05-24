@@ -133,7 +133,7 @@ class SpareProfileSettings extends HookWidget {
                       ],
                     ),
                     InkWell(
-                      onTap: () => context.push(AppRoutes.notification),
+                      onTap: () => context.push(AppRoutes.spareNotification),
                       child: SvgPicture.asset(AppImages.notification),
                     )
                   ],

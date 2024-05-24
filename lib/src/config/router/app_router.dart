@@ -81,6 +81,7 @@ import 'package:ngbuka/src/features/presentation/views/spare_part/inventory/add_
 import 'package:ngbuka/src/features/presentation/views/spare_part/inventory/edit_inventory.dart';
 import 'package:ngbuka/src/features/presentation/views/spare_part/inventory/inventory.dart';
 import 'package:ngbuka/src/features/presentation/views/spare_part/inventory/view_inventory_details.dart';
+import 'package:ngbuka/src/features/presentation/views/spare_part/notification/notification_to_orders.dart';
 import 'package:ngbuka/src/features/presentation/views/spare_part/notification/spare_notification.dart';
 import 'package:ngbuka/src/features/presentation/views/spare_part/orders/orders.dart';
 import 'package:ngbuka/src/features/presentation/views/spare_part/orders/orders_info.dart';
@@ -229,6 +230,13 @@ GoRouter router() => GoRouter(
           ),
         ),
         GoRoute(
+          path: AppRoutes.notificationToOrders,
+          name: AppRoutes.notificationToOrders,
+          builder: (_, state) => NotificationToOrders(
+            id: state.extra as String,
+          ),
+        ),
+        GoRoute(
           path: AppRoutes.businessLocation,
           name: AppRoutes.businessLocation,
           builder: (_, state) => const BusinessLocation(),
@@ -329,7 +337,7 @@ GoRouter router() => GoRouter(
         GoRoute(
           path: AppRoutes.notification,
           name: AppRoutes.notification,
-          builder: (_, state) => const Notification(),
+          builder: (_, state) => Notification(),
         ),
         GoRoute(
             path: AppRoutes.newBookingNotification,
@@ -640,7 +648,7 @@ GoRouter router() => GoRouter(
         GoRoute(
           path: AppRoutes.spareNotification,
           name: AppRoutes.spareNotification,
-          builder: (_, state) => const SpareNotification(),
+          builder: (_, state) => SpareNotification(),
         ),
       ],
     );
