@@ -286,6 +286,7 @@ class All extends HookWidget {
             child: CircularProgressIndicator(),
           )
         : SingleChildScrollView(
+            physics: const ScrollPhysics(),
             child: Column(
               children: [
                 if (inventoryHistory.value.isEmpty)
@@ -320,7 +321,7 @@ class All extends HookWidget {
                             InventoryTile(
                               name: e.name,
                               price: e.finalPrice,
-                              length: '${e.specifications!.length}',
+                              weight: e.specifications!.weight!,
                               image: e.imageUrl,
                               inStock: e.quantityInStock,
                               id: e.id,
@@ -401,6 +402,8 @@ class RunningOut extends HookWidget {
             child: CircularProgressIndicator(),
           )
         : SingleChildScrollView(
+            physics: const ScrollPhysics(),
+
             child: Column(
               children: [
                 if (inventoryHistory.value.isEmpty)
@@ -435,7 +438,7 @@ class RunningOut extends HookWidget {
                             InventoryTile(
                               name: e.name,
                               price: e.finalPrice!,
-                              length: '${e.specifications!.length}',
+                              weight: e.specifications!.weight!,
                               image: e.imageUrl,
                               inStock: e.quantityInStock,
                               id: e.id,
@@ -517,6 +520,8 @@ class StockOut extends HookWidget {
             child: CircularProgressIndicator(),
           )
         : SingleChildScrollView(
+            physics: const ScrollPhysics(),
+
             child: Column(
               children: [
                 if (inventoryHistory.value.isEmpty)
@@ -544,12 +549,6 @@ class StockOut extends HookWidget {
                           : inventoryHistory.value)
                       .map(
                     (e) {
-                      int? size = 0;
-                      // if(e.specifications!.length == null){
-                      //   size = 0;
-                      // }else{
-                      //   size = e.specifications!.length;
-                      // }
                       return Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Column(
@@ -557,7 +556,7 @@ class StockOut extends HookWidget {
                             InventoryTile(
                               name: e.name,
                               price: e.finalPrice!,
-                              length: '$size',
+                              weight: e.specifications!.weight!,
                               image: e.imageUrl,
                               inStock: e.quantityInStock,
                               id: e.id,

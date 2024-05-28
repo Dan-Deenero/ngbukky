@@ -9,7 +9,6 @@ import 'package:ngbuka/src/config/themes/app_theme.dart';
 import 'package:ngbuka/src/core/managers/notification_manger.dart';
 import 'package:overlay_support/overlay_support.dart';
 
-
 final navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   setUplocator();
@@ -19,7 +18,7 @@ void main() async {
   );
   await NotificationsManager.init();
   runApp(const ProviderScope(child: Ngbuka()));
-}   
+}
 
 class Ngbuka extends StatelessWidget {
   static final _router = locator<GoRouter>();
@@ -40,5 +39,5 @@ class Ngbuka extends StatelessWidget {
         },
       ),
     );
-  } 
-} 
+  }
+}

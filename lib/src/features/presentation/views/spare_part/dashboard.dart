@@ -80,7 +80,7 @@ class DashboardView extends HookWidget {
         : Scaffold(
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(
-                8.h,
+                10.h,
               ),
               child: Padding(
                 padding: const EdgeInsets.only(top: 40, left: 20, right: 20),
@@ -276,9 +276,19 @@ class DashboardView extends HookWidget {
                                     price: e.product!.finalPrice,
                                     item: e.product!.name,
                                     quantity: e.quantity,
-                                    ontap: () => context.push(
-                                        AppRoutes.ordersInfo,
-                                        extra: e.id),
+                                    ontap: () {
+                                      if (e.status == 'awaiting processing') {
+                                        context.push(
+                                          AppRoutes.processOrder,
+                                          extra: e.id,
+                                        );
+                                      } else {
+                                        context.push(
+                                          AppRoutes.ordersInfo,
+                                          extra: e.id,
+                                        );
+                                      }
+                                    },
                                     // length: e.product!.specifications!.length,
                                     time: formattedTime,
                                     date: formattedDate,
@@ -299,42 +309,6 @@ class DashboardView extends HookWidget {
                                   textColor: AppColors.primary,
                                   fontWeight: FontWeight.w600,
                                 ),
-                                // if (dashhy.value!.topSellers!.isEmpty)
-                                //   IgnorePointer(
-                                //     ignoring: true,
-                                //     child: Row(
-                                //       children: [
-                                //         customText(
-                                //           text: "See all",
-                                //           fontSize: 15,
-                                //           textColor:
-                                //               AppColors.primary.withOpacity(0.1),
-                                //         ),
-                                //         Icon(
-                                //           Icons.arrow_forward,
-                                //           size: 20,
-                                //           color: AppColors.primary.withOpacity(0.1),
-                                //         )
-                                //       ],
-                                //     ),
-                                //   )
-                                // else
-                                //   GestureDetector(
-                                //     onTap: () => context.push(AppRoutes.orders),
-                                //     child: Row(
-                                //       children: [
-                                //         customText(
-                                //             text: "See all",
-                                //             fontSize: 15,
-                                //             textColor: AppColors.orange),
-                                //         const Icon(
-                                //           Icons.arrow_forward,
-                                //           size: 20,
-                                //           color: AppColors.orange,
-                                //         )
-                                //       ],
-                                //     ),
-                                //   )
                               ],
                             ),
                             heightSpace(4),
@@ -363,25 +337,6 @@ class DashboardView extends HookWidget {
                                 child: ListView(
                                   scrollDirection: Axis.horizontal,
                                   children: [
-                                    Center(
-                                      child: Column(
-                                        children: [
-                                          SvgPicture.asset(
-                                              AppImages.noquoteicon),
-                                          heightSpace(1),
-                                          SizedBox(
-                                            width: 120,
-                                            child: customText(
-                                              text: 'No top sellers yet',
-                                              fontSize: 15,
-                                              textColor: AppColors.textGrey
-                                                  .withOpacity(0.3),
-                                              textAlignment: TextAlign.center,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
                                     ...dashhy.value!.topSellers!.map(
                                       (e) {
                                         return SquareCard(
@@ -410,42 +365,6 @@ class DashboardView extends HookWidget {
                                   textColor: AppColors.primary,
                                   fontWeight: FontWeight.w600,
                                 ),
-                                // if (dashhy.value!.productsLowInStock!.isEmpty)
-                                //   IgnorePointer(
-                                //     ignoring: true,
-                                //     child: Row(
-                                //       children: [
-                                //         customText(
-                                //           text: "See all",
-                                //           fontSize: 15,
-                                //           textColor:
-                                //               AppColors.primary.withOpacity(0.1),
-                                //         ),
-                                //         Icon(
-                                //           Icons.arrow_forward,
-                                //           size: 20,
-                                //           color: AppColors.primary.withOpacity(0.1),
-                                //         )
-                                //       ],
-                                //     ),
-                                //   )
-                                // else
-                                //   GestureDetector(
-                                //     onTap: () => context.push(AppRoutes.orders),
-                                //     child: Row(
-                                //       children: [
-                                //         customText(
-                                //             text: "See all",
-                                //             fontSize: 15,
-                                //             textColor: AppColors.orange),
-                                //         const Icon(
-                                //           Icons.arrow_forward,
-                                //           size: 20,
-                                //           color: AppColors.orange,
-                                //         )
-                                //       ],
-                                //     ),
-                                //   )
                               ],
                             ),
                             heightSpace(2),

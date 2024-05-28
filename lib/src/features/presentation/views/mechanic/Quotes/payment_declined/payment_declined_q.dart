@@ -145,7 +145,7 @@ class _QPaymentDeclinedState extends State<QPaymentDeclined> {
                                         fontWeight: FontWeight.bold),
                                     heightSpace(1),
                                     Container(
-                                      width: 28.w,
+                                      width: 26.w,
                                       height: 3.h,
                                       decoration: BoxDecoration(
                                           borderRadius:
@@ -154,9 +154,9 @@ class _QPaymentDeclinedState extends State<QPaymentDeclined> {
                                       child: Center(
                                         child: customText(
                                           text: "Payment declined",
-                                          fontSize: 10,
+                                          fontSize: 2.58.w,
                                           textColor: AppColors.red,
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                     ),

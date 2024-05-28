@@ -244,7 +244,7 @@ class Wallet extends HookWidget {
         floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
         body: isLoading.value
             ? const Center(
-              child: SingleChildScrollView(),
+              child: CircularProgressIndicator(),
             )
             : SingleChildScrollView(
                 child: Padding(

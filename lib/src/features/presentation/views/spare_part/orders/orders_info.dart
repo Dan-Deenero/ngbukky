@@ -104,7 +104,7 @@ class _OrdersInfoState extends State<OrdersInfo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(20.h),
+        preferredSize: Size.fromHeight(21.h),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -340,7 +340,7 @@ class _OrdersInfoState extends State<OrdersInfo> {
                           ],
                         ),
                       )
-                      else if(ordersModel!.status == 'en_route')
+                      else if(ordersModel!.status == 'delivered')
                        SizedBox(
                         width: 100.w,
                         child: Row(
@@ -359,10 +359,29 @@ class _OrdersInfoState extends State<OrdersInfo> {
                           ],
                         ),
                       )
+                      else if(ordersModel!.status == 'completed')
+                       SizedBox(
+                        width: 100.w,
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(AppImages.delivered),
+                            widthSpace(3),
+                            Flexible(
+                              child: customText(
+                                text:
+                                    "Order is completed",
+                                fontSize: 14,
+                                textColor: AppColors.black,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
                     else
                       const SizedBox.shrink(),
                     heightSpace(3),
-                    if (ordersModel!.order!.deliveryMethod == "self pickup")
+                    if (ordersModel!.order!.deliveryMethod == "self pickup" && ordersModel!.status != 'completed')
                       Row(
                         children: [
                           SvgPicture.asset(AppImages.warning),

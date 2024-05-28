@@ -409,7 +409,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                     fontSize: 13,
                                     textColor: AppColors.black),
                                 customText(
-                                    text: '${transactionModel!.amount}.00',
+                                    text: '₦${Helpers.formatBalance(transactionModel!.amount)}.00',
                                     fontSize: 13,
                                     textColor: AppColors.black)
                               ],
@@ -438,7 +438,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                     textColor: AppColors.black,
                                     fontWeight: FontWeight.w600),
                                 customText(
-                                    text: '${transactionModel!.amount!}',
+                                    text: '₦${Helpers.formatBalance(transactionModel!.amount)}.00',
                                     fontSize: 13,
                                     textColor: AppColors.black,
                                     fontWeight: FontWeight.w600)

@@ -166,7 +166,7 @@ class HomeView extends HookWidget {
           },
           child: isLoading.value
               ? const Center(
-                  child: SingleChildScrollView(),
+                  child: CircularProgressIndicator(),
                 )
               : Padding(
                   padding:

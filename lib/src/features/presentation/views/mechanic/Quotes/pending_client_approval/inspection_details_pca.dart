@@ -118,7 +118,7 @@ class _PCAInspectionDetailsState extends State<PCAInspectionDetails> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             customText(
-                                text: 'Quote not approved by client',
+                                text: 'Review & Dispute',
                                 fontSize: 14,
                                 textColor: AppColors.red,
                                 fontWeight: FontWeight.w600),
@@ -245,19 +245,19 @@ class _PCAInspectionDetailsState extends State<PCAInspectionDetails> {
                           ],
                         ),
                         heightSpace(2),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            customText(
-                                text: 'Ngbuka Charge (1%)',
-                                fontSize: 13,
-                                textColor: AppColors.black),
-                            customText(
-                                text: '$serviceFee',
-                                fontSize: 13,
-                                textColor: AppColors.black)
-                          ],
-                        ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: [
+                        //     customText(
+                        //         text: 'Ngbuka Charge (1%)',
+                        //         fontSize: 13,
+                        //         textColor: AppColors.black),
+                        //     customText(
+                        //         text: '$serviceFee',
+                        //         fontSize: 13,
+                        //         textColor: AppColors.black)
+                        //   ],
+                        // ),
                         heightSpace(2),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -268,7 +268,7 @@ class _PCAInspectionDetailsState extends State<PCAInspectionDetails> {
                                 textColor: AppColors.black,
                                 fontWeight: FontWeight.w600),
                             customText(
-                                text: '${price + serviceFee}',
+                                text: '$price',
                                 fontSize: 13,
                                 textColor: AppColors.black,
                                 fontWeight: FontWeight.w600)

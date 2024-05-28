@@ -117,81 +117,84 @@ class _PendingQuoteApprovalState extends State<PendingQuoteApproval> {
 
                           String profile;
 
-                          if(e.user!.profileImageUrl == null){
-                            profile = 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
-                          }else{
+                          if (e.user!.profileImageUrl == null) {
+                            profile =
+                                'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+                          } else {
                             profile = e.user!.profileImageUrl!;
                           }
 
                           return GestureDetector(
                             onTap: () {
                               context.push(
-                                      AppRoutes.bookingMiddleman,
-                                      extra: {'id': e.id, 'status': e.status,},
-                                    );
+                                AppRoutes.bookingMiddleman,
+                                extra: {
+                                  'id': e.id,
+                                  'status': e.status,
+                                },
+                              );
                             },
                             child: Card(
                               color: Colors.white,
                               surfaceTintColor: Colors.transparent,
                               child: ListTile(
-                                  trailing: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        customText(
-                                            text: "₦$price",
-                                            fontSize: 14,
-                                            textColor: AppColors.textGrey,
-                                            fontWeight: FontWeight.bold),
-                                        heightSpace(1),
-                                        Container(
-                                          width: 25.w,
-                                          height: 3.h,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              color: AppColors.green
-                                                  .withOpacity(.1)),
-                                          child: Center(
-                                            child: customText(
-                                              text: "Unapproved",
-                                              fontSize: 2.6.w,
-                                              textColor: AppColors.green,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        )
-                                      ]),
-                                  subtitle: Row(
+                                trailing: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      Row(
-                                        children: [
-                                          SvgPicture.asset(AppImages.time),
-                                          customText(
-                                              text: formattedTime,
-                                              fontSize: 2.5.w,
-                                              textColor: AppColors.textGrey)
-                                        ],
-                                      ),
-                                      widthSpace(.3),
-                                      Row(
-                                        children: [
-                                          SvgPicture.asset(
-                                              AppImages.calendarIcon),
-                                          customText(
-                                              text: formattedDate,
-                                              fontSize: 2.5.w,
-                                              textColor: AppColors.textGrey)
-                                        ],
+                                      customText(
+                                          text: "₦$price",
+                                          fontSize: 14,
+                                          textColor: AppColors.textGrey,
+                                          fontWeight: FontWeight.bold),
+                                      heightSpace(1),
+                                      Container(
+                                        width: 25.w,
+                                        height: 3.h,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color: AppColors.green
+                                                .withOpacity(.1)),
+                                        child: Center(
+                                          child: customText(
+                                            text: "Unapproved",
+                                            fontSize: 2.6.w,
+                                            textColor: AppColors.green,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       )
-                                    ],
-                                  ),
-                                  title: customText(
-                                      text: e.user!.username!,
-                                      fontSize: 16,
-                                      textColor: AppColors.black,
-                                      fontWeight: FontWeight.bold),
-                                 leading: Container(
+                                    ]),
+                                subtitle: Row(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(AppImages.time),
+                                        customText(
+                                            text: formattedTime,
+                                            fontSize: 2.5.w,
+                                            textColor: AppColors.textGrey)
+                                      ],
+                                    ),
+                                    widthSpace(.3),
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                            AppImages.calendarIcon),
+                                        customText(
+                                            text: formattedDate,
+                                            fontSize: 2.5.w,
+                                            textColor: AppColors.textGrey)
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                title: customText(
+                                    text: e.user!.username!,
+                                    fontSize: 16,
+                                    textColor: AppColors.black,
+                                    fontWeight: FontWeight.bold),
+                                leading: Container(
                                   width: 10.w,
                                   height: 10.h,
                                   decoration: const BoxDecoration(
@@ -199,12 +202,12 @@ class _PendingQuoteApprovalState extends State<PendingQuoteApproval> {
                                       color: AppColors.containerGrey),
                                   child: CircleAvatar(
                                     backgroundColor: AppColors.backgroundGrey,
-                                    backgroundImage:
-                                        NetworkImage(profile),
+                                    backgroundImage: NetworkImage(profile),
                                     radius:
                                         55, // Adjust the size of the circle as needed
                                   ),
-                                ),),
+                                ),
+                              ),
                             ),
                           );
                         })

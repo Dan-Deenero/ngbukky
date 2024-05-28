@@ -229,7 +229,7 @@ class _QuoteRequestsState extends State<QuoteRequests> {
             GestureDetector(
               onTap: () => context.pop(),
               child: Container(
-                height: 10.h,
+                height: 9.h,
                 width: 10.w,
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.black),
@@ -299,18 +299,6 @@ class _QuoteRequestsState extends State<QuoteRequests> {
                     ),
                   ),
                   heightSpace(1),
-                  ListTile(
-                    leading: SvgPicture.asset(AppImages.carIcon),
-                    title: customText(
-                        text: 'AC Maintenance',
-                        fontSize: 14,
-                        textColor: AppColors.black,
-                        fontWeight: FontWeight.bold),
-                    subtitle: customText(
-                        text: 'Service selected',
-                        fontSize: 12,
-                        textColor: AppColors.textGrey),
-                  ),
                   ListTile(
                     leading: SvgPicture.asset(AppImages.carIcon),
                     title: customText(

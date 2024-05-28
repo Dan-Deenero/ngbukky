@@ -15,6 +15,7 @@ class WeightField extends StatefulWidget {
   final bool hasMaxline;
   final bool? isEnabled;
   final bool? hasWidg;
+  final bool? isNeeded;
   final bool? isDropdown;
   final bool? hasLabel;
   final String? Function(String?)? validator;
@@ -42,6 +43,7 @@ class WeightField extends StatefulWidget {
     this.textEditingController,
     this.isPassword = false,
     this.hasWidg = false,
+    this.isNeeded = false,
     this.validator,
     this.isEnabled,
     this.isDropdown,
@@ -61,14 +63,19 @@ class _WeightFieldState extends State<WeightField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             customText(
               text: '${widget.label}',
               fontSize: 14,
               textColor: AppColors.primary,
             ),
-            widget.hasWidg! ? widget.widg! : const SizedBox.shrink()
+            widget.hasWidg! ? widget.widg! : const SizedBox.shrink(),
+            widthSpace(1),
+            customText(
+              text: '*',
+              fontSize: 12,
+              textColor: AppColors.red,
+            )
           ],
         ),
         heightSpace(1),
@@ -81,7 +88,8 @@ class _WeightFieldState extends State<WeightField> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: widget.dropdown!,),
+                child: widget.dropdown!,
+              ),
               Expanded(
                 child: TextFormField(
                   enabled: widget.isEnabled,

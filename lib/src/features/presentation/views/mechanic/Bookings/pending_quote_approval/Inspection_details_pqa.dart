@@ -136,7 +136,7 @@ class _PQAInspectionDetailsState extends State<PQAInspectionDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           customText(
-                              text: 'Quote not approved by client',
+                              text: 'Review & Dispute',
                               fontSize: 14,
                               textColor: AppColors.red,
                               fontWeight: FontWeight.w600),

@@ -34,7 +34,7 @@ class SpareWithdrawFunds extends HookWidget {
           title: 'Withdrawal Successful',
           subtitle: 'You have successfully withdrawn ${amount.text} to your account.',
           action: () {
-            context.go(AppRoutes.bottomNav);
+            context.go(AppRoutes.spareBottomNav);
           },
         ),
       );

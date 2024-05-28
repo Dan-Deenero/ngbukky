@@ -273,7 +273,7 @@ class _InspectionBookingState extends State<InspectionBooking> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: 10.h,
+                height: 9.h,
                 width: 10.w,
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.black),

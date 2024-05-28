@@ -43,7 +43,7 @@ class AddInventory extends HookWidget {
     final expanded2 = useState<bool>(false);
     final isValidated = useState<bool>(false);
     final profileImage = useState<String>(
-        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAJkAvwMBIgACEQEDEQH/xAAbAAEBAAMBAQEAAAAAAAAAAAAAAQQFBgIDB//EADcQAAIBAgQBCgUCBgMAAAAAAAABAgMEBRESIVETFTFBUlNxkZKxFCI1YdFCoSMyc4HB4TNig//EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwD9CICgQpAARSFAAACAFAAAAQoAAEApAUCFIAKAQCkZSMCgACFIUACIoAjKRgCkKAAAAAgFAAAEKBAOsAUAACMpGBQABCkKBEUiKBAygCFIOoCkPtQta1x/xQbXHoXmbKhg3Q69TP8A6w/IGoSbeSTb4Iy6eG3M4Sm4aUlmtT3Zt3Kyw9ZfJB8FvJls7+neTnGEZLT2utAc4DIv6Hw93UgllFvVHwZjgQoAEQCAFAAAjKRgUAAQpCgRFIj1GOqUY5pZvLNgQsIyqPTTi5N9SWZubfB6cd683N8Fsj7zurKzWiGlNfpprcDXW+EV6mTqtUl5s2FKwtLSOueTy/XUZlUKqq0Y1ctKks9+o+VW2tK0tVWMJt8ZAY9fFqFPainUa4bI1txiNzX216I8I7fubf4Gw7ql5j4Gw7qn5gc6ZGHV+Qu6cn0N6ZeDN18DYd1T8x8DYd1T8wMfHKOdKFddMHlLwf8As0p1U1SqU3TnocGsmmzH+BsO6p+YHOg3OKWdvRs5TpUYxlmsmvE0wEQAAFAAEZSMCggAFIGAQYAHRWs1e4bpk93Fwk1xOelFwbi1k08mvubLAq+mtKg+ia1LxR88Zoclda0vlqb/ANwNjT+j/wDi/Y55JbbfsdDT+jr+i/Y01g4Ru6MqmWnUukCyw+5VLlHbtRyz6s/IxslwXkddKUYxcm0klnm+g5Ws4yr1HD+Rzbj4Z7AeMlwXkTJcF5FW7WW+ZtpYZpw5tx/jr53+ANTkuC8iaVwXketMtOrS9PHLYgHQYx9Ol4x9znzoMY+nS8Y+5z4AAAUEAFIwABQAIAUCIBFA90ajo1YVY9MXmbzFKSubDlIbuK1xf2NAb3BqvK2nJS30fLv1oD1S+jL+i/Y59LY6WrS5HDqlPPNRpySOa2A9upNw0OcnFfpbeR5lFxllJNPg9ja4Vh+rKvXjt+iL6/uzYXdlRul/EWUl0Sj0ga3BrTXP4iovlj/Kn1vibs8whGnCMILKMVkj0BiYlR5WyqRS3S1R8Uc39zrms1lxOVuaTo16lPsyeXgBvcY+nS8Y+5z3UdBjH0+XjH3OfAAACkKAICkYFBGUCFIUCIpEAKZeE1uRvIpvKNT5X/gwws0810gdTd5u0rLLdwe39jmqcZwnGXJOWTzylF5G4p4xQ0R1xnqy3yXWeuebbs1fSBi863ncR9EvyOdbzuI+iX5Mrnm27NX0jnm27NXyAxedbzuI+iX5HOt53EfRL8mVzzbdmr6Rzzbdmr6QMXnW87iPol+TCuZVrms6s6TUmt8os2/PNt2avpHPNt2avpA9Yx9Pl4x9zQG0xDEaNzaypU1PU2nuvuapgOsAAUERQBGUjAoAAhQAIigAQMoAgBQJnxAAF3IUATMoAEBQBAUARFAAEKQAEAgAAAAAAAAAAAAAAAAAAAAAAAACAQAAAB1ALoAAAMAAAAA6wAAAAMdYAAAAAAAAAAAAAAAQA//Z');
+        'https://www.shutterstock.com/image-vector/image-upload-icon-260nw-1157424790.jpg');
     final photo = useState<File?>(File(AppImages.usericon));
     final ImagePicker picker = ImagePicker();
     final FirebaseStorage storage = FirebaseStorage.instance;
@@ -83,9 +83,7 @@ class AddInventory extends HookWidget {
     final selectedUnit = useState<String>('kg');
     final convertedWeight = useState<String>('');
 
-
     addInventory() async {
-
       final weighty = double.parse(weight.text);
       if (selectedUnit.value == 'g') {
         convertedWeight.value = (weighty / 1000).toString();
@@ -149,7 +147,7 @@ class AddInventory extends HookWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: 9.h,
+                height: 8.h,
                 width: 10.w,
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.black),
@@ -199,8 +197,6 @@ class AddInventory extends HookWidget {
               button(true, AppColors.darkOrange, AppColors.white,
                   'Upload image', updateProfilePicture),
               heightSpace(2),
-              button(false, AppColors.backgroundGrey, AppColors.darkOrange,
-                  'Remove product image', () {}),
               heightSpace(3),
               customText(
                 text: 'Product Details',
@@ -226,9 +222,11 @@ class AddInventory extends HookWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CustomTextFormField(
+                        isNeeded: true,
                         label: 'Product Name',
                         textEditingController: productName,
                         validator: stringValidation,
+                        keyboardType: TextInputType.multiline,
                       ),
                       heightSpace(3),
                       customText(
@@ -320,12 +318,15 @@ class AddInventory extends HookWidget {
                                 ),
                                 heightSpace(2),
                                 WeightField(
-                                  validator: numericValidation,
+                                  validator: doubleValidation,
                                   label: 'Weight (e.g., 1 kg, 500g etc)',
+                                  hintText:
+                                      'Enter the Exact Weight of Your Product (e.g., 1 kg, 500g etc)',
                                   textEditingController: weight,
                                   keyboardType: TextInputType.number,
                                   dropdown: DropdownButton<String>(
                                     value: selectedUnit.value,
+                                    underline: Container(),
                                     onChanged: (String? newValue) {
                                       selectedUnit.value = newValue!;
                                     },
@@ -384,12 +385,16 @@ class AddInventory extends HookWidget {
                             Column(
                               children: [
                                 CustomTextFormField(
+                                  isNeeded: true,
                                   label: 'In stock',
                                   textEditingController: inStock,
+                                  keyboardType: TextInputType.number,
+                                  validator: numericValidation,
                                 ),
                                 heightSpace(2),
                                 CustomTextFormField(
                                   hasWidg: true,
+                                  isNeeded: true,
                                   validator: numericValidation,
                                   label: 'Price',
                                   widg: GestureDetector(
@@ -407,6 +412,7 @@ class AddInventory extends HookWidget {
                                 ),
                                 heightSpace(2),
                                 CustomTextFormField(
+                                  isNeeded: true,
                                   validator: numericValidation,
                                   label: 'Discount (₦)',
                                   textEditingController: discount,

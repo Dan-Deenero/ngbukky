@@ -240,7 +240,7 @@ class SpareWallet extends HookWidget {
               )
             : SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -367,7 +367,7 @@ class SpareWallet extends HookWidget {
                             )
                           else
                             GestureDetector(
-                              onTap: () => context.push(AppRoutes.bookingAlert),
+                              onTap: () => context.push(AppRoutes.spareWalletHistory),
                               child: Row(
                                 children: [
                                   customText(
@@ -475,52 +475,49 @@ class PaymentTab extends HookWidget {
         ? const Center(
             child: CircularProgressIndicator(),
           )
-        : Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Column(
-              children: [
-                if (transactionHistory.value.isEmpty)
-                  Center(
-                    child: Column(
-                      children: [
-                        SvgPicture.asset(AppImages.nopaymenticon),
-                        heightSpace(1),
-                        SizedBox(
-                          width: 130,
-                          child: customText(
-                            text: 'No payments were made to you',
-                            fontSize: 15,
-                            textColor: AppColors.textGrey.withOpacity(0.3),
-                            textAlignment: TextAlign.center,
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                else
-                  ...transactionHistory.value.map(
-                    (e) {
-                      var dateString = e.createdAt;
-                      var dateTime = DateTime.parse(dateString!);
-                      var formattedDate =
-                          DateFormat('dd MMM yyyy').format(dateTime);
-
-                      var formattedTime =
-                          DateFormat('hh:mm a').format(dateTime);
-                      return WalletTile(
-                        id: e.id,
-                        isWithdrawal: false,
-                        date: formattedDate,
-                        isMechanic: false,
-                        amount: e.amount,
-                        status: e.status,
-                        time: formattedTime,
-                      );
-                    },
-                  )
-              ],
-            ),
-          );
+        : Column(
+          children: [
+            if (transactionHistory.value.isEmpty)
+              Center(
+                child: Column(
+                  children: [
+                    SvgPicture.asset(AppImages.nopaymenticon),
+                    heightSpace(1),
+                    SizedBox(
+                      width: 130,
+                      child: customText(
+                        text: 'No payments were made to you',
+                        fontSize: 15,
+                        textColor: AppColors.textGrey.withOpacity(0.3),
+                        textAlignment: TextAlign.center,
+                      ),
+                    )
+                  ],
+                ),
+              )
+            else
+              ...transactionHistory.value.map(
+                (e) {
+                  var dateString = e.createdAt;
+                  var dateTime = DateTime.parse(dateString!);
+                  var formattedDate =
+                      DateFormat('dd MMM yyyy').format(dateTime);
+        
+                  var formattedTime =
+                      DateFormat('hh:mm a').format(dateTime);
+                  return WalletTile(
+                    id: e.id,
+                    isWithdrawal: false,
+                    date: formattedDate,
+                    isMechanic: false,
+                    amount: e.amount,
+                    status: e.status,
+                    time: formattedTime,
+                  );
+                },
+              )
+          ],
+        );
   }
 }
 
@@ -550,51 +547,48 @@ class WithdrawalTab extends HookWidget {
         ? const Center(
             child: CircularProgressIndicator(),
           )
-        : Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Column(
-              children: [
-                if (transactionHistory.value.isEmpty)
-                  Center(
-                    child: Column(
-                      children: [
-                        SvgPicture.asset(AppImages.nopaymenticon),
-                        heightSpace(1),
-                        SizedBox(
-                          width: 130,
-                          child: customText(
-                            text: 'You have not made any withdrawal',
-                            fontSize: 15,
-                            textColor: AppColors.textGrey.withOpacity(0.3),
-                            textAlignment: TextAlign.center,
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                else
-                  ...transactionHistory.value.map(
-                    (e) {
-                      var dateString = e.createdAt;
-                      var dateTime = DateTime.parse(dateString!);
-                      var formattedDate =
-                          DateFormat('dd MMM yyyy').format(dateTime);
-
-                      var formattedTime =
-                          DateFormat('hh:mm a').format(dateTime);
-                      return WalletTile(
-                        id: e.id,
-                        isWithdrawal: true,
-                        isMechanic: false,
-                        date: formattedDate,
-                        amount: e.amount,
-                        status: e.status,
-                        time: formattedTime,
-                      );
-                    },
-                  )
-              ],
-            ),
-          );
+        : Column(
+          children: [
+            if (transactionHistory.value.isEmpty)
+              Center(
+                child: Column(
+                  children: [
+                    SvgPicture.asset(AppImages.nopaymenticon),
+                    heightSpace(1),
+                    SizedBox(
+                      width: 130,
+                      child: customText(
+                        text: 'You have not made any withdrawal',
+                        fontSize: 15,
+                        textColor: AppColors.textGrey.withOpacity(0.3),
+                        textAlignment: TextAlign.center,
+                      ),
+                    )
+                  ],
+                ),
+              )
+            else
+              ...transactionHistory.value.map(
+                (e) {
+                  var dateString = e.createdAt;
+                  var dateTime = DateTime.parse(dateString!);
+                  var formattedDate =
+                      DateFormat('dd MMM yyyy').format(dateTime);
+        
+                  var formattedTime =
+                      DateFormat('hh:mm a').format(dateTime);
+                  return WalletTile(
+                    id: e.id,
+                    isWithdrawal: true,
+                    isMechanic: false,
+                    date: formattedDate,
+                    amount: e.amount,
+                    status: e.status,
+                    time: formattedTime,
+                  );
+                },
+              )
+          ],
+        );
   }
 }

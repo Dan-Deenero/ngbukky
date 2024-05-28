@@ -217,7 +217,7 @@ class _PDQInspectionDetailsState extends State<PDQInspectionDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           customText(
-                              text: 'Quote not approved by client',
+                              text:  "Client Dissatisfied",
                               fontSize: 14,
                               textColor: AppColors.red,
                               fontWeight: FontWeight.w600),

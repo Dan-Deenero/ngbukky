@@ -49,31 +49,31 @@ class _ViewInventoryDetailsState extends State<ViewInventoryDetails> {
               inventoryModel = value;
               log(inventoryModel!.toJson().toString());
               if(inventoryModel!.specifications!.length == ''){
-                length = '0';
+                length = '---';
               }else{
                 length = inventoryModel!.specifications!.length;
               }
 
               if(inventoryModel!.specifications!.width == ''){
-                width = '0';
+                width = '---';
               }else{
                 width = inventoryModel!.specifications!.width;
               }
 
               if(inventoryModel!.specifications!.height == ''){
-                height = '0';
+                height = '---';
               }else{
                 height = inventoryModel!.specifications!.height;
               }
 
               if(inventoryModel!.specifications!.weight == ''){
-                weight = '0';
+                weight = '---';
               }else{
                 weight = inventoryModel!.specifications!.weight;
               }
 
               if(inventoryModel!.specifications!.volume == ''){
-                volume = '0';
+                volume = '---';
               }else{
                 volume = inventoryModel!.specifications!.volume;
               }
@@ -125,7 +125,7 @@ class _ViewInventoryDetailsState extends State<ViewInventoryDetails> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: 10.h,
+                height: 9.h,
                 width: 10.w,
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.black),

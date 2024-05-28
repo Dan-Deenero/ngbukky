@@ -94,7 +94,6 @@ class EditInventory extends HookWidget {
     final selectedUnit = useState<String>('kg');
     final convertedWeight = useState<String>('');
 
-
     Future<void> updateProfilePicture() async {
       // Select image
       final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -118,7 +117,7 @@ class EditInventory extends HookWidget {
       } else {
         convertedWeight.value = weighty.toString();
       }
-      
+
       var data = {
         "name": productName.text,
         "price": price.text,
@@ -164,7 +163,7 @@ class EditInventory extends HookWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: 10.h,
+                height: 9.h,
                 width: 10.w,
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.black),
@@ -219,8 +218,6 @@ class EditInventory extends HookWidget {
                     button(true, AppColors.darkOrange, AppColors.white,
                         'Upload image', updateProfilePicture),
                     heightSpace(2),
-                    button(false, AppColors.backgroundGrey,
-                        AppColors.darkOrange, 'Remove product image', () {}),
                     heightSpace(3),
                     customText(
                       text: 'Product Details',
@@ -344,12 +341,13 @@ class EditInventory extends HookWidget {
                                       ),
                                       heightSpace(2),
                                       WeightField(
-                                        validator: numericValidation,
+                                        validator: doubleValidation,
                                         label: 'Weight (e.g., 1 kg, 500g etc)',
                                         textEditingController: weight,
                                         keyboardType: TextInputType.number,
                                         dropdown: DropdownButton<String>(
                                           value: selectedUnit.value,
+                                          underline: Container(),
                                           onChanged: (String? newValue) {
                                             selectedUnit.value = newValue!;
                                           },

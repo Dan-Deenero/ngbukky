@@ -116,8 +116,15 @@ class _PaymentRequestState extends State<PaymentRequest> {
                         profile = e.user!.profileImageUrl!;
                       }
                       return GestureDetector(
-                        onTap: () => context.push(AppRoutes.bookingMiddleman,
-                            extra: {e.id, e.status}),
+                        onTap: () {
+                          context.push(
+                            AppRoutes.bookingMiddleman,
+                            extra: {
+                              'id': e.id,
+                              'status': e.status,
+                            },
+                          );
+                        },
                         child: Padding(
                           padding: const EdgeInsets.all(10),
                           child: Card(
@@ -188,10 +195,15 @@ class _PaymentRequestState extends State<PaymentRequest> {
                         profile = e.user!.profileImageUrl!;
                       }
                       return GestureDetector(
-                        onTap: () => context.push(
-                                      AppRoutes.bookingMiddleman,
-                                      extra: {'id': e.id, 'status': e.status,},
-                                    ),
+                        onTap: () {
+                          context.push(
+                            AppRoutes.bookingMiddleman,
+                            extra: {
+                              'id': e.id,
+                              'status': e.status,
+                            },
+                          );
+                        },
                         child: Padding(
                           padding: const EdgeInsets.all(10),
                           child: Card(

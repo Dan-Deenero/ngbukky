@@ -65,6 +65,8 @@ class MechanicRepo {
         booking.add(BookingModel.fromJson(bookingModel));
       }
       return booking;
+    }else if (response.status == 404) {
+      return [];
     }
     return booking;
   }

@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/transaction_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/success_modal.dart';
@@ -224,7 +225,7 @@ class _SpareHistoryDetailState extends State<SpareHistoryDetail> {
                             : SvgPicture.asset(AppImages.unsuccessModal),
                         heightSpace(1.5),
                         customText(
-                            text: '${transactionModel!.orderedItem!.subtotal}',
+                            text: '₦${Helpers.formatBalance(transactionModel!.amount)}',
                             fontSize: 24,
                             textColor: txtcol,
                             fontWeight: FontWeight.bold),
@@ -273,19 +274,19 @@ class _SpareHistoryDetailState extends State<SpareHistoryDetail> {
                               fontSize: 12,
                               textColor: AppColors.textGrey),
                         ),
-                        heightSpace(1),
-                        ListTile(
-                          leading: SvgPicture.asset(AppImages.locationIcon),
-                          title: customText(
-                              text: '#55',
-                              fontSize: 14,
-                              textColor: AppColors.black,
-                              fontWeight: FontWeight.bold),
-                          subtitle: customText(
-                              text: "Order number",
-                              fontSize: 12,
-                              textColor: AppColors.textGrey),
-                        ),
+                        // heightSpace(1),
+                        // ListTile(
+                        //   leading: SvgPicture.asset(AppImages.locationIcon),
+                        //   title: customText(
+                        //       text: '#55',
+                        //       fontSize: 14,
+                        //       textColor: AppColors.black,
+                        //       fontWeight: FontWeight.bold),
+                        //   subtitle: customText(
+                        //       text: "Order number",
+                        //       fontSize: 12,
+                        //       textColor: AppColors.textGrey),
+                        // ),
                         heightSpace(1),
                         ListTile(
                           leading: SvgPicture.asset(AppImages.calendarIcon),
@@ -399,25 +400,25 @@ class _SpareHistoryDetailState extends State<SpareHistoryDetail> {
                                     textColor: AppColors.black),
                                 customText(
                                     text:
-                                        '${transactionModel!.orderedItem!.subtotal}.00',
+                                        '₦${Helpers.formatBalance(transactionModel!.amount)}.00',
                                     fontSize: 13,
                                     textColor: AppColors.black)
                               ],
                             ),
                             heightSpace(2),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                customText(
-                                    text: 'Ngbuka Charge (1%)',
-                                    fontSize: 13,
-                                    textColor: AppColors.black),
-                                customText(
-                                    text: '${50.00}',
-                                    fontSize: 13,
-                                    textColor: AppColors.black)
-                              ],
-                            ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //   children: [
+                            //     customText(
+                            //         text: 'Ngbuka Charge (1%)',
+                            //         fontSize: 13,
+                            //         textColor: AppColors.black),
+                            //     customText(
+                            //         text: '${50.00}',
+                            //         fontSize: 13,
+                            //         textColor: AppColors.black)
+                            //   ],
+                            // ),
                             heightSpace(2),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -429,7 +430,7 @@ class _SpareHistoryDetailState extends State<SpareHistoryDetail> {
                                     fontWeight: FontWeight.w600),
                                 customText(
                                     text:
-                                        '${transactionModel!.orderedItem!.subtotal! + 50.00}',
+                                        '₦${Helpers.formatBalance(transactionModel!.amount)}.00',
                                     fontSize: 13,
                                     textColor: AppColors.black,
                                     fontWeight: FontWeight.w600)

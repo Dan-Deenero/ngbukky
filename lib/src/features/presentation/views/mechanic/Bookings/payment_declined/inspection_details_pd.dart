@@ -226,7 +226,7 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             customText(
-                                text: 'Payment Declined',
+                                text:  "Client Dissatisfied",
                                 fontSize: 14,
                                 textColor: AppColors.red,
                                 fontWeight: FontWeight.w600),

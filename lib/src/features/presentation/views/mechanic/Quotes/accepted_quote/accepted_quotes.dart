@@ -52,7 +52,7 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
             GestureDetector(
               onTap: () => context.pop(),
               child: Container(
-                height: 10.h,
+                height: 9.h,
                 width: 10.w,
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.black),
