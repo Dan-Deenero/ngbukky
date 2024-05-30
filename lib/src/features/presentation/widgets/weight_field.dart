@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:ngbuka/src/core/shared/app_images.dart';
 import '../../../core/shared/colors.dart';
 import 'app_spacer.dart';
 import 'custom_text.dart';
@@ -64,18 +65,40 @@ class _WeightFieldState extends State<WeightField> {
       children: [
         Row(
           children: [
-            customText(
-              text: '${widget.label}',
-              fontSize: 14,
-              textColor: AppColors.primary,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                customText(
+                  text: '${widget.label}',
+                  fontSize: 14,
+                  textColor: AppColors.primary,
+                ),
+                customText(
+                  text: 'weight after packaging',
+                  fontSize: 10,
+                  textColor: AppColors.primary,
+                ),
+              ],
             ),
             widget.hasWidg! ? widget.widg! : const SizedBox.shrink(),
-            widthSpace(1),
+            widthSpace(2),
             customText(
               text: '*',
               fontSize: 12,
               textColor: AppColors.red,
-            )
+            ),
+            widthSpace(1),
+            Container(
+              width: 10.w,
+              height: 3.7.h,
+              decoration: const BoxDecoration(
+                shape: BoxShape.rectangle,
+                color: AppColors.containerGrey,
+              ),
+              child: Image.asset(
+                AppImages.weightPackage,
+              ),
+            ),
           ],
         ),
         heightSpace(1),

@@ -78,5 +78,6 @@ class AppImages {
   static const String outOfstate = "assets/images/svgs/outOfState.svg";
   static const String insideState = "assets/images/svgs/insideState.svg";
   static const String delivered = "assets/images/svgs/delivered.svg";
+  static const String weightPackage = "assets/images/pngs/Products-packaging-cartons.jpg";
   
 }

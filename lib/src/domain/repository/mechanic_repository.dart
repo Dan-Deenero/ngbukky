@@ -321,7 +321,7 @@ class MechanicRepo {
   Future<bool> reportClient(Map<dynamic, dynamic> body) async {
     final response = await ApiClient.post(Endpoints.reportClient,
         body: body, useToken: true);
-    if (response.status == 200) {
+    if (response.status == 200 || response.status == 201) {
       return true;
     }
     return false;

@@ -319,9 +319,9 @@ class AddInventory extends HookWidget {
                                 heightSpace(2),
                                 WeightField(
                                   validator: doubleValidation,
-                                  label: 'Weight (e.g., 1 kg, 500g etc)',
+                                  label: 'Weight(e.g, 2kg, 500g etc)',
                                   hintText:
-                                      'Enter the Exact Weight of Your Product (e.g., 1 kg, 500g etc)',
+                                      'Enter weight After Packaging(e.g., 1 kg, 500g etc)',
                                   textEditingController: weight,
                                   keyboardType: TextInputType.number,
                                   dropdown: DropdownButton<String>(

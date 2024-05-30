@@ -83,6 +83,9 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
     bool result = await _mechanicRepo.reportClient(data);
 
     if (result) {
+      if (context.mounted) {
+        context.pop();
+      }
       showCompletedModal();
     }
   }
@@ -226,7 +229,7 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             customText(
-                                text:  "Client Dissatisfied",
+                                text: "Client Dissatisfied",
                                 fontSize: 14,
                                 textColor: AppColors.red,
                                 fontWeight: FontWeight.w600),
