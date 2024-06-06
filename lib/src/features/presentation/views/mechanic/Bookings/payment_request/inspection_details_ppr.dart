@@ -28,23 +28,23 @@ class _PPRInspectionDetailsState extends State<PPRInspectionDetails> {
 
   bool isLoading = true;
   BookingModel? bookingModel;
-  var dateString;
-  var formattedDate;
-  var formattedTime;
-  var dateTime;
+  dynamic dateString;
+  dynamic formattedDate;
+  dynamic formattedTime;
+  dynamic dateTime;
 
   int price = 0;
   double serviceFee = 0;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _mechanicRepo.getoneBooking(widget.id).then((value) => setState(
           () {
             bookingModel = value;
             dateString = bookingModel!.date;
-            dateTime = DateTime.parse(dateString!);
+            dateTime =
+                DateTime.parse(dateString!).add(const Duration(hours: 1));
             formattedDate = DateFormat('E, d MMM y').format(dateTime);
             formattedTime = DateFormat('hh:mm a').format(dateTime);
             isLoading = false;

@@ -107,7 +107,7 @@ class _PaymentRequestState extends State<PaymentRequest> {
                           price += quote.price!;
                         }
                       }
-                      var profile;
+                      dynamic profile;
 
                       if (e.user!.profileImageUrl == null) {
                         profile =

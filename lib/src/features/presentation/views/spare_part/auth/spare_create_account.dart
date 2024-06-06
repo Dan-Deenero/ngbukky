@@ -123,7 +123,13 @@ class DealerCreateAccount extends HookWidget {
                     heightSpace(2),
                     CustomPhoneField(
                       onChanged: (val) {
-                        phoneNumber.text = val.completeNumber;
+                        if (val.number.startsWith('0') &&
+                            val.number.length == 11) {
+                          phoneNumber.text =
+                              val.countryCode + val.number.substring(1);
+                        } else {
+                          phoneNumber.text = val.completeNumber;
+                        }
                       },
                     ),
                     heightSpace(2),

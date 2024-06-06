@@ -26,16 +26,20 @@ class _ViewAcceptedQuoteState extends State<ViewAcceptedQuote> {
 
   QuotesModel? quoteModel;
   List<Services>? quote = [];
+  List<Services>? otherQuote = [];
+  List<Services>? serviceTogether = [];
 
   @override
   void initState() {
-    // TODO: implement initState
+   
     super.initState();
     _mechanicRepo.getoneQuote(widget.id).then(
           (value) => setState(
             () {
               quoteModel = value;
               quote = quoteModel!.services!;
+              otherQuote = quoteModel!.otherServices!;
+              serviceTogether = quote! + otherQuote!;
               isLoading = false;
             },
           ),
@@ -171,7 +175,7 @@ class _ViewAcceptedQuoteState extends State<ViewAcceptedQuote> {
                     heightSpace(3),
                     Column(
                       children: [
-                        ...quote!.map(
+                        ...serviceTogether!.map(
                           (qte) {
                             return Row(
                               children: [

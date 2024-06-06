@@ -13,7 +13,7 @@ import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
 class ViewRejectedBooking extends StatefulWidget {
   final String id;
-  ViewRejectedBooking({
+  const ViewRejectedBooking({
     super.key,
     required this.id,
   });
@@ -26,10 +26,10 @@ class _ViewRejectedBookingState extends State<ViewRejectedBooking> {
   final MechanicRepo _mechanicRepo = MechanicRepo();
 
   bool isLoading = true;
-  var dateString;
-  var dateTime;
-  var formattedDate;
-  var formattedTime;
+  dynamic dateString;
+  dynamic dateTime;
+  dynamic formattedDate;
+  dynamic formattedTime;
 
   BookingModel? bookingModel;
 
@@ -42,7 +42,7 @@ class _ViewRejectedBookingState extends State<ViewRejectedBooking> {
             bookingModel = value;
             isLoading = false;
             dateString = bookingModel!.date!;
-            dateTime = DateTime.parse(dateString);
+            dateTime = DateTime.parse(dateString!).add(const Duration(hours: 1));
             formattedDate = DateFormat('E, d MMM y').format(dateTime);
 
             formattedTime = DateFormat('hh:mm a').format(dateTime);

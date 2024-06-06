@@ -30,21 +30,22 @@ class _PPRQInspectionDetailsState extends State<PPRQInspectionDetails> {
 
   int? totalPrice;
   List<Services>? quote = [];
+  List<Services>? otherQuote = [];
+  List<Services>? serviceTogether = [];
 
   int price = 0;
   double serviceFee = 0;
-  Services? requestedSystemService;
-  OtherServices? requestedPersonalisedService;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _mechanicRepo.getoneQuote(widget.id).then((value) => setState(
           () {
             quoteModel = value;
             isLoading = false;
             quote = quoteModel!.services!;
+            otherQuote = quoteModel!.otherServices!;
+            serviceTogether = quote! + otherQuote!;
             for (Quotes quote in quoteModel!.quotes!) {
               if (quote.price != null) {
                 price += quote.price!;
@@ -59,10 +60,9 @@ class _PPRQInspectionDetailsState extends State<PPRQInspectionDetails> {
     var body = {
       "": "",
     };
-    bool result =
-        await _mechanicRepo.markQuoteAsCompleted(body, widget.id);
+    bool result = await _mechanicRepo.markQuoteAsCompleted(body, widget.id);
     if (result) {
-      if(context.mounted){
+      if (context.mounted) {
         showCompletedModal();
         return;
       }
@@ -80,7 +80,6 @@ class _PPRQInspectionDetailsState extends State<PPRQInspectionDetails> {
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -234,7 +233,7 @@ class _PPRQInspectionDetailsState extends State<PPRQInspectionDetails> {
                   heightSpace(3),
                   Column(
                     children: [
-                      ...quote!.map(
+                      ...serviceTogether!.map(
                         (qte) {
                           return Row(
                             children: [

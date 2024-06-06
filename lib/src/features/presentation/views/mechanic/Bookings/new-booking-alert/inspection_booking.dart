@@ -33,15 +33,15 @@ class _InspectionBookingState extends State<InspectionBooking> {
   BookingModel? bookingModel;
   NotificationModel? notifyModel;
 
-  var dateString;
-  var dateTime;
-  var viewedString;
-  var viewed;
-  var formattedTime;
-  var formattedDate;
-  var viewedDate;
-  var viewedTime;
-  var modeling;
+  dynamic dateString;
+  dynamic dateTime;
+  dynamic viewedString;
+  dynamic viewed;
+  dynamic formattedTime;
+  dynamic formattedDate;
+  dynamic viewedDate;
+  dynamic viewedTime;
+  dynamic modeling;
 
   String username = '';
 
@@ -55,7 +55,8 @@ class _InspectionBookingState extends State<InspectionBooking> {
               bookingModel = value;
               isLoading = false;
               dateString = bookingModel!.date;
-              dateTime = DateTime.parse(dateString!);
+              dateTime =
+                  DateTime.parse(dateString!).add(const Duration(hours: 1));
               formattedDate = DateFormat('E, d MMM y').format(dateTime);
 
               formattedTime = DateFormat('hh:mm a').format(dateTime);
@@ -125,10 +126,10 @@ class _InspectionBookingState extends State<InspectionBooking> {
       showDialog(
         context: context,
         builder: (context) => Center(
-          child: Container(
-            // padding: EdgeInsets.all(10.0),
+          child: SizedBox(
+            // padding: const EdgeInsets.all(10.0),
             width: 700, // Set the desired width
-            height: 200,
+            height: 220,
             child: Dialog(
               shape: RoundedRectangleBorder(
                 borderRadius:
@@ -137,35 +138,46 @@ class _InspectionBookingState extends State<InspectionBooking> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      customText(
-                          text: 'Confirm acceptance',
-                          fontSize: 20,
-                          textColor: AppColors.black,
-                          fontWeight: FontWeight.w500),
-                      InkWell(
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        customText(
+                            text: 'Confirm acceptance',
+                            fontSize: 20,
+                            textColor: AppColors.black,
+                            fontWeight: FontWeight.w500),
+                        InkWell(
                           onTap: () => context.pop(),
-                          child: SvgPicture.asset(AppImages.cancelModal))
-                    ],
+                          child: SvgPicture.asset(
+                            AppImages.cancelModal,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   heightSpace(1),
-                  customText(
-                      text: 'Confirm that you want to accept this booking',
-                      fontSize: 12,
-                      textColor: AppColors.black),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: customText(
+                        text: 'Confirm that you want to accept this booking',
+                        fontSize: 12,
+                        textColor: AppColors.black),
+                  ),
                   heightSpace(3),
                   Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         TextButton(
-                            onPressed: () => context.pop(),
-                            child: customText(
-                                text: 'No',
-                                fontSize: 16,
-                                textColor: AppColors.textGrey)),
+                          onPressed: () => context.pop(),
+                          child: customText(
+                            text: 'No',
+                            fontSize: 16,
+                            textColor: AppColors.textGrey,
+                          ),
+                        ),
                         widthSpace(3),
                         Container(
                           width: 1,
@@ -199,10 +211,9 @@ class _InspectionBookingState extends State<InspectionBooking> {
       showDialog(
           context: context,
           builder: (context) => Center(
-                child: Container(
-                  // padding: EdgeInsets.all(10.0),
+                child: SizedBox(
                   width: 700, // Set the desired width
-                  height: 200,
+                  height: 220,
                   child: Dialog(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(
@@ -211,36 +222,45 @@ class _InspectionBookingState extends State<InspectionBooking> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            customText(
-                                text: 'Confirm rejection',
-                                fontSize: 20,
-                                textColor: AppColors.black,
-                                fontWeight: FontWeight.w500),
-                            InkWell(
-                                onTap: () => context.pop(),
-                                child: SvgPicture.asset(AppImages.cancelModal))
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              customText(
+                                  text: 'Confirm rejection',
+                                  fontSize: 20,
+                                  textColor: AppColors.black,
+                                  fontWeight: FontWeight.w500),
+                              InkWell(
+                                  onTap: () => context.pop(),
+                                  child:
+                                      SvgPicture.asset(AppImages.cancelModal))
+                            ],
+                          ),
                         ),
                         heightSpace(1),
-                        customText(
-                            text:
-                                'Confirm that you want to reject this booking',
-                            fontSize: 12,
-                            textColor: AppColors.black),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: customText(
+                              text:
+                                  'Confirm that you want to reject this booking',
+                              fontSize: 12,
+                              textColor: AppColors.black),
+                        ),
                         heightSpace(3),
                         Center(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               TextButton(
-                                  onPressed: () => context.pop(),
-                                  child: customText(
-                                      text: 'No',
-                                      fontSize: 16,
-                                      textColor: AppColors.textGrey)),
+                                onPressed: () => context.pop(),
+                                child: customText(
+                                  text: 'No',
+                                  fontSize: 16,
+                                  textColor: AppColors.textGrey,
+                                ),
+                              ),
                               widthSpace(3),
                               Container(
                                 width: 1,
@@ -249,11 +269,13 @@ class _InspectionBookingState extends State<InspectionBooking> {
                               ),
                               widthSpace(3),
                               TextButton(
-                                  onPressed: rejectBooking,
-                                  child: customText(
-                                      text: 'Yes',
-                                      fontSize: 16,
-                                      textColor: AppColors.darkOrange))
+                                onPressed: rejectBooking,
+                                child: customText(
+                                  text: 'Yes',
+                                  fontSize: 16,
+                                  textColor: AppColors.darkOrange,
+                                ),
+                              ),
                             ],
                           ),
                         )

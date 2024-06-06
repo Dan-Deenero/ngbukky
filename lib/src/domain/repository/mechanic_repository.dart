@@ -461,9 +461,23 @@ class MechanicRepo {
     return false;
   }
 
-  Future<List<TransactionModel>> getAllTransaction(String? type) async {
+  Future<List<TransactionModel>> getAllTransaction(String? type,) async {
     final response = await ApiClient.get(
         '${Endpoints.transactions}/?&type=$type',
+        useToken: true);
+    List<TransactionModel> transaction = [];
+    if (response.status == 200) {
+      for (var transactionModel in response.entity['rows']) {
+        transaction.add(TransactionModel.fromJson(transactionModel));
+      }
+      return transaction;
+    }
+    return transaction;
+  }
+
+  Future<List<TransactionModel>> getLimitedTransaction(String? type, int? limit) async {
+    final response = await ApiClient.get(
+        '${Endpoints.transactions}/?&type=$type&limit=$limit',
         useToken: true);
     List<TransactionModel> transaction = [];
     if (response.status == 200) {

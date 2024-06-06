@@ -38,6 +38,7 @@ class HomeView extends HookWidget {
     final completed3 = useState<int?>(0);
     final bookingHistory = useState<List<BookingModel>>([]);
     final quoteHistory = useState<List<QuotesModel>>([]);
+    final transactionHistory = useState<List<TransactionModel>>([]);
 
     final name = useState<String?>('Damini');
 
@@ -81,6 +82,14 @@ class HomeView extends HookWidget {
       );
     }
 
+    Future<dynamic> getTransaction() async {
+      await _mechanicRepo.getAllTransaction('all').then(
+        (value) {
+          transactionHistory.value = value;
+        },
+      );
+    }
+
     Future<dynamic> getNewBookings() async {
       await _mechanicRepo.get5bookingAlert('pending').then(
         (value) {
@@ -108,6 +117,7 @@ class HomeView extends HookWidget {
         await getNewBookings();
         await getNewQuotes();
         await getUserProfile();
+        await getTransaction();
         isLoading.value = false;
       }
 
@@ -463,7 +473,7 @@ class HomeView extends HookWidget {
                                     )
                                   ],
                                 ),
-                              )
+                              ),
                           ],
                         ),
                         heightSpace(4),
@@ -645,18 +655,46 @@ class HomeView extends HookWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             customText(
-                                text: "Recent activities",
-                                fontSize: 15,
-                                textColor: AppColors.primary),
-                            Row(
-                              children: [
-                                customText(
-                                    text: "See all",
-                                    fontSize: 15,
-                                    textColor: AppColors.primary),
-                                const Icon(Icons.arrow_forward)
-                              ],
-                            )
+                              text: "Recent activities",
+                              fontSize: 15,
+                              textColor: AppColors.primary,
+                            ),
+                            if (transactionHistory.value.isEmpty)
+                              IgnorePointer(
+                                ignoring: true,
+                                child: Row(
+                                  children: [
+                                    customText(
+                                      text: "See all",
+                                      fontSize: 15,
+                                      textColor:
+                                          AppColors.primary.withOpacity(0.1),
+                                    ),
+                                    Icon(
+                                      Icons.arrow_forward,
+                                      size: 20,
+                                      color: AppColors.primary.withOpacity(0.1),
+                                    )
+                                  ],
+                                ),
+                              )
+                            else
+                              GestureDetector(
+                                onTap: () =>
+                                    context.push(AppRoutes.walletHistory),
+                                child: Row(
+                                  children: [
+                                    customText(
+                                        text: "See all",
+                                        fontSize: 15,
+                                        textColor: AppColors.primary),
+                                    const Icon(
+                                      Icons.arrow_forward,
+                                      size: 20,
+                                    )
+                                  ],
+                                ),
+                              ),
                           ],
                         ),
                         heightSpace(2),
@@ -752,38 +790,6 @@ class HomeView extends HookWidget {
       ]),
     );
   }
-
-  Widget transactionBox() => Container(
-        margin: const EdgeInsets.symmetric(
-          horizontal: 10,
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-        decoration: const BoxDecoration(
-            border: Border(
-                right: BorderSide(width: 2, color: AppColors.borderGrey))),
-        child: Column(children: [
-          customText(
-              text: "Earnings", fontSize: 12, textColor: AppColors.textColor),
-          heightSpace(2),
-          customText(text: "N0k", fontSize: 30, textColor: AppColors.black),
-          heightSpace(2),
-          Container(
-            width: 35.w,
-            height: 4.h,
-            decoration: BoxDecoration(
-                color: AppColors.containerGrey,
-                borderRadius: BorderRadius.circular(10)),
-            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              customText(text: "+0%", fontSize: 12, textColor: AppColors.green),
-              widthSpace(1),
-              customText(
-                  text: "Since last month",
-                  fontSize: 12,
-                  textColor: AppColors.black),
-            ]),
-          )
-        ]),
-      );
 }
 
 class PaymentTab extends HookWidget {
@@ -795,7 +801,7 @@ class PaymentTab extends HookWidget {
     final transactionHistory = useState<List<TransactionModel>>([]);
     final isLoading = useState<bool>(true);
     getTransaction() {
-      mechanicRepo.getAllTransaction('credit').then(
+      mechanicRepo.getLimitedTransaction('credit', 5).then(
         (value) {
           transactionHistory.value = value;
           isLoading.value = false;
@@ -870,7 +876,7 @@ class WithdrawalTab extends HookWidget {
     final transactionHistory = useState<List<TransactionModel>>([]);
     final isLoading = useState<bool>(true);
     getTransaction() {
-      mechanicRepo.getAllTransaction('withdrawal').then(
+      mechanicRepo.getLimitedTransaction('withdrawal', 5).then(
         (value) {
           transactionHistory.value = value;
           isLoading.value = false;

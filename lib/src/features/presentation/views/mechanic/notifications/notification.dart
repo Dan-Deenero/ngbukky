@@ -69,7 +69,7 @@ class NewNotification extends HookWidget {
                     ...notificationHistory.value.map(
                       (e) {
                         var dateString = e.createdAt!;
-                        var dateTime = DateTime.parse(dateString);
+                        var dateTime = DateTime.parse(dateString).add(const Duration(hours: 1));
                         var formattedDate =
                             DateFormat('dd MMM yyyy').format(dateTime);
                         var formattedTime =
@@ -249,7 +249,7 @@ class ReadNotification extends HookWidget {
                     ...notificationHistory.value.map(
                       (e) {
                         var dateString = e.createdAt!;
-                        var dateTime = DateTime.parse(dateString);
+                        var dateTime = DateTime.parse(dateString).add(const Duration(hours: 1));
                         var formattedDate =
                             DateFormat('dd MMM yyyy').format(dateTime);
 

@@ -29,16 +29,18 @@ class _PRQInspectionDetailsState extends State<PRQInspectionDetails> {
 
   int? totalPrice;
   List<Services>? quote = [];
+  List<Services>? otherQuote = [];
+    List<Services>? serviceTogether = [];
+
 
   int price = 0;
   double serviceFee = 0;
-  Services? requestedSystemService;
-  OtherServices? requestedPersonalisedService;
 
-  var dateString;
-  var formattedDate;
-  var formattedTime;
-  var dateTime;
+
+  dynamic dateString;
+  dynamic formattedDate;
+  dynamic formattedTime;
+  dynamic dateTime;
 
   @override
   void initState() {
@@ -48,11 +50,13 @@ class _PRQInspectionDetailsState extends State<PRQInspectionDetails> {
             quoteModel = value;
             isLoading = false;
             dateString = quoteModel!.createdAt!;
-            dateTime = DateTime.parse(dateString);
+            dateTime = DateTime.parse(dateString!).add(const Duration(hours: 1));
             formattedDate = DateFormat('E, d MMM y').format(dateTime);
 
             formattedTime = DateFormat('hh:mm a').format(dateTime);
             quote = quoteModel!.services!;
+            otherQuote = quoteModel!.otherServices!;
+            serviceTogether = quote! + otherQuote!;
             for (Quotes quote in quoteModel!.quotes!) {
               if (quote.price != null) {
                 price += quote.price!;
@@ -289,7 +293,7 @@ class _PRQInspectionDetailsState extends State<PRQInspectionDetails> {
                     heightSpace(3),
                     Column(
                       children: [
-                        ...quote!.map(
+                        ...serviceTogether!.map(
                           (qte) {
                             return Row(
                               children: [

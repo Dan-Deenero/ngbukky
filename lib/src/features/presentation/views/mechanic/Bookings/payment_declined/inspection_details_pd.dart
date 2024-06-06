@@ -43,7 +43,7 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
           () {
             bookingModel = value;
             dateString = bookingModel!.date;
-            dateTime = DateTime.parse(dateString!);
+            dateTime = DateTime.parse(dateString!).add(const Duration(hours: 1));
             formattedDate = DateFormat('E, d MMM y').format(dateTime);
 
             formattedTime = DateFormat('hh:mm a').format(dateTime);
@@ -60,17 +60,19 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
         ));
   }
 
-  showCompletedModal() {
-    showDialog(
-      context: context,
-      builder: (context) => SuccessDialogue(
-        title: 'Complete booking',
-        subtitle:
-            'Your have completed your booking and requested for payment from ${bookingModel!.user!.username}',
-        action: () => context.go(AppRoutes.bottomNav),
-      ),
-    );
-  }
+  showSuccesModal() async {
+      await showDialog(
+        context: context,
+        builder: (context) => SuccessDialogue(
+          title: 'Report sent',
+          subtitle:
+              "Thank you for submitting your report! We'll review it and get back to you soon.",
+          action: () {
+            context.go(AppRoutes.bottomNav);
+          },
+        ),
+      );
+    }
 
   reportClient() async {
     var data = {
@@ -86,7 +88,7 @@ class _PDInspectionDetailsState extends State<PDInspectionDetails> {
       if (context.mounted) {
         context.pop();
       }
-      showCompletedModal();
+      showSuccesModal();
     }
   }
 

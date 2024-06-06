@@ -357,18 +357,21 @@ class _HistoryDetailState extends State<HistoryDetail> {
                         if (whatIsIt == transactionModel!.booking)
                           ...quote.map(
                             (qte) {
+                              String serviceName = qte.requestedSystemService?.name ?? qte.requestedPersonalisedService?.name ?? 'Unknown Service';
                               return Column(
                                 children: [
                                   Row(
                                     children: [
-                                      SvgPicture.asset(AppImages.serviceIcon),
+                                      SvgPicture.asset(
+                                        AppImages.serviceIcon,
+                                      ),
                                       widthSpace(2),
                                       customText(
-                                          text:
-                                              qte.requestedSystemService!.name!,
-                                          fontSize: 13,
-                                          textColor: AppColors.black,
-                                          fontWeight: FontWeight.w600),
+                                        text: serviceName,
+                                        fontSize: 13,
+                                        textColor: AppColors.black,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ],
                                   ),
                                 ],
@@ -409,7 +412,8 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                     fontSize: 13,
                                     textColor: AppColors.black),
                                 customText(
-                                    text: '₦${Helpers.formatBalance(transactionModel!.amount)}.00',
+                                    text:
+                                        '₦${Helpers.formatBalance(transactionModel!.amount)}.00',
                                     fontSize: 13,
                                     textColor: AppColors.black)
                               ],
@@ -438,7 +442,8 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                     textColor: AppColors.black,
                                     fontWeight: FontWeight.w600),
                                 customText(
-                                    text: '₦${Helpers.formatBalance(transactionModel!.amount)}.00',
+                                    text:
+                                        '₦${Helpers.formatBalance(transactionModel!.amount)}.00',
                                     fontSize: 13,
                                     textColor: AppColors.black,
                                     fontWeight: FontWeight.w600)

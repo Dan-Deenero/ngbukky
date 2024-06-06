@@ -27,10 +27,10 @@ class _BRInspectionDetailsState extends State<BRInspectionDetails> {
   bool isLoading = true;
 
   BookingModel? bookingModel;
-  var dateString;
-  var formattedDate;
-  var formattedTime;
-  var dateTime;
+  dynamic dateString;
+  dynamic formattedDate;
+  dynamic formattedTime;
+  dynamic dateTime;
 
   int price = 0;
   double serviceFee = 0;
@@ -45,7 +45,7 @@ class _BRInspectionDetailsState extends State<BRInspectionDetails> {
           () {
             bookingModel = value;
             dateString = bookingModel!.date;
-            dateTime = DateTime.parse(dateString!);
+            dateTime = DateTime.parse(dateString!).add(const Duration(hours: 1));
             formattedDate = DateFormat('E, d MMM y').format(dateTime);
 
             formattedTime = DateFormat('hh:mm a').format(dateTime);

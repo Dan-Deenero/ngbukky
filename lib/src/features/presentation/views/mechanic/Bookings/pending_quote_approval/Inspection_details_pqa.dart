@@ -12,7 +12,7 @@ import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
 class PQAInspectionDetails extends StatefulWidget {
   final String id;
-  PQAInspectionDetails({
+  const PQAInspectionDetails({
     super.key,
     required this.id,
   });
@@ -42,20 +42,20 @@ class _PQAInspectionDetailsState extends State<PQAInspectionDetails> {
   RequestedPersonalisedService? requestedPersonalisedService;
 
 
-  var dateString;
-  var formattedDate;
-  var formattedTime;
-  var dateTime;
+  dynamic dateString;
+  dynamic formattedDate;
+  dynamic formattedTime;
+  dynamic dateTime;
 
   @override
   void initState() {
-    // TODO: implement initState
+  
     super.initState();
     _mechanicRepo.getoneBooking(widget.id).then((value) => setState(
           () {
             bookingModel = value;
             dateString = bookingModel!.date;
-            dateTime = DateTime.parse(dateString!);
+            dateTime = DateTime.parse(dateString!).add(const Duration(hours: 1));
             formattedDate = DateFormat('E, d MMM y').format(dateTime);
 
             formattedTime = DateFormat('hh:mm a').format(dateTime);

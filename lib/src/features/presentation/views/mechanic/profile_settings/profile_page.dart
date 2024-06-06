@@ -118,6 +118,91 @@ class ProfileSettings extends HookWidget {
       }
     }
 
+    logout() {
+      showDialog(
+        context: context,
+        builder: (context) => Center(
+          child: SizedBox(
+            width: 700, // Set the desired width
+            height: 230,
+            child: Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(16.0), // Adjust the radius as needed
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        customText(
+                            text: 'Logout',
+                            fontSize: 20,
+                            textColor: AppColors.black,
+                            fontWeight: FontWeight.w500),
+                        InkWell(
+                          onTap: () => context.pop(),
+                          child: SvgPicture.asset(
+                            AppImages.cancelModal,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  heightSpace(1),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: customText(
+                        text: 'Are you sure You want to log out of this app',
+                        fontSize: 12,
+                        textColor: AppColors.black),
+                  ),
+                  heightSpace(3),
+                  Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton(
+                          onPressed: () => context.pop(),
+                          child: customText(
+                            text: 'No',
+                            fontSize: 16,
+                            textColor: AppColors.textGrey,
+                          ),
+                        ),
+                        widthSpace(3),
+                        Container(
+                          width: 1,
+                          height: 40,
+                          color: AppColors.containerGrey,
+                        ),
+                        widthSpace(3),
+                        TextButton(
+                          onPressed: () {
+                            context.pop();
+                            signOut();
+                          },
+                          child: customText(
+                            text: 'Yes',
+                            fontSize: 16,
+                            textColor: AppColors.darkOrange,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     useEffect(() {
       void refresh() async {
         isLoading.value = true;
@@ -290,7 +375,7 @@ class ProfileSettings extends HookWidget {
                             ),
                             heightSpace(10),
                             InkWell(
-                              onTap: signOut,
+                              onTap: logout,
                               child: Row(
                                 children: [
                                   customText(

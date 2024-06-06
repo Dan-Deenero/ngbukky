@@ -459,7 +459,7 @@ class PaymentTab extends HookWidget {
     final transactionHistory = useState<List<TransactionModel>>([]);
     final isLoading = useState<bool>(true);
     getTransaction() {
-      mechanicRepo.getAllTransaction('credit').then(
+      mechanicRepo.getLimitedTransaction('credit', 5).then(
         (value) {
           transactionHistory.value = value;
           isLoading.value = false;
@@ -531,7 +531,7 @@ class WithdrawalTab extends HookWidget {
     final transactionHistory = useState<List<TransactionModel>>([]);
     final isLoading = useState<bool>(true);
     getTransaction() {
-      mechanicRepo.getAllTransaction('withdrawal').then(
+      mechanicRepo.getLimitedTransaction('withdrawal', 5).then(
         (value) {
           transactionHistory.value = value;
           isLoading.value = false;

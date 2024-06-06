@@ -46,7 +46,7 @@ import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/rejected_
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/new_quote_request/new_quote_alert.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/payment_declined/payment_declined_q.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/payment_request/payment_request_q.dart';
-import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/pending_client_approval/pending_Client_approval.dart';
+import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/pending_client_approval/pending_client_approval.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/quote_rejected/quote_rejected.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/new_quote_request/quote_request.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/Quotes/rejected_quote/rejected_quote.dart';

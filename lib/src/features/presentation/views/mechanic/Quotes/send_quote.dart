@@ -36,6 +36,8 @@ class _SendQuoteState extends ConsumerState<SendQuote> {
 
   QuotesModel? quoteModel;
   List<Services>? quote = [];
+  List<Services>? otherQuote = [];
+  List<Services>? serviceTogether = [];
 
   @override
   void initState() {
@@ -47,6 +49,8 @@ class _SendQuoteState extends ConsumerState<SendQuote> {
             () {
               quoteModel = value;
               quote = quoteModel!.services!;
+              otherQuote = quoteModel!.otherServices!;
+              serviceTogether = quote! + otherQuote!;
               isLoading = false;
             },
           ),
@@ -65,14 +69,14 @@ class _SendQuoteState extends ConsumerState<SendQuote> {
       showSuccesModal();
     }
   }
-showSuccesModal()
-   async {
+
+  showSuccesModal() async {
     await showDialog(
       context: context,
       builder: (context) => SuccessDialogue(
         title: 'Quote sent',
         subtitle:
-            'Your quote of ${costOnly.text} has been sent successfully to ${quoteModel!.user!.username!}',
+            'Your quote has been sent successfully to ${quoteModel!.user!.username!}',
         action: () {
           context.go(AppRoutes.bottomNav);
         },
@@ -136,7 +140,7 @@ showSuccesModal()
                     heightSpace(3),
                     Column(
                       children: [
-                        ...quote!.map(
+                        ...serviceTogether!.map(
                           (qte) {
                             return Row(
                               children: [

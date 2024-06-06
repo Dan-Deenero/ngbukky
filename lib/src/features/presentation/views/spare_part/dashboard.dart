@@ -262,7 +262,7 @@ class DashboardView extends HookWidget {
                               ...dashhy.value!.incomingOrders!.map(
                                 (e) {
                                   var dateString = e.createdAt;
-                                  var dateTime = DateTime.parse(dateString!);
+                                  var dateTime = DateTime.parse(dateString!).add(const Duration(hours: 1));
                                   var formattedDate = DateFormat('dd MMM yyyy')
                                       .format(dateTime);
 

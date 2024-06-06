@@ -31,21 +31,26 @@ class _PDQInspectionDetailsState extends State<PDQInspectionDetails> {
 
   int? totalPrice;
   List<Services>? quote = [];
+  List<Services>? otherQuote = [];
+    List<Services>? serviceTogether = [];
+
+
 
   int price = 0;
   double serviceFee = 0;
-  Services? requestedSystemService;
-  OtherServices? requestedPersonalisedService;
+
 
   @override
   void initState() {
-    // TODO: implement initState
+    
     super.initState();
     _mechanicRepo.getoneQuote(widget.id).then((value) => setState(
           () {
             quoteModel = value;
             isLoading = false;
             quote = quoteModel!.services!;
+            otherQuote = quoteModel!.otherServices!;
+            serviceTogether = quote! + otherQuote!;
             for (Quotes quote in quotes!) {
               if (quote.price != null) {
                 price += quote.price!;
@@ -56,14 +61,16 @@ class _PDQInspectionDetailsState extends State<PDQInspectionDetails> {
         ));
   }
 
-  showCompletedModal() {
-    showDialog(
+  showSuccesModal() async {
+    await showDialog(
       context: context,
       builder: (context) => SuccessDialogue(
-        title: 'Complete booking',
+        title: 'Report sent',
         subtitle:
-            'Your have completed your booking and requested for payment from ${quoteModel!.user!.username}',
-        action: () => context.go(AppRoutes.bottomNav),
+            "Thank you for submitting your report! We'll review it and get back to you soon.",
+        action: () {
+          context.go(AppRoutes.bottomNav);
+        },
       ),
     );
   }
@@ -79,7 +86,7 @@ class _PDQInspectionDetailsState extends State<PDQInspectionDetails> {
     bool result = await _mechanicRepo.reportClient(data);
 
     if (result) {
-      showCompletedModal();
+      showSuccesModal();
     }
   }
 
@@ -217,7 +224,7 @@ class _PDQInspectionDetailsState extends State<PDQInspectionDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           customText(
-                              text:  "Client Dissatisfied",
+                              text: "Client Dissatisfied",
                               fontSize: 14,
                               textColor: AppColors.red,
                               fontWeight: FontWeight.w600),
@@ -308,22 +315,22 @@ class _PDQInspectionDetailsState extends State<PDQInspectionDetails> {
                   heightSpace(3),
                   Column(
                     children: [
-                      ...quote!.map(
-                        (qte) {
-                          return Row(
-                            children: [
-                              SvgPicture.asset(AppImages.serviceIcon),
-                              widthSpace(2),
-                              customText(
-                                  text: qte.name!,
-                                  fontSize: 13,
-                                  textColor: AppColors.black,
-                                  fontWeight: FontWeight.w600),
-                              heightSpace(4),
-                            ],
-                          );
-                        },
-                      ),
+                      ...serviceTogether!.map(
+                          (qte) {
+                            return Row(
+                              children: [
+                                SvgPicture.asset(AppImages.serviceIcon),
+                                widthSpace(2),
+                                customText(
+                                    text: qte.name!,
+                                    fontSize: 13,
+                                    textColor: AppColors.black,
+                                    fontWeight: FontWeight.w600),
+                                heightSpace(4),
+                              ],
+                            );
+                          },
+                        ),
                     ],
                   ),
                   heightSpace(1),

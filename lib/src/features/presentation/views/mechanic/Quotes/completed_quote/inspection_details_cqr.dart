@@ -31,23 +31,25 @@ class _CQRInspectionDetailsState extends State<CQRInspectionDetails> {
 
   int? totalPrice;
   List<Services>? quote = [];
+  List<Services>? otherQuote = [];
+  List<Services>? serviceTogether = [];
 
   int price = 0;
   double serviceFee = 0;
-  Services? requestedSystemService;
-  OtherServices? requestedPersonalisedService;
 
   @override
   void initState() {
-    // TODO: implement initState
+    
     super.initState();
     _mechanicRepo.getoneQuote(widget.id).then((value) => setState(
           () {
             quoteModel = value;
             isLoading = false;
             quote = quoteModel!.services!;
+            otherQuote = quoteModel!.otherServices!;
+            serviceTogether = quote! + otherQuote!;
             quotes = quoteModel!.quotes;
-          
+
             for (Quotes quote in quotes!) {
               log(quote.toString());
               if (quote.price != null) {
@@ -212,7 +214,7 @@ class _CQRInspectionDetailsState extends State<CQRInspectionDetails> {
                   heightSpace(3),
                   Column(
                     children: [
-                      ...quote!.map(
+                      ...serviceTogether!.map(
                         (qte) {
                           return Row(
                             children: [

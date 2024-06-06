@@ -340,7 +340,7 @@ class InspectionBookings extends HookWidget {
                           fontSize: 12,
                           textColor: AppColors.textGrey),
                       customText(
-                          text: "$approved",
+                          text: "$completed",
                           fontSize: 25,
                           textColor: AppColors.black,
                           fontWeight: FontWeight.bold),

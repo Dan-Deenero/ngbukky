@@ -30,21 +30,20 @@ class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
   NotificationModel? notifyModel;
   bool isLoading = true;
 
-  var dateString;
-  var viewedString;
-  var dateTime;
-  var viewed;
-  var formattedTime;
-  var formattedDate;
-  var viewedDate;
-  var viewedTime;
-  var modeling;
+  dynamic dateString;
+  dynamic viewedString;
+  dynamic dateTime;
+  dynamic viewed;
+  dynamic formattedTime;
+  dynamic formattedDate;
+  dynamic viewedDate;
+  dynamic viewedTime;
+  dynamic modeling;
 
   BookingModel? bookingModel;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _mechanicRepo.getoneBooking(widget.id).then(
           (value) => setState(
@@ -52,7 +51,8 @@ class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
               bookingModel = value;
               isLoading = false;
               dateString = bookingModel!.date!;
-              dateTime = DateTime.parse(dateString);
+              dateTime =
+                  DateTime.parse(dateString).add(const Duration(hours: 1));
               formattedDate = DateFormat('E, d MMM y').format(dateTime);
 
               formattedTime = DateFormat('hh:mm a').format(dateTime);
@@ -107,18 +107,21 @@ class _ViewAcceptedBookingState extends State<ViewAcceptedBooking> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    customText(
-                        text: 'Inspection completed',
-                        fontSize: 20,
-                        textColor: AppColors.black,
-                        fontWeight: FontWeight.w500),
-                    InkWell(
-                        onTap: () => context.pop(),
-                        child: SvgPicture.asset(AppImages.cancelModal))
-                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      customText(
+                          text: 'Inspection completed',
+                          fontSize: 20,
+                          textColor: AppColors.black,
+                          fontWeight: FontWeight.w500),
+                      InkWell(
+                          onTap: () => context.pop(),
+                          child: SvgPicture.asset(AppImages.cancelModal))
+                    ],
+                  ),
                 ),
                 heightSpace(1),
                 Padding(

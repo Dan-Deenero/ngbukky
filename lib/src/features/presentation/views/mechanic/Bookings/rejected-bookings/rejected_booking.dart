@@ -26,11 +26,14 @@ class _RejectedBookingState extends State<RejectedBooking> {
   @override
   void initState() {
     super.initState();
-    _mechanicRepo.getAllBooking('rejected').then((value) => setState(() {
-          _bookingHistory = value;
-          isLoading = false;
-          print(_bookingHistory);
-        }));
+    _mechanicRepo.getAllBooking('rejected').then(
+          (value) => setState(
+            () {
+              _bookingHistory = value;
+              isLoading = false;
+            },
+          ),
+        );
     // log(_bookingHistory.toString());
   }
 
@@ -98,7 +101,8 @@ class _RejectedBookingState extends State<RejectedBooking> {
                           ..._bookingHistory.map(
                             (e) {
                               var dateString = e.date;
-                              var dateTime = DateTime.parse(dateString!);
+                              var dateTime = DateTime.parse(dateString!)
+                                  .add(const Duration(hours: 1));
                               var formattedDate =
                                   DateFormat('dd MMM yyyy').format(dateTime);
 

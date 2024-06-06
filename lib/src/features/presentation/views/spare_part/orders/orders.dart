@@ -222,7 +222,7 @@ class New extends HookWidget {
                     ...ordersHistory.value.map(
                       (e) {
                         var dateString = e.createdAt;
-                        var dateTime = DateTime.parse(dateString!);
+                        var dateTime = DateTime.parse(dateString!).add(const Duration(hours: 1));
                         var formattedDate =
                             DateFormat('dd MMM yyyy').format(dateTime);
 
@@ -311,7 +311,7 @@ class Awaiting extends HookWidget {
                     ...ordersHistory.value.map(
                       (e) {
                         var dateString = e.createdAt;
-                        var dateTime = DateTime.parse(dateString!);
+                        var dateTime = DateTime.parse(dateString!).add(const Duration(hours: 1));
                         var formattedDate =
                             DateFormat('dd MMM yyyy').format(dateTime);
 
@@ -400,7 +400,7 @@ class Processed extends HookWidget {
                     ...ordersHistory.value.map(
                       (e) {
                         var dateString = e.createdAt;
-                        var dateTime = DateTime.parse(dateString!);
+                        var dateTime = DateTime.parse(dateString!).add(const Duration(hours: 1));
                         var formattedDate =
                             DateFormat('dd MMM yyyy').format(dateTime);
 
@@ -489,7 +489,7 @@ class Completed extends HookWidget {
                     ...ordersHistory.value.map(
                       (e) {
                         var dateString = e.createdAt;
-                        var dateTime = DateTime.parse(dateString!);
+                        var dateTime = DateTime.parse(dateString!).add(const Duration(hours: 1));
                         var formattedDate =
                             DateFormat('dd MMM yyyy').format(dateTime);
 

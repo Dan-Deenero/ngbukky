@@ -123,7 +123,7 @@ class Wallet extends HookWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         customText(
-                          text: 'Set up your local bank account ',
+                          text: 'Set up your local bank account',
                           fontSize: 12,
                           textColor: AppColors.black,
                           textAlignment: TextAlign.start,
@@ -470,7 +470,7 @@ class PaymentTab extends HookWidget {
     final transactionHistory = useState<List<TransactionModel>>([]);
     final isLoading = useState<bool>(true);
     getTransaction() {
-      mechanicRepo.getAllTransaction('credit').then(
+      mechanicRepo.getLimitedTransaction('credit', 5).then(
         (value) {
           transactionHistory.value = value;
           isLoading.value = false;
@@ -545,7 +545,7 @@ class WithdrawalTab extends HookWidget {
     final transactionHistory = useState<List<TransactionModel>>([]);
     final isLoading = useState<bool>(true);
     getTransaction() {
-      mechanicRepo.getAllTransaction('withdrawal').then(
+      mechanicRepo.getLimitedTransaction('withdrawal', 5).then(
         (value) {
           transactionHistory.value = value;
           isLoading.value = false;

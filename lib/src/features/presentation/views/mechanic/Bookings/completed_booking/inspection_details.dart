@@ -47,7 +47,7 @@ class _CompletedInspectionDetailsState
             () {
               bookingModel = value;
               dateString = bookingModel!.date;
-              dateTime = DateTime.parse(dateString!);
+              dateTime = DateTime.parse(dateString!).add(const Duration(hours: 1));
               formattedDate = DateFormat('E, d MMM y').format(dateTime);
 
               formattedTime = DateFormat('hh:mm a').format(dateTime);

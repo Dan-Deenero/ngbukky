@@ -9,7 +9,7 @@ class QuotesModel {
   int? year;
   String? createdAt;
   List<Services>? services;
-  List<OtherServices>? otherServices;
+  List<Services>? otherServices;
   List<Quotes>? quotes;
   List<Responses>? responses;
   Mechanic? mechanic;
@@ -45,9 +45,9 @@ class QuotesModel {
       });
     }
     if (json['OtherServices'] != null) {
-      otherServices = <OtherServices>[];
+      otherServices = <Services>[];
       json['OtherServices'].forEach((v) {
-        otherServices!.add(OtherServices.fromJson(v));
+        otherServices!.add(Services.fromJson(v));
       });
     }
     if (json['quotes'] != null) {
@@ -117,24 +117,6 @@ class Services {
   }
 }
 
-class OtherServices {
-  String? name;
-  String? description;
-
-  OtherServices({this.name, this.description});
-
-  OtherServices.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    description = json['description'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['name'] = name;
-    data['description'] = description;
-    return data;
-  }
-}
 
 class Quotes {
   String? id;
@@ -142,7 +124,7 @@ class Quotes {
   String? message;
   int? commission;
   Services? requestedSystemService;
-  OtherServices? requestedPersonalisedService;
+  Services? requestedPersonalisedService;
 
   Quotes({
     this.id,
@@ -162,7 +144,7 @@ class Quotes {
         ? Services.fromJson(json['requestedSystemService'])
         : null;
     requestedPersonalisedService = json['requestedPersonalisedService'] != null
-        ? OtherServices.fromJson(json['requestedPersonalisedService'])
+        ? Services.fromJson(json['requestedPersonalisedService'])
         : null;
   }
 
