@@ -79,8 +79,7 @@ class WalletTile extends StatelessWidget {
                     widthSpace(4),
                   ],
                 ),
-              SizedBox(
-                width: isWithdrawal ? 100.w - 110 : 100.w - 60,
+              Expanded(
                 child: Column(
                   children: [
                     Row(

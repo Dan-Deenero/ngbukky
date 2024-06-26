@@ -400,7 +400,7 @@ class SpareWallet extends HookWidget {
                           },
                           tabs: [
                             Container(
-                              width: 200,
+                              width: 400,
                               height: 40,
                               decoration: BoxDecoration(
                                   color: tabIndex.value == 0

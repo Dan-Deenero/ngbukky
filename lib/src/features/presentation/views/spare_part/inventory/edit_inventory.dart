@@ -69,9 +69,7 @@ class EditInventory extends HookWidget {
           height.text = value.specifications!.height == null
               ? ""
               : value.specifications!.height!;
-          weight.text = value.specifications!.weight == null
-              ? ""
-              : value.specifications!.weight!;
+        value.specifications!.weight!.toString();
           volume.text = value.specifications!.volume == null
               ? ""
               : value.specifications!.volume!;

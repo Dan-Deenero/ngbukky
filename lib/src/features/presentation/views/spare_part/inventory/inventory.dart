@@ -321,7 +321,7 @@ class All extends HookWidget {
                             InventoryTile(
                               name: e.name,
                               price: e.finalPrice,
-                              weight: e.specifications!.weight!,
+                              weight: e.specifications!.weight!.toString(),
                               image: e.imageUrl,
                               inStock: e.quantityInStock,
                               id: e.id,
@@ -438,7 +438,7 @@ class RunningOut extends HookWidget {
                             InventoryTile(
                               name: e.name,
                               price: e.finalPrice!,
-                              weight: e.specifications!.weight!,
+                              weight: e.specifications!.weight!.toString(),
                               image: e.imageUrl,
                               inStock: e.quantityInStock,
                               id: e.id,
@@ -556,7 +556,7 @@ class StockOut extends HookWidget {
                             InventoryTile(
                               name: e.name,
                               price: e.finalPrice!,
-                              weight: e.specifications!.weight!,
+                              weight: e.specifications!.weight!.toString(),
                               image: e.imageUrl,
                               inStock: e.quantityInStock,
                               id: e.id,

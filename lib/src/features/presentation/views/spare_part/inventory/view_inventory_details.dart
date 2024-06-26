@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -38,8 +37,6 @@ class _ViewInventoryDetailsState extends State<ViewInventoryDetails> {
   String? color;
   String? country;
 
-
-
   @override
   void initState() {
     super.initState();
@@ -48,51 +45,59 @@ class _ViewInventoryDetailsState extends State<ViewInventoryDetails> {
             () {
               inventoryModel = value;
               log(inventoryModel!.toJson().toString());
-              if(inventoryModel!.specifications!.length == ''){
+              if (inventoryModel!.specifications!.length == '' ||
+                  inventoryModel!.specifications!.length == null) {
                 length = '---';
-              }else{
+              } else {
                 length = inventoryModel!.specifications!.length;
               }
 
-              if(inventoryModel!.specifications!.width == ''){
+              if (inventoryModel!.specifications!.width == '' ||
+                  inventoryModel!.specifications!.width == null) {
                 width = '---';
-              }else{
+              } else {
                 width = inventoryModel!.specifications!.width;
               }
 
-              if(inventoryModel!.specifications!.height == ''){
+              if (inventoryModel!.specifications!.height == '' ||
+                  inventoryModel!.specifications!.height == null) {
                 height = '---';
-              }else{
+              } else {
                 height = inventoryModel!.specifications!.height;
               }
 
-              if(inventoryModel!.specifications!.weight == ''){
+              if (inventoryModel!.specifications!.weight == '' ||
+                  inventoryModel!.specifications!.weight == null) {
                 weight = '---';
-              }else{
-                weight = inventoryModel!.specifications!.weight;
+              } else {
+                weight = inventoryModel!.specifications!.weight.toString();
               }
 
-              if(inventoryModel!.specifications!.volume == ''){
+              if (inventoryModel!.specifications!.volume == '' ||
+                  inventoryModel!.specifications!.volume == null) {
                 volume = '---';
-              }else{
+              } else {
                 volume = inventoryModel!.specifications!.volume;
               }
 
-              if(inventoryModel!.specifications!.modelNumber == ''){
+              if (inventoryModel!.specifications!.modelNumber == '' ||
+                  inventoryModel!.specifications!.modelNumber == null) {
                 modelNo = '---';
-              }else{
+              } else {
                 modelNo = inventoryModel!.specifications!.modelNumber;
               }
 
-              if(inventoryModel!.specifications!.color == ''){
+              if (inventoryModel!.specifications!.color == '' ||
+                  inventoryModel!.specifications!.color == null) {
                 color = '---';
-              }else{
+              } else {
                 color = inventoryModel!.specifications!.color;
               }
 
-              if(inventoryModel!.specifications!.countryOfProducton == ''){
+              if (inventoryModel!.specifications!.countryOfProducton == '' ||
+                  inventoryModel!.specifications!.countryOfProducton == null) {
                 country = '---';
-              }else{
+              } else {
                 country = inventoryModel!.specifications!.countryOfProducton;
               }
               isLoading = false;
@@ -222,12 +227,8 @@ class _ViewInventoryDetailsState extends State<ViewInventoryDetails> {
                             fontWeight: FontWeight.w600,
                           ),
                           heightSpace(3),
-                          rowDetails(
-                              'Colour',
-                              color,
-                              'In stock',
-                              '${inventoryModel!.quantityInStock!}',
-                              sw),
+                          rowDetails('Colour', color, 'In stock',
+                              '${inventoryModel!.quantityInStock!}', sw),
                           heightSpace(3),
                           rowDetails(
                               'Weight',
@@ -236,12 +237,8 @@ class _ViewInventoryDetailsState extends State<ViewInventoryDetails> {
                               '$length x $width x $height x $volume',
                               sw),
                           heightSpace(3),
-                          rowDetails(
-                              'Model Number',
-                              '$modelNo',
-                              'Country of production',
-                              '$country',
-                              sw),
+                          rowDetails('Model Number', '$modelNo',
+                              'Country of production', '$country', sw),
                           heightSpace(3),
                           customText(
                             text: 'Price',
@@ -250,7 +247,8 @@ class _ViewInventoryDetailsState extends State<ViewInventoryDetails> {
                           ),
                           heightSpace(1),
                           customText(
-                            text: '₦${Helpers.formatBalance(inventoryModel!.finalPrice!)}',
+                            text:
+                                '₦${Helpers.formatBalance(inventoryModel!.finalPrice!)}',
                             fontSize: 14,
                             textColor: AppColors.black,
                             fontWeight: FontWeight.w600,
@@ -263,7 +261,8 @@ class _ViewInventoryDetailsState extends State<ViewInventoryDetails> {
                           ),
                           heightSpace(1),
                           customText(
-                            text: '₦${Helpers.formatBalance(inventoryModel!.discount!)}',
+                            text:
+                                '₦${Helpers.formatBalance(inventoryModel!.discount!)}',
                             fontSize: 14,
                             textColor: AppColors.black,
                             fontWeight: FontWeight.w600,

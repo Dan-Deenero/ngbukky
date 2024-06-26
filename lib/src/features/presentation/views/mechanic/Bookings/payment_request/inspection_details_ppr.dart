@@ -79,7 +79,7 @@ class _PPRInspectionDetailsState extends State<PPRInspectionDetails> {
       builder: (context) => SuccessDialogue(
         title: 'Complete booking',
         subtitle:
-            'Your have completed your booking and requested for payment from Kels2323',
+            'Your have completed your booking and requested for payment from ${bookingModel!.user!.username!}',
         action: () => context.go(
           AppRoutes.bottomNav,
         ),
