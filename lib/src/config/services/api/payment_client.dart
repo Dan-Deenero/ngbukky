@@ -4,10 +4,12 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ngbuka/src/config/keys/app_keys.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/config/locator/app_locator.dart';
 import 'package:ngbuka/src/config/services/api/endpoints.dart';
 import 'package:ngbuka/src/config/services/api/payment_response.dart';
+import 'package:ngbuka/src/config/services/storage_service.dart';
 
 import 'package:ngbuka/src/features/presentation/widgets/app_overlay.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_toast.dart';
@@ -30,7 +32,7 @@ class PaymentClient{
     'Content-Type': 'application/json',
   };
 
-  static const  _token = 'sk_test_e067628a1f0a60083e42cd51576f0f0ff0588194';
+  static const  _token = 'sk_live_f0e0cbbfe396d49e74ed6c06c0692e0d6b9c4f72';
 
 
   static Future get(
@@ -75,7 +77,15 @@ class PaymentClient{
       log(e.response.toString());
       log(e.response!.statusCode.toString());
       if (e.response?.statusCode == 401) {
-        locator<GoRouter>().push(AppRoutes.login);
+        if(locator<LocalStorageService>().getDataFromDisk(AppKeys.userType) == 'mechanic'){
+          locator<GoRouter>().push(AppRoutes.login);
+          log(locator<LocalStorageService>().getDataFromDisk(AppKeys.userType));
+        }else if(locator<LocalStorageService>().getDataFromDisk(AppKeys.userType) == 'dealer'){
+          locator<GoRouter>().push(AppRoutes.dealerLogin);
+          log(locator<LocalStorageService>().getDataFromDisk(AppKeys.userType));
+
+
+        }
         // router.push(AppRoutes.login);
       }
       log(e.toString());

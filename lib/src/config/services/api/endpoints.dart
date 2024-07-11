@@ -1,5 +1,5 @@
 class Endpoints {
-  static const String baseURL = "https://api-ngbuka.olotusquare.co/api/v1/";
+  static const String baseURL = "https://api.ngbuka.com.ng/api/v1/";
   static const String register = "auth/register";
   static const String login = "auth/login"; 
   static const String logout = "auth/logout";
