@@ -23,18 +23,7 @@ class ProcessOrder extends HookWidget {
     final isChecked = useState(false);
     final isLoading = useState(true);
 
-    Color getColor(Set<MaterialState> states) {
-      Color initialColor = AppColors.white;
-      const Set<MaterialState> interactiveStates = <MaterialState>{
-        MaterialState.pressed,
-        MaterialState.hovered,
-        MaterialState.focused,
-      };
-      if (states.any(interactiveStates.contains)) {
-        return initialColor = AppColors.checkBoxColor;
-      }
-      return initialColor;
-    }
+
 
     processOrder() async {
       var body = {
