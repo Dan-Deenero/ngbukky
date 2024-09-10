@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/controller/Helpers.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -110,7 +110,7 @@ class _CompletedQuoteRequestState extends State<CompletedQuoteRequest> {
                             }
                           }
                           var dateString = e.createdAt;
-                          var dateTime = DateTime.parse(dateString!);
+                          var dateTime = DateTime.parse(dateString!).add(const Duration(hours: 1));
                           var formattedDate =
                               DateFormat('dd MMM yyyy').format(dateTime);
 
@@ -118,16 +118,21 @@ class _CompletedQuoteRequestState extends State<CompletedQuoteRequest> {
                               DateFormat('hh:mm a').format(dateTime);
                           String profile;
 
-                          if(e.user!.profileImageUrl == null){
-                            profile = 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
-                          }else{
+                          if (e.user!.profileImageUrl == null) {
+                            profile =
+                                'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+                          } else {
                             profile = e.user!.profileImageUrl!;
                           }
                           return GestureDetector(
                             onTap: () {
                               context.push(
-                                  AppRoutes.completedQuoteRequestDetails,
-                                  extra: e.id);
+                                AppRoutes.quoteMiddlemen,
+                                extra: {
+                                  'id': e.id,
+                                  'status': e.status,
+                                },
+                              );
                             },
                             child: Card(
                               color: Colors.white,
@@ -143,7 +148,7 @@ class _CompletedQuoteRequestState extends State<CompletedQuoteRequest> {
                                     ),
                                     heightSpace(1),
                                     Container(
-                                      width: 28.w,
+                                      width: 27.w,
                                       height: 3.h,
                                       decoration: BoxDecoration(
                                           borderRadius:
@@ -196,8 +201,7 @@ class _CompletedQuoteRequestState extends State<CompletedQuoteRequest> {
                                       color: AppColors.containerGrey),
                                   child: CircleAvatar(
                                     backgroundColor: AppColors.backgroundGrey,
-                                    backgroundImage:
-                                        NetworkImage(profile),
+                                    backgroundImage: NetworkImage(profile),
                                     radius:
                                         55, // Adjust the size of the circle as needed
                                   ),

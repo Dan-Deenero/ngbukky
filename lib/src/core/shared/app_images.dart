@@ -72,5 +72,12 @@ class AppImages {
   static const String bigsizeoil= "assets/images/pngs/bigsizeoil.png";
   static const String largesparkplug = "assets/images/pngs/plugs.png";
   static const String noImage = "assets/images/pngs/noimage.png";
+  static const String showFunds = "assets/images/svgs/show_funds.svg";
+  static const String hideFunds = "assets/images/svgs/hide_funds.svg";
+  static const String hiddenBalance = "assets/images/svgs/hide_balance.svg";
+  static const String outOfstate = "assets/images/svgs/outOfState.svg";
+  static const String insideState = "assets/images/svgs/insideState.svg";
+  static const String delivered = "assets/images/svgs/delivered.svg";
+  static const String weightPackage = "assets/images/pngs/Products-packaging-cartons.jpg";
   
 }

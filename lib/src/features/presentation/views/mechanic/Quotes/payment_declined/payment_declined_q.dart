@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/controller/Helpers.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -116,15 +116,20 @@ class _QPaymentDeclinedState extends State<QPaymentDeclined> {
                             profile = e.user!.profileImageUrl!;
                           }
                           var dateString = e.createdAt;
-                          var dateTime = DateTime.parse(dateString!);
+                          var dateTime = DateTime.parse(dateString!).add(const Duration(hours: 1));
                           var formattedDate =
                               DateFormat('dd MMM yyyy').format(dateTime);
 
                           var formattedTime =
                               DateFormat('hh:mm a').format(dateTime);
                           return GestureDetector(
-                            onTap: () => context
-                                .push(AppRoutes.quotePaymentDeclineDetails, extra: e.id),
+                            onTap: () => context.push(
+                              AppRoutes.quoteMiddlemen,
+                              extra: {
+                                'id': e.id,
+                                'status': e.status,
+                              },
+                            ),
                             child: Card(
                               color: Colors.white,
                               surfaceTintColor: Colors.transparent,
@@ -140,17 +145,19 @@ class _QPaymentDeclinedState extends State<QPaymentDeclined> {
                                         fontWeight: FontWeight.bold),
                                     heightSpace(1),
                                     Container(
-                                      width: 28.w,
+                                      width: 26.w,
                                       height: 3.h,
                                       decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10),
-                                          color: AppColors.red.withOpacity(.3)),
+                                          color: AppColors.red.withOpacity(.2)),
                                       child: Center(
                                         child: customText(
-                                            text: "Payment declined",
-                                            fontSize: 10,
-                                            textColor: AppColors.red),
+                                          text: "Payment declined",
+                                          fontSize: 2.58.w,
+                                          textColor: AppColors.red,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                     ),
                                   ],

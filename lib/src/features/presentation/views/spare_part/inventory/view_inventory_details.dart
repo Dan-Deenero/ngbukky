@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -6,7 +5,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/controller/Helpers.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/inventory_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
@@ -38,8 +37,6 @@ class _ViewInventoryDetailsState extends State<ViewInventoryDetails> {
   String? color;
   String? country;
 
-
-
   @override
   void initState() {
     super.initState();
@@ -48,51 +45,59 @@ class _ViewInventoryDetailsState extends State<ViewInventoryDetails> {
             () {
               inventoryModel = value;
               log(inventoryModel!.toJson().toString());
-              if(inventoryModel!.specifications!.length == ''){
-                length = '0mm';
-              }else{
+              if (inventoryModel!.specifications!.length == '' ||
+                  inventoryModel!.specifications!.length == null) {
+                length = '---';
+              } else {
                 length = inventoryModel!.specifications!.length;
               }
 
-              if(inventoryModel!.specifications!.width == ''){
-                width = '0mm';
-              }else{
+              if (inventoryModel!.specifications!.width == '' ||
+                  inventoryModel!.specifications!.width == null) {
+                width = '---';
+              } else {
                 width = inventoryModel!.specifications!.width;
               }
 
-              if(inventoryModel!.specifications!.height == ''){
-                height = '0mm';
-              }else{
+              if (inventoryModel!.specifications!.height == '' ||
+                  inventoryModel!.specifications!.height == null) {
+                height = '---';
+              } else {
                 height = inventoryModel!.specifications!.height;
               }
 
-              if(inventoryModel!.specifications!.weight == ''){
-                weight = '0kg';
-              }else{
-                weight = inventoryModel!.specifications!.weight;
+              if (inventoryModel!.specifications!.weight == '' ||
+                  inventoryModel!.specifications!.weight == null) {
+                weight = '---';
+              } else {
+                weight = inventoryModel!.specifications!.weight.toString();
               }
 
-              if(inventoryModel!.specifications!.volume == ''){
-                volume = '0l';
-              }else{
+              if (inventoryModel!.specifications!.volume == '' ||
+                  inventoryModel!.specifications!.volume == null) {
+                volume = '---';
+              } else {
                 volume = inventoryModel!.specifications!.volume;
               }
 
-              if(inventoryModel!.specifications!.modelNumber == ''){
+              if (inventoryModel!.specifications!.modelNumber == '' ||
+                  inventoryModel!.specifications!.modelNumber == null) {
                 modelNo = '---';
-              }else{
+              } else {
                 modelNo = inventoryModel!.specifications!.modelNumber;
               }
 
-              if(inventoryModel!.specifications!.color == ''){
+              if (inventoryModel!.specifications!.color == '' ||
+                  inventoryModel!.specifications!.color == null) {
                 color = '---';
-              }else{
+              } else {
                 color = inventoryModel!.specifications!.color;
               }
 
-              if(inventoryModel!.specifications!.countryOfProducton == ''){
+              if (inventoryModel!.specifications!.countryOfProducton == '' ||
+                  inventoryModel!.specifications!.countryOfProducton == null) {
                 country = '---';
-              }else{
+              } else {
                 country = inventoryModel!.specifications!.countryOfProducton;
               }
               isLoading = false;
@@ -125,7 +130,7 @@ class _ViewInventoryDetailsState extends State<ViewInventoryDetails> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: 10.h,
+                height: 9.h,
                 width: 10.w,
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.black),
@@ -222,26 +227,18 @@ class _ViewInventoryDetailsState extends State<ViewInventoryDetails> {
                             fontWeight: FontWeight.w600,
                           ),
                           heightSpace(3),
-                          rowDetails(
-                              'Colour',
-                              color,
-                              'In stock',
-                              '${inventoryModel!.quantityInStock!}',
-                              sw),
+                          rowDetails('Colour', color, 'In stock',
+                              '${inventoryModel!.quantityInStock!}', sw),
                           heightSpace(3),
                           rowDetails(
                               'Weight',
-                              '$weight',
+                              weight,
                               'Product Size (L x W x H x V)',
                               '$length x $width x $height x $volume',
                               sw),
                           heightSpace(3),
-                          rowDetails(
-                              'Model Number',
-                              '$modelNo',
-                              'Country of production',
-                              '$country',
-                              sw),
+                          rowDetails('Model Number', '$modelNo',
+                              'Country of production', '$country', sw),
                           heightSpace(3),
                           customText(
                             text: 'Price',
@@ -250,7 +247,8 @@ class _ViewInventoryDetailsState extends State<ViewInventoryDetails> {
                           ),
                           heightSpace(1),
                           customText(
-                            text: '₦${Helpers.formatBalance(inventoryModel!.finalPrice!)}',
+                            text:
+                                '₦${Helpers.formatBalance(inventoryModel!.finalPrice!)}',
                             fontSize: 14,
                             textColor: AppColors.black,
                             fontWeight: FontWeight.w600,
@@ -263,7 +261,8 @@ class _ViewInventoryDetailsState extends State<ViewInventoryDetails> {
                           ),
                           heightSpace(1),
                           customText(
-                            text: '₦${Helpers.formatBalance(inventoryModel!.discount!)}',
+                            text:
+                                '₦${Helpers.formatBalance(inventoryModel!.discount!)}',
                             fontSize: 14,
                             textColor: AppColors.black,
                             fontWeight: FontWeight.w600,

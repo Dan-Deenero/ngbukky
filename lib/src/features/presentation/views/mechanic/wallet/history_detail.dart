@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,7 +7,9 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/controller/Helpers.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
+import 'package:ngbuka/src/domain/data/inspection_booking_model.dart'
+    as booking;
 import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/data/transaction_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
@@ -27,7 +31,8 @@ class _HistoryDetailState extends State<HistoryDetail> {
 
   TransactionModel? transactionModel;
   static final description = TextEditingController();
-  List<Services>? quote = [];
+  List<booking.Quotes> quote = [];
+  List<Services> quotequo = [];
 
   bool isLoading = true;
 
@@ -52,7 +57,12 @@ class _HistoryDetailState extends State<HistoryDetail> {
               } else {
                 whatIsIt = transactionModel!.booking;
               }
-              quote = whatIsIt!.services!;
+
+              if (whatIsIt == transactionModel!.booking) {
+                quote = whatIsIt!.quotes!;
+              } else {
+                quotequo = whatIsIt!.services!;
+              }
               isLoading = false;
               dateString = transactionModel!.createdAt;
               dateTime = DateTime.parse(dateString!);
@@ -70,6 +80,8 @@ class _HistoryDetailState extends State<HistoryDetail> {
                 txtcol = AppColors.green;
                 isSuccess = true;
               }
+
+              log(quote.toString());
             },
           ),
         );
@@ -219,7 +231,8 @@ class _HistoryDetailState extends State<HistoryDetail> {
             body: SingleChildScrollView(
               child: Column(
                 children: [
-                  const Divider(
+                  Divider(
+                    color: Colors.grey.withOpacity(0.1),
                     height: 0,
                   ),
                   Container(
@@ -341,25 +354,51 @@ class _HistoryDetailState extends State<HistoryDetail> {
                             textColor: AppColors.orange,
                             fontWeight: FontWeight.bold),
                         heightSpace(3),
-                        ...quote!.map(
-                          (qte) {
-                            return Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    SvgPicture.asset(AppImages.serviceIcon),
-                                    widthSpace(2),
-                                    customText(
-                                        text: qte.name!,
+                        if (whatIsIt == transactionModel!.booking)
+                          ...quote.map(
+                            (qte) {
+                              String serviceName = qte.requestedSystemService?.name ?? qte.requestedPersonalisedService?.name ?? 'Unknown Service';
+                              return Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                        AppImages.serviceIcon,
+                                      ),
+                                      widthSpace(2),
+                                      customText(
+                                        text: serviceName,
                                         fontSize: 13,
                                         textColor: AppColors.black,
-                                        fontWeight: FontWeight.w600),
-                                  ],
-                                ),
-                              ],
-                            );
-                          },
-                        ),
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              );
+                            },
+                          )
+                        else
+                          ...quotequo.map(
+                            (qte) {
+                              return Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      SvgPicture.asset(AppImages.serviceIcon),
+                                      widthSpace(2),
+                                      customText(
+                                          text: qte.name!,
+                                          fontSize: 13,
+                                          textColor: AppColors.black,
+                                          fontWeight: FontWeight.w600),
+                                    ],
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+
                         heightSpace(1),
                         const Divider(),
                         heightSpace(1),
@@ -373,26 +412,27 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                     fontSize: 13,
                                     textColor: AppColors.black),
                                 customText(
-                                    text: '${transactionModel!.amount}.00',
+                                    text:
+                                        '₦${Helpers.formatBalance(transactionModel!.amount)}.00',
                                     fontSize: 13,
                                     textColor: AppColors.black)
                               ],
                             ),
                             heightSpace(2),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                customText(
-                                    text: 'Ngbuka Charge (1%)',
-                                    fontSize: 13,
-                                    textColor: AppColors.black),
-                                customText(
-                                    text: '${50.00}',
-                                    fontSize: 13,
-                                    textColor: AppColors.black)
-                              ],
-                            ),
-                            heightSpace(2),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //   children: [
+                            //     customText(
+                            //         text: 'Ngbuka Charge (1%)',
+                            //         fontSize: 13,
+                            //         textColor: AppColors.black),
+                            //     customText(
+                            //         text: '${00.00}',
+                            //         fontSize: 13,
+                            //         textColor: AppColors.black)
+                            //   ],
+                            // ),
+                            // heightSpace(2),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -403,7 +443,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                                     fontWeight: FontWeight.w600),
                                 customText(
                                     text:
-                                        '${transactionModel!.amount! + 50.00}',
+                                        '₦${Helpers.formatBalance(transactionModel!.amount)}.00',
                                     fontSize: 13,
                                     textColor: AppColors.black,
                                     fontWeight: FontWeight.w600)

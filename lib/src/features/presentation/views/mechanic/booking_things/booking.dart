@@ -82,7 +82,7 @@ Widget card(String title, String subtitle, String number, String color) => Card(
 class Bookings extends HookWidget {
   static final MechanicRepo _mechanicRepo = MechanicRepo();
 
-    Bookings({Key? key}) : super(key: key ?? UniqueKey());
+  Bookings({Key? key}) : super(key: key ?? UniqueKey());
 
   @override
   Widget build(BuildContext context) {
@@ -191,9 +191,9 @@ class Bookings extends HookWidget {
             isLoading.value = false;
           },
           child: isLoading.value
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
+              ?  const Center(
+              child: CircularProgressIndicator(),
+            )
               : Column(
                   children: [
                     heightSpace(1),
@@ -210,8 +210,9 @@ class Bookings extends HookWidget {
                       height: 40,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                          color: AppColors.borderGrey,
-                          borderRadius: BorderRadius.circular(5)),
+                        color: AppColors.borderGrey,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
                       child: TabBar(
                         labelPadding: EdgeInsets.zero,
                         unselectedLabelColor: AppColors.primary,
@@ -253,7 +254,8 @@ class Bookings extends HookWidget {
                       ),
                     ),
                     Expanded(
-                      child: TabBarView(
+                      child: IndexedStack(
+                          index: tabIndex.value,
                         children: [
                           InspectionBookings(
                             canceled: canceled.value,
@@ -338,7 +340,7 @@ class InspectionBookings extends HookWidget {
                           fontSize: 12,
                           textColor: AppColors.textGrey),
                       customText(
-                          text: "$approved",
+                          text: "$completed",
                           fontSize: 25,
                           textColor: AppColors.black,
                           fontWeight: FontWeight.bold),

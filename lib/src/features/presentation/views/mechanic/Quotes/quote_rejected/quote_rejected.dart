@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -111,7 +112,7 @@ class _QuoteRejectedState extends State<QuoteRejected> {
                               }
                             }
                             var dateString = e.createdAt;
-                            var dateTime = DateTime.parse(dateString!);
+                            var dateTime = DateTime.parse(dateString!).add(const Duration(hours: 1));
                             var formattedDate =
                                 DateFormat('dd MMM yyyy').format(dateTime);
 
@@ -127,8 +128,13 @@ class _QuoteRejectedState extends State<QuoteRejected> {
                             }
                             return GestureDetector(
                               onTap: () {
-                                context.push(AppRoutes.quoteRejectedDetails,
-                                    extra: e.id);
+                                context.push(
+                                  AppRoutes.quoteMiddlemen,
+                                  extra: {
+                                    'id': e.id,
+                                    'status': e.status,
+                                  },
+                                );
                               },
                               child: Container(
                                 margin: const EdgeInsets.only(bottom: 10),
@@ -139,28 +145,35 @@ class _QuoteRejectedState extends State<QuoteRejected> {
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: ListTile(
-                                  trailing: Column(children: [
-                                    customText(
-                                        text: "$price",
+                                  trailing: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      customText(
+                                        text:
+                                            "₦${Helpers.formatBalance(price)}",
                                         fontSize: 14,
                                         textColor: AppColors.textGrey,
-                                        fontWeight: FontWeight.bold),
-                                    heightSpace(1),
-                                    Container(
-                                      width: 28.w,
-                                      height: 3.h,
-                                      decoration: BoxDecoration(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      heightSpace(1),
+                                      Container(
+                                        width: 26.w,
+                                        height: 3.h,
+                                        decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10),
-                                          color: AppColors.red.withOpacity(.1)),
-                                      child: Center(
-                                        child: customText(
+                                          color: AppColors.red.withOpacity(.1),
+                                        ),
+                                        child: Center(
+                                          child: customText(
                                             text: "Quote rejected",
                                             fontSize: 10,
-                                            textColor: AppColors.red),
+                                            textColor: AppColors.red,
+                                          ),
+                                        ),
                                       ),
-                                    )
-                                  ]),
+                                    ],
+                                  ),
                                   subtitle: Row(
                                     children: [
                                       Row(
@@ -168,7 +181,7 @@ class _QuoteRejectedState extends State<QuoteRejected> {
                                           SvgPicture.asset(AppImages.time),
                                           customText(
                                               text: formattedTime,
-                                              fontSize: 10,
+                                              fontSize: 2.5.w,
                                               textColor: AppColors.textGrey)
                                         ],
                                       ),
@@ -179,7 +192,7 @@ class _QuoteRejectedState extends State<QuoteRejected> {
                                               AppImages.calendarIcon),
                                           customText(
                                               text: formattedDate,
-                                              fontSize: 10,
+                                              fontSize: 2.5.w,
                                               textColor: AppColors.textGrey)
                                         ],
                                       )
@@ -193,12 +206,14 @@ class _QuoteRejectedState extends State<QuoteRejected> {
                                   leading: Container(
                                     width: 8.w,
                                     height: 8.h,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: NetworkImage(profile),
-                                      ),
-                                      shape: BoxShape.circle,
-                                      color: AppColors.containerGrey,
+                                    decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: AppColors.containerGrey),
+                                    child: CircleAvatar(
+                                      backgroundColor: AppColors.backgroundGrey,
+                                      backgroundImage: NetworkImage(profile),
+                                      radius:
+                                          55, // Adjust the size of the circle as needed
                                     ),
                                   ),
                                 ),

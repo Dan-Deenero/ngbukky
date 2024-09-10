@@ -1,5 +1,5 @@
 class Endpoints {
-  static const String baseURL = "https://api-ngbuka.olotusquare.co/api/v1/";
+  static const String baseURL = "https://api.ngbuka.com.ng/api/v1/";
   static const String register = "auth/register";
   static const String login = "auth/login"; 
   static const String logout = "auth/logout";
@@ -21,7 +21,7 @@ class Endpoints {
   static const String getAllBooking = 'mechanic/bookings';
   static const String getAllQuotes = 'mechanic/quote-requests';
   static const String addPersonalizedService = '/mechanic/services/personal';
-  static const String getAllNotifications = 'notifications/';
+  static const String getAllNotifications = 'notifications';
   static const String updateDealerStoreProfile = 'dealer/store-profile';
   static const String getDealerProfile = 'dealer/profile';
   static const String dealerSparePart = 'dealer/spare-parts';

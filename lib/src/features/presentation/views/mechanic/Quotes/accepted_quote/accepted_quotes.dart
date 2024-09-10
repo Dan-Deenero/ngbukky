@@ -52,7 +52,7 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
             GestureDetector(
               onTap: () => context.pop(),
               child: Container(
-                height: 10.h,
+                height: 9.h,
                 width: 10.w,
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.black),
@@ -103,7 +103,7 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
                       else
                         ..._quoteHistory.map((e) {
                           var dateString = e.createdAt;
-                          var dateTime = DateTime.parse(dateString!);
+                          var dateTime = DateTime.parse(dateString!).add(const Duration(hours: 1));
                           var formattedDate =
                               DateFormat('dd MMM yyyy').format(dateTime);
 
@@ -119,8 +119,10 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
                           }
                           return GestureDetector(
                             onTap: () {
-                              context.push(AppRoutes.viewAcceptedQuote,
-                                  extra: e.id);
+                              context.push(
+                                      AppRoutes.quoteMiddlemen,
+                                      extra: {'id': e.id, 'status': e.status,},
+                                    );
                             },
                             child: Card(
                               color: Colors.white,
@@ -134,7 +136,7 @@ class _AcceptedQuotesState extends State<AcceptedQuotes> {
                                   ),
                                   heightSpace(1),
                                   Container(
-                                    width: 28.w,
+                                    width: 26.w,
                                     height: 3.h,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),

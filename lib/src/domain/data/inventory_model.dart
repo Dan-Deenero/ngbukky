@@ -51,7 +51,7 @@ class InventoryModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['name'] = name;
     data['price'] = price;
@@ -77,7 +77,7 @@ class InventoryModel {
 class Specifications {
   String? color;
   String? width;
-  String? weight;
+  dynamic weight;
   String? length;
   String? height;
   String? volume;
@@ -107,7 +107,7 @@ class Specifications {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['color'] = color;
     data['width'] = width;
     data['weight'] = weight;
@@ -152,7 +152,7 @@ class Dealer {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['firstname'] = firstname;
     data['lastname'] = lastname;

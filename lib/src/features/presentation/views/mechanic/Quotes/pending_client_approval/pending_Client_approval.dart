@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -54,7 +55,7 @@ class _PendingClientApprovalState extends State<PendingClientApproval> {
             GestureDetector(
               onTap: () => context.pop(),
               child: Container(
-                height: 10.h,
+                height: 9.h,
                 width: 10.w,
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.black),
@@ -115,7 +116,7 @@ class _PendingClientApprovalState extends State<PendingClientApproval> {
                                 }
                               }
                               var dateString = e.createdAt;
-                              var dateTime = DateTime.parse(dateString!);
+                              var dateTime = DateTime.parse(dateString!).add(const Duration(hours: 1));
                               var formattedDate =
                                   DateFormat('dd MMM yyyy').format(dateTime);
 
@@ -132,8 +133,12 @@ class _PendingClientApprovalState extends State<PendingClientApproval> {
                               return GestureDetector(
                                 onTap: () {
                                   context.push(
-                                      AppRoutes.pendingClientApprovalDetails,
-                                      extra: e.id);
+                                    AppRoutes.quoteMiddlemen,
+                                    extra: {
+                                      'id': e.id,
+                                      'status': e.status,
+                                    },
+                                  );
                                 },
                                 child: Card(
                                   color: Colors.white,
@@ -144,7 +149,8 @@ class _PendingClientApprovalState extends State<PendingClientApproval> {
                                           CrossAxisAlignment.end,
                                       children: [
                                         customText(
-                                            text: "$price",
+                                            text:
+                                                "₦${Helpers.formatBalance(price)}",
                                             fontSize: 14,
                                             textColor: AppColors.textGrey,
                                             fontWeight: FontWeight.bold),

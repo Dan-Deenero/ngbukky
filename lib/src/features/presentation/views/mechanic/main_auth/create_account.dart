@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,6 +9,7 @@ import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
 import 'package:ngbuka/src/domain/data/otp_model.dart';
 import 'package:ngbuka/src/domain/repository/auth_repository.dart';
+import 'package:ngbuka/src/features/presentation/views/spare_part/auth/terms.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_phone_field.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -16,7 +19,7 @@ import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 import 'package:ngbuka/src/utils/helpers/validators.dart';
 
 class CreateAccount extends HookWidget {
-  static final _formKey = GlobalKey<FormState>();
+  static final _createAccountformKey = GlobalKey<FormState>();
 
   static final firstName = TextEditingController();
   static final lastName = TextEditingController();
@@ -28,7 +31,8 @@ class CreateAccount extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isActive = useState<bool>(false);
+    final isChecked = useState(false);
+    final isActive = useState(false);
 
     void createAccount() async {
       // context.push(AppRoutes.verifyAccount, extra: email.text);
@@ -46,13 +50,16 @@ class CreateAccount extends HookWidget {
           context.push(AppRoutes.verifyAccount,
               extra: OTPModel(email: email.text, otpType: "createAccount"));
         }
+      } else {
+        log('Registration failed');
       }
     }
 
     return Form(
-      key: _formKey,
+      key: _createAccountformKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      onChanged: () => isActive.value = _formKey.currentState!.validate(),
+      onChanged: () => isActive.value =
+          _createAccountformKey.currentState!.validate() && isChecked.value,
       child: BodyWithBackCircle(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -123,7 +130,13 @@ class CreateAccount extends HookWidget {
                     heightSpace(2),
                     CustomPhoneField(
                       onChanged: (val) {
-                        phoneNumber.text = val.completeNumber;
+                        if (val.number.startsWith('0') &&
+                            val.number.length == 11) {
+                          phoneNumber.text =
+                              val.countryCode + val.number.substring(1);
+                        } else {
+                          phoneNumber.text = val.completeNumber;
+                        }
                       },
                     ),
                     heightSpace(2),
@@ -157,9 +170,37 @@ class CreateAccount extends HookWidget {
                       "Creating an account means you're okay with our",
                       style: TextStyle(color: AppColors.orange),
                     ),
-                    const Text(
-                      "Terms of service Privacy Policy and our default Notification Settings",
-                      style: TextStyle(color: AppColors.orange),
+                    Row(
+                      children: [
+                        ValueListenableBuilder<bool>(
+                          valueListenable: isChecked,
+                          builder: (context, value, child) {
+                            return Checkbox(
+                              checkColor: Colors.white,
+                              activeColor: AppColors.checkBoxColor,
+                              value: value,
+                              onChanged: (val) {
+                                isChecked.value = val!;
+                                isActive.value = _createAccountformKey
+                                        .currentState!
+                                        .validate() &&
+                                    isChecked.value;
+                              },
+                            );
+                          },
+                        ),
+                        widthSpace(2),
+                        GestureDetector(
+                          onTap: () => showTermsPolicyDesclaimer(context),
+                          child: const Text(
+                            "Agree to terms and conditions",
+                            style: TextStyle(
+                              color: AppColors.normalBlue,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     heightSpace(4),
                     AppButton(

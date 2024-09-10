@@ -32,7 +32,12 @@ class SpareBusinessInfo extends HookWidget {
     updateInfo() async {
       var data = {
         "cacNumber": cac.text,
+        "city": cityController.text,
         "about": description.text,
+        "businessName": storeName.text,
+        "state": stateController.text,
+        "town": lgaController.text,
+        "address": address.text,
       };
       bool result = await _mechanicRepo.updateDealerProfile(data, 2);
       if (result) {

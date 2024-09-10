@@ -28,17 +28,18 @@ class _QRInspectionDetailsState extends State<QRInspectionDetails> {
 
   QuotesModel? quoteModel;
   List<Services>? quote = [];
+  List<Services>? otherQuote = [];
+  List<Services>? serviceTogether = [];
+
   List<Quotes>? quotes = [];
 
-  var dateString;
-  var formattedDate;
-  var formattedTime;
-  var dateTime;
+  dynamic dateString;
+  dynamic formattedDate;
+  dynamic formattedTime;
+  dynamic dateTime;
 
   int price = 0;
   double serviceFee = 0;
-  Services? requestedSystemService;
-  OtherServices? requestedPersonalisedService;
 
   @override
   void initState() {
@@ -47,18 +48,21 @@ class _QRInspectionDetailsState extends State<QRInspectionDetails> {
           () {
             quoteModel = value;
             quote = quoteModel!.services!;
+            otherQuote = quoteModel!.otherServices!;
+            serviceTogether = quote! + otherQuote!;
+            quotes = quoteModel!.quotes;
             isLoading = false;
             dateString = quoteModel!.createdAt!;
-            dateTime = DateTime.parse(dateString);
+            dateTime = DateTime.parse(dateString!).add(const Duration(hours: 1));
             formattedDate = DateFormat('E, d MMM y').format(dateTime);
 
             formattedTime = DateFormat('hh:mm a').format(dateTime);
             for (Quotes quote in quotes!) {
               if (quote.price != null) {
                 price += quote.price!;
+                serviceFee += quote.commission!;
               }
             }
-            serviceFee = price * 0.01;
           },
         ));
   }
@@ -81,10 +85,8 @@ class _QRInspectionDetailsState extends State<QRInspectionDetails> {
                 fontWeight: FontWeight.bold,
                 textColor: AppColors.black),
             // heightSpace(1),
-            Flexible(
-              child: bodyText(
-                "View all necessary information about this booking ",
-              ),
+            bodyText(
+              "View all necessary information about \nthis booking ",
             ),
           ],
         ),
@@ -218,41 +220,22 @@ class _QRInspectionDetailsState extends State<QRInspectionDetails> {
                       textColor: AppColors.orange,
                       fontWeight: FontWeight.bold),
                   heightSpace(3),
-                  ...quotes!.map(
-                    (quote) {
-                      String serviceName = '';
-                      if (quote.requestedPersonalisedService != null) {
-                        serviceName = quote.requestedPersonalisedService!.name!;
-                      } else if (quote.requestedSystemService != null) {
-                        serviceName = quote.requestedSystemService!.name!;
-                      }
-                      return Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  SvgPicture.asset(AppImages.serviceIcon),
-                                  widthSpace(2),
-                                  customText(
-                                      text: serviceName,
-                                      fontSize: 13,
-                                      textColor: AppColors.black,
-                                      fontWeight: FontWeight.w600),
-                                ],
-                              ),
-                              customText(
-                                  text: '${quote.price!}',
-                                  fontSize: 13,
-                                  textColor: AppColors.black)
-                            ],
-                          ),
-                          heightSpace(4),
-                        ],
-                      );
-                    },
-                  ),
+                  ...serviceTogether!.map(
+                          (qte) {
+                            return Row(
+                              children: [
+                                SvgPicture.asset(AppImages.serviceIcon),
+                                widthSpace(2),
+                                customText(
+                                    text: qte.name!,
+                                    fontSize: 13,
+                                    textColor: AppColors.black,
+                                    fontWeight: FontWeight.w600),
+                                heightSpace(4),
+                              ],
+                            );
+                          },
+                        ),
                   heightSpace(1),
                   const Divider(),
                   Column(
@@ -273,21 +256,21 @@ class _QRInspectionDetailsState extends State<QRInspectionDetails> {
                         ],
                       ),
                       heightSpace(2),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          customText(
-                            text: 'Ngbuka Charge (1%)',
-                            fontSize: 13,
-                            textColor: AppColors.black,
-                          ),
-                          customText(
-                            text: '$serviceFee',
-                            fontSize: 13,
-                            textColor: AppColors.black,
-                          ),
-                        ],
-                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   children: [
+                      //     customText(
+                      //       text: 'Ngbuka Charge (1%)',
+                      //       fontSize: 13,
+                      //       textColor: AppColors.black,
+                      //     ),
+                      //     customText(
+                      //       text: '$serviceFee',
+                      //       fontSize: 13,
+                      //       textColor: AppColors.black,
+                      //     ),
+                      //   ],
+                      // ),
                       heightSpace(2),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -298,7 +281,7 @@ class _QRInspectionDetailsState extends State<QRInspectionDetails> {
                               textColor: AppColors.black,
                               fontWeight: FontWeight.w600),
                           customText(
-                              text: '${price + serviceFee}',
+                              text: '$price',
                               fontSize: 13,
                               textColor: AppColors.black,
                               fontWeight: FontWeight.w600)

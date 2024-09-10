@@ -19,6 +19,7 @@ import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_phone_field.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_textformfield.dart';
+import 'package:ngbuka/src/features/presentation/widgets/app_toast.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 import 'package:ngbuka/src/utils/helpers/validators.dart';
 
@@ -74,7 +75,7 @@ class LoginView extends HookWidget {
                       padding: const EdgeInsets.only(right: 10),
                       child: GestureDetector(
                         onTap: () => context.push(AppRoutes.createAccount),
-                        child: SvgPicture.asset(AppImages.createAccount), 
+                        child: SvgPicture.asset(AppImages.createAccount),
                       ),
                     )
                   ],
@@ -145,7 +146,7 @@ class LoginView extends HookWidget {
               heightSpace(4),
               const Expanded(
                 child: TabBarView(
-                  children: [SpareEmailLogin(), SparePhoneNumberLogin()],
+                  children: [EmailLogin(), PhoneNumberLogin()],
                 ),
               ),
             ],
@@ -156,13 +157,13 @@ class LoginView extends HookWidget {
   }
 }
 
-class SpareEmailLogin extends HookWidget {
+class EmailLogin extends HookWidget {
   static final email = TextEditingController();
   static final password = TextEditingController();
   static final AuthRepo _authRepo = AuthRepo();
-  static final formKey = GlobalKey<FormState>();
+  static final emailFormKey = GlobalKey<FormState>();
 
-  const SpareEmailLogin({
+  const EmailLogin({
     super.key,
   });
 
@@ -194,6 +195,9 @@ class SpareEmailLogin extends HookWidget {
         if (result.user?.isEmailVerified == false) {
           context.go(AppRoutes.verifyAccount,
               extra: OTPModel(email: email.text, otpType: "createAccount"));
+        } else if (result.user?.role != 'mechanic') {
+          context.go(AppRoutes.login);
+          ToastResp.toastMsgError(resp: 'Unauthorized User');
         } else {
           if (result.user != null) {
             locator<LocalStorageService>()
@@ -228,10 +232,10 @@ class SpareEmailLogin extends HookWidget {
     }
 
     return Form(
-      key: formKey,
+      key: emailFormKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       onChanged: () {
-        isActive.value = formKey.currentState!.validate();
+        isActive.value = emailFormKey.currentState!.validate();
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -317,13 +321,13 @@ class SpareEmailLogin extends HookWidget {
   }
 }
 
-class SparePhoneNumberLogin extends HookWidget {
+class PhoneNumberLogin extends HookWidget {
   static final phone = TextEditingController();
   static final password = TextEditingController();
   static final AuthRepo _authRepo = AuthRepo();
-  static final formKey = GlobalKey<FormState>();
+  static final phoneFormKey = GlobalKey<FormState>();
 
-  const SparePhoneNumberLogin({
+  const PhoneNumberLogin({
     super.key,
   });
 
@@ -351,29 +355,37 @@ class SparePhoneNumberLogin extends HookWidget {
       };
       LoginModel result = await _authRepo.loginEmail(data);
       if (context.mounted) {
-        if (result.user != null) {
-          locator<LocalStorageService>()
-              .saveDataToDisk(AppKeys.mechPassword, password.text);
-          locator<LocalStorageService>()
-              .saveDataToDisk(AppKeys.userType, 'mechanic');
-          NotificationsManager.getFcmToken().then((value) async {
-            final token = await SecureStorage.readSecureData('device-token');
-            if (token != null || token != '') {
-              if (token != value) {
-                final data = {
-                  'deviceToken': value,
-                };
-                _authRepo.updateDeviceToken(data);
+        if (result.user?.isEmailVerified == false) {
+          context.go(AppRoutes.spareVerifyAccount,
+              extra: OTPModel(email: phone.text, otpType: "createAccount"));
+        } else if (result.user?.role != 'dealer') {
+          context.go(AppRoutes.login);
+          ToastResp.toastMsgError(resp: 'Unauthorized User');
+        } else {
+          if (result.user != null) {
+            locator<LocalStorageService>()
+                .saveDataToDisk(AppKeys.mechPassword, password.text);
+            locator<LocalStorageService>()
+                .saveDataToDisk(AppKeys.userType, 'mechanic');
+            NotificationsManager.getFcmToken().then((value) async {
+              final token = await SecureStorage.readSecureData('device-token');
+              if (token != null || token != '') {
+                if (token != value) {
+                  final data = {
+                    'deviceToken': value,
+                  };
+                  _authRepo.updateDeviceToken(data);
+                }
               }
+            });
+            NotificationsManager.init();
+            if (result.user?.mechanicType == null) {
+              context.go(AppRoutes.personalInfo);
+            } else if (result.user?.businessName == null) {
+              context.go(AppRoutes.businessInfo);
+            } else {
+              context.go(AppRoutes.bottomNav);
             }
-          });
-          NotificationsManager.init();
-          if (result.user?.mechanicType == null) {
-            context.go(AppRoutes.personalInfo);
-          } else if (result.user?.businessName == null) {
-            context.go(AppRoutes.businessInfo);
-          } else {
-            context.go(AppRoutes.bottomNav);
           }
         }
       }
@@ -381,10 +393,10 @@ class SparePhoneNumberLogin extends HookWidget {
     }
 
     return Form(
-      key: formKey,
+      key: phoneFormKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       onChanged: () {
-        isActive.value = formKey.currentState!.validate();
+        isActive.value = phoneFormKey.currentState!.validate();
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -404,7 +416,13 @@ class SparePhoneNumberLogin extends HookWidget {
                     heightSpace(1),
                     CustomPhoneField(
                       onChanged: (val) {
-                        phone.text = val.completeNumber;
+                        if (val.number.startsWith('0') &&
+                            val.number.length == 11) {
+                          phone.text =
+                              val.countryCode + val.number.substring(1);
+                        } else {
+                          phone.text = val.completeNumber;
+                        }
                       },
                     ),
                     heightSpace(2),

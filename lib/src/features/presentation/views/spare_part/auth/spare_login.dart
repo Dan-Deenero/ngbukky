@@ -18,6 +18,7 @@ import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_phone_field.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_textformfield.dart';
+import 'package:ngbuka/src/features/presentation/widgets/app_toast.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 import 'package:ngbuka/src/utils/helpers/validators.dart';
 
@@ -161,7 +162,7 @@ class SpareEmailLogin extends HookWidget {
   static final email = TextEditingController();
   static final password = TextEditingController();
   static final AuthRepo _authRepo = AuthRepo();
-  static final formKey = GlobalKey<FormState>();
+  static final spareEmailFormKey = GlobalKey<FormState>();
 
   const SpareEmailLogin({
     super.key,
@@ -189,12 +190,16 @@ class SpareEmailLogin extends HookWidget {
         "password": password.text,
         "isEmailLogin": true
       };
+
       LoginModel result = await _authRepo.loginEmail(data);
       log(result.toString());
       if (context.mounted) {
         if (result.user?.isEmailVerified == false) {
           context.go(AppRoutes.spareVerifyAccount,
               extra: OTPModel(email: email.text, otpType: "createAccount"));
+        } else if (result.user?.role != 'dealer') {
+          context.go(AppRoutes.dealerLogin);
+          ToastResp.toastMsgError(resp: 'Unauthorized User');
         } else {
           if (result.user != null) {
             locator<LocalStorageService>()
@@ -228,10 +233,10 @@ class SpareEmailLogin extends HookWidget {
     }
 
     return Form(
-      key: formKey,
+      key: spareEmailFormKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       onChanged: () {
-        isActive.value = formKey.currentState!.validate();
+        isActive.value = spareEmailFormKey.currentState!.validate();
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -323,7 +328,7 @@ class SparePhoneNumberLogin extends HookWidget {
   static final phone = TextEditingController();
   static final password = TextEditingController();
   static final AuthRepo _authRepo = AuthRepo();
-  static final formKey = GlobalKey<FormState>();
+  static final sparePhoneFormKey = GlobalKey<FormState>();
 
   const SparePhoneNumberLogin({
     super.key,
@@ -345,46 +350,67 @@ class SparePhoneNumberLogin extends HookWidget {
       return AppColors.checkBoxColor;
     }
 
+    //   void handlePhoneChange(PhoneNumber phoneNumber) {
+    //   String phone = phoneNumber.number;
+
+    //   // Check if the number starts with '0' and is 11 digits long (Nigerian format)
+    //   if (phone.startsWith('0') && phone.length == 11) {
+    //     phone = '+234' + phone.substring(1);
+    //   }
+
+    //   setState(() {
+    //     phoneController.text = phone;
+    //   });
+    // }
+
     void login() async {
       var data = {
-        "phoneNumber": phone.text.substring(0),
+        "phoneNumber": phone.text,
         "password": password.text,
         "isEmailLogin": false
       };
       LoginModel result = await _authRepo.loginEmail(data);
       if (context.mounted) {
-        if (result.user != null) {
-          locator<LocalStorageService>()
-              .saveDataToDisk(AppKeys.dealerPassword, password.text);
-          locator<LocalStorageService>()
-              .saveDataToDisk(AppKeys.userType, 'dealer');
+        if (result.user?.isEmailVerified == false) {
+          context.go(AppRoutes.spareVerifyAccount,
+              extra: OTPModel(email: phone.text, otpType: "createAccount"));
+        } else if (result.user?.role != 'dealer') {
+          context.go(AppRoutes.dealerLogin);
+          ToastResp.toastMsgError(resp: 'Unauthorized User');
+        } else {
+          if (result.user != null) {
+            locator<LocalStorageService>()
+                .saveDataToDisk(AppKeys.dealerPassword, password.text);
+            locator<LocalStorageService>()
+                .saveDataToDisk(AppKeys.userType, 'dealer');
 
-          NotificationsManager.getFcmToken().then((value) async {
-            final token = await SecureStorage.readSecureData('device-token');
-            if (token != null || token != '') {
-              if (token != value) {
-                final data = {
-                  'deviceToken': value,
-                };
-                _authRepo.updateDeviceToken(data);
+            NotificationsManager.getFcmToken().then((value) async {
+              final token = await SecureStorage.readSecureData('device-token');
+              if (token != null || token != '') {
+                if (token != value) {
+                  final data = {
+                    'deviceToken': value,
+                  };
+                  _authRepo.updateDeviceToken(data);
+                }
               }
+            });
+            NotificationsManager.init();
+            if (result.user?.businessName == null) {
+              context.go(AppRoutes.spareStoreInfo);
+            } else {
+              context.go(AppRoutes.spareBottomNav);
             }
-          });
-          NotificationsManager.init();
-          if (result.user?.businessName == null) {
-            context.go(AppRoutes.spareStoreInfo);
-          } else {
-            context.go(AppRoutes.spareBottomNav);
           }
         }
       }
     }
 
     return Form(
-      key: formKey,
+      key: sparePhoneFormKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       onChanged: () {
-        isActive.value = formKey.currentState!.validate();
+        isActive.value = sparePhoneFormKey.currentState!.validate();
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -404,7 +430,13 @@ class SparePhoneNumberLogin extends HookWidget {
                     heightSpace(1),
                     CustomPhoneField(
                       onChanged: (val) {
-                        phone.text = val.completeNumber;
+                        if (val.number.startsWith('0') &&
+                            val.number.length == 11) {
+                          phone.text =
+                              val.countryCode + val.number.substring(1);
+                        } else {
+                          phone.text = val.completeNumber;
+                        }
                       },
                     ),
                     heightSpace(2),

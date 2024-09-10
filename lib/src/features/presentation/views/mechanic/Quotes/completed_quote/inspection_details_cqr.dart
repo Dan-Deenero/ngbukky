@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/controller/Helpers.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -31,23 +31,25 @@ class _CQRInspectionDetailsState extends State<CQRInspectionDetails> {
 
   int? totalPrice;
   List<Services>? quote = [];
+  List<Services>? otherQuote = [];
+  List<Services>? serviceTogether = [];
 
   int price = 0;
   double serviceFee = 0;
-  Services? requestedSystemService;
-  OtherServices? requestedPersonalisedService;
 
   @override
   void initState() {
-    // TODO: implement initState
+    
     super.initState();
     _mechanicRepo.getoneQuote(widget.id).then((value) => setState(
           () {
             quoteModel = value;
             isLoading = false;
             quote = quoteModel!.services!;
+            otherQuote = quoteModel!.otherServices!;
+            serviceTogether = quote! + otherQuote!;
             quotes = quoteModel!.quotes;
-          
+
             for (Quotes quote in quotes!) {
               log(quote.toString());
               if (quote.price != null) {
@@ -212,7 +214,7 @@ class _CQRInspectionDetailsState extends State<CQRInspectionDetails> {
                   heightSpace(3),
                   Column(
                     children: [
-                      ...quote!.map(
+                      ...serviceTogether!.map(
                         (qte) {
                           return Row(
                             children: [

@@ -41,13 +41,13 @@ class _SparePersonalInfoState extends ConsumerState<SparePersonalInfo> {
   getDealerProfile() {
     _mechanicRepo.getDealerProfile().then(
       (value) {
-        phone.text = value.phoneNumber!;
-        email.text = value.email!;
-        storeName.text = value.businessName!;
-        address.text = value.address!;
-        cityController.text = value.city!;
-        lgaController.text = value.town!;
-        stateController.text = value.state!;
+        phone.text = value.phoneNumber ?? "";
+        email.text = value.email ?? "";
+        storeName.text = value.businessName ?? "";
+        address.text = value.address ?? "";
+        cityController.text = value.city ?? "";
+        lgaController.text = value.town ?? "";
+        stateController.text = value.state ?? "";
         ref.read(isLoading.notifier).state = false;
       },
     );
@@ -74,14 +74,26 @@ class _SparePersonalInfoState extends ConsumerState<SparePersonalInfo> {
           return StatefulBuilder(builder: (context, StateSetter setState) {
             return Consumer(builder: (context, ref, _) {
               final stateState = ref.watch(states);
-              final cityState = ref.watch(city);  
+              final cityState = ref.watch(city);
               final townState = ref.watch(town);
-              final statee =
-                  ["Select"] + stateState.map((state) => state.name!).toList();
-              final cityy =
-                  ["Select"] + cityState.map((city) => city.name!).toList();
-              final towns =
-                  ["Select"] + townState.map((town) => town.name!).toList();
+              final statee = [
+                    stateController.text.isEmpty
+                        ? "Select"
+                        : stateController.text.toLowerCase()
+                  ] +
+                  stateState.map((state) => state.name!).toList();
+              final cityy = [
+                    cityController.text.isEmpty
+                        ? "Select"
+                        : cityController.text.toLowerCase()
+                  ] +
+                  cityState.map((city) => city.name!).toList();
+              final towns = [
+                    lgaController.text.isEmpty
+                        ? "Select"
+                        : lgaController.text.toLowerCase()
+                  ] +
+                  townState.map((town) => town.name!).toList();
 
               final loading2 = ref.watch(isLoading2);
 
@@ -128,7 +140,8 @@ class _SparePersonalInfoState extends ConsumerState<SparePersonalInfo> {
                               orElse: () =>
                                   States(), // Default value if state is not found
                             );
-
+                            cityController.clear();
+                            lgaController.clear();
                             final selectedSlug = selectedState.slug;
                             CityLGA result = await mechanicRepo.getSubdomain(
                                 selectedSlug.toString().toLowerCase().trim());

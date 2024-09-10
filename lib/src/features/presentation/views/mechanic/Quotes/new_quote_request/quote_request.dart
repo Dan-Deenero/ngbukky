@@ -28,10 +28,11 @@ class _QuoteRequestsState extends State<QuoteRequests> {
   String uName = 'Kels2332';
 
   List<Services>? quote = [];
+  List<Services>? otherQuote = [];
+  List<Services>? serviceTogether = [];
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _mechanicRepo.getoneQuote(widget.id).then(
           (value) => setState(
@@ -39,6 +40,8 @@ class _QuoteRequestsState extends State<QuoteRequests> {
               quoteModel = value;
               isLoading = false;
               quote = quoteModel!.services!;
+              otherQuote = quoteModel!.otherServices!;
+              serviceTogether = quote! + otherQuote!;
               log(quote.toString());
               uName = quoteModel!.user!.username!;
             },
@@ -53,7 +56,7 @@ class _QuoteRequestsState extends State<QuoteRequests> {
     bool result = await _mechanicRepo.acceptOrRejectQuote(body, widget.id);
     if (result) {
       if (context.mounted) {
-        context.go(AppRoutes.bottomNav);
+        context.go(AppRoutes.sendQuotes, extra: quoteModel!.id);
         return;
       }
     }
@@ -76,7 +79,7 @@ class _QuoteRequestsState extends State<QuoteRequests> {
     showDialog(
         context: context,
         builder: (context) => Center(
-              child: Container(
+              child: SizedBox(
                 width: 700, // Set the desired width
                 height: 220,
                 child: Dialog(
@@ -88,24 +91,28 @@ class _QuoteRequestsState extends State<QuoteRequests> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          customText(
-                              text: 'Confirm acceptance',
-                              fontSize: 20,
-                              textColor: AppColors.black,
-                              fontWeight: FontWeight.w500),
-                          InkWell(
-                              onTap: () => context.pop(),
-                              child: SvgPicture.asset(AppImages.cancelModal))
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            customText(
+                                text: 'Confirm acceptance',
+                                fontSize: 20,
+                                textColor: AppColors.black,
+                                fontWeight: FontWeight.w500),
+                            InkWell(
+                                onTap: () => context.pop(),
+                                child: SvgPicture.asset(AppImages.cancelModal))
+                          ],
+                        ),
                       ),
                       heightSpace(1),
-                      Flexible(
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: customText(
                             text:
-                                'Confirm that you want to accept this Quote request',
+                                'Confirm that you want to accept this quote request',
                             fontSize: 12,
                             textColor: AppColors.black),
                       ),
@@ -149,10 +156,9 @@ class _QuoteRequestsState extends State<QuoteRequests> {
     showDialog(
       context: context,
       builder: (context) => Center(
-        child: Container(
-          // padding: EdgeInsets.all(10.0),
+        child: SizedBox(
           width: 700, // Set the desired width
-          height: 200,
+          height: 220,
           child: Dialog(
             shape: RoundedRectangleBorder(
               borderRadius:
@@ -161,24 +167,31 @@ class _QuoteRequestsState extends State<QuoteRequests> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    customText(
-                        text: 'Confirm rejection',
-                        fontSize: 20,
-                        textColor: AppColors.black,
-                        fontWeight: FontWeight.w500),
-                    InkWell(
-                        onTap: () => context.pop(),
-                        child: SvgPicture.asset(AppImages.cancelModal))
-                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      customText(
+                          text: 'Confirm rejection',
+                          fontSize: 20,
+                          textColor: AppColors.black,
+                          fontWeight: FontWeight.w500),
+                      InkWell(
+                          onTap: () => context.pop(),
+                          child: SvgPicture.asset(AppImages.cancelModal))
+                    ],
+                  ),
                 ),
                 heightSpace(1),
-                customText(
-                    text: 'Confirm that you want to reject this booking',
-                    fontSize: 12,
-                    textColor: AppColors.black),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: customText(
+                      text:
+                          'Confirm that you want to reject this quote request',
+                      fontSize: 12,
+                      textColor: AppColors.black),
+                ),
                 heightSpace(3),
                 Center(
                   child: Row(
@@ -229,7 +242,7 @@ class _QuoteRequestsState extends State<QuoteRequests> {
             GestureDetector(
               onTap: () => context.pop(),
               child: Container(
-                height: 10.h,
+                height: 9.h,
                 width: 10.w,
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.black),
@@ -256,7 +269,7 @@ class _QuoteRequestsState extends State<QuoteRequests> {
         ),
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -299,18 +312,6 @@ class _QuoteRequestsState extends State<QuoteRequests> {
                     ),
                   ),
                   heightSpace(1),
-                  ListTile(
-                    leading: SvgPicture.asset(AppImages.carIcon),
-                    title: customText(
-                        text: 'AC Maintenance',
-                        fontSize: 14,
-                        textColor: AppColors.black,
-                        fontWeight: FontWeight.bold),
-                    subtitle: customText(
-                        text: 'Service selected',
-                        fontSize: 12,
-                        textColor: AppColors.textGrey),
-                  ),
                   ListTile(
                     leading: SvgPicture.asset(AppImages.carIcon),
                     title: customText(
@@ -357,20 +358,22 @@ class _QuoteRequestsState extends State<QuoteRequests> {
                   heightSpace(3),
                   Column(
                     children: [
-                      ...quote!.map((qte) {
-                        return Row(
-                          children: [
-                            SvgPicture.asset(AppImages.serviceIcon),
-                            widthSpace(2),
-                            customText(
-                                text: qte.name!,
-                                fontSize: 13,
-                                textColor: AppColors.black,
-                                fontWeight: FontWeight.w600),
-                            heightSpace(4),
-                          ],
-                        );
-                      }),
+                      ...serviceTogether!.map(
+                        (qte) {
+                          return Row(
+                            children: [
+                              SvgPicture.asset(AppImages.serviceIcon),
+                              widthSpace(2),
+                              customText(
+                                  text: qte.name!,
+                                  fontSize: 13,
+                                  textColor: AppColors.black,
+                                  fontWeight: FontWeight.w600),
+                              heightSpace(4),
+                            ],
+                          );
+                        },
+                      ),
                       heightSpace(4),
                     ],
                   ),

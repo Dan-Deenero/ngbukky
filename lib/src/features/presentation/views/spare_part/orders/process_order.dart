@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/orders_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
@@ -23,18 +23,7 @@ class ProcessOrder extends HookWidget {
     final isChecked = useState(false);
     final isLoading = useState(true);
 
-    Color getColor(Set<MaterialState> states) {
-      Color initialColor = AppColors.white;
-      const Set<MaterialState> interactiveStates = <MaterialState>{
-        MaterialState.pressed,
-        MaterialState.hovered,
-        MaterialState.focused,
-      };
-      if (states.any(interactiveStates.contains)) {
-        return initialColor = AppColors.checkBoxColor;
-      }
-      return initialColor;
-    }
+
 
     processOrder() async {
       var body = {
@@ -82,7 +71,7 @@ class ProcessOrder extends HookWidget {
                   padding: const EdgeInsets.only(left: 7.0),
                   child: Center(
                     child: GestureDetector(
-                      onTap: () => context.push(AppRoutes.bottomNav),
+                      onTap: () => context.pop(),
                       child: const Icon(
                         Icons.arrow_back_ios,
                         color: AppColors.black,
@@ -115,7 +104,8 @@ class ProcessOrder extends HookWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     customText(
-                      text: 'No of items ordered: ${ordersModel.value!.quantity}',
+                      text:
+                          'No of items ordered: ${ordersModel.value!.quantity}',
                       fontSize: 14,
                       textColor: AppColors.black,
                       fontWeight: FontWeight.w600,
@@ -137,11 +127,20 @@ class ProcessOrder extends HookWidget {
                           child: Row(
                             children: [
                               SizedBox(
-                                height: 80,
-                                // width: 40.w - 20,
-                                child: Image.network(
-                                  ordersModel.value!.product!.imageUrl!,
-                                  fit: BoxFit.cover,
+                                height: 120,
+                                width: 40.w - 20,
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(8),
+                                      bottomLeft: Radius.circular(8)),
+                                  child: SizedBox(
+                                    width: 40.w,
+                                    height: 150,
+                                    child: Image.network(
+                                      ordersModel.value!.product!.imageUrl!,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                                 ),
                               ),
                               Container(
@@ -159,13 +158,36 @@ class ProcessOrder extends HookWidget {
                                       fontWeight: FontWeight.w700,
                                     ),
                                     heightSpace(1),
-                                    // customText(
-                                    //   text: 'Type: Iridium',
-                                    //   fontSize: 12,
-                                    //   textColor: AppColors.textGrey,
-                                    //   fontWeight: FontWeight.w600,
-                                    // ),
+                                    SizedBox(
+                                      width: 40.w,
+                                      child: RichText(
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        text: TextSpan(
+                                          text: 'ID: ',
+                                          style: const TextStyle(
+                                              color: AppColors.textGrey),
+                                          children: [
+                                            TextSpan(
+                                              text: ordersModel.value!.id,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: AppColors.black,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                                     heightSpace(1),
+                                    customText(
+                                      text:
+                                          '₦${Helpers.formatBalance(ordersModel.value!.quantity! * ordersModel.value!.price!)}',
+                                      fontSize: 12,
+                                      textColor: AppColors.black,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ],
                                 ),
                               )
@@ -193,22 +215,24 @@ class ProcessOrder extends HookWidget {
                               ),
                             ),
                             widthSpace(8),
-                            RichText(
-                              text: const TextSpan(
-                                text: 'In stock: ',
-                                style: TextStyle(color: AppColors.textGrey),
-                                children: [
-                                  TextSpan(
-                                    text: '10',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.black,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            // RichText(
+                            //   text: TextSpan(
+                            //     text: 'In stock: ',
+                            //     style:
+                            //         const TextStyle(color: AppColors.textGrey),
+                            //     children: [
+                            //       TextSpan(
+                            //         text:
+                            //             '${ordersModel.value!.product!.quantityInStock}',
+                            //         style: const TextStyle(
+                            //           fontWeight: FontWeight.bold,
+                            //           color: AppColors.black,
+                            //           fontSize: 12,
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
                           ],
                         )
                       ],

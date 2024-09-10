@@ -34,3 +34,16 @@ String? numericValidation(String? value) {
   
   return null;
 }
+
+String? doubleValidation(String? value) {
+  if (value == null || value.isEmpty) {
+    return "Please enter a value";
+  }
+
+  // Regex to validate double values
+  if (!RegExp(r"^[-+]?\d*\.?\d+([eE][-+]?\d+)?$").hasMatch(value)) {
+    return "Please enter a valid number";
+  }
+  
+  return null;
+}

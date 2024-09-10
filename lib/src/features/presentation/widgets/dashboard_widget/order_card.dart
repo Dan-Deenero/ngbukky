@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/controller/Helpers.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
 
@@ -32,7 +32,8 @@ class OrderCard extends StatelessWidget {
         children: [
           SizedBox(
             child: ClipRRect(
-              borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
               child: SizedBox(
                 width: 40.w,
                 height: 150,
@@ -67,8 +68,10 @@ class OrderCard extends StatelessWidget {
                 SizedBox(
                   width: 40.w,
                   child: RichText(
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     text: TextSpan(
-                      text: 'ID Number: ',
+                      text: 'ID: ',
                       style: const TextStyle(color: AppColors.textGrey),
                       children: [
                         TextSpan(

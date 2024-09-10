@@ -191,12 +191,16 @@ class ApiClient {
   static Future _makeRequest(Function request) async {
     try {
       final result = await request();
+      if (result == null) {
+        throw Exception('Response is null');
+        
+      }
       log(result.toString());
 
       return SuccessResponse.toApiResponse(result);
     } on DioError catch (e) {
       log(e.response.toString());
-      log(e.response!.statusCode.toString());
+      // log(e.response!.statusCode.toString());
       if (e.response?.statusCode == 401) {
         if(locator<LocalStorageService>().getDataFromDisk(AppKeys.userType) == 'mechanic'){
           locator<GoRouter>().push(AppRoutes.login);
@@ -210,11 +214,12 @@ class ApiClient {
         // router.push(AppRoutes.login);
       }
       log(e.toString());
-      log(e.response!.toString());
+      log(e.response.toString());
       _handleDioError(ApiResponse.toApiResponse(
           e.response?.data ?? e.response?.statusMessage));
 
       return ApiResponse.toApiResponse(e.response!.data);
+      
     } on SocketException catch (e) {
       _handleSocketException(e);
       return e.message;

@@ -11,4 +11,6 @@ class AppKeys {
   static const String dealerAccountNo = '';
   static const String dealerPassword = 'password';
   static const String onBoardingStatus = 'onBoardingStatus';
+  static const String showBalanceForVendor = 'true';
+  static const String showBalanceForDealer = 'true';
 }

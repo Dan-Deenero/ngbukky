@@ -51,15 +51,17 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
         trueItemsString.clear();
         for (var item in workingHour) {
           if (item["isChecked"]) {
-            if (item["isChecked"]) {
-              var itemString =
-                  "day: ${item["day"]}, from: ${item["from"]}, to: ${item["to"]}";
+            var itemString = "${item["day"]}: ${item["from"]} - ${item["to"]}";
+            setState(() {
               trueItemsString.add(itemString);
-            }
+            });
+          } else {
+            trueItemsString
+                .removeWhere((element) => element.contains(item["day"]));
           }
         }
-        workingHourController.text = trueItemsString.join(', ');
-        context.pop();
+
+        context.pop(trueItemsString);
       }
 
       showModalBottomSheet<void>(
@@ -354,9 +356,12 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
               final stateState = ref.watch(states);
               final cityState = ref.watch(city);
               final townState = ref.watch(town);
-              final statee = stateState.map((state) => state.name!).toList();
-              final cityy = cityState.map((city) => city.name!).toList();
-              final towns = townState.map((town) => town.name!).toList();
+              final statee =
+                  ["Select"] + stateState.map((state) => state.name!).toList();
+              final cityy =
+                  ["Select"] + cityState.map((city) => city.name!).toList();
+              final towns =
+                  ["Select"] + townState.map((town) => town.name!).toList();
               final loading2 = ref.watch(isLoading2);
 
               return Form(
@@ -425,67 +430,68 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                                   ),
                                 ),
                               )
-                            :Column(
-                          children: [
-                            AppDropdown(
-                                isValue: false,
-                                value: cityController.text,
-                                dropdownList: cityy,
-                                label: "City",
-                                validator: (val) {
-                                  if (val == "Select") {
-                                    return "Select a city";
-                                  }
-                                  return null;
-                                },
-                                onChange: (val) =>
-                                    cityController.text = val.toString()),
-                            heightSpace(1),
-                            AppDropdown(
-                                isValue: false,
-                                value: lgaController.text,
-                                dropdownList: towns,
-                                validator: (val) {
-                                  if (val == "Select") {
-                                    return "Select a city";
-                                  }
-                                  return null;
-                                },
-                                label: "Town",
-                                onChange: (val) =>
-                                    lgaController.text = val.toString()),
-                            heightSpace(1),
-                            SizedBox(
-                              height: 400,
-                              child: ListView(
-                                keyboardDismissBehavior:
-                                    ScrollViewKeyboardDismissBehavior.onDrag,
+                            : Column(
                                 children: [
-                                  CustomTextFormField(
-                                    validator: stringValidation,
-                                    textEditingController: address,
-                                    label: "Street",
-                                    prefixIcon: Padding(
-                                      padding: const EdgeInsets.all(13.0),
-                                      child: SvgPicture.asset(
-                                        AppImages.locationIcon,
-                                      ),
+                                  AppDropdown(
+                                      isValue: false,
+                                      value: cityController.text,
+                                      dropdownList: cityy,
+                                      label: "City",
+                                      validator: (val) {
+                                        if (val == "Select") {
+                                          return "Select a city";
+                                        }
+                                        return null;
+                                      },
+                                      onChange: (val) =>
+                                          cityController.text = val.toString()),
+                                  heightSpace(1),
+                                  AppDropdown(
+                                      isValue: false,
+                                      value: lgaController.text,
+                                      dropdownList: towns,
+                                      validator: (val) {
+                                        if (val == "Select") {
+                                          return "Select a city";
+                                        }
+                                        return null;
+                                      },
+                                      label: "Town",
+                                      onChange: (val) =>
+                                          lgaController.text = val.toString()),
+                                  heightSpace(1),
+                                  SizedBox(
+                                    height: 400,
+                                    child: ListView(
+                                      keyboardDismissBehavior:
+                                          ScrollViewKeyboardDismissBehavior
+                                              .onDrag,
+                                      children: [
+                                        CustomTextFormField(
+                                          validator: stringValidation,
+                                          textEditingController: address,
+                                          label: "Street",
+                                          prefixIcon: Padding(
+                                            padding: const EdgeInsets.all(13.0),
+                                            child: SvgPicture.asset(
+                                              AppImages.locationIcon,
+                                            ),
+                                          ),
+                                          hintText:
+                                              "Type in your business street address",
+                                        ),
+                                        heightSpace(2),
+                                        AppButton(
+                                            // isActive: isActive.value,
+                                            buttonText: "Save",
+                                            isOrange: true,
+                                            onTap: saveData),
+                                        heightSpace(2),
+                                      ],
                                     ),
-                                    hintText:
-                                        "Type in your business street address",
                                   ),
-                                  heightSpace(2),
-                                  AppButton(
-                                      // isActive: isActive.value,
-                                      buttonText: "Save",
-                                      isOrange: true,
-                                      onTap: saveData),
-                                  heightSpace(2),
                                 ],
                               ),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                   ),
@@ -726,20 +732,95 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
                                 fontSize: 14,
                                 textColor: AppColors.black),
                             heightSpace(2),
-                            GestureDetector(
-                              onTap: workingHours,
-                              child: CustomTextFormField(
-                                isEnabled: false,
-                                textEditingController: workingHourController,
-                                prefixIcon: Padding(
-                                  padding: const EdgeInsets.all(13.0),
-                                  child: SvgPicture.asset(
-                                    AppImages.calendarIcon,
-                                  ),
-                                ),
-                                label: "Working hours",
-                                hintText: "Set working hours",
-                              ),
+                            customText(
+                              text: "Working hours",
+                              fontSize: 14,
+                              textColor: AppColors.black,
+                            ),
+                            heightSpace(1),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 14.0, horizontal: 8.0),
+                              width: double.infinity,
+                              // height: 50,
+                              decoration: BoxDecoration(
+                                  color: AppColors.white,
+                                  border: Border.all(
+                                      color: AppColors.black,
+                                      width: 1.0,
+                                      style: BorderStyle.solid),
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: trueItemsString.isEmpty
+                                  ? GestureDetector(
+                                      onTap: workingHours,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              SvgPicture.asset(
+                                                AppImages.calendarIcon,
+                                              ),
+                                              widthSpace(3),
+                                              customText(
+                                                  text: "Set working hours",
+                                                  fontSize: 14,
+                                                  textColor: AppColors.textGrey)
+                                            ],
+                                          ),
+                                          const Icon(Icons.arrow_drop_down)
+                                        ],
+                                      ),
+                                    )
+                                  : InkWell(
+                                      onTap: workingHours,
+                                      child: SizedBox(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Wrap(
+                                              spacing: 2,
+                                              direction: Axis.vertical,
+                                              children: trueItemsString
+                                                  .map((e) => Chip(
+                                                        backgroundColor:
+                                                            AppColors
+                                                                .orange
+                                                                .withOpacity(
+                                                                    0.1),
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          side:
+                                                              const BorderSide(
+                                                            width: 0.5,
+                                                            color: AppColors
+                                                                .orange,
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                            20,
+                                                          ),
+                                                        ),
+                                                        label: customText(
+                                                          text: e,
+                                                          fontSize: 13,
+                                                          textColor:
+                                                              AppColors.orange,
+                                                        ),
+                                                        deleteIcon: const Icon(
+                                                          Icons.close,
+                                                          color: AppColors.red,
+                                                        ),
+                                                      ))
+                                                  .toList(),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                             ),
                             heightSpace(3),
                             Row(
@@ -857,7 +938,7 @@ class _BusinessInfoPageState extends ConsumerState<BusinessInfoPage> {
       "businessName": businessName.text,
       "cacNumber": cac.text,
       "state": stateController.text,
-      "lga": lgaController.text,
+      "town": lgaController.text,
       "city": cityController.text,
       "address": address.text,
       "longitude": "-122.33221",

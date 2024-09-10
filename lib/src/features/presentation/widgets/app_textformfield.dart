@@ -15,6 +15,7 @@ class CustomTextFormField extends StatefulWidget {
   final bool hasMaxline;
   final bool? isEnabled;
   final bool? hasWidg;
+  final bool? isNeeded;
   final bool? isDropdown;
   final bool? hasLabel;
   final String? Function(String?)? validator;
@@ -40,6 +41,7 @@ class CustomTextFormField extends StatefulWidget {
     this.textEditingController,
     this.isPassword = false,
     this.hasWidg = false,
+    this.isNeeded = false,
     this.validator,
     this.isEnabled,
     this.isDropdown,
@@ -61,13 +63,24 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            customText(
-              text: '${widget.label}',
-              fontSize: 14,
-              textColor: AppColors.primary,
+            Row(
+              children: [
+                customText(
+                  text: '${widget.label}',
+                  fontSize: 14,
+                  textColor: AppColors.primary,
+                ),
+                widthSpace(1),
+                widget.isNeeded!
+                    ? customText(
+                        text: '*',
+                        fontSize: 12,
+                        textColor: AppColors.red,
+                      )
+                    : const SizedBox.shrink()
+              ],
             ),
-            widget.hasWidg! ? 
-            widget.widg! : const SizedBox.shrink()
+            widget.hasWidg! ? widget.widg! : const SizedBox.shrink(),
           ],
         ),
         heightSpace(1),

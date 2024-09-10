@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/get_account.dart';
 import 'package:ngbuka/src/domain/data/transaction_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
@@ -117,7 +118,8 @@ class _SpareWithdrawalDetailState extends State<SpareWithdrawalDetail> {
             body: SingleChildScrollView(
               child: Column(
                 children: [
-                  const Divider(
+                  Divider(
+                    color: Colors.grey.withOpacity(0.1),
                     height: 0,
                   ),
                   Container(
@@ -132,7 +134,8 @@ class _SpareWithdrawalDetailState extends State<SpareWithdrawalDetail> {
                             : SvgPicture.asset(AppImages.unsuccessModal),
                         heightSpace(1.5),
                         customText(
-                            text: "N${transactionModel!.amount}",
+                            text:
+                                "₦${Helpers.formatBalance(transactionModel!.amount)}",
                             fontSize: 24,
                             textColor: AppColors.green,
                             fontWeight: FontWeight.bold),
@@ -169,7 +172,7 @@ class _SpareWithdrawalDetailState extends State<SpareWithdrawalDetail> {
                                 )
                               : SvgPicture.asset(AppImages.unwithdrawal),
                           title: customText(
-                              text: '123-000',
+                              text: '${transactionModel!.reference}',
                               fontSize: 14,
                               textColor: AppColors.black,
                               fontWeight: FontWeight.bold),
@@ -214,7 +217,7 @@ class _SpareWithdrawalDetailState extends State<SpareWithdrawalDetail> {
                         //   title: customText(
                         //       text: getAccount!.bankName!,
                         //       fontSize: 14,
-                        
+
                         //       textColor: AppColors.black,
                         //       fontWeight: FontWeight.bold),
                         //   subtitle: customText(

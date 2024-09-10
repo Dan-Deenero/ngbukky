@@ -47,9 +47,8 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
   final formKey = GlobalKey<FormState>();
   List<String> trueItemsString = [];
   Map<String, String> serviceNameToId = {};
-
+  List<String> workingHoursList = [];
   List<String> selectedServices2 = [];
-
   List<String> carsList = [];
   List<String> selectedCarsList = [];
 
@@ -83,32 +82,75 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
       lgaController.text = value.town!;
       stateController.text = value.state!;
       carsList = value.cars!;
-      log(carsList.toString());
       // log(serveList.toString());
+
+      ref.read(availability.notifier).state = value.availability!;
+      updateStateWithBackendData(ref.watch(availability));
+      ref.read(isLoading.notifier).state = false;
+      ref.read(isFromBackend.notifier).state = true;
+      addAvailables();
     });
+  }
+
+  addAvailables() {
+    final available = ref.watch(availability);
+    for (final item in available) {
+      final day = item.day;
+      final from = item.from;
+      final to = item.to;
+      workingHoursList.add('$day: $from - $to');
+    }
+    log(workingHoursList.toString());
+  }
+
+  void updateStateWithBackendData(List<Availability> backendData) {
+    final List<Map<String, dynamic>> updatedState = [];
+
+    for (final day in ref.read(stateWorkingHours.notifier).state) {
+      final existingDay = backendData.firstWhere(
+        (element) => element.day == day["day"],
+        orElse: () => Availability(),
+      );
+
+      day["isChecked"] = existingDay.id != null;
+
+      if (existingDay.id != null) {
+        day["from"] = existingDay.from;
+        day["to"] = existingDay.to;
+      }
+
+      updatedState.add(day);
+    }
+
+    ref.read(stateWorkingHours.notifier).state = updatedState;
   }
 
   @override
   Widget build(BuildContext context) {
     final loading = ref.watch(isLoading);
+    final isBackend = ref.watch(isFromBackend);
     final workingHour = ref.watch(stateWorkingHours);
+    log(trueItemsString.toString());
     double size = MediaQuery.of(context).size.width;
 
     workingHours() {
       saveData() {
         workingHourController.clear();
         trueItemsString.clear();
-        log(workingHourController.text);
+        ref.read(isFromBackend.notifier).state = false;
         for (var item in workingHour) {
           if (item["isChecked"]) {
-            var itemString =
-                "day: ${item["day"]}, from: ${item["from"]}AM, to: ${item["to"]}PM";
-            trueItemsString.add(itemString);
+            var itemString = "${item["day"]}: ${item["from"]} - ${item["to"]}";
+            setState(() {
+              trueItemsString.add(itemString);
+            });
+          } else {
+            trueItemsString
+                .removeWhere((element) => element.contains(item["day"]));
           }
         }
-        workingHourController.text = trueItemsString.join(', ');
-        log(workingHourController.text);
-        context.pop();
+
+        context.pop(trueItemsString);
       }
 
       showModalBottomSheet<void>(
@@ -177,11 +219,11 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                               stateNotifier.state =
                                                   updatedState;
 
-                                              log(ref
-                                                  .read(stateWorkingHours
-                                                      .notifier)
-                                                  .state[index]["isChecked"]
-                                                  .toString());
+                                              // log(ref
+                                              //     .read(stateWorkingHours
+                                              //         .notifier)
+                                              //     .state[index]["isChecked"]
+                                              //     .toString());
                                             },
                                             child: Container(
                                               padding:
@@ -242,11 +284,11 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
 
                                               stateNotifier.state =
                                                   updatedState;
-                                              log(ref
-                                                  .read(stateWorkingHours
-                                                      .notifier)
-                                                  .state[index]["isChecked"]
-                                                  .toString());
+                                              // log(ref
+                                              //     .read(stateWorkingHours
+                                              //         .notifier)
+                                              //     .state[index]["isChecked"]
+                                              //     .toString());
                                               setState(() {});
                                             },
                                             child: Container(
@@ -304,9 +346,9 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                         final time = ref.watch(startTime);
                                         final TimeOfDay? result =
                                             await showTimePicker(
-                                                context: context,
-                                                initialTime: time,
-                                                );
+                                          context: context,
+                                          initialTime: time,
+                                        );
 
                                         if (result != null) {
                                           if (context.mounted) {
@@ -360,9 +402,9 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                         final time = ref.watch(startTime);
                                         final TimeOfDay? result =
                                             await showTimePicker(
-                                                context: context,
-                                                initialTime: time,
-                                                );
+                                          context: context,
+                                          initialTime: time,
+                                        );
 
                                         if (result != null) {
                                           if (context.mounted) {
@@ -445,9 +487,24 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
               final stateState = ref.watch(states);
               final cityState = ref.watch(city);
               final townState = ref.watch(town);
-              final statee = stateState.map((state) => state.name!).toList();
-              final cityy = cityState.map((city) => city.name!).toList();
-              final towns = townState.map((town) => town.name!).toList();
+              final statee = [
+                    stateController.text.isEmpty
+                        ? "Select"
+                        : stateController.text.toLowerCase()
+                  ] +
+                  stateState.map((state) => state.name!).toList();
+              final cityy = [
+                    cityController.text.isEmpty
+                        ? "Select"
+                        : cityController.text.toLowerCase()
+                  ] +
+                  cityState.map((city) => city.name!).toList();
+              final towns = [
+                    lgaController.text.isEmpty
+                        ? "Select"
+                        : lgaController.text.toLowerCase()
+                  ] +
+                  townState.map((town) => town.name!).toList();
               final loading2 = ref.watch(isLoading2);
 
               return Form(
@@ -490,6 +547,8 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                               orElse: () =>
                                   States(), // Default value if state is not found
                             );
+                            cityController.clear();
+                            lgaController.clear();
                             final selectedSlug = selectedState.slug;
                             CityLGA result = await mechanicRepo.getSubdomain(
                                 selectedSlug.toString().toLowerCase().trim());
@@ -516,67 +575,68 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                                   ),
                                 ),
                               )
-                            :Column(
-                          children: [
-                            AppDropdown(
-                                isValue: false,
-                                value: cityController.text,
-                                validator: (val) {
-                                  if (val == "Select") {
-                                    return "Select a city";
-                                  }
-                                  return null;
-                                },
-                                dropdownList: cityy,
-                                label: "City",
-                                onChange: (val) =>
-                                    cityController.text = val.toString()),
-                            heightSpace(1),
-                            AppDropdown(
-                                isValue: false,
-                                value: lgaController.text,
-                                validator: (val) {
-                                  if (val == "Select") {
-                                    return "Select a lga";
-                                  }
-                                  return null;
-                                },
-                                dropdownList: towns,
-                                label: "Town",
-                                onChange: (val) =>
-                                    lgaController.text = val.toString()),
-                            heightSpace(1),
-                            SizedBox(
-                              height: 400,
-                              child: ListView(
-                                keyboardDismissBehavior:
-                                    ScrollViewKeyboardDismissBehavior.onDrag,
+                            : Column(
                                 children: [
-                                  CustomTextFormField(
-                                    validator: stringValidation,
-                                    textEditingController: address,
-                                    label: "Street",
-                                    prefixIcon: Padding(
-                                      padding: const EdgeInsets.all(13.0),
-                                      child: SvgPicture.asset(
-                                        AppImages.locationIcon,
-                                      ),
+                                  AppDropdown(
+                                      isValue: false,
+                                      value: cityController.text,
+                                      validator: (val) {
+                                        if (val == "Select") {
+                                          return "Select a city";
+                                        }
+                                        return null;
+                                      },
+                                      dropdownList: cityy,
+                                      label: "City",
+                                      onChange: (val) =>
+                                          cityController.text = val.toString()),
+                                  heightSpace(1),
+                                  AppDropdown(
+                                      isValue: false,
+                                      value: lgaController.text,
+                                      validator: (val) {
+                                        if (val == "Select") {
+                                          return "Select a lga";
+                                        }
+                                        return null;
+                                      },
+                                      dropdownList: towns,
+                                      label: "Town",
+                                      onChange: (val) =>
+                                          lgaController.text = val.toString()),
+                                  heightSpace(1),
+                                  SizedBox(
+                                    height: 400,
+                                    child: ListView(
+                                      keyboardDismissBehavior:
+                                          ScrollViewKeyboardDismissBehavior
+                                              .onDrag,
+                                      children: [
+                                        CustomTextFormField(
+                                          validator: stringValidation,
+                                          textEditingController: address,
+                                          label: "Street",
+                                          prefixIcon: Padding(
+                                            padding: const EdgeInsets.all(13.0),
+                                            child: SvgPicture.asset(
+                                              AppImages.locationIcon,
+                                            ),
+                                          ),
+                                          hintText:
+                                              "Type in your business street address",
+                                        ),
+                                        heightSpace(2),
+                                        AppButton(
+                                            // isActive: isActive.value,
+                                            buttonText: "Save",
+                                            isOrange: true,
+                                            onTap: saveData),
+                                        heightSpace(2),
+                                      ],
                                     ),
-                                    hintText:
-                                        "Type in your business street address",
                                   ),
-                                  heightSpace(2),
-                                  AppButton(
-                                      // isActive: isActive.value,
-                                      buttonText: "Save",
-                                      isOrange: true,
-                                      onTap: saveData),
-                                  heightSpace(2),
                                 ],
                               ),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                   ),
@@ -765,7 +825,8 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                             AppDropdDownSearch(
                               listOfSelectedItems: serviceNames,
                               onChanged: (val) {
-                                selectedServiceList = val!;
+                                selectedServiceList =  val!;
+                                serviceNames += selectedServiceList;
                                 log(val.toString());
                                 return null;
                               },
@@ -793,25 +854,103 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
                             ),
                             heightSpace(4),
                             customText(
-                                text: "Availabiity",
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                                textColor: AppColors.black),
+                              text: "Availabiity",
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              textColor: AppColors.black,
+                            ),
                             heightSpace(2),
-                            GestureDetector(
-                              onTap: workingHours,
-                              child: CustomTextFormField(
-                                isEnabled: false,
-                                textEditingController: workingHourController,
-                                prefixIcon: Padding(
-                                  padding: const EdgeInsets.all(13.0),
-                                  child: SvgPicture.asset(
-                                    AppImages.calendarIcon,
-                                  ),
-                                ),
-                                label: "Working hours",
-                                hintText: "Set working hours",
-                              ),
+                            customText(
+                              text: "Working hours",
+                              fontSize: 14,
+                              textColor: AppColors.black,
+                            ),
+                            heightSpace(1),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 14.0, horizontal: 8.0),
+                              width: double.infinity,
+                              // height: 50,
+                              decoration: BoxDecoration(
+                                  color: AppColors.white,
+                                  border: Border.all(
+                                      color: AppColors.black,
+                                      width: 1.0,
+                                      style: BorderStyle.solid),
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: workingHoursList.isEmpty
+                                  ? GestureDetector(
+                                      onTap: workingHours,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              SvgPicture.asset(
+                                                AppImages.calendarIcon,
+                                              ),
+                                              widthSpace(3),
+                                              customText(
+                                                  text: "Set working hours",
+                                                  fontSize: 14,
+                                                  textColor: AppColors.textGrey)
+                                            ],
+                                          ),
+                                          const Icon(Icons.arrow_drop_down)
+                                        ],
+                                      ),
+                                    )
+                                  : InkWell(
+                                      onTap: workingHours,
+                                      child: SizedBox(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Wrap(
+                                              spacing: 2,
+                                              direction: Axis.vertical,
+                                              children: (isBackend
+                                                      ? workingHoursList
+                                                      : trueItemsString)
+                                                  .map((e) => Chip(
+                                                        backgroundColor:
+                                                            AppColors
+                                                                .orange
+                                                                .withOpacity(
+                                                                    0.1),
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          side:
+                                                              const BorderSide(
+                                                            width: 0.5,
+                                                            color: AppColors
+                                                                .orange,
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                            20,
+                                                          ),
+                                                        ),
+                                                        label: customText(
+                                                          text: e,
+                                                          fontSize: 13,
+                                                          textColor:
+                                                              AppColors.orange,
+                                                        ),
+                                                        deleteIcon: const Icon(
+                                                          Icons.close,
+                                                          color: AppColors.red,
+                                                        ),
+                                                      ))
+                                                  .toList(),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                             ),
                             heightSpace(3),
                             Row(
@@ -855,8 +994,6 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
       //   log(e.name.toString());
       //   serviceList.add(e.name!);
       // });
-
-      ref.read(isLoading.notifier).state = false;
     });
   }
 
@@ -880,7 +1017,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
     final servicesState = ref.watch(services);
     final workingHour = ref.watch(stateWorkingHours);
 
-    for (String serviceName in selectedServiceList) {
+    for (String serviceName in serviceNames) {
       for (SystemServices service in servicesState!.systemServices ?? []) {
         if (service.name == serviceName) {
           log(service.name.toString());
@@ -898,7 +1035,6 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
 
     for (var item in workingHour) {
       if (item["isChecked"] == true) {
-        item.remove("isChecked");
         newItems.add(item);
         log(newItems.toString());
       }
@@ -912,7 +1048,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
       otservces = serviceController.text.split(",");
     }
 
-    if(selectedCarsList.isEmpty){
+    if (selectedCarsList.isEmpty) {
       selectServiceList + carsList;
     }
 
@@ -920,7 +1056,7 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
       "businessName": businessName.text,
       "cacNumber": cac.text,
       "state": stateController.text,
-      "lga": lgaController.text,
+      "town": lgaController.text,
       "city": cityController.text,
       "address": address.text,
       "longitude": "-122.33221",
@@ -939,8 +1075,6 @@ class _BusinessInfoSettingsState extends ConsumerState<BusinessInfoSettings> {
       }
     } else {
       serviceNames.clear();
-      workingHourController.clear();
-      // newItems.clear();
     }
 
     log(data.toString());

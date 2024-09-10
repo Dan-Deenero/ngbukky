@@ -26,16 +26,20 @@ class _ViewAcceptedQuoteState extends State<ViewAcceptedQuote> {
 
   QuotesModel? quoteModel;
   List<Services>? quote = [];
+  List<Services>? otherQuote = [];
+  List<Services>? serviceTogether = [];
 
   @override
   void initState() {
-    // TODO: implement initState
+   
     super.initState();
     _mechanicRepo.getoneQuote(widget.id).then(
           (value) => setState(
             () {
               quoteModel = value;
               quote = quoteModel!.services!;
+              otherQuote = quoteModel!.otherServices!;
+              serviceTogether = quote! + otherQuote!;
               isLoading = false;
             },
           ),
@@ -55,7 +59,7 @@ class _ViewAcceptedQuoteState extends State<ViewAcceptedQuote> {
             GestureDetector(
               onTap: () => context.pop(),
               child: Container(
-                height: 10.h,
+                height: 9.h,
                 width: 10.w,
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.black),
@@ -128,18 +132,6 @@ class _ViewAcceptedQuoteState extends State<ViewAcceptedQuote> {
                     ListTile(
                       leading: SvgPicture.asset(AppImages.carIcon),
                       title: customText(
-                          text: 'AC Maintenance',
-                          fontSize: 14,
-                          textColor: AppColors.black,
-                          fontWeight: FontWeight.bold),
-                      subtitle: customText(
-                          text: 'Service selected',
-                          fontSize: 12,
-                          textColor: AppColors.textGrey),
-                    ),
-                    ListTile(
-                      leading: SvgPicture.asset(AppImages.carIcon),
-                      title: customText(
                           text: quoteModel!.brand!,
                           fontSize: 14,
                           textColor: AppColors.black,
@@ -183,7 +175,7 @@ class _ViewAcceptedQuoteState extends State<ViewAcceptedQuote> {
                     heightSpace(3),
                     Column(
                       children: [
-                        ...quote!.map(
+                        ...serviceTogether!.map(
                           (qte) {
                             return Row(
                               children: [

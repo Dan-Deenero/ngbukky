@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/controller/Helpers.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/views/mechanic/success_modal.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
@@ -34,7 +34,7 @@ class SpareWithdrawFunds extends HookWidget {
           title: 'Withdrawal Successful',
           subtitle: 'You have successfully withdrawn ${amount.text} to your account.',
           action: () {
-            context.go(AppRoutes.bottomNav);
+            context.go(AppRoutes.spareBottomNav);
           },
         ),
       );

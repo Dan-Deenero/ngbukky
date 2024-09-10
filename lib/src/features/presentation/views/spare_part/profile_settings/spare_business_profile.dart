@@ -29,8 +29,16 @@ class SpareBusinessProfile extends HookWidget {
     getDealerProfile() {
       _mechanicRepo.getDealerProfile().then(
         (value) {
-          cac.text = value.cacNumber!;
-          description.text = value.about!;
+          if(value.cacNumber == null){
+            cac.text = "";
+          }else{
+            cac.text = value.cacNumber!;
+          }
+          if(value.about == null){
+            description.text = "";
+          }else{
+            description.text = value.about!;
+          }
         },
       );
     }

@@ -43,7 +43,7 @@ class _NewQuoteAlertState extends State<NewQuoteAlert> {
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Container(
-                height: 10.h,
+                height: 9.h,
                 width: 10.w,
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.black),
@@ -105,7 +105,7 @@ class _NewQuoteAlertState extends State<NewQuoteAlert> {
                           else
                             ..._quoteHistory.map((e) {
                               var dateString = e.createdAt;
-                              var dateTime = DateTime.parse(dateString!);
+                              var dateTime = DateTime.parse(dateString!).add(const Duration(hours: 1));
                               var formattedDate =
                                   DateFormat('dd MMM yyyy').format(dateTime);
 
@@ -117,10 +117,15 @@ class _NewQuoteAlertState extends State<NewQuoteAlert> {
                               }).toList();
                               String serviceNames = names.join(', ');
                               return GestureDetector(
-                                onTap: () => context.push(
-                                  AppRoutes.quoteRequest,
-                                  extra: e.id,
-                                ),
+                                onTap: () {
+                                  context.push(
+                                    AppRoutes.quoteMiddlemen,
+                                    extra: {
+                                      'id': e.id,
+                                      'status': e.status,
+                                    },
+                                  );
+                                },
                                 child: Card(
                                   color: Colors.white,
                                   surfaceTintColor: Colors.transparent,
@@ -146,7 +151,8 @@ class _NewQuoteAlertState extends State<NewQuoteAlert> {
                                                   customText(
                                                       text: e.brand!,
                                                       fontSize: 15,
-                                                      textColor: AppColors.black,
+                                                      textColor:
+                                                          AppColors.black,
                                                       fontWeight:
                                                           FontWeight.w600),
                                                   heightSpace(.5),
@@ -154,22 +160,23 @@ class _NewQuoteAlertState extends State<NewQuoteAlert> {
                                                       text:
                                                           '${e.model}, ${e.year}',
                                                       fontSize: 13,
-                                                      textColor: AppColors.black,
+                                                      textColor:
+                                                          AppColors.black,
                                                       fontWeight:
                                                           FontWeight.w500),
                                                   heightSpace(1),
                                                   Row(
                                                     children: [
-                                                      SvgPicture.asset(
-                                                          AppImages.serviceIcon),
+                                                      SvgPicture.asset(AppImages
+                                                          .serviceIcon),
                                                       widthSpace(1),
                                                       SizedBox(
                                                         width: 150,
                                                         child: customText(
                                                             text: serviceNames,
                                                             fontSize: 10,
-                                                            textColor:
-                                                                AppColors.black),
+                                                            textColor: AppColors
+                                                                .black),
                                                       )
                                                     ],
                                                   ),
@@ -214,7 +221,8 @@ class _NewQuoteAlertState extends State<NewQuoteAlert> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.end,
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Container(
                                                   width: 60,
@@ -228,7 +236,8 @@ class _NewQuoteAlertState extends State<NewQuoteAlert> {
                                                     child: customText(
                                                       text: "New",
                                                       fontSize: 10,
-                                                      textColor: AppColors.white,
+                                                      textColor:
+                                                          AppColors.white,
                                                     ),
                                                   ),
                                                 ),
@@ -237,7 +246,8 @@ class _NewQuoteAlertState extends State<NewQuoteAlert> {
                                                     text: "Quote Request",
                                                     fontSize: 12,
                                                     textColor: AppColors.orange,
-                                                    fontWeight: FontWeight.w600),
+                                                    fontWeight:
+                                                        FontWeight.w600),
                                               ]),
                                         ]),
                                   ),

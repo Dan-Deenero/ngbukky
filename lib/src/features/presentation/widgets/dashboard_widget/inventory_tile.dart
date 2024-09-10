@@ -3,7 +3,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/controller/Helpers.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_button.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
 import 'package:ngbuka/src/features/presentation/widgets/custom_text.dart';
@@ -14,9 +14,16 @@ class InventoryTile extends StatelessWidget {
   final String? name;
   final int? inStock;
   final dynamic id;
-  final String length;
+  final String? weight;
 
-  const InventoryTile({super.key, this.image, this.price, this.name, this.inStock, required this.length, this.id});
+  const InventoryTile(
+      {super.key,
+      this.image,
+      this.price,
+      this.name,
+      this.inStock,
+      required this.weight,
+      this.id});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +34,7 @@ class InventoryTile extends StatelessWidget {
     return Column(
       children: [
         Container(
-          height: 18.h,
+          height: 14.h,
           padding: const EdgeInsets.all(12.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
@@ -64,14 +71,17 @@ class InventoryTile extends StatelessWidget {
                       SizedBox(
                         width: sw * 0.60 - 24,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
-                              width: 53.w,
+                              width: 30.w,
                               child: RichText(
-                                text:  TextSpan(
-                                  text: 'ID Number: ',
-                                  style: const TextStyle(color: AppColors.textGrey),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                text: TextSpan(
+                                  text: 'ID: ',
+                                  style: const TextStyle(
+                                      color: AppColors.textGrey),
                                   children: [
                                     TextSpan(
                                       text: id,
@@ -85,6 +95,12 @@ class InventoryTile extends StatelessWidget {
                                 ),
                               ),
                             ),
+                            customText(
+                              text: '${weight!}kg',
+                              fontSize: 14,
+                              textColor: AppColors.black,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ],
                         ),
                       ),
@@ -95,10 +111,11 @@ class InventoryTile extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             customText(
-                                text: '₦${Helpers.formatBalance(price!.toInt())}',
-                                fontSize: 14,
-                                textColor: AppColors.black,
-                                fontWeight: FontWeight.w600),
+                              text: '₦${Helpers.formatBalance(price!.toInt())}',
+                              fontSize: 14,
+                              textColor: AppColors.black,
+                              fontWeight: FontWeight.w600,
+                            ),
                             customText(
                               text: '$inStock in stock',
                               fontSize: 10,

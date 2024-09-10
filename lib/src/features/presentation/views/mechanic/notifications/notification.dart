@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
-import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/notification_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -25,7 +26,6 @@ class NewNotification extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final notificationHistory = useState<List<NotificationModel>>([]);
-    final notific = useState<NotificationModel?>(null);
     final isLoading = useState<bool>(true);
 
     getAllNotification() {
@@ -37,21 +37,10 @@ class NewNotification extends HookWidget {
       );
     }
 
-    getANotification(String id) {
-      _mechanicRepo.getOneNotification(id).then((value) {
-        notific.value = value;
-        isLoading.value = false;
-        Helpers.routeToRespectiveNotificationScreens(
-          notific.value,
-          context,
-        );
-      });
-    }
-
     useEffect(() {
       getAllNotification();
       return null;
-    }, [notificationHistory.value.length]);
+    }, []);
 
     return isLoading.value
         ? const Center(
@@ -80,7 +69,7 @@ class NewNotification extends HookWidget {
                     ...notificationHistory.value.map(
                       (e) {
                         var dateString = e.createdAt!;
-                        var dateTime = DateTime.parse(dateString);
+                        var dateTime = DateTime.parse(dateString).add(const Duration(hours: 1));
                         var formattedDate =
                             DateFormat('dd MMM yyyy').format(dateTime);
                         var formattedTime =
@@ -89,114 +78,106 @@ class NewNotification extends HookWidget {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                getANotification(e.id!);
+                                if (e.notifiableType == "booking") {
+                                  context.push(
+                                    AppRoutes.notificationToBooking,
+                                    extra: e.id,
+                                  );
+                                } else {
+                                  context.push(
+                                    AppRoutes.notificationToQuote,
+                                    extra: e.id,
+                                  );
+                                }
                               },
-                              child: Container(
-                                width: double.infinity,
-                                // height: 120,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 4, vertical: 20),
-                                decoration: BoxDecoration(
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: AppColors.containerGrey,
-                                      offset: Offset(
-                                        5.0,
-                                        5.0,
+                              child: Card(
+                                color: AppColors.white,
+                                surfaceTintColor: Colors.transparent,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 8, horizontal: 4),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.center,
+                                        child: SvgPicture.asset(
+                                          AppImages.notification,
+                                          width: 30,
+                                        ),
                                       ),
-                                      blurRadius: 10.0,
-                                      spreadRadius: 2.0,
-                                    ), //BoxShadow
-                                    BoxShadow(
-                                      color: Colors.white,
-                                      offset: Offset(0.0, 0.0),
-                                      blurRadius: 0.0,
-                                      spreadRadius: 0.0,
-                                    ), //BoxShadow
-                                  ],
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: AppColors.white,
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: SvgPicture.asset(
-                                        AppImages.notification,
-                                        width: 30,
-                                      ),
-                                    ),
-                                    widthSpace(2),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            customText(
-                                              text: e.title!,
-                                              fontSize: calculateTextSize(
-                                                  context, 0.035),
-                                              textColor: AppColors.black,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                            SizedBox(
-                                              width: calculateTextSize(
-                                                  context, 0.45),
-                                              child: customText(
+                                      widthSpace(2),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              customText(
+                                                text: e.title!,
+                                                fontSize: calculateTextSize(
+                                                    context, 0.032),
+                                                textColor: AppColors.black,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                              SizedBox(
+                                                width: calculateTextSize(
+                                                    context, 0.40),
+                                                child: customText(
                                                   text: e.body!,
                                                   fontSize: calculateTextSize(
                                                       context, 0.03),
-                                                  textColor:
-                                                      AppColors.textGrey),
-                                            ),
-                                          ],
-                                        ),
-                                        Column(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                        AppImages.time),
-                                                    customText(
+                                                  textColor: AppColors.textGrey,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      SvgPicture.asset(
+                                                          AppImages.time),
+                                                      customText(
                                                         text: formattedTime,
                                                         fontSize:
                                                             calculateTextSize(
                                                                 context, 0.025),
                                                         textColor:
-                                                            AppColors.textGrey)
-                                                  ],
-                                                ),
-                                                widthSpace(.5),
-                                                Row(
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                        AppImages.calendarIcon),
-                                                    customText(
-                                                        text: formattedDate,
-                                                        fontSize:
-                                                            calculateTextSize(
-                                                                context, 0.025),
-                                                        textColor:
-                                                            AppColors.textGrey)
-                                                  ],
-                                                )
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    // widthSpace(2),
-                                  ],
+                                                            AppColors.textGrey,
+                                                      )
+                                                    ],
+                                                  ),
+                                                  widthSpace(.5),
+                                                  Row(
+                                                    children: [
+                                                      SvgPicture.asset(AppImages
+                                                          .calendarIcon),
+                                                      customText(
+                                                          text: formattedDate,
+                                                          fontSize:
+                                                              calculateTextSize(
+                                                                  context,
+                                                                  0.025),
+                                                          textColor: AppColors
+                                                              .textGrey)
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      // widthSpace(2),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -226,7 +207,6 @@ class ReadNotification extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final notificationHistory = useState<List<NotificationModel>>([]);
-    final notific = useState<NotificationModel?>(null);
     final isLoading = useState<bool>(true);
 
     getAllNotification() {
@@ -236,17 +216,6 @@ class ReadNotification extends HookWidget {
           isLoading.value = false;
         },
       );
-    }
-
-    getANotification(String id) {
-      _mechanicRepo.getOneNotification(id).then((value) {
-        notific.value = value;
-        isLoading.value = false;
-        Helpers.routeToRespectiveNotificationScreens(
-          notific.value,
-          context,
-        );
-      });
     }
 
     useEffect(() {
@@ -280,7 +249,7 @@ class ReadNotification extends HookWidget {
                     ...notificationHistory.value.map(
                       (e) {
                         var dateString = e.createdAt!;
-                        var dateTime = DateTime.parse(dateString);
+                        var dateTime = DateTime.parse(dateString).add(const Duration(hours: 1));
                         var formattedDate =
                             DateFormat('dd MMM yyyy').format(dateTime);
 
@@ -289,113 +258,109 @@ class ReadNotification extends HookWidget {
                         return Column(
                           children: [
                             GestureDetector(
-                              onTap: () => getANotification(e.id!),
-                              child: Container(
-                                width: double.infinity,
-                                // height: 120,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 4, vertical: 20),
-                                decoration: BoxDecoration(
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: AppColors.containerGrey,
-                                      offset: Offset(
-                                        5.0,
-                                        5.0,
-                                      ),
-                                      blurRadius: 10.0,
-                                      spreadRadius: 2.0,
-                                    ), //BoxShadow
-                                    BoxShadow(
-                                      color: Colors.white,
-                                      offset: Offset(0.0, 0.0),
-                                      blurRadius: 0.0,
-                                      spreadRadius: 0.0,
-                                    ), //BoxShadow
-                                  ],
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: AppColors.white,
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: SvgPicture.asset(
-                                        AppImages.notification,
-                                        width: 30,
-                                      ),
-                                    ),
-                                    widthSpace(2),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            customText(
-                                              text: e.title!,
-                                              fontSize: calculateTextSize(
-                                                  context, 0.035),
-                                              textColor: AppColors.black,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                            SizedBox(
-                                              width: calculateTextSize(
-                                                  context, 0.45),
-                                              child: customText(
-                                                  text: e.body!,
-                                                  fontSize: calculateTextSize(
-                                                      context, 0.03),
-                                                  textColor:
-                                                      AppColors.textGrey),
-                                            ),
-                                          ],
+                              onTap: () {
+                                if (e.notifiableType == "booking") {
+                                  context.push(
+                                    AppRoutes.notificationToBooking,
+                                    extra: e.id,
+                                  );
+                                } else {
+                                  context.push(
+                                    AppRoutes.notificationToQuote,
+                                    extra: e.id,
+                                  );
+                                }
+                              },
+                              child: Card(
+                                color: AppColors.white,
+                                surfaceTintColor: Colors.transparent,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 8, horizontal: 4),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.center,
+                                        child: SvgPicture.asset(
+                                          AppImages.notification,
+                                          width: 30,
                                         ),
-                                        Column(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                        AppImages.time),
-                                                    customText(
-                                                        text: formattedTime,
-                                                        fontSize:
-                                                            calculateTextSize(
-                                                                context, 0.025),
-                                                        textColor:
-                                                            AppColors.textGrey)
-                                                  ],
-                                                ),
-                                                widthSpace(.5),
-                                                Row(
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                        AppImages.calendarIcon),
-                                                    customText(
-                                                        text: formattedDate,
-                                                        fontSize:
-                                                            calculateTextSize(
-                                                                context, 0.025),
-                                                        textColor:
-                                                            AppColors.textGrey)
-                                                  ],
-                                                )
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    // widthSpace(2),
-                                  ],
+                                      ),
+                                      widthSpace(2),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              customText(
+                                                text: e.title!,
+                                                fontSize: calculateTextSize(
+                                                    context, 0.032),
+                                                textColor: AppColors.black,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                              SizedBox(
+                                                width: calculateTextSize(
+                                                    context, 0.40),
+                                                child: customText(
+                                                    text: e.body!,
+                                                    fontSize: calculateTextSize(
+                                                        context, 0.03),
+                                                    textColor:
+                                                        AppColors.textGrey),
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      SvgPicture.asset(
+                                                          AppImages.time),
+                                                      customText(
+                                                          text: formattedTime,
+                                                          fontSize:
+                                                              calculateTextSize(
+                                                                  context,
+                                                                  0.025),
+                                                          textColor: AppColors
+                                                              .textGrey)
+                                                    ],
+                                                  ),
+                                                  widthSpace(.5),
+                                                  Row(
+                                                    children: [
+                                                      SvgPicture.asset(AppImages
+                                                          .calendarIcon),
+                                                      customText(
+                                                          text: formattedDate,
+                                                          fontSize:
+                                                              calculateTextSize(
+                                                                  context,
+                                                                  0.025),
+                                                          textColor: AppColors
+                                                              .textGrey)
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      // widthSpace(2),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -412,11 +377,36 @@ class ReadNotification extends HookWidget {
 }
 
 class Notification extends HookWidget {
-  const Notification({super.key});
+  Notification({
+    Key? key,
+  }) : super(key: key ?? UniqueKey());
+  final MechanicRepo _mechanicRepo = MechanicRepo();
 
   @override
   Widget build(BuildContext context) {
+    final notificationHistory = useState<List<NotificationModel>>([]);
+    final isLoading = useState<bool>(true);
     final tabIndex = useState<int>(0);
+
+    Future<dynamic> getAllNotification() async {
+      await _mechanicRepo.getEveryNotifications().then(
+        (value) {
+          notificationHistory.value = value;
+        },
+      );
+    }
+
+    useEffect(() {
+      void refresh() async {
+        isLoading.value = true;
+        await getAllNotification();
+        isLoading.value = false;
+      }
+
+      refresh();
+      return null;
+    }, [isLoading]);
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -481,59 +471,38 @@ class Notification extends HookWidget {
                     ],
                   ),
                 ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     Container(
-                //       padding: const EdgeInsets.all(8),
-                //       width: 120,
-                //       height: 40,
-                //       decoration: BoxDecoration(
-                //           border: Border.all(color: AppColors.containerGrey),
-                //           borderRadius: BorderRadius.circular(10)),
-                //       child: Row(
-                //         mainAxisAlignment: MainAxisAlignment.spaceAround,
-                //         children: [
-                //           SvgPicture.asset(AppImages.sort),
-                //           customText(
-                //               text: "New to old",
-                //               fontSize: 12,
-                //               textColor: AppColors.black)
-                //         ],
-                //       ),
-                //     ),
-                //     Container(
-                //       padding: const EdgeInsets.all(8),
-                //       width: 120,
-                //       height: 40,
-                //       decoration: BoxDecoration(
-                //           border: Border.all(color: AppColors.containerGrey),
-                //           borderRadius: BorderRadius.circular(10)),
-                //       child: Row(
-                //         mainAxisAlignment: MainAxisAlignment.spaceAround,
-                //         children: [
-                //           SvgPicture.asset(AppImages.filter),
-                //           customText(
-                //               text: "All",
-                //               fontSize: 12,
-                //               textColor: AppColors.black)
-                //         ],
-                //       ),
-                //     ),
-                //   ],
-                // ),
                 heightSpace(1),
               ],
             ),
           ),
         ),
-        body: Column(
-          children: [
-            Expanded(
-                child: TabBarView(
-                    children: [NewNotification(), ReadNotification()]))
-          ],
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: AppColors.white,
+          mini: true,
+          onPressed: () async {
+            isLoading.value = true;
+            await getAllNotification();
+            isLoading.value = false;
+          },
+          child: const Icon(Icons.refresh),
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
+        body: isLoading.value
+            ? const Center(
+                child: SingleChildScrollView(),
+              )
+            : Column(
+                children: [
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        NewNotification(),
+                        ReadNotification(),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }

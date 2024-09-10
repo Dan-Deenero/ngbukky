@@ -65,6 +65,8 @@ class MechanicRepo {
         booking.add(BookingModel.fromJson(bookingModel));
       }
       return booking;
+    }else if (response.status == 404) {
+      return [];
     }
     return booking;
   }
@@ -119,7 +121,7 @@ class MechanicRepo {
     final response = await ApiClient.get(endpoint, useToken: true);
     List<States> state = [];
     if (response.status == 200) {
-      for(var stateModel in response.entity){
+      for(var stateModel in response.entity['data']){
         state.add(States.fromJson(stateModel));
       }
       return state;
@@ -236,10 +238,23 @@ class MechanicRepo {
     }
     return false;
   }
+  Future<List<NotificationModel>> getEveryNotifications() async {
+    final response = await ApiClient.get(
+        Endpoints.getAllNotifications,
+        useToken: true);
+    List<NotificationModel> notification = [];
+    if (response.status == 200) {
+      for (var notificationModel in response.entity['rows']) {
+        notification.add(NotificationModel.fromJson(notificationModel));
+      }
+      return notification;
+    }
+    return notification;
+  }
 
   Future<List<NotificationModel>> getAllNotifications() async {
     final response = await ApiClient.get(
-        '${Endpoints.getAllNotifications}?type=unseen',
+        '${Endpoints.getAllNotifications}/?type=unseen',
         useToken: true);
     List<NotificationModel> notification = [];
     if (response.status == 200) {
@@ -253,7 +268,7 @@ class MechanicRepo {
 
   Future<List<NotificationModel>> getAllSeenNotifications() async {
     final response = await ApiClient.get(
-        '${Endpoints.getAllNotifications}?type=seen',
+        '${Endpoints.getAllNotifications}/?type=seen',
         useToken: true);
     List<NotificationModel> notification = [];
     if (response.status == 200) {
@@ -306,7 +321,7 @@ class MechanicRepo {
   Future<bool> reportClient(Map<dynamic, dynamic> body) async {
     final response = await ApiClient.post(Endpoints.reportClient,
         body: body, useToken: true);
-    if (response.status == 200) {
+    if (response.status == 200 || response.status == 201) {
       return true;
     }
     return false;
@@ -446,9 +461,23 @@ class MechanicRepo {
     return false;
   }
 
-  Future<List<TransactionModel>> getAllTransaction(String? type) async {
+  Future<List<TransactionModel>> getAllTransaction(String? type,) async {
     final response = await ApiClient.get(
-        '${Endpoints.transactions}?&type=$type',
+        '${Endpoints.transactions}/?&type=$type',
+        useToken: true);
+    List<TransactionModel> transaction = [];
+    if (response.status == 200) {
+      for (var transactionModel in response.entity['rows']) {
+        transaction.add(TransactionModel.fromJson(transactionModel));
+      }
+      return transaction;
+    }
+    return transaction;
+  }
+
+  Future<List<TransactionModel>> getLimitedTransaction(String? type, int? limit) async {
+    final response = await ApiClient.get(
+        '${Endpoints.transactions}/?&type=$type&limit=$limit',
         useToken: true);
     List<TransactionModel> transaction = [];
     if (response.status == 200) {
@@ -473,6 +502,7 @@ class MechanicRepo {
   Future<DashboardModel> getDealerDahsboardInfo() async {
     final response =
         await ApiClient.get(Endpoints.dealerDashboard, useToken: true);
+        log(Endpoints.dealerDashboard);
     if (response.status == 200) {
       return DashboardModel.fromJson(response.entity);
     }

@@ -70,7 +70,7 @@ class _SpareLocalAccountSetupState
         subtitle:
             'Your local account number and bank has been saved, you can go ahead and withdraw now',
         action: () {
-          context.go(AppRoutes.withdrawFunds);
+          context.go(AppRoutes.spareWithdrawFunds);
         },
       ),
     );

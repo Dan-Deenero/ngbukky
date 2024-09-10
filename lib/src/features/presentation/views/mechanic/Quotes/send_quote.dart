@@ -36,6 +36,8 @@ class _SendQuoteState extends ConsumerState<SendQuote> {
 
   QuotesModel? quoteModel;
   List<Services>? quote = [];
+  List<Services>? otherQuote = [];
+  List<Services>? serviceTogether = [];
 
   @override
   void initState() {
@@ -47,6 +49,8 @@ class _SendQuoteState extends ConsumerState<SendQuote> {
             () {
               quoteModel = value;
               quote = quoteModel!.services!;
+              otherQuote = quoteModel!.otherServices!;
+              serviceTogether = quote! + otherQuote!;
               isLoading = false;
             },
           ),
@@ -61,6 +65,7 @@ class _SendQuoteState extends ConsumerState<SendQuote> {
     log(result.toString());
 
     if (result) {
+      costOnly.clear();
       showSuccesModal();
     }
   }
@@ -71,7 +76,7 @@ class _SendQuoteState extends ConsumerState<SendQuote> {
       builder: (context) => SuccessDialogue(
         title: 'Quote sent',
         subtitle:
-            'Your quote of ${costOnly.text} has been sent successfully to ${quoteModel!.user!.username!}',
+            'Your quote has been sent successfully to ${quoteModel!.user!.username!}',
         action: () {
           context.go(AppRoutes.bottomNav);
         },
@@ -102,7 +107,7 @@ class _SendQuoteState extends ConsumerState<SendQuote> {
                     fontWeight: FontWeight.bold,
                     textColor: AppColors.black),
                 GestureDetector(
-                  onTap: () => context.pop(),
+                  onTap: () => context.go(AppRoutes.bottomNav),
                   child: Container(
                     height: 10.h,
                     width: 10.w,
@@ -135,7 +140,7 @@ class _SendQuoteState extends ConsumerState<SendQuote> {
                     heightSpace(3),
                     Column(
                       children: [
-                        ...quote!.map(
+                        ...serviceTogether!.map(
                           (qte) {
                             return Row(
                               children: [

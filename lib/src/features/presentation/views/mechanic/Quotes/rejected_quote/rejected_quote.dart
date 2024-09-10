@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:ngbuka/src/config/keys/app_routes.dart';
 import 'package:ngbuka/src/core/shared/app_images.dart';
 import 'package:ngbuka/src/core/shared/colors.dart';
+import 'package:ngbuka/src/domain/controller/helpers.dart';
 import 'package:ngbuka/src/domain/data/quote_model.dart';
 import 'package:ngbuka/src/domain/repository/mechanic_repository.dart';
 import 'package:ngbuka/src/features/presentation/widgets/app_spacer.dart';
@@ -82,138 +83,142 @@ class _RejectedQuoteState extends State<RejectedQuote> {
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Wrap(
-                    children: [
-                      if (_quoteHistory.isEmpty)
-                        Center(
-                          heightFactor: 3.5,
-                          child: Column(
-                            children: [
-                              SvgPicture.asset(AppImages.bookingWarning),
-                              customText(
-                                  text: 'You do not have any rejected booking',
-                                  fontSize: 15,
-                                  textColor: AppColors.black,
-                                  textAlignment: TextAlign.center)
-                            ],
-                          ),
-                        )
-                      else
-                        ..._quoteHistory.map((e) {
-                          _mechanicRepo.getoneQuote(e.id).then(
-                                (value) => setState(
-                                  () {
-                                    quoteModel = value;
-                                    for (Quotes quote in quotes!) {
-                                      if (quote.price != null) {
-                                        price += quote.price!;
-                                      }
-                                    }
-                                  },
-                                ),
-                              );
-                          var dateString = e.createdAt;
-                          var dateTime = DateTime.parse(dateString!);
-                          var formattedDate =
-                              DateFormat('dd MMM yyyy').format(dateTime);
-
-                          var formattedTime =
-                              DateFormat('hh:mm a').format(dateTime);
-                          String profile;
-
-                          if (e.user!.profileImageUrl == null) {
-                            profile =
-                                'https://cdn-icons-png.flaticon.com/512/149/149071.png';
-                          } else {
-                            profile = e.user!.profileImageUrl!;
-                          }
-                          return GestureDetector(
-                            onTap: () {
-                              context.push(
-                                AppRoutes.rejectedQuoteDetails,
-                                extra: e.id,
-                              );
-                            },
-                            child: Card(
-                              color: Colors.white,
-                              surfaceTintColor: Colors.transparent,
-                              child: ListTile(
-                                trailing: Column(
-                                  children: [
-                                    customText(
-                                        text: "$price",
-                                        fontSize: 14,
-                                        textColor: AppColors.textGrey,
-                                        fontWeight: FontWeight.bold),
-                                    heightSpace(1),
-                                    Container(
-                                      width: 28.w,
-                                      height: 3.h,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: AppColors.red.withOpacity(.1)),
-                                      child: Center(
-                                        child: customText(
-                                            text: "Booking rejected",
-                                            fontSize: 10,
-                                            textColor: AppColors.red),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                subtitle: Row(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        SvgPicture.asset(AppImages.time),
-                                        customText(
-                                            text: formattedTime,
-                                            fontSize: 10,
-                                            textColor: AppColors.textGrey)
-                                      ],
-                                    ),
-                                    widthSpace(1),
-                                    Row(
-                                      children: [
-                                        SvgPicture.asset(
-                                            AppImages.calendarIcon),
-                                        customText(
-                                            text: formattedDate,
-                                            fontSize: 10,
-                                            textColor: AppColors.textGrey)
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                title: customText(
-                                    text: e.user!.username!,
-                                    fontSize: 16,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Wrap(
+                      children: [
+                        if (_quoteHistory.isEmpty)
+                          Center(
+                            heightFactor: 3.5,
+                            child: Column(
+                              children: [
+                                SvgPicture.asset(AppImages.bookingWarning),
+                                customText(
+                                    text:
+                                        'You do not have any rejected booking',
+                                    fontSize: 15,
                                     textColor: AppColors.black,
-                                    fontWeight: FontWeight.bold),
-                                leading: Container(
-                                  width: 8.w,
-                                  height: 8.h,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage(profile),
+                                    textAlignment: TextAlign.center)
+                              ],
+                            ),
+                          )
+                        else
+                          ..._quoteHistory.map((e) {
+                            // int price = 0;
+                            for (Quotes quote in e.quotes!) {
+                              if (quote.price != null) {
+                                price += quote.price!;
+                              }
+                            }
+                            var dateString = e.createdAt;
+                            var dateTime = DateTime.parse(dateString!)
+                                .add(const Duration(hours: 1));
+                            var formattedDate =
+                                DateFormat('dd MMM yyyy').format(dateTime);
+
+                            var formattedTime =
+                                DateFormat('hh:mm a').format(dateTime);
+                            String profile;
+
+                            if (e.user!.profileImageUrl == null) {
+                              profile =
+                                  'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+                            } else {
+                              profile = e.user!.profileImageUrl!;
+                            }
+                            return GestureDetector(
+                              onTap: () {
+                                context.push(
+                                  AppRoutes.quoteMiddlemen,
+                                  extra: {
+                                    'id': e.id,
+                                    'status': e.status,
+                                  },
+                                );
+                              },
+                              child: Card(
+                                color: Colors.white,
+                                surfaceTintColor: Colors.transparent,
+                                child: ListTile(
+                                  trailing: Column(
+                                    children: [
+                                      customText(
+                                          text:
+                                              "₦${Helpers.formatBalance(price)}",
+                                          fontSize: 14,
+                                          textColor: AppColors.textGrey,
+                                          fontWeight: FontWeight.bold),
+                                      heightSpace(1),
+                                      Container(
+                                        width: 27.w,
+                                        height: 3.h,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color:
+                                                AppColors.red.withOpacity(.1)),
+                                        child: Center(
+                                          child: customText(
+                                              text: "Booking rejected",
+                                              fontSize: 10,
+                                              textColor: AppColors.red),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  subtitle: Row(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          SvgPicture.asset(AppImages.time),
+                                          customText(
+                                              text: formattedTime,
+                                              fontSize: 2.5.w,
+                                              textColor: AppColors.textGrey)
+                                        ],
+                                      ),
+                                      widthSpace(1),
+                                      Row(
+                                        children: [
+                                          SvgPicture.asset(
+                                              AppImages.calendarIcon),
+                                          customText(
+                                              text: formattedDate,
+                                              fontSize: 2.5.w,
+                                              textColor: AppColors.textGrey)
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  title: customText(
+                                      text: e.user!.username!,
+                                      fontSize: 16,
+                                      textColor: AppColors.black,
+                                      fontWeight: FontWeight.bold),
+                                  leading: Container(
+                                    width: 8.w,
+                                    height: 8.h,
+                                    decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: AppColors.containerGrey),
+                                    child: CircleAvatar(
+                                      backgroundColor: AppColors.backgroundGrey,
+                                      backgroundImage: NetworkImage(profile),
+                                      radius:
+                                          55, // Adjust the size of the circle as needed
                                     ),
-                                    shape: BoxShape.circle,
-                                    color: AppColors.containerGrey,
                                   ),
                                 ),
                               ),
-                            ),
-                          );
-                        })
-                    ],
+                            );
+                          })
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),),
+                ],
+              ),
+            ),
     );
   }
 }

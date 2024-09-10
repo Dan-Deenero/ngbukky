@@ -64,11 +64,11 @@ class _LocalAccountSetupState extends ConsumerState<LocalAccountSetup> {
     await showDialog(
       context: context,
       builder: (context) => SuccessDialogue(
-        title: 'Account Savede',
+        title: 'Account Saved',
         subtitle:
             'Your local account number and bank has been saved, you can go ahead and withdraw now',
         action: () {
-          context.go(AppRoutes.withdrawFunds);
+          context.go(AppRoutes.bottomNav);
         },
       ),
     );
